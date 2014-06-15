@@ -39,7 +39,6 @@ public class Universe
             {
                 lines.Add(reader.ReadLine());
             }
-            Debug.Log(lines[0]);
 
             bool dataBlock = false;
             foreach (string line in lines)

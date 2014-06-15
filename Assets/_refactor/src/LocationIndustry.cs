@@ -133,7 +133,7 @@ public class LocationIndustry
 {
     Dictionary<string, int> stockpile = new Dictionary<string,int>();
     Production production = new Production();
-    Stockpile stockpile = new Stockpile();
+//    Stockpile stockpile = new Stockpile();
 
     Location location;
     float economyReserves = 0;
@@ -156,10 +156,10 @@ public class LocationIndustry
         for (; foodToProduce >= 1.0; foodToProduce -= 1.0f)
         {
             float roll = (float)rng.NextDouble();
-            if (roll < production.market.shares[key].produce)
-            {
+            //if (roll < production.market.shares[key].produce)
+            //{
 
-            }
+            //}
             //@todo calculate integral of all food stuff and produce it
             //Stockpile["food"] += amount;
         }
