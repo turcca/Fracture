@@ -62,6 +62,7 @@ public class Production
         {
             public float buy;
             public float produce;
+            public float consumption = 1.0f;
             public bool producable;
         }
 
@@ -116,24 +117,10 @@ public class Production
 
 }
 
-public class Stockpile
-{
-    public Stockpile()
-    {
-        foreach (string name in Economy.getCommodityNames())
-        {
-            commodities.Add(name, 0);
-        }
-    }
-
-    public Dictionary<string, int> commodities = new Dictionary<string,int>();
-}
-
 public class LocationIndustry
 {
-    Dictionary<string, int> stockpile = new Dictionary<string,int>();
+    //Dictionary<string, int> stockpile = new Dictionary<string,int>();
     Production production = new Production();
-//    Stockpile stockpile = new Stockpile();
 
     Location location;
     float economyReserves = 0;
@@ -156,22 +143,95 @@ public class LocationIndustry
         for (; foodToProduce >= 1.0; foodToProduce -= 1.0f)
         {
             float roll = (float)rng.NextDouble();
-            //if (roll < production.market.shares[key].produce)
-            //{
-
-            //}
-            //@todo calculate integral of all food stuff and produce it
-            //Stockpile["food"] += amount;
+            float productionProbability = 0.0f;
+            foreach (string key in Economy.getCommodityInfoOnCategory("food").Keys)
+            {
+                productionProbability += production.market.shares[key].produce;
+                if (roll < productionProbability)
+                {
+                    location.stockpile.commodities[key]++;
+                    break;
+                }
+            }
         }
         foodFraction = foodToProduce;
     }
+
     void consumeFood(float amount)
     {
+        Random rng = new Random();
+        float foodToConsume = amount;
+        for (; foodToConsume >= 1.0; foodToConsume -= 1.0f)
+        {
+            float roll = (float)rng.NextDouble();
+            float consumeProbability = 0.0f;
+            string want = "";
+            foreach (string key in Economy.getCommodityInfoOnCategory("food").Keys)
+            {
+                consumeProbability += production.market.shares[key].buy;
+                if (roll < consumeProbability)
+                {
+                    want = key;
+                    break;
+                }
+            }
+
+            if (location.stockpile.commodities[want] > 0)
+            {
+                location.stockpile.commodities[want]--;
+                if (location.stockpile.lacking[want] > production.market.shares[want].consumption * 2)
+                {
+                    location.stockpile.lacking[want]--;
+                }
+                if (location.stockpile.lacking[want] > 0)
+                {
+                    location.stockpile.lacking[want]--;
+                }
+            }
+            else
+            {
+                location.stockpile.lacking[want]++;
+                bool eaten = false;
+                foreach (string substitute in Economy.getCommodityInfoOnCategory("food").Keys)
+                {
+                    if (location.stockpile.commodities[substitute] > 0)
+                    {
+                        location.stockpile.commodities[substitute]--;
+                        if (location.stockpile.lacking[substitute] > 0)
+                        {
+                            location.stockpile.lacking[substitute]--;
+                            eaten = true;
+                            break;
+                        }
+                    }
+                }
+                if (!eaten)
+                {
+                    // add hunger
+                }
+            }
+        }
     }
+
     void produceIndustry(float amount)
     {
-        //@todo produce industry see food
-        //Stockpile["ind"] += amount;
+        Random rng = new Random();
+        float industryToProduce = amount + industryFraction;
+        for (; industryToProduce >= 1.0; industryToProduce -= 1.0f)
+        {
+            float roll = (float)rng.NextDouble();
+            float productionProbability = 0.0f;
+            foreach (string key in Economy.getCommodityInfoOnCategory("industry").Keys)
+            {
+                productionProbability += production.market.shares[key].produce;
+                if (roll < productionProbability)
+                {
+                    location.stockpile.commodities[key]++;
+                    break;
+                }
+            }
+        }
+        industryFraction = industryToProduce;
     }
     void consumeIndustry(float amount)
     {
@@ -287,6 +347,12 @@ public class LocationIndustry
 
         //@todo aid from imperial if enough shortage and not separatist
     }
+
+	public int getCommodityPrice(string commodity)
+	{
+		return Economy.calculateCommodityPrice(commodity, production.market.shares[commodity].buy,
+			location.stockpile.lacking[commodity], production.market.shares[commodity].producable);
+	}
 
     public string toDebugString()
     {

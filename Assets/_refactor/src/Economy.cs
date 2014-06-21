@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Commodity
-{
-    public float creationDate;
-}
-
 public class CommodityInfo
 {
     public string name;
@@ -32,7 +27,7 @@ public class CommodityInfo
     public float bAffluenceBonus;
     public float bMilitaryBonus;
 
-    //public float shortagedPriceMult;
+    public float shortagedPriceMult = 1.2f;
 }
 
 public class CommodityCategory
@@ -159,5 +154,39 @@ static public class Economy
         commodityInfo["tobacco"].name = "tobacco"; commodityInfo["tobacco"].category = "narcotic"; commodityInfo["tobacco"].legality = 1; commodityInfo["tobacco"].shelfLife = 720; commodityInfo["tobacco"].value = 6; commodityInfo["tobacco"].marketShareBase = 34; commodityInfo["tobacco"].pTechLevel = 0.0f; commodityInfo["tobacco"].pOrbital = 0; commodityInfo["tobacco"].pBiomass = 0.3f; commodityInfo["tobacco"].pMinerals = 0; commodityInfo["tobacco"].pFoodOutputBonus = 1.5f; commodityInfo["tobacco"].pIndustryOutputBonus = 1; commodityInfo["tobacco"].pInnovationBonus = 1; commodityInfo["tobacco"].pMilitaryBonus = 1; commodityInfo["tobacco"].bFoodOutputBonus = -1.5f; commodityInfo["tobacco"].bIndustryOutputBonus = 1; commodityInfo["tobacco"].bAffluenceBonus = 1; commodityInfo["tobacco"].bMilitaryBonus = 1;
         commodityInfo["drugs"].name = "drugs"; commodityInfo["drugs"].category = "narcotic"; commodityInfo["drugs"].legality = 4; commodityInfo["drugs"].shelfLife = 120; commodityInfo["drugs"].value = 20; commodityInfo["drugs"].marketShareBase = 12; commodityInfo["drugs"].pTechLevel = 0.0f; commodityInfo["drugs"].pOrbital = 0; commodityInfo["drugs"].pBiomass = 0; commodityInfo["drugs"].pMinerals = 0; commodityInfo["drugs"].pFoodOutputBonus = 1; commodityInfo["drugs"].pIndustryOutputBonus = 1; commodityInfo["drugs"].pInnovationBonus = 1; commodityInfo["drugs"].pMilitaryBonus = 1; commodityInfo["drugs"].bFoodOutputBonus = 1; commodityInfo["drugs"].bIndustryOutputBonus = 1; commodityInfo["drugs"].bAffluenceBonus = 1; commodityInfo["drugs"].bMilitaryBonus = 1;
         commodityInfo["psychic"].name = "psychic"; commodityInfo["psychic"].category = "narcotic"; commodityInfo["psychic"].legality = 5; commodityInfo["psychic"].shelfLife = 120; commodityInfo["psychic"].value = 80; commodityInfo["psychic"].marketShareBase = 4; commodityInfo["psychic"].pTechLevel = 0.57f; commodityInfo["psychic"].pOrbital = 0; commodityInfo["psychic"].pBiomass = 0; commodityInfo["psychic"].pMinerals = 0; commodityInfo["psychic"].pFoodOutputBonus = 1; commodityInfo["psychic"].pIndustryOutputBonus = 1; commodityInfo["psychic"].pInnovationBonus = 3; commodityInfo["psychic"].pMilitaryBonus = 1; commodityInfo["psychic"].bFoodOutputBonus = 1; commodityInfo["psychic"].bIndustryOutputBonus = 1; commodityInfo["psychic"].bAffluenceBonus = 1; commodityInfo["psychic"].bMilitaryBonus = 1;
+    }
+
+    static public int calculateCommodityPrice(string commodity, float localShare, int shortage, bool producable)
+    {
+        float priceMult = 1.0f;
+
+        if (!producable)
+        {
+            priceMult += 0.1f;
+        }
+        if (localShare > commodityInfo[commodity].marketShareBase)
+        {
+            priceMult += 0.1f;
+        }
+        if (shortage > 0)
+        {
+            priceMult += shortage / 10.0f;
+            priceMult += commodityInfo[commodity].shortagedPriceMult;
+        }
+
+        return (int)(priceMult * commodityInfo[commodity].value);
+    }
+
+    static public int calculateCommodityAmountInSale(string commodity, float localShare, int totalAmount,
+                                                     float consumptionFactor, int shortage, bool producable)
+    {
+        if (!producable || localShare > commodityInfo[commodity].marketShareBase)
+        {
+            return (int)Math.Max(totalAmount - 1 - (consumptionFactor * 3 + shortage), 0.0);
+        }
+        else
+        {
+            return (int)Math.Max(totalAmount - 1 - (consumptionFactor + shortage), 0);
+        }
     }
 }

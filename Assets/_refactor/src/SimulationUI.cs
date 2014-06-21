@@ -21,10 +21,15 @@ public class SimulationUI : MonoBehaviour
         if (selectedPlanet == "") return;
 
         string planetInfo = "";
-        Universe universe = GameObject.Find("GameLoop").GetComponent<GameLoop>().universe;
+        Universe universe = Universe.singleton;
 
         planetInfo += universe.locations[selectedPlanet].toDebugString();
-
         GUI.TextArea(new Rect(0, 0, 300, 900), planetInfo);
+
+        if (GUI.Button(new Rect(300, 0, 100, 100), "go"))
+        {
+            Debug.Log("go to planet!");
+            Application.LoadLevel("location");
+        }
     }
 }

@@ -3,17 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+
 public class Universe
 {
+    static public Universe singleton = new Universe();
+
     public Dictionary<string, Location> locations = new Dictionary<string, Location>();
+    public Player player = new Player();
+    public EventManager eventManager = new EventManager();
+
     Dictionary<string, string> locationData = new Dictionary<string, string>();
 
     public Universe()
     {
         parseLocationData();
 
-        locations.Add("a", new Location(locationData["a"]));
-        locations.Add("b", new Location(locationData["b"]));
+        locations.Add("a", new Location("a", locationData["a"]));
+        locations.Add("b", new Location("b", locationData["b"]));
     }
 
     void parseLocationData()
@@ -62,9 +68,14 @@ public class Universe
 
     public void tick(float days)
     {
-        foreach (Location location in locations.Values)
+        if (GameState.getState() != GameState.State.Event)
         {
-            location.tick(days);
+            foreach (Location location in locations.Values)
+            {
+                location.tick(days);
+            }
+            player.tick(days);
+            eventManager.tick(days);
         }
     }
 }

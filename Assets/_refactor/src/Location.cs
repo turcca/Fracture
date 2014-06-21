@@ -37,21 +37,43 @@ public class LocationData
     }
 }
 
+
+public class Stockpile
+{
+    public Stockpile()
+    {
+        foreach (string name in Economy.getCommodityNames())
+        {
+            commodities.Add(name, 0);
+            lacking.Add(name, 0);
+            tradable.Add(name, UnityEngine.Random.Range(0, 99));
+        }
+    }
+
+    public Dictionary<string, int> commodities = new Dictionary<string, int>();
+    public Dictionary<string, int> lacking = new Dictionary<string, int>();
+    public Dictionary<string, int> tradable = new Dictionary<string, int>();
+}
+
 public class Location
 {
     public string Name = Tools.STRING_NOT_ASSIGNED;
     public string Description = Tools.STRING_NOT_ASSIGNED;
+    public string id = "";
     // etc
 
     public IdeologyData ideology;
     public GroupData group;
     public LocationData info;
 
+    public Stockpile stockpile = new Stockpile();
+
     LocationIndustry industry;
     //Inventory Stockpile;
 
-    public Location(string data)
+    public Location(string _id, string data)
     {
+        id = _id;
         int i = 0;
         string groupData = "";
         string infoData = "";
@@ -197,6 +219,11 @@ public class Location
         float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
 
         return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
+    }
+
+    public int getCommodityPrice(string commodity)
+    {
+		return industry.getCommodityPrice(commodity);
     }
 
 }

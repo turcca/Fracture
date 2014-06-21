@@ -1,0 +1,28 @@
+// & text to be changed &
+
+// All tags and return strings are to be written "mid sentence", without capitalization
+// capitalization from eventEditor tags will carry over to these returns
+// 		EXAMPLE: if eventEditor tag reads &Yes&, a return value "aye" here will show as "Aye" in-game
+
+// OR: || AND: && equal: == other logic operators: <=, >=, <, >
+
+
+& agree &
+
+if (advisor.ideology == "cult") return "it is so";
+return "I agree";
+
+
+& yes &
+
+if (advisor.leadership > 3 && advisor.hr > 2) return "for sure";
+if (advisor.idealist < 10)  return "sure";
+if (advisor.ideology == "aristocrat")  return "aye";
+return "yes";
+
+
+& no &
+
+if (advisor.ideology == "aristocrat")  return "nay";
+return "no";
+

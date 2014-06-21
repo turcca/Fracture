@@ -1,0 +1,272 @@
+﻿#"Test Event"
+	@trigger = "atLocation" 
+	@character = getBestFromAll("leadership")
+	@location = getLocation("4S03")
+
+	@frequency "Elevated"
+
+	@f "AI"
+	@f "mutants"
+
+	@p {gameTime > 1}=10
+	@p { NO playerLoc("atLocation", locationObject.name) } = 0
+	@p { character.leadership > 3 } = 2
+
+	@a captain { theCaptain.leadership <= 3 } "I guess we have to settle." = 1
+	@a captain { theCaptain.leadership > 3 } "Let me lead you!" = 2
+	@a navigator "Hmm"
+
+	@t { o = 0 } "We must attack at +location.locName+." 
+	@t { o = 0 AND character.leadership > 3 } " It won't work unless +character.name+ leads us!"
+	@t { o > 0 } "It has happened before!"
+
+	@c "There is but one choise." = 1
+	@c { character.leadership > 3} "Unless +character.name+'s leadership is >3: +character.leadership+" = 2
+
+	@o {c > 0} = c  $=factionChange("nobleHouse4", -1) $=filterWeight("mutants", 0) $=available = false $=end
+
+
+
+#"Test Event inLocation"
+	@trigger = "inLocation"
+	@character = getBestFromAll("leadership")
+	@location = getLocation("4S03")
+
+
+	@p {gameTime > 1}=10
+	@p { NO playerLoc("inLocation", locationObject.name) } = 0
+	@p { character.leadership > 3 } = 2
+
+	@t { o = 0 } "What happens will happen in +location.locName+."
+	@t { o = 0 } " It won't happen unless +character.name+ leads us!"
+	@t { o > 0 } "It has happened before!"
+
+	@c "There is but one choise." = 1
+	@c { character.leadership > 3} "Unless +character.name+'s leadership is >3: +character.leadership+" = 2
+
+	@o {c > 0} = c $=available = false $=end
+
+
+
+#"The root of all evil"
+	@character = getBest("psy")
+
+	@p{finder.magnitude < 1.7} = 0 
+	@p{gameTime < 60} = 10 
+	@p{Event["Test Event"].outcome = 0 } =10
+
+
+	@t {o = 0} "Traveling through deep Fracture, +character.name+"
+	@t {o = 0 AND character.corruption >= 70} " finally contacts an intelligence in the warp."
+	@t {o = 0 AND character.corruption < 70} " has a terrible visitation from a daemon of the warp."
+
+	@c { o = 0 } "Try to communicate with it, and learn its name." = 1
+	@c { o = 0 } "Oh no, run away!" = 2
+	@c{ o = 0 AND character.holiness > 2}"Recite holy scriptures." = 3
+	@c{ o = 0 AND character.psy > 3}"Try to capture the daemon." = 4
+
+	@o {c =1 AND statRoll("psy") < 3} = 1 $=character.addStat("possessed", 20)
+	@o { c = 1 AND statRoll("psy") > 2 AND statRoll("psy") < 4 } = 2
+	@o{ c = 1 AND statRoll("psy") > 3} = 3
+	@o { c = 2 } = 4
+	@o { c = 3 } = 5
+	@o {c = 4 AND statRoll("psy") <= 3} = 6 $=character.possessed=100
+	@o {c = 4 AND statRoll("psy") > 3 AND character.corruption <= 100} = 7
+	@o {c = 4 AND statRoll("psy") > 3 AND character.corruption > 100} = 8 $=character.addStat("corruption", 100)
+
+	@t { o = 1 } "+character.name+ had long talks with it, but didn't remember much afterwards."
+	@t { o = 2 } "After a quick encounter, there is a lingering feeling it'll be back..."
+	@t { o = 3 } "+character.name+ learns its name, and starts preparing rituals."
+	@t { o = 4 } "Escape! But what do they say about running from your problems?"
+	@t { o = 5 } "Reciting the holy scriptures banishes the daemon! Praised be!"
+	@t { o = 6 } "+character.name+ succeeds, and now can call upon great powers."
+	@t { o = 7 } "+character.name+ leans its name, something will come out of this."
+	@t { o = 8 } "+character.name+ succeeds, and now can call upon great powers."
+
+	@c { o > 0 AND o != 5 } "Continue" = 8
+	@c { o = 5 } "Continue, you holy crusader!" = 9
+
+	@o { c  = 8 } = o $=available = false $=end
+	@o { c = 9 } = o $=character.addStat("holiness", 0.25) $=available = false $=end
+
+
+
+#"Odd behavior"
+
+	@t "You hear reports of odd behavior among the crew."
+
+	@c "It's probably nothing, carry on!" = 1
+	@c "Odd behavior? It might be wise to investigate this one." =2
+
+	@o = c $=available = false $=end
+
+
+	@a captain "Weeed to figure out what's going on." = 2
+	@a navigator "Odd behavior you say?"
+	@a engineer "I've got my men under control." = 1
+	@a security "We should set up a curfew and arrest the troublemakers at once!" = 2
+	@a quartermaster "The crew could use some downtime. We've spend too much time in the Fracture lately."
+	@a psycher "Well well, what do we have here?" =2
+	@a priest "Heretics! They are all damned heretics!" =2
+
+#"locationAdvice"
+
+	@p = 0
+	@location = getLocation(currentLocation)
+
+	@a captain { theCaptain.diplomat <= 2 } "+location.ruler+ is in charge here."
+	@a captain { theCaptain.diplomat > 2 } "+location.ruler+ is in charge here."
+	@a navigator "These people once counted their lucky stars. Now they worry about crops."
+	@a engineer "We could use more engineers."
+	@a security "We should keep a low profile and not recruit here."
+	@a quartermaster "The crew could use some downtime. We've spend too much time in the Fracture lately."
+	@a psycher "This is an ancient planet. Something forgotten is lying beneath the surface."
+	@a priest { location.ideologyStats["holy"] < -50 } "Heretics! They are all damned heretics!"
+	@a priest { location.ideologyStats["holy"] >= -50 AND location.ideologyStats["holy"] < 0} "What a misguided place this is."
+	@a priest { location.ideologyStats["holy"] >= 0 AND location.ideologyStats["holy"] < 40} "This place seem decent enough"
+	@a priest { location.ideologyStats["holy"] > 40 } "Ah, +location.name+ is known for its diligent and productive citizens. Truly inspiring."
+
+	@o = 0 $=end
+
+
+#"appointment_Locals"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the Local Government."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "We get to meet with +location.ruler+'s representative."
+
+
+#"appointment_nobleHouse1"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the House Furia."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is House Furia."
+
+
+#"appointment_nobleHouse2"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the House Rathmund."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is House Rathmund."
+
+
+#"appointment_nobleHouse3"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the House Tarquinia."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is House Tarquinia."
+
+
+#"appointment_nobleHouse4"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the House Valeria."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is House Valeria."
+
+
+#"appointment_guild1"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the Everlasting Union."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is the Union."
+
+
+#"appointment_guild2"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the Dacei Family."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is Dacei Family."
+
+
+#"appointment_guild3"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the Coruna Cartel."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is Coruna Cartel."
+
+
+#"appointment_church"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the Church."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is the Church."
+
+
+#"appointment_heretic"
+
+@location = getLocation(currentLocation)
+@p=0
+
+@t "You meet with the representative of the Radical Movement."
+
+@c "Done" = 1
+
+@o { c = 1} = 1 $=end
+
+@a captain "Yes, this is Radical Movement."
+
+
+
