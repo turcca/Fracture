@@ -7,7 +7,7 @@ public class TestEventStuff : MonoBehaviour
     void Start()
     {
         EventManager mgr = new EventManager();
-        mgr.pickEvent();
+        mgr.handleEvent(mgr.pickEvent());
     }
 
     // Update is called once per frame

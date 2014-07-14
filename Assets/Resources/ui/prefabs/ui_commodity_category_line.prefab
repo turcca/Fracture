@@ -64,7 +64,7 @@ MonoBehaviour:
   keepAspectRatio: 0
   aspectRatio: 2.66666675
   keepCrispWhenShrunk: 1
-  mTrueTypeFont: {fileID: 12800000, guid: b270ba79bdc5b0a4882365d8ab4ca524, type: 3}
+  mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 0}
   mText: narcotic
   mFontSize: 12

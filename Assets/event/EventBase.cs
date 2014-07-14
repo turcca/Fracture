@@ -1,44 +1,66 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
+public class EventAdvice
+{
+    public string text = "NO ADVICE";
+    public int recommend = -1;
+}
 
 public class EventBase
 {
     public string name = "";
     public bool available = false;
-    public Player player = Universe.singleton.player;
+    public Player player = Game.getUniverse().player;
     public Dictionary<string, float> filters = new Dictionary<string, float>();
     public Dictionary<string, int> choices = new Dictionary<string, int>();
 
     public Character character;
     public Character advisor;
     public string location;
-    public int outcome = -1;
+    public int outcome = 0;
     public int choice = -1;
+    public bool locationRequired = false;
+
+    public float lastProbability = 0.0f;
+    public bool running = false;
+
+    public bool locationEvent = false;
 
     public EventBase(string _name)
     {
         name = _name;
         available = true;
+        //initPre();
 
-        initChoices();
+        Game.getUniverse().eventManager.addEventToPool(this);
     }
-
-    public void addFilter(string str)
+    public void start()
     {
-        filters.Add(str, 1.0f);
+        running = true;
     }
-    public virtual void initChoices()
+    public void stop()
+    {
+        running = false;
+    }
+    public virtual void initPre()
     {
     }
-
     public virtual float calculateProbability()
     {
-        return 1;
+        return lastProbability;
     }
-    public virtual string getAdvice(string who)
+    public Dictionary<string, int> getChoices()
     {
-        return "INSERT GENERAL ADVICE HERE";
+        choices.Clear();
+        initChoices();
+        return choices;
+    }
+    public virtual EventAdvice getAdvice(Character.Job who)
+    {
+        return new EventAdvice();
     }
     public virtual string getText()
     {
@@ -46,39 +68,44 @@ public class EventBase
     }
     public virtual void doOutcome()
     {
+        if (choice == 1) end();
     }
-
-    protected int getElapsedDays()
-    {
-        return Universe.singleton.player.getElapsedDays();
-    }
-    protected Character getCharacter()
+    public Character getEventCharacter()
     {
         return character;
     }
-    protected Character getCharacter(string position)
+    public string getEventLocationID()
     {
-        return Universe.singleton.player.getCharacter(position);
+        return location;
     }
-    protected Character getAdvisor()
+
+    public virtual void initChoices()
     {
-        return advisor;
+        choices.Add("CONTINUE", 1);
+    }
+    protected void addFilter(string str)
+    {
+        filters.Add(str, 1.0f);
+    }
+    protected int getElapsedDays()
+    {
+        return Game.getUniverse().player.getElapsedDays();
     }
     protected double getWarpMagnitude()
     {
-        return Universe.singleton.player.getWarpMagnitude();
+        return Game.getUniverse().player.getWarpMagnitude();
     }
     protected EventBase getEvent(string name)
     {
         return EventDataBase.events[name];
     }
-    protected string getLocationID()
+    protected string getPlayerLocationID()
     {
-        return Universe.singleton.player.getLocationID();
+        return Game.getUniverse().player.getLocationID();
     }
     protected Location getLocation()
     {
-        return Universe.singleton.locations[getLocationID()];
+        return Game.getUniverse().locations[location];
     }
     protected void factionChange(string f, int a)
     {
@@ -88,29 +115,51 @@ public class EventBase
     {
         //todo
     }
+
+    protected Character getCharacter()
+    {
+        return character;
+    }
+    protected Character getCharacter(Character.Job job)
+    {
+        return Game.getUniverse().player.getCharacter(job);
+    }
+    protected Character getBestCharacter(Character.Stat s)
+    {
+        return Character.getBest(Game.getUniverse().player.getCharacters(), s);
+    }
+    protected double getCharacterStat(Character.Stat s)
+    {
+        return character.getStat(s);
+    }
+    protected double getCharacterStat(Character.Job job, Character.Stat s)
+    {
+        return Game.getUniverse().player.getCharacter(job).getStat(s);
+    }
+    protected Character getAdvisor()
+    {
+        return advisor;
+    }
+    protected void addCharacterStat(Character.Stat stat, double amount)
+    {
+        //todo
+    }
+    protected void setCharacterStat(Character.Stat stat, double amount)
+    {
+        //todo
+    }
+
     protected int statRoll(string s)
     {
         return 0;
     }
     protected void end()
     {
-        //todo
+        running = false;
     }
 }
 
 static public class EventDataBase
 {
     static public Dictionary<string, EventBase> events = new Dictionary<string, EventBase>();
-}
-
-public class Event_xx : EventBase
-{
-    public Event_xx(string name)
-        : base(name)
-    { }
-
-    public override float calculateProbability()
-    {
-        return 0;
-    }
 }

@@ -26,12 +26,12 @@ public class UiInventoryCommodity : MonoBehaviour {
 		gameObject.transform.FindChild("name").GetComponent<UILabel>().text =
 			Economy.commodityInfo[commodity].name;
 		gameObject.transform.FindChild("amount").GetComponent<UILabel>().text =
-			Universe.singleton.player.cargo.commodities[commodity].ToString();
+			Game.getUniverse().player.cargo.commodities[commodity].ToString();
 		
 		GameObject.Find("statusDesc").GetComponent<UILabel>().text =
-			"Cargo: " + Universe.singleton.player.cargo.getUsedCargoSpace().ToString() + " / " +
-				Universe.singleton.player.cargo.maxCargoSpace.ToString() + "\n" +
-				"Credits: " + Universe.singleton.player.cargo.credits.ToString();
+			"Cargo: " + Game.getUniverse().player.cargo.getUsedCargoSpace().ToString() + " / " +
+				Game.getUniverse().player.cargo.maxCargoSpace.ToString() + "\n" +
+				"Credits: " + Game.getUniverse().player.cargo.credits.ToString();
 	}
 
 }

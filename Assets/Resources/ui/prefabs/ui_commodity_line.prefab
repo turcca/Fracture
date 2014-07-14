@@ -356,9 +356,9 @@ MonoBehaviour:
   keepAspectRatio: 0
   aspectRatio: 1.42857146
   keepCrispWhenShrunk: 1
-  mTrueTypeFont: {fileID: 12800000, guid: b270ba79bdc5b0a4882365d8ab4ca524, type: 3}
+  mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 0}
-  mText: 52
+  mText: 30
   mFontSize: 12
   mFontStyle: 0
   mEncoding: 1
@@ -419,8 +419,8 @@ MonoBehaviour:
   mTrueTypeFont: {fileID: 12800000, guid: b270ba79bdc5b0a4882365d8ab4ca524, type: 3}
   mFont: {fileID: 0}
   mText: psychic
-  mFontSize: 11
-  mFontStyle: 0
+  mFontSize: 12
+  mFontStyle: 1
   mEncoding: 1
   mMaxLineCount: 0
   mEffectStyle: 0
@@ -630,7 +630,7 @@ MonoBehaviour:
   keepAspectRatio: 0
   aspectRatio: 1.42857146
   keepCrispWhenShrunk: 1
-  mTrueTypeFont: {fileID: 12800000, guid: b270ba79bdc5b0a4882365d8ab4ca524, type: 3}
+  mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 0}
   mText: 0
   mFontSize: 12

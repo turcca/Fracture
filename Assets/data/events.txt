@@ -1,4 +1,4 @@
-﻿#"Test Event"
+#"Test Event"
 	@trigger = "atLocation" 
 	@character = getBestFromAll("leadership")
 	@location = getLocation("4S03")
@@ -51,7 +51,7 @@
 #"The root of all evil"
 	@character = getBest("psy")
 
-	@p{finder.magnitude < 1.7} = 0 
+	@p {finder.magnitude < 1.7} = 0 
 	@p{gameTime < 60} = 10 
 	@p{Event["Test Event"].outcome = 0 } =10
 

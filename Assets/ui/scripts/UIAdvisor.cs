@@ -3,34 +3,31 @@ using System.Collections;
 
 public class UIAdvisor : MonoBehaviour
 {
-    public delegate void AdvisorSelectedDelegate(string pos);
+    public delegate void AdvisorSelectedDelegate(Character.Job job);
 
-    private string advisorPosition = "";
+    private Character.Job advisorJob = Character.Job.none;
     private Character character;
     private GameObject adviseFrame;
     AdvisorSelectedDelegate callback;
 
-    // Use this for initialization
     void Start()
     {
         adviseFrame = transform.GetChild(0).gameObject;
         NGUITools.SetActive(adviseFrame, false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
-    public void setup(string p, AdvisorSelectedDelegate d)
+    public void setup(Character.Job job, AdvisorSelectedDelegate d)
     {
-        advisorPosition = p;
-        character = Universe.singleton.player.getCharacter(advisorPosition);
+        advisorJob = job;
+        character = Game.getUniverse().player.getCharacter(advisorJob);
+        gameObject.GetComponent<UITexture>().mainTexture =
+            Game.PortraitManager.getPortraitTexture(character.getPortrait().id);
         callback = d;
     }
 
     void OnClick()
     {
-        callback(advisorPosition);
+        callback(advisorJob);
     }
 }

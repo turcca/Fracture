@@ -43,7 +43,7 @@ GameObject:
   - 114: {fileID: 11400004}
   - 65: {fileID: 6500000}
   m_Layer: 8
-  m_Name: ui_inv_commodity
+  m_Name: 38_commodity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

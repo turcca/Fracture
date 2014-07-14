@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class UIAdvisorManager : MonoBehaviour
@@ -14,23 +14,22 @@ public class UIAdvisorManager : MonoBehaviour
     
     void Start()
     {
-        GameObject root = gameObject;
-
         int i = 0;
-        foreach (string position in Character.getAdvisorPositionNames())
+        foreach (Character.Job job in Character.getAdvisorAssignmentNames())
         {
             ++i;
             GameObject go = NGUITools.AddChild(gameObject, advisorPrefab);
             go.GetComponent<UIKeyBinding>().keyCode = Tools.getKeyFunction(i);
-            go.GetComponent<UIAdvisor>().setup(position, new UIAdvisor.AdvisorSelectedDelegate(advisorSelected));
+            go.GetComponent<UIAdvisor>().setup(job, new UIAdvisor.AdvisorSelectedDelegate(eventAdvisorSelected));
         }
         gameObject.GetComponent<UIGrid>().Reposition();
     }
 
-    public void advisorSelected(string pos)
+    public void eventAdvisorSelected(Character.Job job)
     {
-        eventUI.setAdvisor(pos);
+        eventUI.setAdvisor(job);
     }
+
 
     // Update is called once per frame
     void Update()
