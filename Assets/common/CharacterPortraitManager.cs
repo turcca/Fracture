@@ -10,7 +10,7 @@ public class CharacterPortraitManager
     {
         public string file = "";
         public string tag = "";     // specially tagged portraits, such as "navigator", can be reserved for those characters
-        public int id = 0;
+        public int id = -1;
 
         public PortraitEntry(string _file, string _tag, int _id)
         {
@@ -78,11 +78,18 @@ public class CharacterPortraitManager
 
     public string getPortraitImage(int id)
     {
+        ///@todo check range
         return portraits[id].file;
     }
 
     public Texture getPortraitTexture(int id)
     {
+        ///@todo check range
         return Resources.Load<Texture2D>("ui/portraits/" + portraits[id].file);
+    }
+
+    public Sprite getPortraitSprite(int id)
+    {
+        return Resources.Load<Sprite>("ui/portraits/" + portraits[id].file);
     }
 }

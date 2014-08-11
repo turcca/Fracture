@@ -13,7 +13,7 @@ public class EventAdvisor : MonoBehaviour
     void Start()
     {
         adviceFrame = transform.GetChild(0).gameObject;
-        NGUITools.SetActive(adviceFrame, false);
+        //NGUITools.SetActive(adviceFrame, false);
     }
     
     
@@ -21,20 +21,20 @@ public class EventAdvisor : MonoBehaviour
     {
         advisorJob = job;
         character = Game.getUniverse().player.getCharacter(advisorJob);
-        gameObject.GetComponent<UITexture>().mainTexture =
-            Game.PortraitManager.getPortraitTexture(character.getPortrait().id);
+//        gameObject.GetComponent<UITexture>().mainTexture =
+//            Game.PortraitManager.getPortraitTexture(character.getPortrait().id);
         callback = d;
     }
 
     public void showAdvice(string advice)
     {
-        NGUITools.SetActive(adviceFrame, true);
-        adviceFrame.GetComponent<UILabel>().text = advice;
+//        NGUITools.SetActive(adviceFrame, true);
+//        adviceFrame.GetComponent<UILabel>().text = advice;
     }
 
     public void hideAdvice()
     {
-        NGUITools.SetActive(adviceFrame, false);
+//        NGUITools.SetActive(adviceFrame, false);
     }
     
     void OnClick()

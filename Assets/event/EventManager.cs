@@ -7,10 +7,11 @@ public class EventManager
     public delegate void AllDoneDelegate();
 
     private AllDoneDelegate allDoneCallback;
-    private GameObject eventUINode;
+
     private List<EventBase> eventPool = new List<EventBase>();
     private List<EventBase> triggerEventPool = new List<EventBase>();
     private List<EventBase> eventQueue = new List<EventBase>();
+
     private float daysSinceLastEvent = 0;
     private float eventInterval = 13.0f;
     private float timePow = 2.0f;
@@ -110,8 +111,6 @@ public class EventManager
             {
                 
             }
-
-
             // do stuff
         }
 
@@ -126,15 +125,7 @@ public class EventManager
             return;
         }
 
-        if (!eventUINode)
-        {
-            eventUINode = GameObject.Find("EventRoot").GetComponent<EventRoot>().eventUI;
-        }
-        
-        EventUI eventUI = eventUINode.GetComponent<EventUI>();
-
-        NGUITools.SetActive(eventUINode, true);
-
+        EventUI eventUI = GameObject.Find("EventCanvas").GetComponent<EventUI>();
         eventUI.setEvent(e, new EventUI.EventDoneDelegate(eventDone));
     }
 
@@ -148,6 +139,5 @@ public class EventManager
             allDoneCallback();
             allDoneCallback = null;
         }
-        NGUITools.SetActive(eventUINode, false);
     }
 }

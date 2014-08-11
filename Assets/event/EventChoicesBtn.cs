@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class EventChoicesBtn : MonoBehaviour
@@ -7,9 +8,9 @@ public class EventChoicesBtn : MonoBehaviour
 
     public int choice = 0;
     public ChoiceDelegate callback;
-    public UIWidget choiceTxt;
+    public Text choiceTxt;
 
-    void OnClick()
+    public void click()
     {
         callback(choice);
     }

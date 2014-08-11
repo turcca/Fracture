@@ -430,10 +430,10 @@ SphereCollider:
   m_PrefabInternal: {fileID: 1256835299}
   m_GameObject: {fileID: 253327203}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &253327207
 MeshFilter:
@@ -466,6 +466,7 @@ GameObject:
   - 92: {fileID: 312524445}
   - 124: {fileID: 312524444}
   - 81: {fileID: 312524443}
+  - 114: {fileID: 312524448}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -534,6 +535,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &312524448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 312524442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63d5ab18b7ec004c9a259d991c9092f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1439987986}
+  distance: 6
+  height: 5
+  heightDamping: 2
+  rotationDamping: 3
 --- !u!1 &329976363
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,10 +1320,10 @@ SphereCollider:
   m_PrefabInternal: {fileID: 514548686}
   m_GameObject: {fileID: 812304092}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &812304097
 MeshFilter:
@@ -1965,10 +1982,10 @@ SphereCollider:
   m_PrefabInternal: {fileID: 130348838}
   m_GameObject: {fileID: 1051923020}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1051923025
 MeshFilter:
@@ -2213,7 +2230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1284153771
 Transform:
   m_ObjectHideFlags: 0
@@ -2222,7 +2239,7 @@ Transform:
   m_GameObject: {fileID: 1284153770}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00416666688, y: .00416666688, z: .00416666688}
+  m_LocalScale: {x: .00296296296, y: .00296296296, z: .00296296296}
   m_Children:
   - {fileID: 445467719}
   m_Father: {fileID: 0}
@@ -2369,10 +2386,10 @@ SphereCollider:
   m_PrefabInternal: {fileID: 919416326}
   m_GameObject: {fileID: 1358677400}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1358677405
 MeshFilter:
@@ -2448,6 +2465,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1439987986}
+  - 143: {fileID: 1439987987}
+  - 114: {fileID: 1439987989}
+  - 114: {fileID: 1439987988}
+  - 114: {fileID: 1439987991}
+  - 65: {fileID: 1439987990}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2467,6 +2489,111 @@ Transform:
   m_Children:
   - {fileID: 242394621}
   m_Father: {fileID: 0}
+--- !u!143 &1439987987
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439987985}
+  serializedVersion: 2
+  m_Height: 0
+  m_Radius: 0
+  m_SlopeLimit: 45
+  m_StepOffset: .300000012
+  m_SkinWidth: .0799999982
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1439987988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439987985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b7910447d3f54256ba8c76506687864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canControl: 1
+  useFixedUpdate: 0
+  weatherAffects: 1
+  shipSpeed: 1
+  shipAgility: 1
+  weatherResistance: .300000012
+  movement:
+    maxForwardSpeed: 2
+    maxSidewaysSpeed: 1
+    maxBackwardsSpeed: .200000003
+    slopeSpeedMultiplier:
+      serializedVersion: 2
+      m_Curve:
+      - time: -100.5
+        value: 1
+        inSlope: -.0139982561
+        outSlope: -.0139982561
+        tangentMode: 0
+      - time: 90
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    maxGroundAcceleration: .5
+    maxAirAcceleration: .5
+    gravity: 0
+    maxFallSpeed: 0
+  jumping:
+    enabled: 1
+    baseHeight: 1
+    extraHeight: 4.0999999
+    perpAmount: 0
+    steepPerpAmount: .5
+  movingPlatform:
+    enabled: 1
+    movementTransfer: 2
+  sliding:
+    enabled: 0
+    slidingSpeed: 1
+    sidewaysControl: .300000012
+    speedControl: 0
+--- !u!114 &1439987989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439987985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47990123b0d114e83ad3c24829fdd3cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoRotate: 1
+  maxRotationSpeed: 60
+  TurningRatio: 1
+--- !u!65 &1439987990
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439987985}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1439987991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439987985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a011831ec2cffd64fa13e6f2212870f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1455731998
 GameObject:
   m_ObjectHideFlags: 0
@@ -2757,6 +2884,68 @@ MeshFilter:
   m_PrefabInternal: {fileID: 2024568472}
   m_GameObject: {fileID: 1627830048}
   m_Mesh: {fileID: 4300062, guid: 57b7857e589aa0d4dab9f07b13667bab, type: 3}
+--- !u!1 &1630530486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1630530488}
+  - 108: {fileID: 1630530487}
+  m_Layer: 0
+  m_Name: Directional light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1630530487
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1630530486}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: .5
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: .0500000007
+    m_Softness: 4
+    m_SoftnessFade: 1
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_ActuallyLightmapped: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 1
+  m_ShadowSamples: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_IndirectIntensity: 1
+  m_AreaSize: {x: 1, y: 1}
+--- !u!4 &1630530488
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1630530486}
+  m_LocalRotation: {x: -.682809174, y: -.18295823, z: 3.51219853e-08, w: .707317472}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &1787667265
 GameObject:
   m_ObjectHideFlags: 0
@@ -2920,10 +3109,10 @@ SphereCollider:
   m_PrefabInternal: {fileID: 830478110}
   m_GameObject: {fileID: 1889953126}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1889953131
 MeshFilter:
@@ -3006,10 +3195,10 @@ SphereCollider:
   m_PrefabInternal: {fileID: 866111458}
   m_GameObject: {fileID: 1955333441}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1955333446
 MeshFilter:

@@ -10,7 +10,7 @@ public class LocationDiplomacyMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        location = Game.getUniverse().locations[Game.getUniverse().player.getLocationID()];
+        location = Game.getUniverse().locations[Game.getUniverse().player.getLocationId()];
         buttonPrefab = Resources.Load<GameObject>("ui/prefabs/locationMenuButton");
         grid = transform.FindChild("grid").gameObject;
         buildMenuItems();
@@ -29,10 +29,10 @@ public class LocationDiplomacyMenu : MonoBehaviour {
     }
     private void addMenuItem(string faction, float control)
     {
-        GameObject go = NGUITools.AddChild(grid, buttonPrefab);
-        go.GetComponent<UILabel>().text = getAppointmentLabel(faction, getOfficeLevel(control));
-        go.GetComponent<LocationButtonCallback>().param = faction;
-        go.GetComponent<LocationButtonCallback>().callback = new LocationButtonCallback.CallbackDelegate(pickFaction);
+        //GameObject go = NGUITools.AddChild(grid, buttonPrefab);
+        //go.GetComponent<UILabel>().text = getAppointmentLabel(faction, getOfficeLevel(control));
+        //go.GetComponent<LocationButtonCallback>().param = faction;
+        //go.GetComponent<LocationButtonCallback>().callback = new LocationButtonCallback.CallbackDelegate(pickFaction);
     }
     private int getOfficeLevel(float c)
     {

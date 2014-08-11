@@ -8,6 +8,7 @@ public class TestEventStuff : MonoBehaviour
     {
         EventManager mgr = new EventManager();
         mgr.handleEvent(mgr.pickEvent());
+        Tools.debug("ALERT - Test events enabled in eventScene!");
     }
 
     // Update is called once per frame

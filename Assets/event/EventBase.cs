@@ -101,7 +101,7 @@ public class EventBase
     }
     protected string getPlayerLocationID()
     {
-        return Game.getUniverse().player.getLocationID();
+        return Game.getUniverse().player.getLocationId();
     }
     protected Location getLocation()
     {

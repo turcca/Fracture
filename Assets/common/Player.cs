@@ -35,6 +35,9 @@ public class Player
     private List<Character> characters = new List<Character>();
     private Dictionary<Character.Job, Character> advisors = new Dictionary<Character.Job, Character>();
 
+    public Vector3 position = new Vector3(0, 0, 0);
+    private string locationId = "";
+
     private float elapsedDays = 0;
 
     public Player()
@@ -43,7 +46,17 @@ public class Player
 
     public void init()
     {
-        foreach (Character.Job job in (Character.Job[])Enum.GetValues(typeof(Character.Job)))
+        Character.Job[] tempChars =
+        {
+            Character.Job.captain,
+            Character.Job.navigator,
+            Character.Job.engineer,
+            Character.Job.security,
+            Character.Job.quartermaster,
+            Character.Job.psycher
+        };
+
+        foreach (Character.Job job in tempChars)
         {
             Character c = new Character();
             characters.Add(c);
@@ -66,14 +79,24 @@ public class Player
         return advisors[job];
     }
 
+    public Character getCharacter(int id)
+    {
+        return characters[id];
+    }
+
     public Character[] getCharacters()
     {
         return characters.ToArray();
     }
 
-    public string getLocationID()
+    public string getLocationId()
     {
-        return "a";
+        return locationId;
+    }
+
+    public void setLocationId(string loc)
+    {
+        locationId = loc;
     }
 
     public void tick(float days)

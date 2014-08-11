@@ -15,3 +15,5 @@ EditorBuildSettings:
     path: Assets/Resources/location/scenes/a.unity
   - enabled: 1
     path: Assets/eventScene.unity
+  - enabled: 1
+    path: Assets/startMenuScene.unity

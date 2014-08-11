@@ -4,10 +4,11 @@ using System.Collections;
 public class LocationSceneState : MonoBehaviour
 {
     public string trackedLocation = "a";
+    public GameObject menu;
 
     void Awake()
     {
-        trackedLocation = Game.getUniverse().player.getLocationID();
+        //trackedLocation = Game.getUniverse().player.getLocationId();
         Application.LoadLevelAdditive(trackedLocation);
         Application.LoadLevelAdditive("eventScene");
     }
@@ -16,7 +17,7 @@ public class LocationSceneState : MonoBehaviour
     {
         // deactivate scene camera to use loaded levels main camera
         GameObject.Find("LocationCamera").GetComponent<Camera>().enabled = false;
-
+        menu.SetActive(false);
         // check and trigger location events
         Game.getUniverse().eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
     }
@@ -24,7 +25,7 @@ public class LocationSceneState : MonoBehaviour
     public void eventQueryDone()
     {
         // activate location ui
-        GameObject.Find("LocationUI").GetComponent<UiLocationMain>().go();
+        menu.SetActive(true);
     }
 
     public void startDiplomacyEvent(string faction)
