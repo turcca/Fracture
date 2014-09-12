@@ -26,14 +26,13 @@ public class CommodityInventory
         }
         return rv;
     }
-
 }
 
 public class Player
 {
     public CommodityInventory cargo = new CommodityInventory();
-    private List<Character> characters = new List<Character>();
-    private Dictionary<Character.Job, Character> advisors = new Dictionary<Character.Job, Character>();
+    private Dictionary<int, Character> characters = new Dictionary<int, Character>();
+    private Dictionary<Character.Job, int> advisors = new Dictionary<Character.Job, int>();
 
     public Vector3 position = new Vector3(0, 0, 0);
     private string locationId = "";
@@ -59,8 +58,9 @@ public class Player
         foreach (Character.Job job in tempChars)
         {
             Character c = new Character();
-            characters.Add(c);
-            advisors.Add(job, c);
+
+            characters.Add(c.id, c);
+            advisors.Add(job, c.id);
         }
     }
 
@@ -76,17 +76,33 @@ public class Player
 
     public Character getCharacter(Character.Job job)
     {
-        return advisors[job];
+        if (advisors.ContainsKey(job) && characters.ContainsKey(advisors[job]))
+        {
+            return characters[advisors[job]];
+        }
+        else
+        {
+            return Character.Empty;
+        }
     }
 
     public Character getCharacter(int id)
     {
-        return characters[id];
+        if (characters.ContainsKey(id))
+        {
+            return characters[id];
+        }
+        else
+        {
+            return Character.Empty;
+        }
     }
 
     public Character[] getCharacters()
     {
-        return characters.ToArray();
+        Character[] copy = new Character[characters.Count];
+        characters.Values.CopyTo(copy, 0);
+        return copy;
     }
 
     public string getLocationId()
@@ -102,5 +118,19 @@ public class Player
     public void tick(float days)
     {
         elapsedDays += days;
+    }
+
+    public void setAdvisor(Character.Job job, int id)
+    {
+        foreach (var pair in advisors)
+        {
+            if (pair.Value == id)
+            {
+                advisors.Remove(pair.Key);
+                break;
+            }
+        }
+
+        advisors[job] = getCharacter(id).id;
     }
 }

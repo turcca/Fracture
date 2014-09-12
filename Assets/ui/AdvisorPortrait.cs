@@ -12,18 +12,31 @@ public class AdvisorPortrait : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        character = Game.getUniverse().player.getCharacter(job);
         setImage();
     }
 
     private void setImage()
     {
-        characterImage.sprite = Game.PortraitManager.getPortraitSprite(character.getPortrait().id);
+        character = Game.universe.player.getCharacter(job);
+        if (character != Character.Empty)
+        {
+            characterImage.sprite = Game.PortraitManager.getPortraitSprite(character.portrait.id);
+            characterImage.enabled = true;
+        }
+        else
+        {
+            characterImage.enabled = false;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    void updateView()
+    {
+        setImage();
     }
 }

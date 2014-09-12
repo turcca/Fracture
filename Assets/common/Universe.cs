@@ -8,7 +8,9 @@ public class Universe
 {
     public Dictionary<string, Location> locations = new Dictionary<string, Location>();
     public EventManager eventManager = new EventManager();
-    public Player player;
+    public Player player { get; private set; }
+    public NavNetwork tradeNetwork;
+    public List<NPCShip> ships = new List<NPCShip>();
 
     Dictionary<string, string> locationData = new Dictionary<string, string>();
 
@@ -38,6 +40,19 @@ public class Universe
         {
             // for scene testing purposes
             locations.Add("a", new Location("a", locationData["a"], new Vector2(0, 0)));
+        }
+
+        Location[] arr = new Location[locations.Count];
+        locations.Values.CopyTo(arr, 0);
+        tradeNetwork = new NavNetwork(arr);
+    }
+
+    public void initNPCShips()
+    {
+        foreach (Location location in locations.Values)
+        {
+            for (int i = 0; i < 5; i++)
+                ships.Add(new NPCShip(location));
         }
     }
 
@@ -116,6 +131,11 @@ public class Universe
             }
             player.tick(days);
             eventManager.tick(days);
+
+            foreach (NPCShip ship in ships)
+            {
+                ship.tick(days);
+            }
         }
     }
 }

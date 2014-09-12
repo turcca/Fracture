@@ -23,7 +23,6 @@ public class EventUI : MonoBehaviour
     void Awake()
     {
         choiceButtonPrefab = Resources.Load<GameObject>("event/ui/EventChoice");
-        //advisorNode = gameObject.transform.FindChild("eventCharacterElement").gameObject;
         eventPage.SetActive(false);
     }
 
@@ -57,31 +56,24 @@ public class EventUI : MonoBehaviour
 
     public string setAdvisor(Character.Job job)
     {
-        return "";
-        //if (currentEvent == null)
-        //{
-        //    return "";
-        //}
+        if (currentEvent == null)
+        {
+            return "";
+        }
 
-        ////advisorNode.transform.FindChild("eventCharacterAdvice").GetComponent<UILabel>().text =
-        ////    currentEvent.getAdvice(job).text;
-        //foreach (KeyValuePair<int, EventChoicesBtn> entry in choiceButtons)
-        //{
-        //    if (currentEvent.getAdvice(job).recommend == entry.Key)
-        //    {
-        //        entry.Value.recommend(true);
-        //    }
-        //    else
-        //    {
-        //        entry.Value.recommend(false);
-        //    }
-        //}
-        ////advisorNode.transform.FindChild("eventCharacterPortrait").GetComponent<UITexture>().mainTexture =
-        ////    Game.PortraitManager.getPortraitTexture(Game.getUniverse().player.getCharacter(job).getPortrait().id);
-        ////advisorNode.transform.FindChild("eventCharacterData").GetComponent<UILabel>().text =
-        ////    Game.getUniverse().player.getCharacter(job).getStats();
+        foreach (KeyValuePair<int, EventChoicesBtn> entry in choiceButtons)
+        {
+            if (currentEvent.getAdvice(job).recommend == entry.Key)
+            {
+                entry.Value.recommend(true);
+            }
+            else
+            {
+                entry.Value.recommend(false);
+            }
+        }
 
-        //return currentEvent.getAdvice(job).text;
+        return currentEvent.getAdvice(job).text;
     }
 
     private void startEvent()

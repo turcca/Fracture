@@ -21,7 +21,7 @@ public class SimulationUI : MonoBehaviour
         if (selectedPlanet == "") return;
 
         string planetInfo = "";
-        Universe universe = Game.getUniverse();
+        Universe universe = Game.universe;
 
         planetInfo += universe.locations[selectedPlanet].toDebugString();
         GUI.TextArea(new Rect(0, 0, 300, 900), planetInfo);

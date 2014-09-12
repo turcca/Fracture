@@ -8,12 +8,14 @@ public class CharacterCreator
 {
     public CharacterCreator(Vector2 pos)
     {
-        string homeId = Game.getUniverse().getClosestHabitat(pos).id;
+        string homeId = Game.universe.getClosestHabitat(pos).id;
     }
 }
 
 public class Character
 {
+    static public Character Empty = new Character();
+
     static public Character[] sortBy(Stat s, Character[] c)
     {
         // returns with new objects!!! cannot be used
@@ -82,6 +84,7 @@ public class Character
     public  string  agenda         = null;
     public  Job     assignment     = Job.none;
     public  float   dateAssigned   = -1;
+    public int id { get; private set; }
 
     /*
     public  float   health         = 100;          // 0 - 100
@@ -137,7 +140,7 @@ public class Character
         {
         }
     }
-    private Portrait portrait;
+    public Portrait portrait {get; private set;}
 
     static public string[] getSkillNames()
     {
@@ -241,11 +244,16 @@ public class Character
         };
     }
 
+    static private int ids = 0;
     public Character()
     {
+        id = ids;
+        ++ids;
+
         // get appropriate portrait
         portrait = Game.PortraitManager.getPortrait("");
-
+        // get name
+        name = NameGenerator.getName("any");
         // setup stats
         foreach (Stat s in (Stat[])Enum.GetValues(typeof(Stat)))
         {
@@ -253,11 +261,6 @@ public class Character
         }
         stats[Stat.age] = 45;
         stats[Stat.health] = 100;
-    }
-
-    public Portrait getPortrait()
-    {
-        return portrait;
     }
 
     public float getStat (Stat skill) 

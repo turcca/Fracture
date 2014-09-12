@@ -4,7 +4,7 @@ using System.Collections;
 static public class Game
 {
     static public CharacterPortraitManager PortraitManager { get; private set; }
-    static public Universe universe;
+    static public Universe universe {get; private set;}
 
     static Game()
     {
@@ -16,13 +16,9 @@ static public class Game
     {
         universe = new Universe();
         universe.initLocations();
+        universe.initNPCShips();
         universe.initPlayer();
 
         EventAdder.addAllEvents();
-    }
-
-    static public Universe getUniverse()
-    {
-        return universe;
     }
 }

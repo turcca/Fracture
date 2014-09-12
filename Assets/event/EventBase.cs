@@ -13,7 +13,7 @@ public class EventBase
 {
     public string name = "";
     public bool available = false;
-    public Player player = Game.getUniverse().player;
+    public Player player = Game.universe.player;
     public Dictionary<string, float> filters = new Dictionary<string, float>();
     public Dictionary<string, int> choices = new Dictionary<string, int>();
 
@@ -35,7 +35,7 @@ public class EventBase
         available = true;
         //initPre();
 
-        Game.getUniverse().eventManager.addEventToPool(this);
+        Game.universe.eventManager.addEventToPool(this);
     }
     public void start()
     {
@@ -89,11 +89,11 @@ public class EventBase
     }
     protected int getElapsedDays()
     {
-        return Game.getUniverse().player.getElapsedDays();
+        return Game.universe.player.getElapsedDays();
     }
     protected double getWarpMagnitude()
     {
-        return Game.getUniverse().player.getWarpMagnitude();
+        return Game.universe.player.getWarpMagnitude();
     }
     protected EventBase getEvent(string name)
     {
@@ -101,11 +101,11 @@ public class EventBase
     }
     protected string getPlayerLocationID()
     {
-        return Game.getUniverse().player.getLocationId();
+        return Game.universe.player.getLocationId();
     }
     protected Location getLocation()
     {
-        return Game.getUniverse().locations[location];
+        return Game.universe.locations[location];
     }
     protected void factionChange(string f, int a)
     {
@@ -122,11 +122,11 @@ public class EventBase
     }
     protected Character getCharacter(Character.Job job)
     {
-        return Game.getUniverse().player.getCharacter(job);
+        return Game.universe.player.getCharacter(job);
     }
     protected Character getBestCharacter(Character.Stat s)
     {
-        return Character.getBest(Game.getUniverse().player.getCharacters(), s);
+        return Character.getBest(Game.universe.player.getCharacters(), s);
     }
     protected double getCharacterStat(Character.Stat s)
     {
@@ -134,7 +134,7 @@ public class EventBase
     }
     protected double getCharacterStat(Character.Job job, Character.Stat s)
     {
-        return Game.getUniverse().player.getCharacter(job).getStat(s);
+        return Game.universe.player.getCharacter(job).getStat(s);
     }
     protected Character getAdvisor()
     {

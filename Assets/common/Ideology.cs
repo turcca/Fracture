@@ -2,11 +2,49 @@
 using System.Collections.Generic;
 using System.Globalization;
 
+public class Faction
+{
+    static public string getFactionName(string id)
+    {
+        Dictionary<string, string> names = new Dictionary<string, string>()
+        {
+            {"noble1", "House Furia"},
+            {"noble2", "House Rathmund"},
+            {"noble3", "House Valeria"},
+            {"noble4", "House Tarquinia"},
+            {"guild1", "Everlasting Union"},
+            {"guild2", "Dacei Family"},
+            {"guild3", "Coruna Cartel"},
+            {"church", "Church"},
+            {"cult", "Heretics"}
+        };
+        return names[id];
+    }
+
+    static public string getTitle(string id)
+    {
+        Dictionary<string, string> names = new Dictionary<string, string>()
+        {
+            {"noble1", "Governor"},
+            {"noble2", "Governor"},
+            {"noble3", "Governor"},
+            {"noble4", "Governor"},
+            {"guild1", "Governor"},
+            {"guild2", "Governor"},
+            {"guild3", "Governor"},
+            {"church", "Bishop"},
+            {"cult", "Protector"}
+        };
+        return names[id];
+    }
+}
+
 public class FactionData
 {
     public Dictionary<string, float> control = new Dictionary<string, float>();
+    public Dictionary<string, string> ruler = new Dictionary<string, string>();
 
-    static public string[] getFactionNames()
+    static public string[] getFactionIds()
     {
         string[] rv = new string[]
         {
@@ -34,6 +72,17 @@ public class FactionData
         control["guild3"] = float.Parse(dataChunk[6], CultureInfo.InvariantCulture.NumberFormat);
         control["church"] = float.Parse(dataChunk[7], CultureInfo.InvariantCulture.NumberFormat);
         control["heretic"] = float.Parse(dataChunk[8], CultureInfo.InvariantCulture.NumberFormat);
+
+        // randomize rulers
+        ruler["noble1"] = NameGenerator.getName("noble1");
+        ruler["noble2"] = NameGenerator.getName("noble2");
+        ruler["noble3"] = NameGenerator.getName("noble3");
+        ruler["noble4"] = NameGenerator.getName("noble4");
+        ruler["guild1"] = NameGenerator.getName("guild1");
+        ruler["guild2"] = NameGenerator.getName("guild2");
+        ruler["guild3"] = NameGenerator.getName("guild3");
+        ruler["church"] = NameGenerator.getName("church");
+        ruler["cult"] = NameGenerator.getName("cult");
     }
 
     public float getTotalControl()

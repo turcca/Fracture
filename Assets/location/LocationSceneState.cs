@@ -3,38 +3,50 @@ using System.Collections;
 
 public class LocationSceneState : MonoBehaviour
 {
-    public string trackedLocation = "a";
-    public GameObject menu;
+    public string trackedLocation = "not_set";
+    public MenuSystem menu;
+    public GameObject diplomacy;
 
     void Awake()
     {
-        //trackedLocation = Game.getUniverse().player.getLocationId();
-        Application.LoadLevelAdditive(trackedLocation);
+        //trackedLocation = Game.Universe.player.getLocationId();
+        try
+        {
+            //Application.LoadLevelAdditive(trackedLocation);
+            Application.LoadLevelAdditive("default");
+        }
+        catch
+        {
+            Application.LoadLevelAdditive("default");
+        }
+
         Application.LoadLevelAdditive("eventScene");
+        //Application.LoadLevelAdditive("uiScene");
     }
 
     void Start()
     {
         // deactivate scene camera to use loaded levels main camera
         GameObject.Find("LocationCamera").GetComponent<Camera>().enabled = false;
-        menu.SetActive(false);
+        menu.hideAll();
         // check and trigger location events
-        Game.getUniverse().eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
+        Game.universe.eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
     }
 
     public void eventQueryDone()
     {
-        // activate location ui
-        menu.SetActive(true);
+        menu.showMain();
+    }
+
+    public void diplomacyQueryDone()
+    {
+        menu.showMain();
+        menu.show(diplomacy);
     }
 
     public void startDiplomacyEvent(string faction)
     {
-        Game.getUniverse().eventManager.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(eventQueryDone));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        menu.hideAll();
+        Game.universe.eventManager.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
     }
 }

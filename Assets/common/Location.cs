@@ -61,7 +61,7 @@ public class Location
     public string Name = Tools.STRING_NOT_ASSIGNED;
     public string Description = Tools.STRING_NOT_ASSIGNED;
     public string id = "";
-    public Vector2 position = new Vector2(0, 0);
+    public Vector3 position = new Vector3(0, 0, 0);
 
     public IdeologyData ideology;
     public FactionData faction;
@@ -72,7 +72,7 @@ public class Location
     LocationIndustry industry;
     //Inventory Stockpile;
 
-    public Location(string _id, string data, Vector2 pos)
+    public Location(string _id, string data, Vector3 pos)
     {
         id = _id;
         position = pos;

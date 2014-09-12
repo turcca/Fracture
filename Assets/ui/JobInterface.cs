@@ -11,7 +11,6 @@ public class JobInterface : MonoBehaviour
     {
         characterDialog = 
             GameObject.Find("GameCanvas").GetComponent<GameMenuSystem>().characterSelectDialog;
-        characterDialog.GetComponent<CharacterSelectDialog>().initilise(characterSelected);
     }
 
     // Update is called once per frame
@@ -21,12 +20,14 @@ public class JobInterface : MonoBehaviour
 
     public void ReAssignJob()
     {
+        characterDialog.GetComponent<CharacterSelectDialog>().initilise(characterSelected);
         characterDialog.SetActive(true);
     }
 
     void characterSelected(bool ok, int id)
     {
-        Tools.debug("wohoo!");
+        Game.universe.player.setAdvisor(job, id);
         characterDialog.SetActive(false);
+        SendMessageUpwards("notifyChange");
     }
 }

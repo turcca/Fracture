@@ -1,19 +1,21 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class PlayerLocator : MonoBehaviour
 {
+    private GameMenuSystem ui;
 
     // Use this for initialization
     void Start()
     {
-        transform.position = Game.getUniverse().player.position;
+        transform.position = Game.universe.player.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Game.getUniverse().player.position = transform.position;
+        Game.universe.player.position = transform.position;
     }
 
     void OnTriggerEnter(Collider other)
@@ -21,9 +23,28 @@ public class PlayerLocator : MonoBehaviour
         LocationId locId = other.gameObject.GetComponent<LocationId>();
         if (locId)
         {
-            Game.getUniverse().player.setLocationId(locId.Id);
-            Tools.debug("Entering " + locId.Id.ToString());
+            Game.universe.player.setLocationId(locId.Id);
+            if (dialogReady())
+            {
+                ui.showLocationEntryDialog();
+            }
         }
+    }
+
+    private bool dialogReady()
+    {
+        if (ui == null)
+        {
+            try
+            {
+                ui = GameObject.Find("GameCanvas").GetComponent<GameMenuSystem>();
+            }
+            catch (NullReferenceException e)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void OnTriggerExit(Collider other)
@@ -31,8 +52,10 @@ public class PlayerLocator : MonoBehaviour
         LocationId locId = other.gameObject.GetComponent<LocationId>();
         if (locId)
         {
-            Game.getUniverse().player.setLocationId("");
-            Tools.debug("Leaving " + locId.Id.ToString());
+            if (dialogReady())
+            {
+                ui.hideLocationEntryDialog();
+            }
         }
     }
 }

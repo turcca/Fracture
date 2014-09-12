@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public class MenuSystem : MonoBehaviour
 {
+    public GameObject menu;
     public GameObject market;
     public GameObject diplomacy;
+    public GameObject ship;
 
     void Start()
     {
@@ -16,6 +18,7 @@ public class MenuSystem : MonoBehaviour
     {
         market.SetActive(false);
         diplomacy.SetActive(false);
+        ship.SetActive(false);
     }
 
     void Update()
@@ -32,5 +35,17 @@ public class MenuSystem : MonoBehaviour
     public void exit()
     {
         Application.LoadLevel(0);
+    }
+
+
+    public void hideAll()
+    {
+        hideAllPages();
+        menu.SetActive(false);
+    }
+
+    public void showMain()
+    {
+        menu.SetActive(true);
     }
 }

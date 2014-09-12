@@ -1,40 +1,39 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class EventAdvisor : MonoBehaviour
 {
     public delegate void AdvisorSelectedDelegate(Character.Job job);
+    public GameObject advicePanel;
+    public Character.Job advisorJob;
+    public Text adviceText;
     
-    private Character.Job advisorJob = Character.Job.none;
     private Character character;
-    private GameObject adviceFrame;
     AdvisorSelectedDelegate callback;
     
     void Start()
     {
-        adviceFrame = transform.GetChild(0).gameObject;
-        //NGUITools.SetActive(adviceFrame, false);
+        advicePanel.SetActive(false);
     }
     
     
     public void setup(Character.Job job, AdvisorSelectedDelegate d)
     {
-        advisorJob = job;
-        character = Game.getUniverse().player.getCharacter(advisorJob);
-//        gameObject.GetComponent<UITexture>().mainTexture =
-//            Game.PortraitManager.getPortraitTexture(character.getPortrait().id);
+        character = Game.universe.player.getCharacter(advisorJob);
+        advicePanel.SetActive(false);
         callback = d;
     }
 
     public void showAdvice(string advice)
     {
-//        NGUITools.SetActive(adviceFrame, true);
-//        adviceFrame.GetComponent<UILabel>().text = advice;
+        adviceText.text = advice;
+        advicePanel.SetActive(true);
     }
 
     public void hideAdvice()
     {
-//        NGUITools.SetActive(adviceFrame, false);
+        advicePanel.SetActive(false);
     }
     
     void OnClick()
