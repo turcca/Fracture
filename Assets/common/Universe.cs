@@ -26,13 +26,15 @@ public class Universe
         {
             foreach (LocationId loc in root.GetComponentsInChildren<LocationId>())
             {
-                if (locationData.ContainsKey(loc.Id))
+                string id = loc.getId();
+                if (locationData.ContainsKey(id))
                 {
-                    locations.Add(loc.Id, new Location(loc.Id, locationData[loc.Id], loc.gameObject.transform.position));
+                    locations.Add(id, new Location(id, locationData[id], loc.gameObject.transform.position));
                 }
                 else
                 {
-                    Tools.error("Id '" + loc.Id + "' not found in location data!");
+                    locations.Add(id, new Location(id, locationData["a"], loc.gameObject.transform.position));
+                    Tools.debug("Id '" + id + "' not found in location data!");
                 }
             }
         }
@@ -42,17 +44,27 @@ public class Universe
             locations.Add("a", new Location("a", locationData["a"], new Vector2(0, 0)));
         }
 
+        // all locations
         Location[] arr = new Location[locations.Count];
         locations.Values.CopyTo(arr, 0);
-        tradeNetwork = new NavNetwork(arr);
+        // all navpoints
+        GameObject navRoot = GameObject.Find("NavpointRoot");
+        List<NavpointId> navs = new List<NavpointId>();
+        if (navRoot)
+        {
+            foreach(NavpointId nav in navRoot.GetComponentsInChildren<NavpointId>())
+            {
+                navs.Add(nav);
+            }
+        }
+        tradeNetwork = new NavNetwork(arr, navs);
     }
 
     public void initNPCShips()
     {
         foreach (Location location in locations.Values)
         {
-            for (int i = 0; i < 5; i++)
-                ships.Add(new NPCShip(location));
+            location.initShips();
         }
     }
 

@@ -94,6 +94,21 @@ public class FactionData
         }
         return rv;
     }
+
+    public string getStrongest()
+    {
+        string rv = "";
+        float currentPick = 0.0f;
+        foreach(KeyValuePair<string, float> pair in control)
+        {
+            if (pair.Value > currentPick)
+            {
+                rv = pair.Key;
+                currentPick = pair.Value;
+            }
+        }
+        return rv;
+    }
 }
 
 public class IdeologyData

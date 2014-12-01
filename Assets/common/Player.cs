@@ -6,7 +6,7 @@ using System;
 public class CommodityInventory
 {
     public Dictionary<string, int> commodities = new Dictionary<string, int>();
-    public int maxCargoSpace = 25;
+    public int maxCargoSpace = 10;
     public int credits = 1000;
 
     public CommodityInventory()

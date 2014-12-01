@@ -23,7 +23,7 @@ public class PlayerLocator : MonoBehaviour
         LocationId locId = other.gameObject.GetComponent<LocationId>();
         if (locId)
         {
-            Game.universe.player.setLocationId(locId.Id);
+            Game.universe.player.setLocationId(locId.getId());
             if (dialogReady())
             {
                 ui.showLocationEntryDialog();

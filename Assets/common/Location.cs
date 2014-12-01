@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 public class LocationData
 {
@@ -45,8 +46,9 @@ public class Stockpile
     {
         foreach (string name in Economy.getCommodityNames())
         {
-            commodities.Add(name, 0);
-            lacking.Add(name, 0);
+            // use random until real values are inserted to exel
+            commodities.Add(name, UnityEngine.Random.Range(0,99));
+            lacking.Add(name, UnityEngine.Random.Range(0, 99));
             tradable.Add(name, UnityEngine.Random.Range(0, 99));
         }
     }
@@ -54,6 +56,22 @@ public class Stockpile
     public Dictionary<string, int> commodities = new Dictionary<string, int>();
     public Dictionary<string, int> lacking = new Dictionary<string, int>();
     public Dictionary<string, int> tradable = new Dictionary<string, int>();
+
+    public List<string> getImportList()
+    {
+        var rv = from pair in lacking
+                 orderby pair.Value descending
+                 select pair.Key;
+        return rv.ToList<string>();
+    }
+
+    public List<string> getExportList()
+    {
+        var rv = from pair in tradable
+                 orderby pair.Value descending
+                 select pair.Key;
+        return rv.ToList<string>();
+    }
 }
 
 public class Location
@@ -62,6 +80,7 @@ public class Location
     public string Description = Tools.STRING_NOT_ASSIGNED;
     public string id = "";
     public Vector3 position = new Vector3(0, 0, 0);
+    public int numShips = 1;
 
     public IdeologyData ideology;
     public FactionData faction;
@@ -229,4 +248,12 @@ public class Location
         return industry.getCommodityPrice(commodity);
     }
 
+
+    public void initShips()
+    {
+        for (int i = 0; i < numShips; ++i )
+        {
+            Game.universe.ships.Add(new NPCShip(this));
+        }
+    }
 }

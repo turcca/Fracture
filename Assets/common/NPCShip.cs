@@ -7,7 +7,10 @@ public class NPCShip
     public Location home;
     public Location destination;
     public Vector3 position;
-    public Vector3 currentTarget;
+    public string captain;
+    public List<string> wantedCommodityList = new List<string>();
+    public CommodityInventory inventory = new CommodityInventory();
+
     List<NavNode> navPoints = new List<NavNode>();
 
     public NPCShip(Location homeLocation)
@@ -15,6 +18,8 @@ public class NPCShip
         home = homeLocation;
         position = home.position;
         destination = home;
+        captain = NameGenerator.getName(home.faction.getStrongest());
+        wantedCommodityList = home.stockpile.getImportList();
 
         Location[] arr = new Location[Game.universe.locations.Count];
         Game.universe.locations.Values.CopyTo(arr, 0);
@@ -42,9 +47,25 @@ public class NPCShip
 
     private void arrived()
     {
-        Location[] arr = new Location[Game.universe.locations.Count];
-        Game.universe.locations.Values.CopyTo(arr, 0);
-        embarkTo(arr[Random.Range(0, arr.Length - 1)]);
+        if (destination == home)
+        {
+            // transfer loot
+            Trade.transferAll(inventory.commodities, home.stockpile.commodities);
+
+            // and set off again
+            wantedCommodityList = home.stockpile.getImportList();
+            Location dest = Trade.findBestImportLocation(wantedCommodityList, home);
+            embarkTo(dest);
+        }
+        else
+        {
+            Debug.Log("Trade!");
+            // trade
+            Trade.tradeShipInventory(this, destination);
+
+            // and return to home
+            embarkTo(home);
+        }
     }
 
     public void embarkTo(Location to)

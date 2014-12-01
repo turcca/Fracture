@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class NavNode
 {
@@ -15,14 +16,23 @@ public class NavNode
 
 public class NavNetwork
 {
-    private List<NavNode> navNodes = new List<NavNode>();
+    public List<NavNode> navNodes = new List<NavNode>();
+    private Graph graph = new Graph();
 
-    public NavNetwork(Location[] locations)
+    public NavNetwork(Location[] locations, List<NavpointId> navpoints)
     {
         foreach (Location loc in locations)
         {
+            graph.AddNode(loc.id);
             NavNode node = new NavNode(loc.id);
             node.position = loc.position;
+            navNodes.Add(node);
+        }
+        foreach (NavpointId nav in navpoints)
+        {
+            graph.AddNode(nav.getId());
+            NavNode node = new NavNode(nav.getId());
+            node.position = nav.gameObject.transform.position;
             navNodes.Add(node);
         }
         foreach (NavNode source in navNodes)
@@ -33,22 +43,44 @@ public class NavNetwork
                 {
                     continue;
                 }
-                if ((source.position - destination.position).magnitude < 30)
+                if ((source.position - destination.position).magnitude < 150)
                 {
                     source.links.Add(destination);
+                    graph.AddConnection(source.id, destination.id, (int)(source.position - destination.position).magnitude, false);
                 }
             }
         }
     }
 
-    public List<Location> getLocationsFrom(Location l, int distance)
+    public List<Location> getNeighbours(Location l)
     {
         NavNode originNode = getNavNodeFor(l);
 
         List<Location> rv = new List<Location>();
-        foreach (NavNode node in getNodesFrom(originNode, distance))
+        foreach (NavNode node in getNodesFrom(originNode, 1))
         {
             rv.Add(Game.universe.locations[node.id]);
+        }
+        return rv;
+    }
+
+    public List<Location> getNearestLocations(Location l)
+    {
+        List<Location> rv = new List<Location>();
+
+        DistanceCalculator calc = new DistanceCalculator();
+        Dictionary<string, double> ids = (Dictionary<string, double>)calc.CalculateDistances(graph, l.id);
+
+        var tp = from pair in ids
+                 orderby pair.Value ascending
+                 select pair.Key;
+
+        foreach (string id in tp)
+        {
+            if (Game.universe.locations.ContainsKey(id))
+            {
+                rv.Add(Game.universe.locations[id]);
+            }
         }
         return rv;
     }
@@ -81,36 +113,28 @@ public class NavNetwork
 
     public List<NavNode> getPath(NavNode from, NavNode to)
     {
-        //List<NavNode> rv = new List<NavNode>();
+        List<NavNode> rv = new List<NavNode>();
         //rv.Add(to);
         //return rv;
 
-        List<NavNode> visited = new List<NavNode>();
-        List<NavNode> workList = new List<NavNode>() { from };
-        Dictionary<NavNode, NavNode> connections = new Dictionary<NavNode, NavNode>();
+        DistanceCalculator calc = new DistanceCalculator();
+        List<string> ids = (List<string>)calc.CalculatePath(graph, from.id, to.id);
 
-        while (workList.Count != 0)
+        foreach (string id in ids)
         {
-            NavNode pNode = workList[0];
-            visited.Add(pNode);
-            foreach (NavNode neighbor in pNode.links)
+            foreach (NavNode n in navNodes)
             {
-                if (!workList.Contains(neighbor) && !visited.Contains(neighbor))
+                if (n.id == id)
                 {
-                    workList.Add(neighbor);
-                    connections.Add(neighbor, pNode);
+                    rv.Add(n);
                 }
             }
-            workList.RemoveAt(0);
         }
-
-        List<NavNode> rv = new List<NavNode>();
-        while (connections.ContainsKey(to) && connections[to] != null)
-        {
-            rv.Add(to);
-            to = connections[to];
-        }
-        rv.Reverse();
+        //Debug.Log("Shortest path from " + from.id + " to " + to.id + ": ");
+        //foreach(NavNode n in rv)
+        //{
+        //    Debug.Log(n.id);
+        //}
         return rv;
     }
 
@@ -131,3 +155,4 @@ public class NavNetwork
         return rv;
     }
 }
+
