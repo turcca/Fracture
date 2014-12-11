@@ -30,7 +30,9 @@ public class LocationSceneState : MonoBehaviour
         GameObject.Find("LocationCamera").GetComponent<Camera>().enabled = false;
         menu.hideAll();
         // check and trigger location events
-        Game.universe.eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
+        //Game.universe.eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
+        //@note skip events
+        eventQueryDone();
     }
 
     public void eventQueryDone()

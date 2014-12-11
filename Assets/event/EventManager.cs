@@ -56,7 +56,9 @@ public class EventManager
     public void queryLocationEvents(AllDoneDelegate callback)
     {
         allDoneCallback = callback;
+        //@note test location events
         handleEvent(pickEvent());
+        //handleEvent(null);
     }
 
     public void queryDiplomacyEvents(string faction, AllDoneDelegate callback)
@@ -120,6 +122,10 @@ public class EventManager
 
     public void handleEvent(EventBase e)
     {
+        if (e == null)
+        {
+            eventDone();
+        }
         if (!GameState.requestState(GameState.State.Event))
         {
             return;

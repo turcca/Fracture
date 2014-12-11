@@ -20,12 +20,15 @@ public class PlayerLocator : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("trigger");
         LocationId locId = other.gameObject.GetComponent<LocationId>();
         if (locId)
         {
+            Debug.Log("loc");
             Game.universe.player.setLocationId(locId.getId());
             if (dialogReady())
             {
+                Debug.Log("dialog");
                 ui.showLocationEntryDialog();
             }
         }

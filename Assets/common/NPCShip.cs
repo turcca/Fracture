@@ -59,7 +59,6 @@ public class NPCShip
         }
         else
         {
-            Debug.Log("Trade!");
             // trade
             Trade.tradeShipInventory(this, destination);
 
