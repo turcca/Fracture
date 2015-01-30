@@ -62,19 +62,11 @@ public class MarketCommodity : MonoBehaviour
     public void msgMouseEnter()
     {
         hilight.enabled = true;
-        //lineGraph.rectTransform.sizeDelta = new Vector2(48 + 214 - ((RectTransform)gameObject.transform).localPosition.y, 3);
-        //lineGraphHor.enabled = true;
-        //if (((RectTransform)gameObject.transform).localPosition.x < 0)
-        //    lineGraphHor.rectTransform.localPosition = new Vector3(-24, -42 + ((RectTransform)gameObject.transform).localPosition.y, 0);
-        //else
-        //    lineGraphHor.rectTransform.localPosition = new Vector3(24, -42 + ((RectTransform)gameObject.transform).localPosition.y, 0);
     }
 
     public void msgMouseExit()
     {
         hilight.enabled = false;
-        //lineGraph.rectTransform.sizeDelta = new Vector2(48, 3);
-        //lineGraphHor.enabled = false;
     }
 
     public void buy()

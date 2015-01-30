@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class MapMouseCatcher : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class MapMouseCatcher : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -22,7 +23,6 @@ public class MapMouseCatcher : MonoBehaviour
             {
                 playerMover.setTarget(hit.point);
             }
-
         }
     }
 }

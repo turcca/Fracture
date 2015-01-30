@@ -126,24 +126,24 @@ public class EventManager
         {
             eventDone();
         }
-        if (!GameState.requestState(GameState.State.Event))
-        {
-            return;
-        }
 
-        EventUI eventUI = GameObject.Find("EventCanvas").GetComponent<EventUI>();
+        EventUI eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
         eventUI.setEvent(e, new EventUI.EventDoneDelegate(eventDone));
     }
 
     public void eventDone()
     {
-        GameState.returnFromState(GameState.State.Event);
-        
         // loop through all events in queue?
         if (allDoneCallback != null)
         {
             allDoneCallback();
             allDoneCallback = null;
         }
+    }
+
+    internal void startRandomStarMapEvent(AllDoneDelegate callback)
+    {
+        allDoneCallback = callback;
+        handleEvent(pickEvent());
     }
 }

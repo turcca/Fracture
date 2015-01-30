@@ -13,6 +13,7 @@ public class Universe
     public List<NPCShip> ships = new List<NPCShip>();
 
     Dictionary<string, string> locationData = new Dictionary<string, string>();
+    bool testingMode = false;
 
     public Universe()
     {
@@ -41,7 +42,9 @@ public class Universe
         else
         {
             // for scene testing purposes
-            locations.Add("a", new Location("a", locationData["a"], new Vector2(0, 0)));
+            locations.Add("a", new Location("1c01", locationData["1c01"], new Vector2(0, 0)));
+            testingMode = true;
+            return;
         }
 
         // all locations
@@ -50,18 +53,17 @@ public class Universe
         // all navpoints
         GameObject navRoot = GameObject.Find("NavpointRoot");
         List<NavpointId> navs = new List<NavpointId>();
-        if (navRoot)
+        foreach (NavpointId nav in navRoot.GetComponentsInChildren<NavpointId>())
         {
-            foreach(NavpointId nav in navRoot.GetComponentsInChildren<NavpointId>())
-            {
-                navs.Add(nav);
-            }
+            navs.Add(nav);
         }
         tradeNetwork = new NavNetwork(arr, navs);
     }
 
     public void initNPCShips()
     {
+        if (testingMode) return;
+
         foreach (Location location in locations.Values)
         {
             location.initShips();
@@ -72,6 +74,7 @@ public class Universe
     {
         player = new Player();
         player.init();
+        player.position = new Vector3(-280, 0, -180);
     }
 
     void parseLocationData()

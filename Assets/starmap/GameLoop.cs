@@ -5,7 +5,7 @@ public class GameLoop : MonoBehaviour
 {
     void Awake()
     {
-        Application.LoadLevelAdditive("uiScene");
+        Application.LoadLevelAdditive("generalUIScene");
     }
 
     float time = 0;

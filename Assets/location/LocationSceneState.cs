@@ -9,7 +9,16 @@ public class LocationSceneState : MonoBehaviour
 
     void Awake()
     {
-        //trackedLocation = Game.Universe.player.getLocationId();
+        string playerLocation = Game.universe.player.getLocationId();
+        if (Game.universe.locations.ContainsKey(playerLocation))
+        {
+            trackedLocation = playerLocation;
+        }
+        else
+        {
+            Tools.error("Could not find location: " + playerLocation);
+        }
+
         try
         {
             //Application.LoadLevelAdditive(trackedLocation);
@@ -20,12 +29,12 @@ public class LocationSceneState : MonoBehaviour
             Application.LoadLevelAdditive("default");
         }
 
-        Application.LoadLevelAdditive("eventScene");
         //Application.LoadLevelAdditive("uiScene");
     }
 
     void Start()
     {
+        Application.LoadLevelAdditive("generalUIScene");
         // deactivate scene camera to use loaded levels main camera
         GameObject.Find("LocationCamera").GetComponent<Camera>().enabled = false;
         menu.hideAll();
@@ -37,18 +46,21 @@ public class LocationSceneState : MonoBehaviour
 
     public void eventQueryDone()
     {
-        menu.showMain();
+        menu.showOrbit();
     }
 
     public void diplomacyQueryDone()
     {
-        menu.showMain();
-        menu.show(diplomacy);
+        Game.ui.hideEventWindow();
+        menu.showForum();
     }
 
     public void startDiplomacyEvent(string faction)
     {
-        menu.hideAll();
-        Game.universe.eventManager.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
+        if (!Game.ui.isEventWindow())
+        {
+            Game.universe.eventManager.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
+            Game.ui.showEventWindow();
+        }
     }
 }

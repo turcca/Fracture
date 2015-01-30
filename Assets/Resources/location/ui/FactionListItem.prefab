@@ -64,8 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Mat: {fileID: 0}
-  m_Color: {r: .818663538, g: .83088237, b: .821781456, a: 1}
+  m_Material: {fileID: 0}
+  m_Color: {r: .0779087543, g: .0808823705, b: .0786675364, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 40d2ed6a4e14dfe4eb404ce06c588f66, type: 3}
     m_FontSize: 16
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Mat: {fileID: 0}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Sprite: {fileID: 21300000, guid: a4154156468bf22409d7ac06ca57d6bc, type: 3}
   m_Type: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Mat: {fileID: 0}
+  m_Material: {fileID: 0}
   m_Color: {r: .818663538, g: .83088237, b: .821781456, a: 1}
   m_Sprite: {fileID: 21300000, guid: 71143934b6724964fbd4fb47d19fe850, type: 3}
   m_Type: 1
@@ -157,8 +157,8 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_TargetGraphic: {fileID: 11400004}
   m_Interactable: 1
+  m_TargetGraphic: {fileID: 11400004}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -173,7 +173,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_Enabled: 1
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &11400008
@@ -188,6 +188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 
+  location: 
   factionImage: {fileID: 11400002}
   meetDesc: {fileID: 11400000}
 --- !u!222 &22200000
@@ -223,7 +224,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: .5}
   m_AnchorMax: {x: 0, y: .5}
   m_AnchoredPosition: {x: 100, y: 0}
-  m_SizeDelta: {x: 400, y: 100}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0, y: .5}
 --- !u!224 &22400002
 RectTransform:

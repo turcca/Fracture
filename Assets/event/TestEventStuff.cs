@@ -6,9 +6,7 @@ public class TestEventStuff : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        EventManager mgr = new EventManager();
-        mgr.handleEvent(mgr.pickEvent());
-        Tools.debug("ALERT - Test events enabled in eventScene!");
+        Game.startRandomStarMapEvent();
     }
 
     // Update is called once per frame

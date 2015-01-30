@@ -23,7 +23,6 @@ public class EventUI : MonoBehaviour
     void Awake()
     {
         choiceButtonPrefab = Resources.Load<GameObject>("event/ui/EventChoice");
-        eventPage.SetActive(false);
     }
 
     void Start()
@@ -40,6 +39,7 @@ public class EventUI : MonoBehaviour
     public void eventChoicePicked(int i)
     {
         Debug.Log("choice: " + i.ToString());
+
         currentEvent.choice = i;
         currentEvent.doOutcome();
         if (currentEvent.running)
@@ -78,17 +78,17 @@ public class EventUI : MonoBehaviour
 
     private void startEvent()
     {
-        eventPage.SetActive(true);
         currentEvent.initPre();
         currentEvent.start();
         continueEvent();
     }
+
     private void endEvent()
     {
         currentEvent.stop();
         currentEvent = null;
-        eventPage.SetActive(false);
     }
+
 
     private void continueEvent()
     {
@@ -114,8 +114,6 @@ public class EventUI : MonoBehaviour
     private void drawChoice(int num, string text)
     {
         GameObject btn = (GameObject)GameObject.Instantiate(choiceButtonPrefab);
-        //choiceButtons[num] = btn.GetComponent<EventChoicesBtn>();
-
         btn.GetComponent<Text>().text = text;
 
         // set relevant choice

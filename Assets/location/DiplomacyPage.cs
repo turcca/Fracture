@@ -30,7 +30,6 @@ public class DiplomacyPage : MonoBehaviour
 
     private void addMenuItem(string faction, float support)
     {
-        // add commodity
         GameObject factionPanel = (GameObject)GameObject.Instantiate(factionListItem);
         factionPanel.GetComponent<FactionMeetPanel>().setup(scene.trackedLocation, faction,
             new FactionMeetPanel.FactionSelectedDelegate(eventFactionPicked));
