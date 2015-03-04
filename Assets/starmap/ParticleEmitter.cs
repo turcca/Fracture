@@ -19,6 +19,6 @@ public class ParticleEmitter : MonoBehaviour
         float size = 5.0f;
         float life = 10.0f;
         Color32 color = new Color32(255, 255, 255, 255);
-        gameObject.particleSystem.Emit(pos, vel, size, life, color);
+        gameObject.GetComponent<ParticleSystem>().Emit(pos, vel, size, life, color);
     }
 }
