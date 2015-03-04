@@ -33,7 +33,7 @@ public class DiplomacyPage : MonoBehaviour
         GameObject factionPanel = (GameObject)GameObject.Instantiate(factionListItem);
         factionPanel.GetComponent<FactionMeetPanel>().setup(scene.trackedLocation, faction,
             new FactionMeetPanel.FactionSelectedDelegate(eventFactionPicked));
-        factionPanel.transform.parent = grid.transform;
+        factionPanel.transform.SetParent(grid.transform);
     }
 
     public void eventFactionPicked(string faction)
