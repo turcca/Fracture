@@ -18,8 +18,8 @@ public class NPCShip
         home = homeLocation;
         position = home.position;
         destination = home;
-        captain = NameGenerator.getName(home.faction.getStrongest());
-        wantedCommodityList = home.stockpile.getImportList();
+        //captain = NameGenerator.getName(home.faction.getStrongest());
+        //wantedCommodityList = home.stockpile.getImportList();
 
         Location[] arr = new Location[Game.universe.locations.Count];
         Game.universe.locations.Values.CopyTo(arr, 0);
@@ -50,12 +50,12 @@ public class NPCShip
         if (destination == home)
         {
             // transfer loot
-            Trade.transferAll(inventory.commodities, home.stockpile.commodities);
+            //Trade.transferAll(inventory.commodities, home.stockpile.commodities);
 
             // and set off again
-            wantedCommodityList = home.stockpile.getImportList();
-            Location dest = Trade.findBestImportLocation(wantedCommodityList, home);
-            embarkTo(dest);
+            //wantedCommodityList = home.stockpile.getImportList();
+            //Location dest = Trade.findBestImportLocation(wantedCommodityList, home);
+            //embarkTo(dest);
         }
         else
         {

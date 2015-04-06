@@ -80,180 +80,185 @@ public class Location
     public string Description = Tools.STRING_NOT_ASSIGNED;
     public string id = "";
     public Vector3 position = new Vector3(0, 0, 0);
-    public int numShips = 1;
+    //public int numShips = 1;
 
-    public IdeologyData ideology;
-    public FactionData faction;
-    public LocationData info;
+    //public IdeologyData ideology;
+    //public FactionData faction;
+    //public LocationData info;
 
-    public Stockpile stockpile = new Stockpile();
+    //public Stockpile stockpile = new Stockpile();
 
-    LocationIndustry industry;
+    //LocationIndustry industry;
     //Inventory Stockpile;
 
-    public Location(string _id, string data, Vector3 pos)
+    NewEconomy.LocationEconomy economy;
+
+    public Location(string id, Vector3 position, NewEconomy.LocationEconomy economy)
     {
-        id = _id;
-        position = pos;
+        this.id = id;
+        this.position = position;
+        this.economy = economy;
 
-        int i = 0;
-        string factionData = "";
-        string infoData = "";
-        foreach (string value in data.Split(','))
-        {
-            if (i == 1)
-            {
-                Name = value;
-            }
-            else if (i == 2)
-            {
-                Description = value;
-            }
-            else if (i >= 3 && i <= 11)
-            {
-                factionData += value + ",";
-            }
-            else if (i >= 12)
-            {
-                infoData += value + ",";
-            }
-            ++i;
-        }
+        //int i = 0;
+        //string factionData = "";
+        //string infoData = "";
+        //foreach (string value in data.Split(','))
+        //{
+        //    if (i == 1)
+        //    {
+        //        Name = value;
+        //    }
+        //    else if (i == 2)
+        //    {
+        //        Description = value;
+        //    }
+        //    else if (i >= 3 && i <= 11)
+        //    {
+        //        factionData += value + ",";
+        //    }
+        //    else if (i >= 12)
+        //    {
+        //        infoData += value + ",";
+        //    }
+        //    ++i;
+        //}
 
-        info = new LocationData(infoData);
-        faction = new FactionData(factionData);
-        ideology = new IdeologyData();
-        industry = new LocationIndustry(this);
-
-        initIdeologies();
+        //info = new LocationData(infoData);
+        //faction = new FactionData(factionData);
+        //ideology = new IdeologyData();
+        //industry = new LocationIndustry(this);
+        //initIdeologies();
     }
 
     public void tick(float days)
     {
-        industry.tick(days);
+        economy.tick(days);
     }
 
-    void initIdeologies()
-    {
-        Dictionary<string, float> populationIdeology = new Dictionary<string, float>();
-        Dictionary<string, float> factionIdeology = new Dictionary<string, float>();
+    //void initIdeologies()
+    //{
+    //    Dictionary<string, float> populationIdeology = new Dictionary<string, float>();
+    //    Dictionary<string, float> factionIdeology = new Dictionary<string, float>();
 
-        foreach (string i in IdeologyData.getIdeologyNames())
-        {
-            populationIdeology[i] = 0.0f;
-            factionIdeology[i] = 0.0f;
-        }
+    //    foreach (string i in IdeologyData.getIdeologyNames())
+    //    {
+    //        populationIdeology[i] = 0.0f;
+    //        factionIdeology[i] = 0.0f;
+    //    }
 
-        // derived from location base stats
-        populationIdeology["imperialist"] += (1 - info.frontier) * 18;
-        populationIdeology["navigators"] += (1 - info.frontier) * 1;
-        populationIdeology["brotherhood"] += (1 - info.frontier) * 1;
-        populationIdeology["nationalist"] += info.frontier * 20;
+    //    // derived from location base stats
+    //    populationIdeology["imperialist"] += (1 - info.frontier) * 18;
+    //    populationIdeology["navigators"] += (1 - info.frontier) * 1;
+    //    populationIdeology["brotherhood"] += (1 - info.frontier) * 1;
+    //    populationIdeology["nationalist"] += info.frontier * 20;
 
-        populationIdeology["imperialist"] += (1 - info.liberalValues) * 20;
-        populationIdeology["liberal"] += info.liberalValues * 20;
+    //    populationIdeology["imperialist"] += (1 - info.liberalValues) * 20;
+    //    populationIdeology["liberal"] += info.liberalValues * 20;
 
-        populationIdeology["imperialist"] += (1 - info.independent) * 18;
-        populationIdeology["bureaucracy"] += (1 - info.independent) * 2;
-        populationIdeology["nationalist"] += info.independent * 20;
+    //    populationIdeology["imperialist"] += (1 - info.independent) * 18;
+    //    populationIdeology["bureaucracy"] += (1 - info.independent) * 2;
+    //    populationIdeology["nationalist"] += info.independent * 20;
 
-        populationIdeology["liberal"] += (1 - info.religious) * 8;
-        if (info.techLevel > 0.3f)
-        {
-            populationIdeology["technocrat"] += (1 - info.religious) * 12;
-        }
-        else
-        {
-            populationIdeology["transhumanist"] += (1 - info.religious) * 12;
-        }
-        populationIdeology["cult"] += info.religious * 20;
+    //    populationIdeology["liberal"] += (1 - info.religious) * 8;
+    //    if (info.techLevel > 0.3f)
+    //    {
+    //        populationIdeology["technocrat"] += (1 - info.religious) * 12;
+    //    }
+    //    else
+    //    {
+    //        populationIdeology["transhumanist"] += (1 - info.religious) * 12;
+    //    }
+    //    populationIdeology["cult"] += info.religious * 20;
 
-        populationIdeology["technocrat"] += (1 - info.psychic) * 20;
-        populationIdeology["transhumanist"] += info.psychic * 20 * (1 - info.psyStability);
-        populationIdeology["brotherhood"] += info.psychic * 16 * info.psyStability;
-        populationIdeology["navigators"] += info.psychic * 4 * info.psyStability;
-
-
-        // derived from nobles and guilds
-        factionIdeology["cult"] += faction.control["noble3"] * 20;
-        factionIdeology["mercantile"] += faction.control["noble2"] * 40;
-        factionIdeology["liberal"] += faction.control["noble4"] * 30;
-        factionIdeology["nationalist"] += faction.control["noble1"] * 40;
-
-        factionIdeology["aristocrat"] += faction.control["noble1"] * 60;
-        factionIdeology["aristocrat"] += faction.control["noble2"] * 60;
-        factionIdeology["aristocrat"] += faction.control["noble3"] * 20;
-        factionIdeology["aristocrat"] += faction.control["noble4"] * 50;
-
-        factionIdeology["imperialist"] += faction.control["noble3"] * 60;
-        factionIdeology["navigators"] += faction.control["noble4"] * 10;
-        factionIdeology["brotherhood"] += faction.control["noble4"] * 10;
-
-        factionIdeology["technocrat"] += faction.control["guild2"] * 40;
-        factionIdeology["mercantile"] += faction.control["guild1"] * 50;
-        factionIdeology["mercantile"] += faction.control["guild2"] * 20;
-        factionIdeology["mercantile"] += faction.control["guild3"] * 60;
-        factionIdeology["bureaucracy"] += faction.control["guild2"] * 30;
-        factionIdeology["bureaucracy"] += faction.control["guild3"] * 30;
-        factionIdeology["aristocrat"] += faction.control["guild2"] * 10;
-        factionIdeology["navigators"] += faction.control["guild3"] * 10;
-        factionIdeology["transhumanist"] += faction.control["guild1"] * 50;
-
-        factionIdeology["cult"] += faction.control["church"] * 100;
-        factionIdeology["transhumanist"] += faction.control["heretic"] * 100;
+    //    populationIdeology["technocrat"] += (1 - info.psychic) * 20;
+    //    populationIdeology["transhumanist"] += info.psychic * 20 * (1 - info.psyStability);
+    //    populationIdeology["brotherhood"] += info.psychic * 16 * info.psyStability;
+    //    populationIdeology["navigators"] += info.psychic * 4 * info.psyStability;
 
 
-        // calculate support for ideologies in location
-        // and precalculate effects from ideologies
-        foreach (string i in IdeologyData.getIdeologyNames())
-        {
-            if (faction.getTotalControl() > 0)
-            {
-                ideology.support[i] += factionIdeology[i];
-            }
-            if (faction.getTotalControl() < 1)
-            {
-                ideology.support[i] += populationIdeology[i] * (1 - faction.getTotalControl());
-            }
-        }
-        ideology.calculateEffects();
-    }
+    //    // derived from nobles and guilds
+    //    factionIdeology["cult"] += faction.control["noble3"] * 20;
+    //    factionIdeology["mercantile"] += faction.control["noble2"] * 40;
+    //    factionIdeology["liberal"] += faction.control["noble4"] * 30;
+    //    factionIdeology["nationalist"] += faction.control["noble1"] * 40;
 
-    public void determineControl()
-    {
+    //    factionIdeology["aristocrat"] += faction.control["noble1"] * 60;
+    //    factionIdeology["aristocrat"] += faction.control["noble2"] * 60;
+    //    factionIdeology["aristocrat"] += faction.control["noble3"] * 20;
+    //    factionIdeology["aristocrat"] += faction.control["noble4"] * 50;
 
-    }
+    //    factionIdeology["imperialist"] += faction.control["noble3"] * 60;
+    //    factionIdeology["navigators"] += faction.control["noble4"] * 10;
+    //    factionIdeology["brotherhood"] += faction.control["noble4"] * 10;
+
+    //    factionIdeology["technocrat"] += faction.control["guild2"] * 40;
+    //    factionIdeology["mercantile"] += faction.control["guild1"] * 50;
+    //    factionIdeology["mercantile"] += faction.control["guild2"] * 20;
+    //    factionIdeology["mercantile"] += faction.control["guild3"] * 60;
+    //    factionIdeology["bureaucracy"] += faction.control["guild2"] * 30;
+    //    factionIdeology["bureaucracy"] += faction.control["guild3"] * 30;
+    //    factionIdeology["aristocrat"] += faction.control["guild2"] * 10;
+    //    factionIdeology["navigators"] += faction.control["guild3"] * 10;
+    //    factionIdeology["transhumanist"] += faction.control["guild1"] * 50;
+
+    //    factionIdeology["cult"] += faction.control["church"] * 100;
+    //    factionIdeology["transhumanist"] += faction.control["heretic"] * 100;
+
+
+    //    // calculate support for ideologies in location
+    //    // and precalculate effects from ideologies
+    //    foreach (string i in IdeologyData.getIdeologyNames())
+    //    {
+    //        if (faction.getTotalControl() > 0)
+    //        {
+    //            ideology.support[i] += factionIdeology[i];
+    //        }
+    //        if (faction.getTotalControl() < 1)
+    //        {
+    //            ideology.support[i] += populationIdeology[i] * (1 - faction.getTotalControl());
+    //        }
+    //    }
+    //    ideology.calculateEffects();
+    //}
+
+    //public void determineControl()
+    //{
+
+    //}
 
     public string toDebugString()
     {
         return "Name: " + Name + "\n" +
-            "---\n" + "Politics:\n" + ideology.toDebugString() +
-            "---\n" + "Economy:\n" + industry.toDebugString();
+            "Economy:\n" + economy.toDebugString() + "\n";
+            //"---\n" + "Politics:\n" + ideology.toDebugString();
+            //"---\n" + "Economy:\n" + industry.toDebugString();
     }
 
     public float getImportance()
     {
-        float populationFactor = (float)Math.Pow(info.population, 0.17);
-        float orbitalFactor = info.orbitalInfra * 3;
-        float infraFactor = info.infrastructure * (ideology.effects.pgrowth / 2 + ideology.effects.industry / 2 + 1) + 0.5f;
-        float economyFactor = ideology.effects.economy + 1;
-        float militaryFactor = ideology.effects.military + 1;
-        float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
+        //float populationFactor = (float)Math.Pow(info.population, 0.17);
+        //float orbitalFactor = info.orbitalInfra * 3;
+        //float infraFactor = info.infrastructure * (ideology.effects.pgrowth / 2 + ideology.effects.industry / 2 + 1) + 0.5f;
+        //float economyFactor = ideology.effects.economy + 1;
+        //float militaryFactor = ideology.effects.military + 1;
+        //float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
 
-        return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
+        //return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
+        return 0;
     }
 
     public int getCommodityPrice(string commodity)
     {
-        return industry.getCommodityPrice(commodity);
+        //return industry.getCommodityPrice(commodity);
+        return 0;
     }
 
 
     public void initShips()
     {
-        for (int i = 0; i < numShips; ++i )
-        {
-            Game.universe.ships.Add(new NPCShip(this));
-        }
+        //for (int i = 0; i < numShips; ++i )
+        //{
+        //    Game.universe.ships.Add(new NPCShip(this));
+        //}
     }
 }

@@ -30,11 +30,11 @@ public class Universe
                 string id = loc.getId();
                 if (locationData.ContainsKey(id))
                 {
-                    locations.Add(id, new Location(id, locationData[id], loc.gameObject.transform.position));
+                    //locations.Add(id, new Location(id, locationData[id], loc.gameObject.transform.position));
                 }
                 else
                 {
-                    locations.Add(id, new Location(id, locationData["a"], loc.gameObject.transform.position));
+                    //locations.Add(id, new Location(id, locationData["a"], loc.gameObject.transform.position));
                     Tools.debug("Id '" + id + "' not found in location data!");
                 }
             }
@@ -42,7 +42,7 @@ public class Universe
         else
         {
             // for scene testing purposes
-            locations.Add("a", new Location("1c01", locationData["1c01"], new Vector2(0, 0)));
+            //locations.Add("a", new Location("1c01", locationData["1c01"], new Vector2(0, 0)));
             testingMode = true;
             return;
         }

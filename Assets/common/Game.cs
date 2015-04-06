@@ -31,7 +31,7 @@ static public class Game
         universe.initNPCShips();
         universe.initPlayer();
 
-        EventAdder.addAllEvents();
+//        EventAdder.addAllEvents();
     }
 
     internal static void eventDone()

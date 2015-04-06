@@ -178,10 +178,10 @@ if (getElapsedDays() < 60)
 {
 p = p *  10 ;
 }
-//if (getEvent("Test Event").outcome== 0 )
-//{
-//p = p * 10;
-//}
+if (getEvent("Test Event").outcome== 0 )
+{
+p = p * 10;
+}
 return p;
 }
 //------------------------------------------------------- ADVICE
@@ -453,28 +453,28 @@ eventAdvice.text = "This is an ancient planet. Something forgotten is lying bene
 }
 }
 if (job == Character.Job.priest) {
-if ( getLocation().ideology.effects.holy < -50 )
-{
-eventAdvice.text = "Heretics! They are all damned heretics!";
-}
-}
-if (job == Character.Job.priest) {
-if ( getLocation().ideology.effects.holy >= -50 && getLocation().ideology.effects.holy < 0)
-{
-eventAdvice.text = "What a misguided place this is.";
-}
+//if ( getLocation().ideology.effects.holy < -50 )
+//{
+//eventAdvice.text = "Heretics! They are all damned heretics!";
+//}
 }
 if (job == Character.Job.priest) {
-if ( getLocation().ideology.effects.holy >= 0 && getLocation().ideology.effects.holy < 40)
-{
-eventAdvice.text = "This place seem decent enough";
-}
+//if ( getLocation().ideology.effects.holy >= -50 && getLocation().ideology.effects.holy < 0)
+//{
+//eventAdvice.text = "What a misguided place this is.";
+//}
 }
 if (job == Character.Job.priest) {
-if ( getLocation().ideology.effects.holy > 40 )
-{
-eventAdvice.text = "Ah, +location.name+ is known for its diligent and productive citizens. Truly inspiring.";
+//if ( getLocation().ideology.effects.holy >= 0 && getLocation().ideology.effects.holy < 40)
+//{
+//eventAdvice.text = "This place seem decent enough";
+//}
 }
+if (job == Character.Job.priest) {
+//if ( getLocation().ideology.effects.holy > 40 )
+//{
+//eventAdvice.text = "Ah, +location.name+ is known for its diligent and productive citizens. Truly inspiring.";
+//}
 }
 return eventAdvice;
 }
@@ -543,7 +543,7 @@ end();
 //------------------------------------------------------- EVENT 7
 //---------------------------------------------------------------------------------
 public class Event_7 : EventBase {
-public Event_7() : base("appointment_noble1") {}
+public Event_7() : base("appointment_nobleHouse1") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 location= getPlayerLocationID();
@@ -589,7 +589,7 @@ end();
 //------------------------------------------------------- EVENT 8
 //---------------------------------------------------------------------------------
 public class Event_8 : EventBase {
-public Event_8() : base("appointment_noble2") {}
+public Event_8() : base("appointment_nobleHouse2") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 location= getPlayerLocationID();
@@ -635,7 +635,7 @@ end();
 //------------------------------------------------------- EVENT 9
 //---------------------------------------------------------------------------------
 public class Event_9 : EventBase {
-public Event_9() : base("appointment_noble3") {}
+public Event_9() : base("appointment_nobleHouse3") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 location= getPlayerLocationID();
@@ -681,7 +681,7 @@ end();
 //------------------------------------------------------- EVENT 10
 //---------------------------------------------------------------------------------
 public class Event_10 : EventBase {
-public Event_10() : base("appointment_noble4") {}
+public Event_10() : base("appointment_nobleHouse4") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 location= getPlayerLocationID();
@@ -952,26 +952,4 @@ outcome= 1;
 end();
 }
 }
-}
-
-public static class EventAdder
-{
-    public static void addAllEvents()
-    {
-        new Event_1();
-        new Event_2();
-        new Event_3();
-        new Event_4();
-        new Event_5();
-        new Event_6();
-        new Event_7();
-        new Event_8();
-        new Event_9();
-        new Event_10();
-        new Event_11();
-        new Event_12();
-        new Event_13();
-        new Event_14();
-        new Event_15();
-    }
 }

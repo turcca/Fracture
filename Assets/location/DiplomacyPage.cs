@@ -19,13 +19,13 @@ public class DiplomacyPage : MonoBehaviour
 
     private void populateFactionPanels()
     {
-        foreach (var entry in location.faction.control)
-        {
-            if (entry.Value > 0.01)
-            {
-                addMenuItem(entry.Key, entry.Value);
-            }
-        }
+        //foreach (var entry in location.faction.control)
+        //{
+        //    if (entry.Value > 0.01)
+        //    {
+        //        addMenuItem(entry.Key, entry.Value);
+        //    }
+        //}
     }
 
     private void addMenuItem(string faction, float support)

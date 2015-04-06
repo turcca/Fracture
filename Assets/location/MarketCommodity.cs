@@ -49,14 +49,15 @@ public class MarketCommodity : MonoBehaviour
 
     private void updateCommodityInfo(string location, string commodity)
     {
-        name.text = Economy.commodityInfo[commodity].name;
-        price.text = Game.universe.locations[location].getCommodityPrice(commodity).ToString();
-        cargoAmount.text = Game.universe.player.cargo.commodities[commodity].ToString();
-        storeAmount.text = Game.universe.locations[location].stockpile.tradable[commodity].ToString();
+        //name.text = Economy.commodityInfo[commodity].name;
+        //price.text = Game.universe.locations[location].getCommodityPrice(commodity).ToString();
+        //cargoAmount.text = Game.universe.player.cargo.commodities[commodity].ToString();
+        //storeAmount.text = Game.universe.locations[location].stockpile.tradable[commodity].ToString();
 
-        playerCredits.text = Game.universe.player.cargo.credits.ToString();
-        playerCargo.text = Game.universe.player.cargo.getUsedCargoSpace().ToString() + "/" +
-                           Game.universe.player.cargo.maxCargoSpace.ToString();
+
+        //playerCredits.text = Game.universe.player.cargo.credits.ToString();
+        //playerCargo.text = Game.universe.player.cargo.getUsedCargoSpace().ToString() + "/" +
+        //                   Game.universe.player.cargo.maxCargoSpace.ToString();
     }
 
     public void msgMouseEnter()
@@ -71,33 +72,33 @@ public class MarketCommodity : MonoBehaviour
 
     public void buy()
     {
-        Dictionary<string, int> store = Game.universe.locations[trackedLocation].stockpile.tradable;
-        Dictionary<string, int> player = Game.universe.player.cargo.commodities;
+        //Dictionary<string, int> store = Game.universe.locations[trackedLocation].stockpile.tradable;
+        //Dictionary<string, int> player = Game.universe.player.cargo.commodities;
 
-        if (store[trackedCommodity] > 0 &&
-            Game.universe.player.cargo.credits >= Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity) &&
-            Game.universe.player.cargo.getUsedCargoSpace() < Game.universe.player.cargo.maxCargoSpace)
-        {
-            --store[trackedCommodity];
-            ++player[trackedCommodity];
-            Game.universe.player.cargo.credits -= Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity);
-        }
+        //if (store[trackedCommodity] > 0 &&
+        //    Game.universe.player.cargo.credits >= Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity) &&
+        //    Game.universe.player.cargo.getUsedCargoSpace() < Game.universe.player.cargo.maxCargoSpace)
+        //{
+        //    --store[trackedCommodity];
+        //    ++player[trackedCommodity];
+        //    Game.universe.player.cargo.credits -= Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity);
+        //}
 
-        updateCommodityInfo(trackedLocation, trackedCommodity);
+        //updateCommodityInfo(trackedLocation, trackedCommodity);
     }
 
     public void sell()
     {
-        Dictionary<string, int> store = Game.universe.locations[trackedLocation].stockpile.tradable;
-        Dictionary<string, int> player = Game.universe.player.cargo.commodities;
+        //Dictionary<string, int> store = Game.universe.locations[trackedLocation].stockpile.tradable;
+        //Dictionary<string, int> player = Game.universe.player.cargo.commodities;
 
-        if (Game.universe.player.cargo.commodities[trackedCommodity] > 0)
-        {
-            ++store[trackedCommodity];
-            --player[trackedCommodity];
-            Game.universe.player.cargo.credits += Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity);
-        }
+        //if (Game.universe.player.cargo.commodities[trackedCommodity] > 0)
+        //{
+        //    ++store[trackedCommodity];
+        //    --player[trackedCommodity];
+        //    Game.universe.player.cargo.credits += Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity);
+        //}
 
-        updateCommodityInfo(trackedLocation, trackedCommodity);
+        //updateCommodityInfo(trackedLocation, trackedCommodity);
     }
 }

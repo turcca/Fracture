@@ -37,36 +37,37 @@ public class Trade
 
     private static int scoreImportPotential(List<string> importList, Location location)
     {
-        List<string> exportList = location.stockpile.getExportList();
-        int score = 0;
-        for (int priority = 0; priority < importList.Count; ++priority)
-        {
-            string want = importList[priority];
-            for (int distance = 0; distance < exportList.Count; ++distance)
-            {
-                string offer = exportList[distance];
-                if (offer == want)
-                {
-                    score = score + (20 - priority) * (10 - distance);
-                }
-                if (distance > 10) break;
-            }
-            if (priority > 20) break;
-        }
-        return score;
+        //List<string> exportList = location.stockpile.getExportList();
+        //int score = 0;
+        //for (int priority = 0; priority < importList.Count; ++priority)
+        //{
+        //    string want = importList[priority];
+        //    for (int distance = 0; distance < exportList.Count; ++distance)
+        //    {
+        //        string offer = exportList[distance];
+        //        if (offer == want)
+        //        {
+        //            score = score + (20 - priority) * (10 - distance);
+        //        }
+        //        if (distance > 10) break;
+        //    }
+        //    if (priority > 20) break;
+        //}
+        //return score;
+        return 0;
     }
 
     internal static void tradeShipInventory(NPCShip ship, Location loc)
     {
-        List<string> shipWants = ship.wantedCommodityList;
-        foreach (string commodity in shipWants)
-        {
-            while (loc.stockpile.tradable[commodity] > 0 && ship.inventory.getUsedCargoSpace() < ship.inventory.maxCargoSpace)
-            {
-                loc.stockpile.tradable[commodity]--;
-                ship.inventory.commodities[commodity]++;
-            }
-            if (ship.inventory.getUsedCargoSpace() >= ship.inventory.maxCargoSpace) break;
-        }
+        //List<string> shipWants = ship.wantedCommodityList;
+        //foreach (string commodity in shipWants)
+        //{
+        //    while (loc.stockpile.tradable[commodity] > 0 && ship.inventory.getUsedCargoSpace() < ship.inventory.maxCargoSpace)
+        //    {
+        //        loc.stockpile.tradable[commodity]--;
+        //        ship.inventory.commodities[commodity]++;
+        //    }
+        //    if (ship.inventory.getUsedCargoSpace() >= ship.inventory.maxCargoSpace) break;
+        //}
     }
 }

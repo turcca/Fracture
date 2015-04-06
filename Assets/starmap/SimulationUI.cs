@@ -21,14 +21,11 @@ public class SimulationUI : MonoBehaviour
         if (selectedPlanet == "") return;
 
         string planetInfo = "";
-        Universe universe = Game.universe;
-
-        planetInfo += universe.locations[selectedPlanet].toDebugString();
-        GUI.TextArea(new Rect(0, 0, 300, 900), planetInfo);
-
-        if (GUI.Button(new Rect(300, 0, 100, 100), "go"))
-        {
-            Application.LoadLevel("locationScene");
-        }
+        planetInfo += NewEconomy.SimulationTestSetup.locations[selectedPlanet].toDebugString();
+        GUI.Label(new Rect(0, 0, 300, 900), planetInfo);
+        //if (GUI.Button(new Rect(300, 0, 100, 100), "go"))
+        //{
+        //    Application.LoadLevel("locationScene");
+        //}
     }
 }

@@ -37,8 +37,8 @@ public class FactionMeetPanel : MonoBehaviour
 
     private void updateInfo()
     {
-        meetDesc.text = Faction.getFactionName(faction) + "\n" +
-                        Faction.getTitle(faction) + " " + Game.universe.locations[location].faction.ruler[faction];
+        meetDesc.text = Faction.getFactionName(faction) + "\n";// + 
+                        //Faction.getTitle(faction) + " " + Game.universe.locations[location].faction.ruler[faction];
     }
 
     private void updateImage()
