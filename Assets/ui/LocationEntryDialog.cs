@@ -21,7 +21,7 @@ public class LocationEntryDialog : MonoBehaviour
         if (needsUpdate)
         {
             locationId = Game.universe.player.getLocationId();
-            locationName.text = Game.universe.locations[locationId].Name;
+            locationName.text = Game.universe.locations[locationId].name;
             needsUpdate = false;
         }
     }

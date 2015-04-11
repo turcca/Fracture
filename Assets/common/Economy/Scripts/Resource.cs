@@ -26,15 +26,13 @@ namespace NewEconomy
         public enum Policy { Grow, Sustain }
         public Policy policy;
 
-        float resources = 0.0f;
+        private float resources = 0.0f;
 
-        float consumptionRate = 0.0f;
-        float productionRate = 0.0f;
-        float tradeRate = 0.0f;
-
-        float targetLimit = 0.0f;
-        float growLimit = 0.0f;
-        float overflowLimit = 0.0f;
+        public float consumptionRate { get; private set; }
+        public float productionRate { get; private set; }
+        public float targetLimit { get; private set; }
+        public float growLimit { get;  private set; }
+        public float overflowLimit { get; private set; }
 
         public ResourceTierPool(float startAmount = 0.0f, float consumptionRate = 0.0f, float targetLimit = 0.0f, 
                                 float growLimit = 0.0f, float overflowLimit = 0.0f)
@@ -65,15 +63,10 @@ namespace NewEconomy
         {
             productionRate = amount;
         }
-        public void setTrade(float amount)
-        {
-            tradeRate = amount;
-        }
 
         public void tick(float delta)
         {
             resources += productionRate * delta;
-            resources += tradeRate * delta;
             resources -= consumptionRate * delta;
 
             // spoilage
@@ -101,22 +94,37 @@ namespace NewEconomy
             return resources >= growLimit;
         }
 
-        internal static ResourceTierPool[] createTier1Pools(int amount)
+        internal static ResourceTierPool createTierPool(int tier, int level)
         {
-            ResourceTierPool pool = new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f);
-            return new ResourceTierPool[] { pool };
+            return new ResourceTierPool(UnityEngine.Random.Range(1.0f, 10.0f), 1.0f, 5.0f, 10.0f, 20.0f);
         }
 
         internal static ResourceTierPool[] createPools(int level)
         {
-            return new ResourceTierPool[]
+            return new ResourceTierPool[]            
             {
-                new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f),
-                new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f),
-                new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f),
-                new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f)
+                createTierPool(1, level),
+                createTierPool(2, level),
+                createTierPool(3, level),
+                createTierPool(4, level)
             };
        }
+
+        internal void setGrowLimit(float limit)
+        {
+            growLimit = limit;
+            overflowLimit = limit * 1.2f;
+        }
+
+        internal void setTargetLimit(float limit)
+        {
+            targetLimit = limit;
+        }
+
+        internal void setConsumption(float p)
+        {
+            consumptionRate = p;
+        }
     }
 
 
@@ -134,7 +142,10 @@ namespace NewEconomy
         public Policy policy { get; set; }
         public State state { get; private set; }
         public Type type {get; private set; }
-        
+
+        public int level { get; private set; }
+
+       
         public Resource(Type type, ResourceTierPool[] pools)
         {
             this.type = type;
@@ -177,7 +188,10 @@ namespace NewEconomy
             }
             else if (allTiersAtGrowLimit)
             {
-                state = State.ReadyToUpgrade;
+                if (level < 5)
+                {
+                    state = State.ReadyToUpgrade;
+                }
             }
             else
             {
@@ -196,11 +210,25 @@ namespace NewEconomy
 
         private void handlePolicyChanges()
         {
+            if (policy == Policy.Grow)
+            {
+                foreach (ResourceTierPool pool in pools.Values)
+                {
+                    pool.setTargetLimit(pool.growLimit);
+                }
+            }
+            else if (policy == Policy.Sustain)
+            {
+                foreach (ResourceTierPool pool in pools.Values)
+                {
+                    pool.setTargetLimit(pool.consumptionRate * 5);
+                }
+            }
         }
 
         private void handleExcess(ResourceTierPool resourcePool)
         {
-            // export
+            // not needed? excess can be handled in locationeconomy?
         }
 
         public ResourceTierPool getPool(int tier)
@@ -210,16 +238,40 @@ namespace NewEconomy
 
         internal string toDebugString()
         {
-            string rv = Enum.GetName(typeof(Type), type) + " [" + Enum.GetName(typeof(State), state)
+            string rv = Enum.GetName(typeof(Type), type) + " lvl " + level.ToString() + " [" + Enum.GetName(typeof(State), state)
                 + "] <" + Enum.GetName(typeof(Policy), policy) + ">\n";
             int i = 1;
             foreach (ResourceTierPool pool in pools.Values)
             {
-                rv += "T" + i.ToString() +": " + pools[1].get().ToString("F") + "    ";
+                rv += "T" + i.ToString() +": " + pools[i].get().ToString("F") + "  (+" +
+                      pools[i].productionRate.ToString("F") + ")" + " (-" + pools[i].consumptionRate.ToString("F") + ")\n";
                 i++;
             }
             return rv;
             
+        }
+
+        internal void upgrade()
+        {
+            level++;
+            foreach (var pool in pools)
+            {
+                pool.Value.setGrowLimit(level * 10.0f);
+                pool.Value.spend(pool.Value.get() * 0.8f);
+            }
+        }
+
+        internal void updateFeatures(LocationFeatures features)
+        {
+            ///@todo production, consumption based on features
+            ///      for now just use random
+
+            UnityEngine.Random.seed = (int)type;
+            foreach (var pair in pools)
+            {
+                pair.Value.setProduction(UnityEngine.Random.Range(0.0f, 5.0f));
+                pair.Value.setConsumption(UnityEngine.Random.Range(0.0f, 2.0f));
+            }
         }
     }
 

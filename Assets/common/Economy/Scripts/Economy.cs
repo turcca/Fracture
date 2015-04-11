@@ -14,7 +14,14 @@ namespace NewEconomy
 
         internal void manageLocationUpgrades(LocationEconomy location)
         {
-            // todo
+            ///@todo upgrade resources based on policies, just upgrade all eligible for now
+            foreach (Resource resource in location.getResources())
+            {
+                if (resource.state == Resource.State.ReadyToUpgrade)
+                {
+                    resource.upgrade();
+                }
+            }
         }
 
         internal void setupTrades(LocationEconomy location)
@@ -58,11 +65,11 @@ namespace NewEconomy
                 // create pools based on input data
                 resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
             }
+            updateFeatures(null);
         }
 
         public void tick(float delta)
         {
-            //AISetStrategy(this);
             ai.setPolicies(this);
 
             foreach (Resource resource in resources.Values)
@@ -85,10 +92,23 @@ namespace NewEconomy
             string rv = "";
             foreach (Resource resource in resources.Values)
             {
-                rv = rv + "   " + resource.toDebugString() + "\n";
+                rv = rv + resource.toDebugString() + "\n";
             }
             return rv;
             throw new NotImplementedException();
+        }
+
+        internal void updateFeatures(LocationFeatures features)
+        {
+            foreach (var pair in resources)
+            {
+                pair.Value.updateFeatures(features);
+            }
+        }
+
+        internal IEnumerable<Resource> getResources()
+        {
+            return resources.Values;
         }
     }
 }

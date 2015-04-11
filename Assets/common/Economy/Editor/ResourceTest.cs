@@ -26,10 +26,9 @@ namespace NewEconomy
             Assert.That(pool.get(), Is.EqualTo(9.0f));
         }
         [Test]
-        public void ProductionAndTradeIncreaseAmount()
+        public void ProductionIncreaseAmount()
         {
-            pool.setProduction(1.0f);
-            pool.setTrade(1.0f);
+            pool.setProduction(2.0f);
             pool.tick(1.0f);
             Assert.That(pool.get(), Is.EqualTo(11.0f));
         }
