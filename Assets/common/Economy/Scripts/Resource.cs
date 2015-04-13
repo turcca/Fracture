@@ -12,21 +12,18 @@ namespace NewEconomy
      * deficit |--------------------|-----------------|------------------| spoiled
      *        empty           target limit        grow limit        overflow limit
      * 
-     * Grow/Sustain limits depend on population, tier, tech levels etc and
-     * are given on creation. Target limit does not affect calculation but
+     * Grow/Sustain limits depend on population, tier, tech levels.
+     * Target limit does not affect calculation but
      * is there to highlight amount of resources that should be kept in
      * storage.
      * 
      * Negative resources count as deficit and must be consumed from other
-     * pools. Resources over grow limit count as excess and must be transferred
-     * to trade.
+     * pools. Resources over grow limit count as excess.
      */
     public class ResourceTierPool
     {
-        public enum Policy { Grow, Sustain }
-        public Policy policy;
-
         private float resources = 0.0f;
+        Resource.SubType type;
 
         public float consumptionRate { get; private set; }
         public float productionRate { get; private set; }
@@ -43,6 +40,16 @@ namespace NewEconomy
             this.targetLimit = targetLimit;
             this.overflowLimit = overflowLimit;
         }
+        public ResourceTierPool(Resource.SubType type, float resourcesAtStart)
+        {
+            this.type = type;
+            this.resources = resourcesAtStart;
+            this.consumptionRate = 0.0f;
+            this.growLimit = 0.0f;
+            this.targetLimit = 0.0f;
+            this.overflowLimit = 0.0f;
+        }
+
         public float get()
         {
             return resources;
@@ -94,22 +101,6 @@ namespace NewEconomy
             return resources >= growLimit;
         }
 
-        internal static ResourceTierPool createTierPool(int tier, int level)
-        {
-            return new ResourceTierPool(UnityEngine.Random.Range(1.0f, 10.0f), 1.0f, 5.0f, 10.0f, 20.0f);
-        }
-
-        internal static ResourceTierPool[] createPools(int level)
-        {
-            return new ResourceTierPool[]            
-            {
-                createTierPool(1, level),
-                createTierPool(2, level),
-                createTierPool(3, level),
-                createTierPool(4, level)
-            };
-       }
-
         internal void setGrowLimit(float limit)
         {
             growLimit = limit;
@@ -125,6 +116,49 @@ namespace NewEconomy
         {
             consumptionRate = p;
         }
+
+        internal static ResourceTierPool[] createPools(Resource.Type type)
+        {
+            ///@todo create pools by type, maybe move to external class
+            switch (type)
+            {
+                case Resource.Type.Food:
+                    return new ResourceTierPool[] {
+                        createTierPool(Resource.SubType.FoodT1, 0),
+                        createTierPool(Resource.SubType.FoodT2, 0),
+                        createTierPool(Resource.SubType.FoodT3, 0),
+                        createTierPool(Resource.SubType.FoodT4, 0)
+                    };
+                default:
+                    return new ResourceTierPool[] {
+                        createTierPool(Resource.SubType.FoodT1, 0),
+                        createTierPool(Resource.SubType.FoodT2, 0),
+                        createTierPool(Resource.SubType.FoodT3, 0),
+                        createTierPool(Resource.SubType.FoodT4, 0)
+                    };
+            }
+        }
+
+        private static ResourceTierPool createTierPool(Resource.SubType subType, int level)
+        {
+            return new ResourceTierPool(subType, 5.0f);
+        }
+
+        internal static ResourceTierPool[] createPools(int level)
+        {
+            return new ResourceTierPool[]            
+            {
+                createTierPool(1, level),
+                createTierPool(2, level),
+                createTierPool(3, level),
+                createTierPool(4, level)
+            };
+        }
+
+        internal static ResourceTierPool createTierPool(int tier, int level)
+        {
+            return new ResourceTierPool(UnityEngine.Random.Range(1.0f, 10.0f), 1.0f, 5.0f, 10.0f, 20.0f);
+        }
     }
 
 
@@ -135,6 +169,11 @@ namespace NewEconomy
     public class Resource
     {
         public enum Type { Food, Mineral, BlackMarket, Innovation, Culture, Industry, Economy, Military }
+        public enum SubType { FoodT1, FoodT2, FoodT3, FoodT4, MineralT1, MineralT2, MineralT3, MineralT4,
+                              BlackMarketT1, BlackMarketT2, BlackMarketT3, BlackMarketT4, InnovationT1, InnovationT2,
+                              InnovationT3, InnovationT4, CultureT1, CultureT2, CultureT3, CultureT4,
+                              IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
+                              EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown }
         public enum Policy { Grow, Sustain, Import, Export }
         public enum State { Shortage, Sustain, ReadyToUpgrade }
 

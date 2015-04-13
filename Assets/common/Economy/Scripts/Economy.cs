@@ -63,7 +63,8 @@ namespace NewEconomy
             foreach(Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
             {
                 // create pools based on input data
-                resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
+                //resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
+                resources[type] = new Resource(type, ResourceTierPool.createPools(type));
             }
             updateFeatures(null);
         }
