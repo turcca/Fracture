@@ -9,10 +9,15 @@ namespace NewEconomy
     {
         public void setPolicies(LocationEconomy location)
         {
-			// Prioritize
+			// sort resources by resource multiplier - ie. how fast it's generating production
+
+			// if negative growth, find out best resource to downgrade
+
+			// else Find out best resources to upgrade
 
 
-            location.setPolicy(Resource.Type.Military, Resource.Policy.Grow);
+
+            //location.setPolicy(Resource.Type.Military, Resource.Policy.Grow);
         }
 
         internal void manageLocationUpgrades(LocationEconomy location)
@@ -58,6 +63,7 @@ namespace NewEconomy
     public class LocationEconomy
     {
         Dictionary<Resource.Type, Resource> resources = new Dictionary<Resource.Type, Resource>();
+		List<KeyValuePair<Resource.Type, float>> sortedResourceTypes = new List<KeyValuePair<Resource.Type, float>>(); // sorted by effective resource multiplier
         LocationEconomyAI ai;
 
         public LocationEconomy(LocationEconomyData data, LocationEconomyAI ai)
@@ -68,6 +74,9 @@ namespace NewEconomy
                 // create pools based on input data
                 //resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
                 resources[type] = new Resource(type, ResourceTierPool.createPools(type));
+
+				// populate sort list for types
+				sortedResourceTypes.Add(new KeyValuePair<Resource.Type, float>(type, 1.0f/*getEffectiveMul(location, ideology, type)*/));
             }
             updateFeatures(null);
         }
@@ -139,22 +148,39 @@ namespace NewEconomy
 			if (resources[Resource.Type.Military].level > 0) mul *= location.military;
 			return mul;
 		}
-		public float getEffectiveLocationResourceMultiplier(LocationFeatures location, IdeologyData ideology)
+		public float getTotalEffectiveLocationResourceMultiplier(LocationFeatures location, IdeologyData ideology)
 		{
 			// IdeologyData ideology = location.info.ideology;
 			float mul = 1;
-			if (resources[Resource.Type.Food].level > 0) mul *= location.food * ideology.effects.foodMul;
-			if (resources[Resource.Type.Mineral].level > 0) mul *= location.minerals * ideology.effects.mineralsMul;
-			if (resources[Resource.Type.BlackMarket].level > 0) mul *= location.blackMarket * ideology.effects.blackMarketMul;
-			if (resources[Resource.Type.Innovation].level > 0) mul *= location.innovation * ideology.effects.innovationMul;
-			if (resources[Resource.Type.Culture].level > 0) mul *= location.culture * ideology.effects.cultureMul;
-			if (resources[Resource.Type.Industry].level > 0) mul *= location.industry * ideology.effects.industryMul;
-			if (resources[Resource.Type.Economy].level > 0) mul *= location.economy * ideology.effects.economyMul;
-			if (resources[Resource.Type.Military].level > 0) mul *= location.military * ideology.effects.militaryMul;
+			if (resources[Resource.Type.Food].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Food);
+			if (resources[Resource.Type.Mineral].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Mineral);
+			if (resources[Resource.Type.BlackMarket].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.BlackMarket);
+			if (resources[Resource.Type.Innovation].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Innovation);
+			if (resources[Resource.Type.Culture].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Culture);
+			if (resources[Resource.Type.Industry].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Industry);
+			if (resources[Resource.Type.Economy].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Economy);
+			if (resources[Resource.Type.Military].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Military);
 			return mul;
 		}
-		public void sortResourcesByEffectiveLocationMultiplier(LocationFeatures location)
+		// todo remove: -"IdeologyData ideology" // replace: ideology ---> location.info.ideology;
+		internal float getEffectiveMul(LocationFeatures location, IdeologyData ideology, Resource.Type type)
 		{
+			if (type == Resource.Type.Food) return location.food * ideology.effects.foodMul;
+			else if (type == Resource.Type.Mineral) return location.minerals * ideology.effects.mineralsMul;
+			else if (type == Resource.Type.BlackMarket) return location.blackMarket * ideology.effects.blackMarketMul;
+			else if (type == Resource.Type.Innovation) return location.innovation * ideology.effects.innovationMul;
+			else if (type == Resource.Type.Culture) return location.culture * ideology.effects.cultureMul;
+			else if (type == Resource.Type.Industry) return location.industry * ideology.effects.industryMul;
+			else if (type == Resource.Type.Economy) return location.economy * ideology.effects.economyMul;
+			else if (type == Resource.Type.Military) return location.military * ideology.effects.militaryMul;
+			else { Debug.LogWarning ("WARNING: bad input type."); return 0; }
+		}	
+
+		public void sortResourceTypes(LocationFeatures location)
+		{
+			//sortedResourceTypes = 
+
+
 			/*
 			List<KeyValuePair<Resource.Type, Resource>> resourceList = resources.ToList();
 			resourceList.Sort(

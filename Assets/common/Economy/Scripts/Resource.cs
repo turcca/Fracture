@@ -73,10 +73,6 @@ namespace NewEconomy
 
         public void tick(float delta)
         {
-			// assignState
-
-			// downsize
-
 			//Produce
             resources += productionRate * delta;
             resources -= consumptionRate * delta;
@@ -231,7 +227,7 @@ namespace NewEconomy
                               InnovationT3, InnovationT4, CultureT1, CultureT2, CultureT3, CultureT4,
                               IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
                               EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown }
-        public enum Policy { Grow, Sustain, Import, Export, Downsize, Shortage }
+        public enum Policy { Grow, Sustain, Import, Export, Downsize }
         public enum State { Shortage, Sustain, ReadyToUpgrade }
 
         private Dictionary<int, ResourceTierPool> pools = new Dictionary<int, ResourceTierPool>();
@@ -285,7 +281,7 @@ namespace NewEconomy
             }
             else if (allTiersAtGrowLimit)
             {
-                if (level < 5)
+                if (level < 4)
                 {
                     state = State.ReadyToUpgrade;
                 }
@@ -319,7 +315,7 @@ namespace NewEconomy
             {
                 foreach (ResourceTierPool pool in pools.Values)
                 {
-                    pool.setTargetLimit(pool.consumptionRate * 5);
+					pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
                 }
             }
         }
