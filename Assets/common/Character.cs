@@ -8,7 +8,7 @@ public class CharacterCreator
 {
     public CharacterCreator(Vector2 pos)
     {
-        string homeId = Game.universe.getClosestHabitat(pos).id;
+        string homeId = Root.game.getClosestHabitat(pos).id;
     }
 }
 
@@ -251,7 +251,7 @@ public class Character
         ++ids;
 
         // get appropriate portrait
-        portrait = Game.PortraitManager.getPortrait("");
+        portrait = Root.PortraitManager.getPortrait("");
         // get name
         name = NameGenerator.getName("any");
         // setup stats

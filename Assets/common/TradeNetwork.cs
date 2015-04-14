@@ -59,7 +59,7 @@ public class NavNetwork
         List<Location> rv = new List<Location>();
         foreach (NavNode node in getNodesFrom(originNode, 1))
         {
-            rv.Add(Game.universe.locations[node.id]);
+            rv.Add(Root.game.locations[node.id]);
         }
         return rv;
     }
@@ -77,9 +77,9 @@ public class NavNetwork
 
         foreach (string id in tp)
         {
-            if (Game.universe.locations.ContainsKey(id))
+            if (Root.game.locations.ContainsKey(id))
             {
-                rv.Add(Game.universe.locations[id]);
+                rv.Add(Root.game.locations[id]);
             }
         }
         return rv;

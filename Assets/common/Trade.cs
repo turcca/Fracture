@@ -20,7 +20,7 @@ public class Trade
 
     public static Location findBestImportLocation(List<string> importList, Location home)
     {
-        List<Location> potentials = Game.universe.tradeNetwork.getNearestLocations(home);
+        List<Location> potentials = Root.game.tradeNetwork.getNearestLocations(home);
         Location bestDestination = home;
         int maxScore = 0;
         for (int i = 0; i < 10; ++i)

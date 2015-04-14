@@ -36,7 +36,7 @@ public class CharacterPortraitManager
     public Character.Portrait getPortrait(string tag)
     {
         Dictionary<int, int> takenIds = new Dictionary<int,int>();
-        foreach (Character c in Game.universe.player.getCharacters())
+        foreach (Character c in Root.game.player.getCharacters())
         {
             int tryId = c.portrait.id;
             if (takenIds.ContainsKey(tryId))

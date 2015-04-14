@@ -32,7 +32,7 @@ public class CharacterSelectDialog : MonoBehaviour
             GameObject.DestroyImmediate(characterGrid.transform.GetChild(i).gameObject);
         }
 
-        Character[] chars = Game.universe.player.getCharacters();
+        Character[] chars = Root.game.player.getCharacters();
         foreach (Character c in chars)
         {
             createCharInfo(c);

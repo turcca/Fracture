@@ -11,7 +11,7 @@ public class TradeNetVisualisation : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        foreach (NPCShip ship in Game.universe.ships)
+        foreach (NPCShip ship in Root.game.ships)
         {
             createShip(ship);
         }
@@ -40,7 +40,7 @@ public class TradeNetVisualisation : MonoBehaviour
         //    }
         //}
 
-        foreach (NavNode node in Game.universe.tradeNetwork.navNodes)
+        foreach (NavNode node in Root.game.tradeNetwork.navNodes)
         {
             foreach (NavNode neighbour in node.links)
             {

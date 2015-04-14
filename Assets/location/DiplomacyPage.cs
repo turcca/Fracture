@@ -13,7 +13,7 @@ public class DiplomacyPage : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        location = Game.universe.locations[scene.trackedLocation];
+        location = Root.game.locations[scene.trackedLocation];
         populateFactionPanels();
     }
 

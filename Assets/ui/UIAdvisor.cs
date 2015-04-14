@@ -20,7 +20,7 @@ public class UIAdvisor : MonoBehaviour
     public void setup(Character.Job job, AdvisorSelectedDelegate d)
     {
         advisorJob = job;
-        character = Game.universe.player.getCharacter(advisorJob);
+        character = Root.game.player.getCharacter(advisorJob);
         //gameObject.GetComponent<UITexture>().mainTexture =
         //    Game.PortraitManager.getPortraitTexture(character.getPortrait().id);
         callback = d;

@@ -358,12 +358,13 @@ namespace NewEconomy
         internal void updateFeatures(LocationFeatures features)
         {
             ///@todo production, consumption based on features
-            ///      for now just use random
-
+            ///      use random until reasonable values inserted
             UnityEngine.Random.seed = (int)type;
             foreach (var pair in pools)
             {
                 pair.Value.setProduction(UnityEngine.Random.Range(0.0f, 5.0f));
+                pair.Value.setProduction(pair.Value.productionRate * features.resourceMultiplier[type]);
+
                 pair.Value.setConsumption(UnityEngine.Random.Range(0.0f, 2.0f));
             }
         }
