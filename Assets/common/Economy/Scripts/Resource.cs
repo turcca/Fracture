@@ -73,11 +73,15 @@ namespace NewEconomy
 
         public void tick(float delta)
         {
+			//Produce
             resources += productionRate * delta;
             resources -= consumptionRate * delta;
 
+			// Shortages
+
+
             // spoilage
-            Mathf.Clamp(resources, 0.0f, overflowLimit);
+            //Mathf.Clamp(resources, 0.0f, overflowLimit);
 
         }
         internal void spend(float amount)
@@ -119,7 +123,7 @@ namespace NewEconomy
 
         internal static ResourceTierPool[] createPools(Resource.Type type)
         {
-            ///@todo create pools by type, maybe move to external class
+            ///maybe move to external class
             switch (type)
             {
                 case Resource.Type.Food:
@@ -129,6 +133,55 @@ namespace NewEconomy
                         createTierPool(Resource.SubType.FoodT3, 0),
                         createTierPool(Resource.SubType.FoodT4, 0)
                     };
+				case Resource.Type.Mineral:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.MineralT1, 0),
+						createTierPool(Resource.SubType.MineralT2, 0),
+						createTierPool(Resource.SubType.MineralT3, 0),
+						createTierPool(Resource.SubType.MineralT4, 0)
+					};
+				case Resource.Type.BlackMarket:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.BlackMarketT1, 0),
+						createTierPool(Resource.SubType.BlackMarketT2, 0),
+						createTierPool(Resource.SubType.BlackMarketT3, 0),
+						createTierPool(Resource.SubType.BlackMarketT4, 0)
+					};
+				case Resource.Type.Innovation:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.InnovationT1, 0),
+						createTierPool(Resource.SubType.InnovationT2, 0),
+						createTierPool(Resource.SubType.InnovationT3, 0),
+						createTierPool(Resource.SubType.InnovationT4, 0)
+					};
+				case Resource.Type.Culture:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.CultureT1, 0),
+						createTierPool(Resource.SubType.CultureT2, 0),
+						createTierPool(Resource.SubType.CultureT3, 0),
+						createTierPool(Resource.SubType.CultureT4, 0)
+					};
+				case Resource.Type.Industry:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.IndustryT1, 0),
+						createTierPool(Resource.SubType.IndustryT2, 0),
+						createTierPool(Resource.SubType.IndustryT3, 0),
+						createTierPool(Resource.SubType.IndustryT4, 0)
+					};
+				case Resource.Type.Economy:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.EconomyT1, 0),
+						createTierPool(Resource.SubType.EconomyT2, 0),
+						createTierPool(Resource.SubType.EconomyT3, 0),
+						createTierPool(Resource.SubType.EconomyT4, 0)
+					};
+				case Resource.Type.Military:
+					return new ResourceTierPool[] {
+						createTierPool(Resource.SubType.MilitaryT1, 0),
+						createTierPool(Resource.SubType.MilitaryT2, 0),
+						createTierPool(Resource.SubType.MilitaryT3, 0),
+						createTierPool(Resource.SubType.MilitaryT4, 0)
+				}; 
                 default:
                     return new ResourceTierPool[] {
                         createTierPool(Resource.SubType.FoodT1, 0),
@@ -141,7 +194,7 @@ namespace NewEconomy
 
         private static ResourceTierPool createTierPool(Resource.SubType subType, int level)
         {
-            return new ResourceTierPool(subType, 5.0f);
+			return new ResourceTierPool(subType, 5.0f);	// todo starting resources (5)
         }
 
         internal static ResourceTierPool[] createPools(int level)
@@ -157,7 +210,7 @@ namespace NewEconomy
 
         internal static ResourceTierPool createTierPool(int tier, int level)
         {
-            return new ResourceTierPool(UnityEngine.Random.Range(1.0f, 10.0f), 1.0f, 5.0f, 10.0f, 20.0f);
+            return new ResourceTierPool(UnityEngine.Random.Range(1.0f, 10.0f), 1.0f, 5.0f, 10.0f, 20.0f); // Mitä tää on?
         }
     }
 
@@ -174,7 +227,7 @@ namespace NewEconomy
                               InnovationT3, InnovationT4, CultureT1, CultureT2, CultureT3, CultureT4,
                               IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
                               EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown }
-        public enum Policy { Grow, Sustain, Import, Export }
+        public enum Policy { Grow, Sustain, Import, Export, Downsize }
         public enum State { Shortage, Sustain, ReadyToUpgrade }
 
         private Dictionary<int, ResourceTierPool> pools = new Dictionary<int, ResourceTierPool>();
@@ -205,6 +258,7 @@ namespace NewEconomy
             return pools[tier].get();
         }
 
+		// ------------------------------------------------------------------------------
         public void tick(float delta)
         {
             // check policies
@@ -227,7 +281,7 @@ namespace NewEconomy
             }
             else if (allTiersAtGrowLimit)
             {
-                if (level < 5)
+                if (level < 4)
                 {
                     state = State.ReadyToUpgrade;
                 }
@@ -246,6 +300,7 @@ namespace NewEconomy
             // check for level up
             return;
         }
+		// ------------------------------------------------------------------------------
 
         private void handlePolicyChanges()
         {
@@ -260,7 +315,7 @@ namespace NewEconomy
             {
                 foreach (ResourceTierPool pool in pools.Values)
                 {
-                    pool.setTargetLimit(pool.consumptionRate * 5);
+					pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
                 }
             }
         }
