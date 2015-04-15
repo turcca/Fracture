@@ -194,7 +194,7 @@ namespace NewEconomy
 
         private static ResourceTierPool createTierPool(Resource.SubType subType, int level)
         {
-			return new ResourceTierPool(subType, 5.0f);	// Mitä tää on?
+			return new ResourceTierPool(subType, 5.0f);	// todo starting resources (5)
         }
 
         internal static ResourceTierPool[] createPools(int level)

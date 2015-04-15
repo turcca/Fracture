@@ -63,7 +63,7 @@ namespace NewEconomy
     public class LocationEconomy
     {
         Dictionary<Resource.Type, Resource> resources = new Dictionary<Resource.Type, Resource>();
-		List<KeyValuePair<Resource.Type, float>> sortedResourceTypes = new List<KeyValuePair<Resource.Type, float>>(); // sorted by effective resource multiplier
+		internal List<KeyValuePair<Resource.Type, float>> sortedResourceTypes = new List<KeyValuePair<Resource.Type, float>>(); // sorted by (float) effective resource multiplier
         LocationEconomyAI ai;
 
         public LocationEconomy(LocationEconomyData data, LocationEconomyAI ai)
@@ -176,21 +176,26 @@ namespace NewEconomy
 			else { Debug.LogWarning ("WARNING: bad input type."); return 0; }
 		}	
 
-		public void sortResourceTypes(LocationFeatures location)
+		internal void getSortedResourceTypes(LocationFeatures location)
 		{
-			//sortedResourceTypes = 
+			// IdeologyData ideology = location.info.ideology;
 
+			foreach(KeyValuePair<Resource.Type, float> resource in sortedResourceTypes)
+			{
+				// update values (brute force, often not changed!)
+				//resource.Value = 1.0f/*getEffectiveMul(location, ideology, resource.Key)*/;
+			}
 
-			/*
-			List<KeyValuePair<Resource.Type, Resource>> resourceList = resources.ToList();
-			resourceList.Sort(
-				delegate(KeyValuePair<Resource.Type, Resource> firstPair,
-			         KeyValuePair<Resource.Type, Resource> nextPair)
+			// Sort list by values
+			sortedResourceTypes.Sort(
+				delegate(KeyValuePair<Resource.Type, float> firstPair,
+			         KeyValuePair<Resource.Type, float> nextPair)
 				{
 				return firstPair.Value.CompareTo(nextPair.Value);
-			}
+				}
 			);
-			*/
+
 		}
+
     }
 }

@@ -96,4 +96,5 @@ public class LocationFeatures
         legalLevel = int.Parse(dataChunk[12], CultureInfo.InvariantCulture.NumberFormat);
     }
 
+
 }
