@@ -9,8 +9,8 @@ public class LocationSceneState : MonoBehaviour
 
     void Awake()
     {
-        string playerLocation = Game.universe.player.getLocationId();
-        if (Game.universe.locations.ContainsKey(playerLocation))
+        string playerLocation = Root.game.player.getLocationId();
+        if (Root.game.locations.ContainsKey(playerLocation))
         {
             trackedLocation = playerLocation;
         }
@@ -51,16 +51,16 @@ public class LocationSceneState : MonoBehaviour
 
     public void diplomacyQueryDone()
     {
-        Game.ui.hideEventWindow();
+        Root.ui.hideEventWindow();
         menu.showForum();
     }
 
     public void startDiplomacyEvent(string faction)
     {
-        if (!Game.ui.isEventWindow())
+        if (!Root.ui.isEventWindow())
         {
-            Game.universe.eventManager.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
-            Game.ui.showEventWindow();
+            Root.game.events.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
+            Root.ui.showEventWindow();
         }
     }
 }

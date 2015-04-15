@@ -6,7 +6,7 @@ public class TestEventStuff : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Game.startRandomStarMapEvent();
+        Root.startRandomStarMapEvent();
     }
 
     // Update is called once per frame

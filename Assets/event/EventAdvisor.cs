@@ -19,7 +19,7 @@ public class EventAdvisor : MonoBehaviour
     
     public void setup(Character.Job job, AdvisorSelectedDelegate d)
     {
-        character = Game.universe.player.getCharacter(advisorJob);
+        character = Root.game.player.getCharacter(advisorJob);
         advicePanel.SetActive(false);
         callback = d;
     }

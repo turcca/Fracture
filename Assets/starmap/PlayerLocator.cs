@@ -9,13 +9,13 @@ public class PlayerLocator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        transform.position = Game.universe.player.position;
+        transform.position = Root.game.player.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Game.universe.player.position = transform.position;
+        Root.game.player.position = transform.position;
     }
 
     void OnTriggerEnter(Collider other)
@@ -25,7 +25,7 @@ public class PlayerLocator : MonoBehaviour
         if (locId)
         {
             Debug.Log("loc");
-            Game.universe.player.setLocationId(locId.getId());
+            Root.game.player.setLocationId(locId.getId());
             if (dialogReady())
             {
                 Debug.Log("dialog");

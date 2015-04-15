@@ -17,10 +17,10 @@ public class AdvisorPortrait : MonoBehaviour
 
     private void setImage()
     {
-        character = Game.universe.player.getCharacter(job);
+        character = Root.game.player.getCharacter(job);
         if (character != Character.Empty)
         {
-            characterImage.sprite = Game.PortraitManager.getPortraitSprite(character.portrait.id);
+            characterImage.sprite = Root.PortraitManager.getPortraitSprite(character.portrait.id);
             characterImage.enabled = true;
         }
         else

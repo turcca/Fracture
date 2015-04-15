@@ -5,6 +5,6 @@ public class ControlWindow : MonoBehaviour
 {
     public void buttonAdbisors()
     {
-        Game.ui.toggleAdvisors();
+        Root.ui.toggleAdvisors();
     }
 }

@@ -20,6 +20,6 @@ public class CharacterImageSmall : MonoBehaviour
     public void initialise(int c)
     {
         characterId = c;
-        image.sprite = Game.PortraitManager.getPortraitSprite(characterId);
+        image.sprite = Root.PortraitManager.getPortraitSprite(characterId);
     }
 }

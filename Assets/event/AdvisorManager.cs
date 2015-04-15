@@ -14,7 +14,7 @@ public class AdvisorManager : MonoBehaviour
         Character.Job job = advisorNode.GetComponent<EventAdvisor>().advisorJob;
 
         string advice = "";
-        if (Game.state == Game.State.Event)
+        if (Root.state == Root.State.Event)
         {
             advice = eventUI.setAdvisor(job);
         }

@@ -26,7 +26,7 @@ public class JobInterface : MonoBehaviour
 
     void characterSelected(bool ok, int id)
     {
-        Game.universe.player.setAdvisor(job, id);
+        Root.game.player.setAdvisor(job, id);
         characterDialog.SetActive(false);
         SendMessageUpwards("notifyChange");
     }

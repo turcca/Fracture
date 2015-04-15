@@ -40,11 +40,11 @@ public class Stockpile
 
 public class Location
 {
-    public string name = Tools.STRING_NOT_ASSIGNED;
-    public string description = Tools.STRING_NOT_ASSIGNED; 
-    public string id = "";
-    public Vector3 position = new Vector3(0, 0, 0);
-    public LocationFeatures features = new LocationFeatures();
+    public string name { get; private set; }
+    public string description { get; private set; }
+    public string id { get; private set; }
+    public Vector3 position { get; private set; }
+    public LocationFeatures features { get; private set; }
 
     //public int numShips = 1;
 
@@ -60,41 +60,18 @@ public class Location
     NewIdeology.LocationIdeology ideology;
 
     public Location(string id, Vector3 position, NewEconomy.LocationEconomy economy)
+        : this(id, position, new LocationFeatures(), economy)
+    {
+    }
+
+    public Location(string id, Vector3 position, LocationFeatures locationFeatures, NewEconomy.LocationEconomy economy)
     {
         this.id = id;
-        this.position = position;
-        this.economy = economy;
         this.name = id;
-
-        //int i = 0;
-        //string factionData = "";
-        //string infoData = "";
-        //foreach (string value in data.Split(','))
-        //{
-        //    if (i == 1)
-        //    {
-        //        Name = value;
-        //    }
-        //    else if (i == 2)
-        //    {
-        //        Description = value;
-        //    }
-        //    else if (i >= 3 && i <= 11)
-        //    {
-        //        factionData += value + ",";
-        //    }
-        //    else if (i >= 12)
-        //    {
-        //        infoData += value + ",";
-        //    }
-        //    ++i;
-        //}
-
-        //info = new LocationData(infoData);
-        //faction = new FactionData(factionData);
-        //ideology = new IdeologyData();
-        //industry = new LocationIndustry(this);
-        //initIdeologies();
+        this.description = Tools.STRING_NOT_ASSIGNED;
+        this.position = position;
+        this.features = locationFeatures;
+        this.economy = economy;
     }
 
     public void tick(float days)
@@ -197,6 +174,7 @@ public class Location
     public string toDebugString()
     {
         return "Name: " + name + "\n" +
+            "Features: " + features.toDebugString() + "\n" +
             "Economy:\n" + economy.toDebugString() + "\n";
             //"---\n" + "Politics:\n" + ideology.toDebugString();
             //"---\n" + "Economy:\n" + industry.toDebugString();

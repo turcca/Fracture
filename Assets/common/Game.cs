@@ -1,48 +1,174 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
-static public class Game
+
+public class Game
 {
-    public enum State
+    public Dictionary<string, Location> locations { get; private set; } 
+    public EventManager events {get; private set; } 
+    public Player player { get; private set; }
+    public NavNetwork tradeNetwork { get; private set; }
+    public List<NPCShip> ships { get; private set; }
+
+    bool testingMode = false;
+
+    internal void initLocations()
     {
-        MainMenu,
-        Location,
-        StarMap,
-        Event
+        locations = new Dictionary<string, Location>();
+        Dictionary<string, LocationFeatures> locationFeatures = new Dictionary<string, LocationFeatures>();
+        locationFeatures = parseLocationFeatures();
+        GameObject root = GameObject.Find("SystemRoot");
+        if (root)
+        {
+            foreach (LocationId loc in root.GetComponentsInChildren<LocationId>())
+            {
+                string id = loc.getId();
+                if (locationFeatures.ContainsKey(id))
+                {
+                    NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
+                    NewEconomy.LocationEconomyData data = new NewEconomy.LocationEconomyData();
+                    data.generateDebugData();
+                    locations.Add(id, new Location(id, loc.gameObject.transform.position,
+                                  locationFeatures[id],
+                                  new NewEconomy.LocationEconomy(data, ai)));
+                }
+                else
+                {
+                    NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
+                    NewEconomy.LocationEconomyData data = new NewEconomy.LocationEconomyData();
+                    data.generateDebugData();
+                    locations.Add(id, new Location(id, loc.gameObject.transform.position,
+                                  new NewEconomy.LocationEconomy(data, ai)));
+                    Tools.debug("Id '" + id + "' not found in location data!");
+                }
+            }
+        }
+        else
+        {
+            // for scene testing purposes
+            //locations.Add("a", new Location("1c01", locationData["1c01"], new Vector2(0, 0)));
+            testingMode = true;
+            return;
+        }
+
+        //// all locations
+        //Location[] arr = new Location[locations.Count];
+        //locations.Values.CopyTo(arr, 0);
+        //// all navpoints
+        //GameObject navRoot = GameObject.Find("NavpointRoot");
+        //List<NavpointId> navs = new List<NavpointId>();
+        //foreach (NavpointId nav in navRoot.GetComponentsInChildren<NavpointId>())
+        //{
+        //    navs.Add(nav);
+        //}
+        //tradeNetwork = new NavNetwork(arr, navs);
     }
 
-    static public CharacterPortraitManager PortraitManager { get; private set; }
-    static public Universe universe {get; private set;}
-    static public GameUI ui { get; private set; }
-    static public State state;
-
-    static Game()
+    internal void initEvents()
     {
-        PortraitManager = new CharacterPortraitManager();
-        ui = new GameUI();
-
-        createNewGame();
+        events = new EventManager();
     }
 
-    static void createNewGame()
+    internal void initNPCShips()
     {
-        universe = new Universe();
-        universe.initLocations();
-        universe.initNPCShips();
-        universe.initPlayer();
+        ships = new List<NPCShip>();
 
-//        EventAdder.addAllEvents();
+        if (testingMode) return;
+
+        foreach (Location location in locations.Values)
+        {
+            location.initShips();
+        }
     }
 
-    internal static void eventDone()
+    internal void initPlayer()
     {
-        state = State.StarMap;
-        ui.hideEventWindow();
+        player = new Player();
+        player.init();
+        player.position = new Vector3(-280, 0, -180);
     }
-    internal static void startRandomStarMapEvent()
+
+
+    private Dictionary<string, LocationFeatures> parseLocationFeatures()
     {
-        universe.eventManager.startRandomStarMapEvent(new EventManager.AllDoneDelegate(eventDone));
-        ui.showEventWindow();
-        state = State.Event;
+        Dictionary<string, LocationFeatures> rv = new Dictionary<string, LocationFeatures>();
+        FileInfo src = null;
+        StreamReader reader = null;
+ 
+        src = new FileInfo (Application.dataPath + "/data/locations.csv");
+        if (src != null && src.Exists)
+        {
+            reader = src.OpenText();
+        }
+ 
+        if (reader == null)
+        {
+            Debug.Log("Location data not found or not readable.");
+        }
+        else
+        {
+            // Each line starting from DATASTART to DATAEND contains one location 
+            // split lines to strings and construct features from each line between markers
+            List<string> lines = new List<string>();
+            while (!reader.EndOfStream)
+            {
+                lines.Add(reader.ReadLine());
+            }
+
+            bool dataBlock = false;
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("DATASTART"))
+                {
+                    dataBlock = true;
+                }
+                else if (line.StartsWith("DATAEND"))
+                {
+                    dataBlock = false;
+                    break;
+                }
+                else if (dataBlock)
+                {
+                    // first block contains id, rest is data
+                    rv.Add(line.Split(',')[0], DataParser.parseLocationFeatures(line));
+                }
+            }
+        }
+        return rv;
+    }
+
+    public Location getClosestHabitat(Vector2 pos)
+    {
+        Location closestPlanet = null;
+        float closestDistance = 9999999.0f;
+        foreach (Location loc in locations.Values)
+        {
+            if (Vector2.Distance(pos, loc.position) < closestDistance)
+            {
+                closestPlanet = loc;
+                closestDistance = Vector2.Distance(pos, loc.position);
+            }
+        }
+        return closestPlanet;
+    }
+
+    public void tick(float days)
+    {
+        if (GameState.getState() != GameState.State.Event)
+        {
+            foreach (Location location in locations.Values)
+            {
+                location.tick(days);
+            }
+            //player.tick(days);
+            //events.tick(days);
+
+            //foreach (NPCShip ship in ships)
+            //{
+            //    ship.tick(days);
+            //}
+        }
     }
 }

@@ -12,7 +12,7 @@ public class InventoryCommodity : MonoBehaviour
     {
         trackedCommodity = commodity;
         name.text = Economy.commodityInfo[trackedCommodity].name;
-        pcs.text = Game.universe.player.cargo.commodities[trackedCommodity].ToString();
+        pcs.text = Root.game.player.cargo.commodities[trackedCommodity].ToString();
     }
 
     // Use this for initialization

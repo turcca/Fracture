@@ -39,7 +39,7 @@ public class InventoryList : MonoBehaviour
         int numItems = 0;
         foreach (KeyValuePair<string, CommodityInfo> entry in Economy.commodityInfo)
         {
-            if (Game.universe.player.cargo.commodities[entry.Key] > 0)
+            if (Root.game.player.cargo.commodities[entry.Key] > 0)
             {
                 GameObject commodityPrefab = Resources.Load<GameObject>("ui/prefabs/InventoryCommodity");
                 GameObject commodity = (GameObject)GameObject.Instantiate(commodityPrefab);

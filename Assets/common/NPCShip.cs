@@ -21,8 +21,8 @@ public class NPCShip
         //captain = NameGenerator.getName(home.faction.getStrongest());
         //wantedCommodityList = home.stockpile.getImportList();
 
-        Location[] arr = new Location[Game.universe.locations.Count];
-        Game.universe.locations.Values.CopyTo(arr, 0);
+        Location[] arr = new Location[Root.game.locations.Count];
+        Root.game.locations.Values.CopyTo(arr, 0);
         embarkTo(arr[Random.Range(0, arr.Length - 1)]);
     }
 
@@ -69,8 +69,8 @@ public class NPCShip
 
     public void embarkTo(Location to)
     {
-        navPoints = Game.universe.tradeNetwork.getPath(Game.universe.tradeNetwork.getNavNodeFor(destination),
-                                                       Game.universe.tradeNetwork.getNavNodeFor(to));
+        navPoints = Root.game.tradeNetwork.getPath(Root.game.tradeNetwork.getNavNodeFor(destination),
+                                                       Root.game.tradeNetwork.getNavNodeFor(to));
         destination = to;
     }
 }
