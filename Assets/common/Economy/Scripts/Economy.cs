@@ -142,7 +142,7 @@ namespace NewEconomy
             {
                 // create pools based on input data
                 //resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
-                resources[type] = new Resource(type, ResourceTierPool.createPools(type));
+                resources[type] = new Resource(type, new ResourcePool(5.0f));
             }
 			foreach (Tech.Type type in Enum.GetValues(typeof(Tech.Type)))
 			{
@@ -186,7 +186,6 @@ namespace NewEconomy
                 rv = rv + resource.toDebugString() + "\n";
             }
             return rv;
-            throw new NotImplementedException();
         }
 
         internal void updateFeatures(LocationFeatures features)
