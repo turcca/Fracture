@@ -161,33 +161,12 @@ namespace NewEconomy
         public void tick(float delta)
         {
             // check policies
-            //handlePolicyChanges(location);
+            handlePolicyChanges();
 
             // produce and consume
             pool.tick(delta);
 
-            // set state
-            if (pool.getAndResetDeficit() > 0.0f)
-            {
-                this.state = State.Shortage;
-            }
-            else if (pool.atGrowLimit())
-            {
-                state = State.AtGrowLimit;
-                /*
-                if (isResourceUpgradeableByTech(type, location))
-                {
-                    state = State.ReadyToUpgrade;
-                }
-                 */
-            }
-            else
-            {
-                state = State.Sustain;
-            }
-
-            // handle excess
-            handleExcess();
+            setState();
 
             // normalize player influence
             foreach (var tier in playerInfluence.Keys)
@@ -199,7 +178,23 @@ namespace NewEconomy
         }
 		// ------------------------------------------------------------------------------
 
-        private void handlePolicyChanges(LocationEconomy location)
+        private void setState()
+        {
+            if (pool.getAndResetDeficit() > 0.0f)
+            {
+                this.state = State.Shortage;
+            }
+            else if (pool.atGrowLimit())
+            {
+                state = State.AtGrowLimit;
+            }
+            else
+            {
+                state = State.Sustain;
+            }
+        }
+
+        private void handlePolicyChanges()
         {
             switch (policy)
             {
@@ -223,15 +218,7 @@ namespace NewEconomy
                     break;
             }
         }
-
-
-
-        private void handleExcess()
-        {
-            // not needed? excess can be handled in locationeconomy?
-            // yeah, no spoilage - it can just be exported. Trying to make resources zero-sum game and avoid disappearing resources from the larger pool
-        }
-
+        
         internal string toDebugString()
         {
             string rv = Enum.GetName(typeof(Type), type) + " " + pool.get().ToString("F") + " (lvl " + level.ToString() + ") [" + Enum.GetName(typeof(State), state)
@@ -245,37 +232,14 @@ namespace NewEconomy
             state = State.Sustain;
             pool.setGrowLimit(level * 10.0f);
             pool.spend(pool.get() * 0.8f);
+            setState();
         }
         internal void downgrade()
         {
             if (level > 0) level--;
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
-            state = State.Sustain;
+            setState();
         }
-
-		internal static bool isResourceUpgradeableByTech(Type type, LocationEconomy location)
-		{
-            /*
-			if (location.resources[type].level < 4)
-			{
-				// not enough tech
-				if (location.resources[type].level >= location.technologies[Tech.Type.Technology].level) return false;
-				// not enough infra
-				if (type == Resource.Type.Industry || type == Resource.Type.Mineral || type == Resource.Type.Economy)
-				{
-					if (location.resources[type].level >= location.technologies[Tech.Type.Infrastructure].level) return false;
-				}
-				// not enough military tech
-				if (type == Resource.Type.Military)
-				{
-					if (location.resources[type].level >= location.technologies[Tech.Type.Military].level) return false;
-				}
-				return true;
-			}
-			else return false;
-             */
-            return true;
-		}
 
         internal void updateFeatures(LocationFeatures features)
         {
