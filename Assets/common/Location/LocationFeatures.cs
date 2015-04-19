@@ -78,6 +78,10 @@ public class LocationFeatures
         //aristocrat 		= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
         //*/
 
+
+		// commented out until new data is made
+		//// todo: change technology levels to: Technology, Infrastructure, Military
+		/// todo: add assets: SpaceStation, TransportShips, groundTroops, MilitaryShips (needs amount and type, ships need tracking and cargo)
         //population = float.Parse(dataChunk[14], CultureInfo.InvariantCulture.NumberFormat);
         //techLevel = float.Parse(dataChunk[15], CultureInfo.InvariantCulture.NumberFormat);
         //infrastructure = float.Parse(dataChunk[16], CultureInfo.InvariantCulture.NumberFormat);

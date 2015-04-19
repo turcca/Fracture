@@ -22,7 +22,7 @@ namespace NewEconomy
      */
     public class ResourceTierPool
     {
-        private float resources = 0.0f;
+        public float resources { get; private set; }
         Resource.SubType type;
 
         public float consumptionRate { get; private set; }
@@ -230,6 +230,7 @@ namespace NewEconomy
         public enum Policy { Grow, Sustain, Import, Export, Downsize }
         public enum State { Shortage, Sustain, ReadyToUpgrade }
 
+
         private Dictionary<int, ResourceTierPool> pools = new Dictionary<int, ResourceTierPool>();
         public Policy policy { get; set; }
         public State state { get; private set; }
@@ -262,7 +263,7 @@ namespace NewEconomy
         public void tick(float delta)
         {
             // check policies
-            handlePolicyChanges();
+            //handlePolicyChanges(location);
 
             // produce and consume
             bool allTiersAtGrowLimit = true;
@@ -275,16 +276,18 @@ namespace NewEconomy
                 deficitFromLowerTiers = tier.Value.getAndResetDeficit();
             }
             // set state
-            if (deficitFromLowerTiers > 0.0f)
+            if (deficitFromLowerTiers > 0.0f )
             {
-                state = State.Shortage;
+                this.state = State.Shortage;
             }
             else if (allTiersAtGrowLimit)
             {
-                if (level < 4)
+                /*
+                if (isResourceUpgradeableByTech(type, location))
                 {
                     state = State.ReadyToUpgrade;
                 }
+                 */
             }
             else
             {
@@ -302,27 +305,46 @@ namespace NewEconomy
         }
 		// ------------------------------------------------------------------------------
 
-        private void handlePolicyChanges()
+        private void handlePolicyChanges(LocationEconomy location)
         {
-            if (policy == Policy.Grow)
+            foreach (ResourceTierPool pool in pools.Values)
             {
-                foreach (ResourceTierPool pool in pools.Values)
+
+                if (policy == Policy.Grow)
                 {
+                    // set resorce limits
                     pool.setTargetLimit(pool.growLimit);
                 }
-            }
-            else if (policy == Policy.Sustain)
-            {
-                foreach (ResourceTierPool pool in pools.Values)
+                else if (policy == Policy.Sustain)
                 {
-					pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
+                    // set resorce limits
+                    pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
+                    // policy 2nd iteration
+                    if (pool.resources < pool.consumptionRate) this.policy = Policy.Import;
+                    else if (pool.resources > pool.targetLimit) this.policy = Policy.Export;
+                }
+                else if (policy == Policy.Import)
+                {
+                    // set resorce limits
+                    pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
+                    // policy 2nd iteration
+                    //if (pool.resources < pool.consumptionRate) this.state = State.Shortage;
+                    if (pool.resources > pool.targetLimit) this.policy = Policy.Sustain;
+                }
+                else if (policy == Policy.Export) 
+                {
+                    // set resource limits
+                    pool.setTargetLimit(pool.consumptionRate); // ? should export anything over consumptionRate
                 }
             }
         }
 
+
+
         private void handleExcess(ResourceTierPool resourcePool)
         {
             // not needed? excess can be handled in locationeconomy?
+            // yeah, no spoilage - it can just be exported. Trying to make resources zero-sum game and avoid disappearing resources from the larger pool
         }
 
         public ResourceTierPool getPool(int tier)
@@ -348,12 +370,41 @@ namespace NewEconomy
         internal void upgrade()
         {
             level++;
+            state = State.Sustain;
             foreach (var pool in pools)
             {
+                // todo reduce ugprade costs from needed resources
                 pool.Value.setGrowLimit(level * 10.0f);
                 pool.Value.spend(pool.Value.get() * 0.8f);
             }
         }
+        internal void downgrade()
+        {
+            if (level > 0) level--;
+            else Debug.LogWarning ("Attempting to downgrade level 0 resource");
+            state = State.Sustain;
+        }
+
+		internal static bool isResourceUpgradeableByTech(Type type, LocationEconomy location)
+		{
+			if (location.resources[type].level < 4)
+			{
+				// not enough tech
+				if (location.resources[type].level >= location.technologies[Tech.Type.Technology].level) return false;
+				// not enough infra
+				if (type == Resource.Type.Industry || type == Resource.Type.Mineral || type == Resource.Type.Economy)
+				{
+					if (location.resources[type].level >= location.technologies[Tech.Type.Infrastructure].level) return false;
+				}
+				// not enough military tech
+				if (type == Resource.Type.Military)
+				{
+					if (location.resources[type].level >= location.technologies[Tech.Type.Military].level) return false;
+				}
+				return true;
+			}
+			else return false;
+		}
 
         internal void updateFeatures(LocationFeatures features)
         {

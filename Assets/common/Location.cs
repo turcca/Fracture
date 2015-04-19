@@ -56,8 +56,8 @@ public class Location
     //LocationIndustry industry;
     //Inventory Stockpile;
 
-    NewEconomy.LocationEconomy economy;
-    NewIdeology.LocationIdeology ideology;
+    public NewEconomy.LocationEconomy economy;
+    public NewIdeology.LocationIdeology ideology;
 
     public Location(string id, Vector3 position, NewEconomy.LocationEconomy economy)
         : this(id, position, new LocationFeatures(), economy)
