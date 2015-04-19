@@ -18,25 +18,26 @@ namespace NewEconomy
      */
     public class ResourcePool
     {
-        public float resources { get; private set; }
+        private Data.LocationResource data;
         public float consumptionRate { get; private set; }
         public float productionRate { get; private set; }
         public float targetLimit { get; private set; }
         public float growLimit { get;  private set; }
         public float overflowLimit { get; private set; }
 
-        public ResourcePool(float startAmount, float consumptionRate, float targetLimit = 0.0f, 
-                                float growLimit = 0.0f, float overflowLimit = 0.0f)
+        public ResourcePool(Data.LocationResource data, float consumptionRate,
+                            float targetLimit = 0.0f, float growLimit = 0.0f,
+                            float overflowLimit = 0.0f)
         {
-            resources = startAmount;
+            this.data = data;
             this.consumptionRate = consumptionRate;
             this.growLimit = growLimit;
             this.targetLimit = targetLimit;
             this.overflowLimit = overflowLimit;
         }
-        public ResourcePool(float resourcesAtStart)
+        public ResourcePool(Data.LocationResource data)
         {
-            this.resources = resourcesAtStart;
+            this.data = data;
             this.consumptionRate = 0.0f;
             this.growLimit = 0.0f;
             this.targetLimit = 0.0f;
@@ -45,19 +46,19 @@ namespace NewEconomy
 
         public float get()
         {
-            return resources;
+            return data.resources;
         }
         public float getDeficit()
         {
-            return resources < 0.0f ? -resources : 0.0f;
+            return data.resources < 0.0f ? -data.resources : 0.0f;
         }
         public float getOverflow()
         {
-            return resources > growLimit ? resources - growLimit : 0.0f;
+            return data.resources > growLimit ? data.resources - growLimit : 0.0f;
         }
         public float getExcess()
         {
-            return resources > targetLimit ? resources - targetLimit : 0.0f;
+            return data.resources > targetLimit ? data.resources - targetLimit : 0.0f;
         }
         public void setProduction(float amount)
         {
@@ -67,32 +68,32 @@ namespace NewEconomy
         public void tick(float delta)
         {
             // prod + consumption
-            resources += productionRate * delta;
-            resources -= consumptionRate * delta;
+            data.resources += productionRate * delta;
+            data.resources -= consumptionRate * delta;
 
             // spoilage
-            Mathf.Clamp(resources, 0.0f, overflowLimit);
+            Mathf.Clamp(data.resources, 0.0f, overflowLimit);
 
         }
         internal void spend(float amount)
         {
-            resources -= amount;
+            data.resources -= amount;
         }
         internal float getAndResetDeficit()
         {
             float deficit = getDeficit();
-            resources += deficit;
+            data.resources += deficit;
             return deficit;
         }
 
         public void add(float amount)
         {
-            resources += amount;
+            data.resources += amount;
         }
 
         internal bool atGrowLimit()
         {
-            return resources >= growLimit;
+            return data.resources >= growLimit;
         }
 
         internal void setGrowLimit(float limit)
@@ -119,39 +120,14 @@ namespace NewEconomy
      */
     public class Resource
     {
-        public enum Type { Food, Mineral, BlackMarket, Innovation, Culture, Industry, Economy, Military }
-        public enum SubType { FoodT1, FoodT2, FoodT3, FoodT4, MineralT1, MineralT2, MineralT3, MineralT4,
-                              BlackMarketT1, BlackMarketT2, BlackMarketT3, BlackMarketT4, InnovationT1, InnovationT2,
-                              InnovationT3, InnovationT4, CultureT1, CultureT2, CultureT3, CultureT4,
-                              IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
-                              EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown }
-        public enum Policy { Grow, Sustain, Stockpile, BareMinimum, Downsize }
-        public enum State { Shortage, Sustain, AtGrowLimit }
+        private ResourcePool pool;
+        private Data.LocationResource data;
 
-
-        public ResourcePool pool { get; private set; }
-        public Dictionary<SubType, float> playerInfluence { get; private set; }
-        public Policy policy { get; set; }
-        public State state { get; private set; }
-        public Type type {get; private set; }
-
-        public int level { get; private set; }
-
-       
-        public Resource(Type type, ResourcePool pool)
+        public Resource(Data.LocationResource data, ResourcePool pool)
         {
-            this.type = type;
+            this.data = data;
             this.pool = pool;
-            this.playerInfluence = new Dictionary<SubType, float>();
-            foreach (SubType tier in Enum.GetValues(typeof(SubType)))
-            {
-                playerInfluence.Add(tier, 0.0f);
-            }
-
-            // set default policy + state
-            this.policy = Policy.Sustain;
-            this.state = State.Sustain;
-       }
+        }
         public float getResources()
         {
             return pool.get();
@@ -160,7 +136,7 @@ namespace NewEconomy
 		// ------------------------------------------------------------------------------
         public void tick(float delta)
         {
-            // check policies
+            updateFeatures();
             handlePolicyChanges();
 
             // produce and consume
@@ -169,9 +145,9 @@ namespace NewEconomy
             setState();
 
             // normalize player influence
-            foreach (var tier in playerInfluence.Keys)
+            foreach (var tier in data.playerInfluence.Keys)
             {
-                Mathf.MoveTowards(playerInfluence[tier], 0.0f,
+                Mathf.MoveTowards(data.playerInfluence[tier], 0.0f,
                     Parameters.playerResourceInfluenceNormalizationPerDay * delta);
             }
             return;
@@ -182,35 +158,35 @@ namespace NewEconomy
         {
             if (pool.getAndResetDeficit() > 0.0f)
             {
-                this.state = State.Shortage;
+                data.state = Data.LocationResource.State.Shortage;
             }
             else if (pool.atGrowLimit())
             {
-                state = State.AtGrowLimit;
+                data.state = Data.LocationResource.State.AtGrowLimit;
             }
             else
             {
-                state = State.Sustain;
+                data.state = Data.LocationResource.State.Sustain;
             }
         }
 
         private void handlePolicyChanges()
         {
-            switch (policy)
+            switch (data.policy)
             {
-                case Policy.Grow:
+                case Data.LocationResource.Policy.Grow:
                     pool.setTargetLimit(pool.growLimit);
                     break;
-                case Policy.Sustain:
+                case Data.LocationResource.Policy.Sustain:
                     pool.setTargetLimit(pool.consumptionRate * Parameters.resourcePolicyStockpileDays);
                     break;
-                case Policy.Stockpile:
+                case Data.LocationResource.Policy.Stockpile:
                     pool.setTargetLimit(pool.overflowLimit);
                     break;
-                case Policy.BareMinimum:
+                case Data.LocationResource.Policy.BareMinimum:
                     pool.setTargetLimit(pool.consumptionRate);
                     break;
-                case Policy.Downsize:
+                case Data.LocationResource.Policy.Downsize:
                     pool.setTargetLimit(0.0f);
                     break;
                 default:
@@ -221,32 +197,35 @@ namespace NewEconomy
         
         internal string toDebugString()
         {
-            string rv = Enum.GetName(typeof(Type), type) + " " + pool.get().ToString("F") + " (lvl " + level.ToString() + ") [" + Enum.GetName(typeof(State), state)
-                + "] <" + Enum.GetName(typeof(Policy), policy) + ">";
+            string rv = Enum.GetName(typeof(Data.LocationResource.Type), data.type) + " " + pool.get().ToString("F") +
+                " (lvl " + data.level.ToString() + ") " +
+                "[" + Enum.GetName(typeof(Data.LocationResource.State), data.state) + "] " +
+                "<" + Enum.GetName(typeof(Data.LocationResource.Policy), data.policy) + ">";
             return rv;            
         }
 
         internal void upgrade()
         {
-            level++;
-            state = State.Sustain;
-            pool.setGrowLimit(level * 10.0f);
+            data.level++;
+            data.state = Data.LocationResource.State.Sustain;
+            pool.setGrowLimit(data.level * 10.0f);
             pool.spend(pool.get() * 0.8f);
             setState();
         }
         internal void downgrade()
         {
-            if (level > 0) level--;
+            if (data.level > 0) data.level--;
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
             setState();
         }
 
-        internal void updateFeatures(LocationFeatures features)
+        internal void updateFeatures()
         {
             ///@todo production, consumption based on features
             ///      use random until reasonable values inserted
-            UnityEngine.Random.seed = (int)type;
-            pool.setProduction(pool.productionRate * features.resourceMultiplier[type]);
+            UnityEngine.Random.seed = (int)data.type;
+            //pool.setProduction(pool.productionRate * features.resourceMultiplier[data.type]);
+            pool.setProduction(3.0f);
             pool.setConsumption(UnityEngine.Random.Range(0.0f, 2.0f));
         }
     }

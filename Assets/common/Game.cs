@@ -17,7 +17,7 @@ public class Game
     internal void initLocations()
     {
         locations = new Dictionary<string, Location>();
-        Dictionary<string, LocationFeatures> locationFeatures = new Dictionary<string, LocationFeatures>();
+        Dictionary<string, Data.LocationFeatures> locationFeatures = new Dictionary<string, Data.LocationFeatures>();
         locationFeatures = parseLocationFeatures();
         GameObject root = GameObject.Find("SystemRoot");
         if (root)
@@ -28,17 +28,14 @@ public class Game
                 if (locationFeatures.ContainsKey(id))
                 {
                     NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
-                    NewEconomy.LocationEconomyData data = new NewEconomy.LocationEconomyData();
-                    data.generateDebugData();
+                    Data.Location data = new Data.Location();
                     locations.Add(id, new Location(id, loc.gameObject.transform.position,
-                                  locationFeatures[id],
                                   new NewEconomy.LocationEconomy(data, ai)));
                 }
                 else
                 {
                     NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
-                    NewEconomy.LocationEconomyData data = new NewEconomy.LocationEconomyData();
-                    data.generateDebugData();
+                    Data.Location data = new Data.Location();
                     locations.Add(id, new Location(id, loc.gameObject.transform.position,
                                   new NewEconomy.LocationEconomy(data, ai)));
                     Tools.debug("Id '" + id + "' not found in location data!");
@@ -91,9 +88,9 @@ public class Game
     }
 
 
-    private Dictionary<string, LocationFeatures> parseLocationFeatures()
+    private Dictionary<string, Data.LocationFeatures> parseLocationFeatures()
     {
-        Dictionary<string, LocationFeatures> rv = new Dictionary<string, LocationFeatures>();
+        Dictionary<string, Data.LocationFeatures> rv = new Dictionary<string, Data.LocationFeatures>();
         FileInfo src = null;
         StreamReader reader = null;
  

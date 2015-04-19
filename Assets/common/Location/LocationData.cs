@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Data
 {
 
-    public class Resource
+    public class LocationResource
     {
         public enum Type { Food, Mineral, BlackMarket, Innovation, Culture, Industry, Economy, Military }
         public enum SubType
@@ -20,18 +21,43 @@ namespace Data
         public enum State { Shortage, Sustain, AtGrowLimit }
 
 
-        public Dictionary<SubType, float> playerInfluence { get; set; }
-        public Policy policy { get; set; }
-        public State state { get; set; }
-        public Type type { get; set; }
-        public int level { get; set; }
+        public Dictionary<SubType, float> playerInfluence = new Dictionary<SubType, float>();
+        public Policy policy = Policy.Sustain;
+        public State state = State.Sustain;
+        public Type type;
+        public int level = 0;
 
+        public float resources = 0.0f;
 
+        public LocationResource(Type type)
+        {
+            this.type = type;
+            foreach (SubType tier in Enum.GetValues(typeof(SubType)))
+            {
+                playerInfluence.Add(tier, 0.0f);
+            }
+        }
+
+        public static LocationResource generateDebugData(Type type)
+        {
+            LocationResource rv = new LocationResource(type);
+            return rv;
+        }
     }
 
-    public class LocationData
+     public class Location
     {
+        public Dictionary<LocationResource.Type, LocationResource> resources =
+            new Dictionary<LocationResource.Type, LocationResource>();
+        public LocationFeatures features = new LocationFeatures();
 
+        public Location()
+        {
+            foreach (LocationResource.Type type in Enum.GetValues(typeof(LocationResource.Type)))
+            {
+                resources.Add(type, new LocationResource(type));
+            }
+        }
     }
 
 }
