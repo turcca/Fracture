@@ -5,20 +5,16 @@ using System;
 namespace NewEconomy
 {
     /**
-     * Resource tier pool keeps track of single resouce consumption/production.
+     * Resource pool keeps track of resouce consumption/production.
      * Resource amount is labeled as follows:
      * 
      *                sustain              excess        excess/overflow
      * deficit |--------------------|-----------------|------------------| spoiled
      *        empty           target limit        grow limit        overflow limit
      * 
-     * Grow/Sustain limits depend on population, tier, tech levels.
-     * Target limit does not affect calculation but
-     * is there to highlight amount of resources that should be kept in
-     * storage.
-     * 
-     * Negative resources count as deficit and must be consumed from other
-     * pools. Resources over grow limit count as excess.
+     * Grow/Sustain limits depend on population, tech levels etc.
+     * Target limit does not affect calculation but is there to highlight amount of
+     * resources that should be kept in storage.
      */
     public class ResourcePool
     {
@@ -118,7 +114,7 @@ namespace NewEconomy
 
 
     /**
-     * Resources are combination of all tiered commodities under the same category.
+     * Resources.
      * They represent location's "stats", see enum Type for all resource categories.
      */
     public class Resource
@@ -129,11 +125,12 @@ namespace NewEconomy
                               InnovationT3, InnovationT4, CultureT1, CultureT2, CultureT3, CultureT4,
                               IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
                               EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown }
-        public enum Policy { Grow, Sustain, Import, Export, Downsize }
-        public enum State { Shortage, Sustain, ReadyToUpgrade }
+        public enum Policy { Grow, Sustain, Stockpile, BareMinimum, Downsize }
+        public enum State { Shortage, Sustain, AtGrowLimit }
 
 
         public ResourcePool pool { get; private set; }
+        public Dictionary<SubType, float> playerInfluence { get; private set; }
         public Policy policy { get; set; }
         public State state { get; private set; }
         public Type type {get; private set; }
@@ -145,10 +142,15 @@ namespace NewEconomy
         {
             this.type = type;
             this.pool = pool;
+            this.playerInfluence = new Dictionary<SubType, float>();
+            foreach (SubType tier in Enum.GetValues(typeof(SubType)))
+            {
+                playerInfluence.Add(tier, 0.0f);
+            }
 
             // set default policy + state
-            policy = Policy.Sustain;
-            state = State.Sustain;
+            this.policy = Policy.Sustain;
+            this.state = State.Sustain;
        }
         public float getResources()
         {
@@ -171,7 +173,7 @@ namespace NewEconomy
             }
             else if (pool.atGrowLimit())
             {
-                state = State.ReadyToUpgrade;
+                state = State.AtGrowLimit;
                 /*
                 if (isResourceUpgradeableByTech(type, location))
                 {
@@ -187,45 +189,39 @@ namespace NewEconomy
             // handle excess
             handleExcess();
 
-            // check for level up
+            // normalize player influence
+            foreach (var tier in playerInfluence.Keys)
+            {
+                Mathf.MoveTowards(playerInfluence[tier], 0.0f,
+                    Parameters.playerResourceInfluenceNormalizationPerDay * delta);
+            }
             return;
         }
 		// ------------------------------------------------------------------------------
 
         private void handlePolicyChanges(LocationEconomy location)
         {
-            /*
-            foreach (ResourcePool pool in pools.Values)
+            switch (policy)
             {
-
-                if (policy == Policy.Grow)
-                {
-                    // set resorce limits
+                case Policy.Grow:
                     pool.setTargetLimit(pool.growLimit);
-                }
-                else if (policy == Policy.Sustain)
-                {
-                    // set resorce limits
-                    pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
-                    // policy 2nd iteration
-                    if (pool.resources < pool.consumptionRate) this.policy = Policy.Import;
-                    else if (pool.resources > pool.targetLimit) this.policy = Policy.Export;
-                }
-                else if (policy == Policy.Import)
-                {
-                    // set resorce limits
-                    pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
-                    // policy 2nd iteration
-                    //if (pool.resources < pool.consumptionRate) this.state = State.Shortage;
-                    if (pool.resources > pool.targetLimit) this.policy = Policy.Sustain;
-                }
-                else if (policy == Policy.Export) 
-                {
-                    // set resource limits
-                    pool.setTargetLimit(pool.consumptionRate); // ? should export anything over consumptionRate
-                }
+                    break;
+                case Policy.Sustain:
+                    pool.setTargetLimit(pool.consumptionRate * Parameters.resourcePolicyStockpileDays);
+                    break;
+                case Policy.Stockpile:
+                    pool.setTargetLimit(pool.overflowLimit);
+                    break;
+                case Policy.BareMinimum:
+                    pool.setTargetLimit(pool.consumptionRate);
+                    break;
+                case Policy.Downsize:
+                    pool.setTargetLimit(0.0f);
+                    break;
+                default:
+                    //noop
+                    break;
             }
-             */
         }
 
 

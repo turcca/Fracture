@@ -87,7 +87,7 @@ namespace NewEconomy
         {
             foreach (Resource resource in location.getResources())
             {
-                if (resource.state == Resource.State.ReadyToUpgrade)
+                if (resource.state == Resource.State.AtGrowLimit)
                 {
                     resource.upgrade();
                 }
@@ -140,14 +140,13 @@ namespace NewEconomy
             this.ai = ai;
             foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
             {
-                // create pools based on input data
-                //resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
+                ///@todo create pools based on input data
                 resources[type] = new Resource(type, new ResourcePool(5.0f));
             }
 			foreach (Tech.Type type in Enum.GetValues(typeof(Tech.Type)))
 			{
-				// create tech dictionary
- 				if (type != Tech.Type.None) technologies.Add(type, new Tech(type, 1/*todo lataa datasta alku-tech levelit*/));
+				///@todo create tech based on input data
+ 				if (type != Tech.Type.None) technologies.Add(type, new Tech(type, 1));
 			}
             
         }
@@ -206,32 +205,25 @@ namespace NewEconomy
         public float getTotalLocationResourceMultiplier(LocationFeatures features)
         {
             float mul = 1;
-			if (resources[Resource.Type.Food].level > 0) mul *= features.resourceMultiplier[Resource.Type.Food];
-			if (resources[Resource.Type.Mineral].level > 0) mul *= features.resourceMultiplier[Resource.Type.Mineral];
-			if (resources[Resource.Type.BlackMarket].level > 0) mul *= features.resourceMultiplier[Resource.Type.BlackMarket];
-			if (resources[Resource.Type.Innovation].level > 0) mul *= features.resourceMultiplier[Resource.Type.Innovation];
-			if (resources[Resource.Type.Culture].level > 0) mul *= features.resourceMultiplier[Resource.Type.Culture];
-			if (resources[Resource.Type.Industry].level > 0) mul *= features.resourceMultiplier[Resource.Type.Industry];
-			if (resources[Resource.Type.Economy].level > 0) mul *= features.resourceMultiplier[Resource.Type.Economy];
-			if (resources[Resource.Type.Military].level > 0) mul *= features.resourceMultiplier[Resource.Type.Military];
+            foreach (var pair in resources)
+            {
+                mul *= pair.Value.level > 0 ? features.resourceMultiplier[pair.Key] : 1.0f;
+            }
             return mul;
         }
         public float getTotalEffectiveLocationResourceMultiplier(Location location)
         {
             float mul = 1;
-			if (resources[Resource.Type.Food].level > 0) mul *= getEffectiveMul(location, Resource.Type.Food);
-			if (resources[Resource.Type.Mineral].level > 0) mul *= getEffectiveMul(location, Resource.Type.Mineral);
-			if (resources[Resource.Type.BlackMarket].level > 0) mul *= getEffectiveMul(location, Resource.Type.BlackMarket);
-			if (resources[Resource.Type.Innovation].level > 0) mul *= getEffectiveMul(location, Resource.Type.Innovation);
-			if (resources[Resource.Type.Culture].level > 0) mul *= getEffectiveMul(location, Resource.Type.Culture);
-			if (resources[Resource.Type.Industry].level > 0) mul *= getEffectiveMul(location, Resource.Type.Industry);
-			if (resources[Resource.Type.Economy].level > 0) mul *= getEffectiveMul(location, Resource.Type.Economy);
-			if (resources[Resource.Type.Military].level > 0) mul *= getEffectiveMul(location, Resource.Type.Military);
+            foreach (var pair in resources)
+            {
+                mul *= pair.Value.level > 0 ? getEffectiveMul(location, pair.Key) : 1.0f; 
+            }
             return mul;
         }
         internal float getEffectiveMul(Location location, Resource.Type type)
         {
 			// should probably get all the multipliers at once for getSortedResourceTypes
+            //return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type];
 			if (type == Resource.Type.Food) return location.features.resourceMultiplier[Resource.Type.Food] * location.ideology.effects.foodMul;
 			else if (type == Resource.Type.Mineral) return location.features.resourceMultiplier[Resource.Type.Mineral] * location.ideology.effects.mineralsMul;
 			else if (type == Resource.Type.BlackMarket) return location.features.resourceMultiplier[Resource.Type.BlackMarket] * location.ideology.effects.blackMarketMul;

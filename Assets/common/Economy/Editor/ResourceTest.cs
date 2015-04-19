@@ -89,7 +89,7 @@ namespace NewEconomy
         {
             resource.pool.add(16.0f);
 			resource.tick(1.0f);
-            Assert.That(resource.state, Is.EqualTo(Resource.State.ReadyToUpgrade));
+            Assert.That(resource.state, Is.EqualTo(Resource.State.AtGrowLimit));
         }
     }
 }
