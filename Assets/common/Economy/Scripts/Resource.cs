@@ -5,45 +5,39 @@ using System;
 namespace NewEconomy
 {
     /**
-     * Resource tier pool keeps track of single resouce consumption/production.
+     * Resource pool keeps track of resouce consumption/production.
      * Resource amount is labeled as follows:
      * 
      *                sustain              excess        excess/overflow
      * deficit |--------------------|-----------------|------------------| spoiled
      *        empty           target limit        grow limit        overflow limit
      * 
-     * Grow/Sustain limits depend on population, tier, tech levels.
-     * Target limit does not affect calculation but
-     * is there to highlight amount of resources that should be kept in
-     * storage.
-     * 
-     * Negative resources count as deficit and must be consumed from other
-     * pools. Resources over grow limit count as excess.
+     * Grow/Sustain limits depend on population, tech levels etc.
+     * Target limit does not affect calculation but is there to highlight amount of
+     * resources that should be kept in storage.
      */
-    public class ResourceTierPool
+    public class ResourcePool
     {
-        private float resources = 0.0f;
-        Resource.SubType type;
-
+        private Data.LocationResource data;
         public float consumptionRate { get; private set; }
         public float productionRate { get; private set; }
         public float targetLimit { get; private set; }
         public float growLimit { get;  private set; }
         public float overflowLimit { get; private set; }
 
-        public ResourceTierPool(float startAmount = 0.0f, float consumptionRate = 0.0f, float targetLimit = 0.0f, 
-                                float growLimit = 0.0f, float overflowLimit = 0.0f)
+        public ResourcePool(Data.LocationResource data, float consumptionRate,
+                            float targetLimit = 0.0f, float growLimit = 0.0f,
+                            float overflowLimit = 0.0f)
         {
-            resources = startAmount;
+            this.data = data;
             this.consumptionRate = consumptionRate;
             this.growLimit = growLimit;
             this.targetLimit = targetLimit;
             this.overflowLimit = overflowLimit;
         }
-        public ResourceTierPool(Resource.SubType type, float resourcesAtStart)
+        public ResourcePool(Data.LocationResource data)
         {
-            this.type = type;
-            this.resources = resourcesAtStart;
+            this.data = data;
             this.consumptionRate = 0.0f;
             this.growLimit = 0.0f;
             this.targetLimit = 0.0f;
@@ -52,19 +46,19 @@ namespace NewEconomy
 
         public float get()
         {
-            return resources;
+            return data.resources;
         }
         public float getDeficit()
         {
-            return resources < 0.0f ? -resources : 0.0f;
+            return data.resources < 0.0f ? -data.resources : 0.0f;
         }
         public float getOverflow()
         {
-            return resources > growLimit ? resources - growLimit : 0.0f;
+            return data.resources > growLimit ? data.resources - growLimit : 0.0f;
         }
         public float getExcess()
         {
-            return resources > targetLimit ? resources - targetLimit : 0.0f;
+            return data.resources > targetLimit ? data.resources - targetLimit : 0.0f;
         }
         public void setProduction(float amount)
         {
@@ -73,36 +67,33 @@ namespace NewEconomy
 
         public void tick(float delta)
         {
-			//Produce
-            resources += productionRate * delta;
-            resources -= consumptionRate * delta;
-
-			// Shortages
-
+            // prod + consumption
+            data.resources += productionRate * delta;
+            data.resources -= consumptionRate * delta;
 
             // spoilage
-            //Mathf.Clamp(resources, 0.0f, overflowLimit);
+            Mathf.Clamp(data.resources, 0.0f, overflowLimit);
 
         }
         internal void spend(float amount)
         {
-            resources -= amount;
+            data.resources -= amount;
         }
         internal float getAndResetDeficit()
         {
             float deficit = getDeficit();
-            resources += deficit;
+            data.resources += deficit;
             return deficit;
         }
 
         public void add(float amount)
         {
-            resources += amount;
+            data.resources += amount;
         }
 
         internal bool atGrowLimit()
         {
-            return resources >= growLimit;
+            return data.resources >= growLimit;
         }
 
         internal void setGrowLimit(float limit)
@@ -120,253 +111,122 @@ namespace NewEconomy
         {
             consumptionRate = p;
         }
-
-        internal static ResourceTierPool[] createPools(Resource.Type type)
-        {
-            ///maybe move to external class
-            switch (type)
-            {
-                case Resource.Type.Food:
-                    return new ResourceTierPool[] {
-                        createTierPool(Resource.SubType.FoodT1, 0),
-                        createTierPool(Resource.SubType.FoodT2, 0),
-                        createTierPool(Resource.SubType.FoodT3, 0),
-                        createTierPool(Resource.SubType.FoodT4, 0)
-                    };
-				case Resource.Type.Mineral:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.MineralT1, 0),
-						createTierPool(Resource.SubType.MineralT2, 0),
-						createTierPool(Resource.SubType.MineralT3, 0),
-						createTierPool(Resource.SubType.MineralT4, 0)
-					};
-				case Resource.Type.BlackMarket:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.BlackMarketT1, 0),
-						createTierPool(Resource.SubType.BlackMarketT2, 0),
-						createTierPool(Resource.SubType.BlackMarketT3, 0),
-						createTierPool(Resource.SubType.BlackMarketT4, 0)
-					};
-				case Resource.Type.Innovation:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.InnovationT1, 0),
-						createTierPool(Resource.SubType.InnovationT2, 0),
-						createTierPool(Resource.SubType.InnovationT3, 0),
-						createTierPool(Resource.SubType.InnovationT4, 0)
-					};
-				case Resource.Type.Culture:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.CultureT1, 0),
-						createTierPool(Resource.SubType.CultureT2, 0),
-						createTierPool(Resource.SubType.CultureT3, 0),
-						createTierPool(Resource.SubType.CultureT4, 0)
-					};
-				case Resource.Type.Industry:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.IndustryT1, 0),
-						createTierPool(Resource.SubType.IndustryT2, 0),
-						createTierPool(Resource.SubType.IndustryT3, 0),
-						createTierPool(Resource.SubType.IndustryT4, 0)
-					};
-				case Resource.Type.Economy:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.EconomyT1, 0),
-						createTierPool(Resource.SubType.EconomyT2, 0),
-						createTierPool(Resource.SubType.EconomyT3, 0),
-						createTierPool(Resource.SubType.EconomyT4, 0)
-					};
-				case Resource.Type.Military:
-					return new ResourceTierPool[] {
-						createTierPool(Resource.SubType.MilitaryT1, 0),
-						createTierPool(Resource.SubType.MilitaryT2, 0),
-						createTierPool(Resource.SubType.MilitaryT3, 0),
-						createTierPool(Resource.SubType.MilitaryT4, 0)
-				}; 
-                default:
-                    return new ResourceTierPool[] {
-                        createTierPool(Resource.SubType.FoodT1, 0),
-                        createTierPool(Resource.SubType.FoodT2, 0),
-                        createTierPool(Resource.SubType.FoodT3, 0),
-                        createTierPool(Resource.SubType.FoodT4, 0)
-                    };
-            }
-        }
-
-        private static ResourceTierPool createTierPool(Resource.SubType subType, int level)
-        {
-			return new ResourceTierPool(subType, 5.0f);	// todo starting resources (5)
-        }
-
-        internal static ResourceTierPool[] createPools(int level)
-        {
-            return new ResourceTierPool[]            
-            {
-                createTierPool(1, level),
-                createTierPool(2, level),
-                createTierPool(3, level),
-                createTierPool(4, level)
-            };
-        }
-
-        internal static ResourceTierPool createTierPool(int tier, int level)
-        {
-            return new ResourceTierPool(UnityEngine.Random.Range(1.0f, 10.0f), 1.0f, 5.0f, 10.0f, 20.0f); // Mitä tää on?
-        }
     }
 
 
     /**
-     * Resources are combination of all tiered commodities under the same category.
+     * Resources.
      * They represent location's "stats", see enum Type for all resource categories.
      */
     public class Resource
     {
-        public enum Type { Food, Mineral, BlackMarket, Innovation, Culture, Industry, Economy, Military }
-        public enum SubType { FoodT1, FoodT2, FoodT3, FoodT4, MineralT1, MineralT2, MineralT3, MineralT4,
-                              BlackMarketT1, BlackMarketT2, BlackMarketT3, BlackMarketT4, InnovationT1, InnovationT2,
-                              InnovationT3, InnovationT4, CultureT1, CultureT2, CultureT3, CultureT4,
-                              IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
-                              EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown }
-        public enum Policy { Grow, Sustain, Import, Export, Downsize }
-        public enum State { Shortage, Sustain, ReadyToUpgrade }
+        private ResourcePool pool;
+        private Data.LocationResource data;
 
-        private Dictionary<int, ResourceTierPool> pools = new Dictionary<int, ResourceTierPool>();
-        public Policy policy { get; set; }
-        public State state { get; private set; }
-        public Type type {get; private set; }
-
-        public int level { get; private set; }
-
-       
-        public Resource(Type type, ResourceTierPool[] pools)
+        public Resource(Data.LocationResource data, ResourcePool pool)
         {
-            this.type = type;
-
-            // set default policy
-            policy = Policy.Sustain;
-
-            // add all tiers
-            int tier = 1;
-            foreach (var pool in pools)
-            {
-                this.pools.Add(tier, pool);
-                ++tier;
-            }
+            this.data = data;
+            this.pool = pool;
         }
-        public float getResources(int tier)
+        public float getResources()
         {
-            return pools[tier].get();
+            return pool.get();
         }
 
 		// ------------------------------------------------------------------------------
         public void tick(float delta)
         {
-            // check policies
+            updateFeatures();
             handlePolicyChanges();
 
             // produce and consume
-            bool allTiersAtGrowLimit = true;
-            float deficitFromLowerTiers = 0.0f;
-            foreach (var tier in pools)
-            {
-                tier.Value.spend(deficitFromLowerTiers);
-                tier.Value.tick(delta);
-                allTiersAtGrowLimit = tier.Value.atGrowLimit() ? allTiersAtGrowLimit : false;
-                deficitFromLowerTiers = tier.Value.getAndResetDeficit();
-            }
-            // set state
-            if (deficitFromLowerTiers > 0.0f)
-            {
-                state = State.Shortage;
-            }
-            else if (allTiersAtGrowLimit)
-            {
-                if (level < 4)
-                {
-                    state = State.ReadyToUpgrade;
-                }
-            }
-            else
-            {
-                state = State.Sustain;
-            }
+            pool.tick(delta);
 
-            // handle excess
-            foreach (var tier in pools)
-            {
-                handleExcess(tier.Value);
-            }
+            setState();
 
-            // check for level up
+            // normalize player influence
+            foreach (var tier in data.playerInfluence.Keys)
+            {
+                Mathf.MoveTowards(data.playerInfluence[tier], 0.0f,
+                    Parameters.playerResourceInfluenceNormalizationPerDay * delta);
+            }
             return;
         }
 		// ------------------------------------------------------------------------------
 
+        private void setState()
+        {
+            if (pool.getAndResetDeficit() > 0.0f)
+            {
+                data.state = Data.LocationResource.State.Shortage;
+            }
+            else if (pool.atGrowLimit())
+            {
+                data.state = Data.LocationResource.State.AtGrowLimit;
+            }
+            else
+            {
+                data.state = Data.LocationResource.State.Sustain;
+            }
+        }
+
         private void handlePolicyChanges()
         {
-            if (policy == Policy.Grow)
+            switch (data.policy)
             {
-                foreach (ResourceTierPool pool in pools.Values)
-                {
+                case Data.LocationResource.Policy.Grow:
                     pool.setTargetLimit(pool.growLimit);
-                }
+                    break;
+                case Data.LocationResource.Policy.Sustain:
+                    pool.setTargetLimit(pool.consumptionRate * Parameters.resourcePolicyStockpileDays);
+                    break;
+                case Data.LocationResource.Policy.Stockpile:
+                    pool.setTargetLimit(pool.overflowLimit);
+                    break;
+                case Data.LocationResource.Policy.BareMinimum:
+                    pool.setTargetLimit(pool.consumptionRate);
+                    break;
+                case Data.LocationResource.Policy.Downsize:
+                    pool.setTargetLimit(0.0f);
+                    break;
+                default:
+                    //noop
+                    break;
             }
-            else if (policy == Policy.Sustain)
-            {
-                foreach (ResourceTierPool pool in pools.Values)
-                {
-					pool.setTargetLimit(pool.consumptionRate * Parameters.stockpileDays);
-                }
-            }
         }
-
-        private void handleExcess(ResourceTierPool resourcePool)
-        {
-            // not needed? excess can be handled in locationeconomy?
-        }
-
-        public ResourceTierPool getPool(int tier)
-        {
-            return pools[tier];
-        }
-
+        
         internal string toDebugString()
         {
-            string rv = Enum.GetName(typeof(Type), type) + " lvl " + level.ToString() + " [" + Enum.GetName(typeof(State), state)
-                + "] <" + Enum.GetName(typeof(Policy), policy) + ">\n";
-            int i = 1;
-            foreach (ResourceTierPool pool in pools.Values)
-            {
-                rv += "T" + i.ToString() +": " + pools[i].get().ToString("F") + "  (+" +
-                      pools[i].productionRate.ToString("F") + ")" + " (-" + pools[i].consumptionRate.ToString("F") + ")\n";
-                i++;
-            }
-            return rv;
-            
+            string rv = Enum.GetName(typeof(Data.LocationResource.Type), data.type) + " " + pool.get().ToString("F") +
+                " (lvl " + data.level.ToString() + ") " +
+                "[" + Enum.GetName(typeof(Data.LocationResource.State), data.state) + "] " +
+                "<" + Enum.GetName(typeof(Data.LocationResource.Policy), data.policy) + ">";
+            return rv;            
         }
 
         internal void upgrade()
         {
-            level++;
-            foreach (var pool in pools)
-            {
-                pool.Value.setGrowLimit(level * 10.0f);
-                pool.Value.spend(pool.Value.get() * 0.8f);
-            }
+            data.level++;
+            data.state = Data.LocationResource.State.Sustain;
+            pool.setGrowLimit(data.level * 10.0f);
+            pool.spend(pool.get() * 0.8f);
+            setState();
+        }
+        internal void downgrade()
+        {
+            if (data.level > 0) data.level--;
+            else Debug.LogWarning ("Attempting to downgrade level 0 resource");
+            setState();
         }
 
-        internal void updateFeatures(LocationFeatures features)
+        internal void updateFeatures()
         {
             ///@todo production, consumption based on features
             ///      use random until reasonable values inserted
-            UnityEngine.Random.seed = (int)type;
-            foreach (var pair in pools)
-            {
-                pair.Value.setProduction(UnityEngine.Random.Range(0.0f, 5.0f));
-                pair.Value.setProduction(pair.Value.productionRate * features.resourceMultiplier[type]);
-
-                pair.Value.setConsumption(UnityEngine.Random.Range(0.0f, 2.0f));
-            }
+            UnityEngine.Random.seed = (int)data.type;
+            //pool.setProduction(pool.productionRate * features.resourceMultiplier[data.type]);
+            pool.setProduction(3.0f);
+            pool.setConsumption(UnityEngine.Random.Range(0.0f, 2.0f));
         }
     }
 

@@ -2,7 +2,7 @@
 
 public static class DataParser
 {
-    public static LocationFeatures parseLocationFeatures(string locationData)
+    public static Data.LocationFeatures parseLocationFeatures(string locationData)
     {
         int i = 0;
         //string factionData = "";
@@ -28,6 +28,6 @@ public static class DataParser
             ++i;
         }
 
-        return new LocationFeatures(locationFeaturesRaw);
+        return new Data.LocationFeatures(locationFeaturesRaw);
     }
 }

@@ -9,27 +9,91 @@ namespace NewEconomy
     {
         public void setPolicies(LocationEconomy location)
         {
-            // sort resources by resource multiplier - ie. how fast it's generating production
+            //// if negative total growth
+            //if (location.totalEffectiveMultiplier < 1.0f)
+            //{
+            //    // POLICY: find out the worse resource to downgrade
+            //    int lastIndex = location.sortedResourceTypes.Count-1;
 
-            // if negative growth, find out best resource to downgrade
+            //    if (location.sortedResourceTypes[lastIndex].Value <1.0f) 
+            //    { 
+            //        for (int i = lastIndex; i >=0; i--)
+            //        {
+            //            // set last & bad resources to 'Downsize'
+            //            if (i == lastIndex || location.sortedResourceTypes[i].Value < 0.3f) location.setPolicy(location.sortedResourceTypes[i].Key, Resource.Policy.Downsize);
+            //            // set negative ones to 'Import'
+            //            else if (location.sortedResourceTypes[i].Value < 1.0f) location.setPolicy(location.sortedResourceTypes[i].Key, Resource.Policy.Import);
+            //            // set positive ones to 'export'
+            //            else if (location.sortedResourceTypes[i].Value > 1.0f) location.setPolicy(location.sortedResourceTypes[i].Key, Resource.Policy.Export);
+            //            // else sustain
+            //            else location.setPolicy(location.sortedResourceTypes[i].Key, Resource.Policy.Sustain);
+            //        }
+            //    }
+            //    else Debug.LogWarning ("WARNING: lowest sorted value >=1, even if 'totalEffectiveMul was <1");
+            //}
+            //// Positive growth! Find out best resources to upgrade (if total effective multiplier >=1)
+            //else
+            //{
+            //    // POLICY: find overall strategy goal & figure out needed resources for that
+            //    Resource.Type resourceGoal = location.sortedResourceTypes[0].Key;
+            //    List<Resource.Type> resourceGoals = new List<Resource.Type>();
+            //    Tech.Type techGoal = Tech.Type.Technology;
 
-            // else Find out best resources to upgrade
+            //    ///@todo ASSET GOALS?
 
 
+            //    // see if resource goal is achiavable
+            //    foreach (KeyValuePair<Resource.Type, float> sorted in location.sortedResourceTypes)
+            //    {
+            //        if (location.resources[sorted.Key].level < 4)
+            //        {
+            //            //if (Resource.isResourceUpgradeableByTech(sorted.Key, location)) 
+            //            //{
+            //            //    // >resource goal
+            //            //    resourceGoals.Add (sorted.Key);
+            //            //    techGoal = Tech.Type.None;
+            //            //    break;
+            //            //}
+            //        }
+            //    }
+            //    // needs a tech goal
+            //    if (techGoal != Tech.Type.None) 
+            //    {
+            //        // >needs tech upgrade
+            //        techGoal = Tech.getEligibleTechGoal(resourceGoal, location);
+            //        resourceGoals = Tech.getResourcesForTech(techGoal, location);
+            //    }
 
-            //location.setPolicy(Resource.Type.Military, Resource.Policy.Grow);
+            //    // go through resources and set policies
+            //    foreach(KeyValuePair<Resource.Type, float> sorted in location.sortedResourceTypes)
+            //    {
+            //        // if resource is listed in resourceGoals, grow
+            //        if (resourceGoals.Contains (sorted.Key)) location.setPolicy (sorted.Key, Resource.Policy.Grow);
+            //        // if producing, export
+            //        else if (sorted.Value > 1.0f) location.setPolicy (sorted.Key, Resource.Policy.Export);
+            //        // else needs to import
+            //        else if (sorted.Value < 1.0f) location.setPolicy (sorted.Key, Resource.Policy.Import);
+            //        else location.setPolicy (sorted.Key, Resource.Policy.Sustain);
+            //    }
+            //    ///todo check after resource state allocation if total import mul > export mul. Can policies can be afforded?
+            //}
+            ////location.setPolicy(Resource.Type.Military, Resource.Policy.Grow);
         }
+
 
         internal void manageLocationUpgrades(LocationEconomy location)
         {
-            ///@todo upgrade resources based on policies, just upgrade all eligible for now
-            foreach (Resource resource in location.getResources())
-            {
-                if (resource.state == Resource.State.ReadyToUpgrade)
-                {
-                    resource.upgrade();
-                }
-            }
+            //foreach (Resource resource in location.getResources())
+            //{
+            //    if (resource.state == Resource.State.AtGrowLimit)
+            //    {
+            //        resource.upgrade();
+            //    }
+            //    if (resource.policy == Resource.Policy.Downsize)
+            //    {
+            //        resource.downgrade();
+            //    }
+            //}
         }
 
         internal void setupTrades(LocationEconomy location)
@@ -38,52 +102,40 @@ namespace NewEconomy
         }
     }
 
-    public class ResourceData
-    {
-        public int level;
-        public Dictionary<int, float> pools = new Dictionary<int, float>();
-    }
-
-    public class LocationEconomyData
-    {
-        public Dictionary<Resource.Type, ResourceData> resourceData = new Dictionary<Resource.Type, ResourceData>();
-
-        internal void generateDebugData()
-        {
-            foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
-            {
-                ResourceData data = new ResourceData();
-                data.level = UnityEngine.Random.Range(0, 5);
-                resourceData[type] = data;
-            }
-        }
-    }
-
-
     public class LocationEconomy
     {
-        Dictionary<Resource.Type, Resource> resources = new Dictionary<Resource.Type, Resource>();
-        internal List<KeyValuePair<Resource.Type, float>> sortedResourceTypes = new List<KeyValuePair<Resource.Type, float>>(); // sorted by (float) effective resource multiplier
-        LocationEconomyAI ai;
+        internal Dictionary<Data.LocationResource.Type, Resource> resources = new Dictionary<Data.LocationResource.Type, Resource>();
+		//internal Dictionary<Tech.Type, Tech> technologies = new Dictionary<Tech.Type, Tech>();
 
-        public LocationEconomy(LocationEconomyData data, LocationEconomyAI ai)
+        //internal List<KeyValuePair<Resource.Type, float>> sortedResourceTypes = new List<KeyValuePair<Resource.Type, float>>(); // sorted by (float) effective resource multiplier - might be nice to see in the inspector
+		//internal float totalEffectiveMultiplier;
+		LocationEconomyAI ai;
+
+        public LocationEconomy(Data.Location data, LocationEconomyAI ai)
         {
             this.ai = ai;
-            foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
+            foreach (Data.LocationResource.Type type in Enum.GetValues(typeof(Data.LocationResource.Type)))
             {
-                // create pools based on input data
-                //resources[type] = new Resource(type, ResourceTierPool.createPools(data.resourceData[type].level));
-                resources[type] = new Resource(type, ResourceTierPool.createPools(type));
-
-                // populate sort list for types
-                sortedResourceTypes.Add(new KeyValuePair<Resource.Type, float>(type, 1.0f/*getEffectiveMul(location, ideology, type)*/));
+                Data.LocationResource resourceData = Data.LocationResource.generateDebugData(type);
+                resources[type] = new Resource(resourceData, new ResourcePool(resourceData));
             }
+            //foreach (Tech.Type type in Enum.GetValues(typeof(Tech.Type)))
+            //{
+            //    ///@todo create tech based on input data
+            //    if (type != Tech.Type.None) technologies.Add(type, new Tech(type, 1));
+            //}
+            
         }
 
         // ----------------------------------------------------------TICK
         public void tick(float delta)
         {
-            ai.setPolicies(this);
+			// calculate totalEffectiveMultiplier for the tick // doesn't change unless location stats change
+			//totalEffectiveMultiplier = getTotalEffectiveLocationResourceMultiplier(location);
+			// sort resources by resource multiplier - ie. how fast it's generating production // doesn't change unless location stats change
+			//sortedResourceTypes = getSortedResourceTypes(location);
+
+			ai.setPolicies(this);
 
             foreach (Resource resource in resources.Values)
             {
@@ -96,15 +148,48 @@ namespace NewEconomy
         }
         // ----------------------------------------------------------
 
-        internal void setPolicy(Resource.Type type, Resource.Policy policy)
-        {
-            // resources[type].policy = policy;
+        //internal void setPolicy(Resource.Type type, Resource.Policy policy)
+        //{
+        //    resources[type].policy = policy;
+        //}
 
-            foreach (Resource resource in resources.Values)
-            {
-                //resource.;
-            }
-        }
+        //internal bool hasEnoughMaterialsToUpgrade(Resource.Type type)
+        //{
+        //    return resources[type].state == Resource.State.AtGrowLimit;
+        //}
+
+        //internal bool hasEnoughTechToUpgrade(Resource.Type type)
+        //{
+        //    if (resources[type].level < 4 &&
+        //        resources[type].level < technologies[Tech.Type.Technology].level)
+        //    {
+        //        // not enough infra
+        //        if (type == Resource.Type.Industry || type == Resource.Type.Mineral || type == Resource.Type.Economy)
+        //        {
+        //            if (resources[type].level < technologies[Tech.Type.Infrastructure].level)
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //        // not enough military tech
+        //        else if (type == Resource.Type.Military)
+        //        {
+        //            if (resources[type].level < technologies[Tech.Type.Military].level)
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        //internal void upgradeResource(Resource.Type type)
+        //{
+        //    if (hasEnoughMaterialsToUpgrade(type) && hasEnoughTechToUpgrade(type))
+        //    {
+        //        resources[type].upgrade();
+        //    }
+        //}
 
         internal string toDebugString()
         {
@@ -114,85 +199,75 @@ namespace NewEconomy
                 rv = rv + resource.toDebugString() + "\n";
             }
             return rv;
-            throw new NotImplementedException();
         }
 
-        internal void updateFeatures(LocationFeatures features)
-        {
-            foreach (var pair in resources)
-            {
-                pair.Value.updateFeatures(features);
-            }
-        }
+        //internal void updateFeatures(LocationFeatures features)
+        //{
+        //    foreach (var pair in resources)
+        //    {
+        //        pair.Value.updateFeatures(features);
+        //    }
+        //}
 
-        internal IEnumerable<Resource> getResources()
-        {
-            return resources.Values;
-        }
+        //internal IEnumerable<Resource> getResources()
+        //{
+        //    return resources.Values;
+        //}
 
-        // location economy variables
+        //// location economy variables
 
-        public float getTotalLocationResourceMultiplier(LocationFeatures location)
-        {
-            float mul = 1;
-            if (resources[Resource.Type.Food].level > 0) mul *= location.resourceMultiplier[Resource.Type.Food];
-            if (resources[Resource.Type.Mineral].level > 0) mul *= location.resourceMultiplier[Resource.Type.Mineral];
-            if (resources[Resource.Type.BlackMarket].level > 0) mul *= location.resourceMultiplier[Resource.Type.BlackMarket];
-            if (resources[Resource.Type.Innovation].level > 0) mul *= location.resourceMultiplier[Resource.Type.Innovation];
-            if (resources[Resource.Type.Culture].level > 0) mul *= location.resourceMultiplier[Resource.Type.Culture];
-            if (resources[Resource.Type.Industry].level > 0) mul *= location.resourceMultiplier[Resource.Type.Industry];
-            if (resources[Resource.Type.Economy].level > 0) mul *= location.resourceMultiplier[Resource.Type.Economy];
-            if (resources[Resource.Type.Military].level > 0) mul *= location.resourceMultiplier[Resource.Type.Military];
-            return mul;
-        }
-        public float getTotalEffectiveLocationResourceMultiplier(LocationFeatures location, IdeologyData ideology)
-        {
-            // IdeologyData ideology = location.info.ideology;
-            float mul = 1;
-            if (resources[Resource.Type.Food].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Food);
-            if (resources[Resource.Type.Mineral].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Mineral);
-            if (resources[Resource.Type.BlackMarket].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.BlackMarket);
-            if (resources[Resource.Type.Innovation].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Innovation);
-            if (resources[Resource.Type.Culture].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Culture);
-            if (resources[Resource.Type.Industry].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Industry);
-            if (resources[Resource.Type.Economy].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Economy);
-            if (resources[Resource.Type.Military].level > 0) mul *= getEffectiveMul(location, ideology, Resource.Type.Military);
-            return mul;
-        }
-        // todo remove: -"IdeologyData ideology" // replace: ideology ---> location.info.ideology;
-        internal float getEffectiveMul(LocationFeatures location, IdeologyData ideology, Resource.Type type)
-        {
-            if (type == Resource.Type.Food) return location.resourceMultiplier[Resource.Type.Food] * ideology.effects.foodMul;
-            else if (type == Resource.Type.Mineral) return location.resourceMultiplier[Resource.Type.Mineral] * ideology.effects.mineralsMul;
-            else if (type == Resource.Type.BlackMarket) return location.resourceMultiplier[Resource.Type.BlackMarket] * ideology.effects.blackMarketMul;
-            else if (type == Resource.Type.Innovation) return location.resourceMultiplier[Resource.Type.Innovation] * ideology.effects.innovationMul;
-            else if (type == Resource.Type.Culture) return location.resourceMultiplier[Resource.Type.Culture] * ideology.effects.cultureMul;
-            else if (type == Resource.Type.Industry) return location.resourceMultiplier[Resource.Type.Industry] * ideology.effects.industryMul;
-            else if (type == Resource.Type.Economy) return location.resourceMultiplier[Resource.Type.Economy] * ideology.effects.economyMul;
-            else if (type == Resource.Type.Military) return location.resourceMultiplier[Resource.Type.Military] * ideology.effects.militaryMul;
-            else { Debug.LogWarning("WARNING: bad input type."); return 0; }
-        }
+        //public float getTotalLocationResourceMultiplier(LocationFeatures features)
+        //{
+        //    float mul = 1;
+        //    foreach (var pair in resources)
+        //    {
+        //        mul *= pair.Value.level > 0 ? features.resourceMultiplier[pair.Key] : 1.0f;
+        //    }
+        //    return mul;
+        //}
+        //public float getTotalEffectiveLocationResourceMultiplier(Location location)
+        //{
+        //    float mul = 1;
+        //    foreach (var pair in resources)
+        //    {
+        //        mul *= pair.Value.level > 0 ? getEffectiveMul(location, pair.Key) : 1.0f; 
+        //    }
+        //    return mul;
+        //}
+        //internal float getEffectiveMul(Location location, Resource.Type type)
+        //{
+        //    // should probably get all the multipliers at once for getSortedResourceTypes
+        //    //return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type];
+        //    if (type == Resource.Type.Food) return location.features.resourceMultiplier[Resource.Type.Food] * location.ideology.effects.foodMul;
+        //    else if (type == Resource.Type.Mineral) return location.features.resourceMultiplier[Resource.Type.Mineral] * location.ideology.effects.mineralsMul;
+        //    else if (type == Resource.Type.BlackMarket) return location.features.resourceMultiplier[Resource.Type.BlackMarket] * location.ideology.effects.blackMarketMul;
+        //    else if (type == Resource.Type.Innovation) return location.features.resourceMultiplier[Resource.Type.Innovation] * location.ideology.effects.innovationMul;
+        //    else if (type == Resource.Type.Culture) return location.features.resourceMultiplier[Resource.Type.Culture] * location.ideology.effects.cultureMul;
+        //    else if (type == Resource.Type.Industry) return location.features.resourceMultiplier[Resource.Type.Industry] * location.ideology.effects.industryMul;
+        //    else if (type == Resource.Type.Economy) return location.features.resourceMultiplier[Resource.Type.Economy] * location.ideology.effects.economyMul;
+        //    else if (type == Resource.Type.Military) return location.features.resourceMultiplier[Resource.Type.Military] * location.ideology.effects.militaryMul;
+        //    else { Debug.LogWarning("WARNING: bad input type."); return 0; }
+        //}
 
-        internal void getSortedResourceTypes(LocationFeatures location)
-        {
-            // IdeologyData ideology = location.info.ideology;
-
-            foreach (KeyValuePair<Resource.Type, float> resource in sortedResourceTypes)
-            {
-                // update values (brute force, often not changed!)
-                //resource.Value = 1.0f/*getEffectiveMul(location, ideology, resource.Key)*/;
-            }
-
-            // Sort list by values
-            sortedResourceTypes.Sort(
-                delegate(KeyValuePair<Resource.Type, float> firstPair,
-                     KeyValuePair<Resource.Type, float> nextPair)
-                {
-                    return firstPair.Value.CompareTo(nextPair.Value);
-                }
-            );
-
-        }
+        //internal List<KeyValuePair<Resource.Type, float>> getSortedResourceTypes(Location location)
+        //{
+        //    List<KeyValuePair<Resource.Type, float>> sortedList = new List<KeyValuePair<Resource.Type, float>>();
+            
+        //    foreach(Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
+        //    {
+        //            sortedList.Add (new KeyValuePair<Resource.Type, float>(type, getEffectiveMul(location, type)));
+        //    }
+            
+        //    // Sort list by values
+        //    sortedList.Sort(
+        //            delegate(KeyValuePair<Resource.Type, float> firstPair,
+        //             KeyValuePair<Resource.Type, float> nextPair)
+        //            {
+        //            return firstPair.Value.CompareTo(nextPair.Value);
+        //    }
+        //    );
+        //    return sortedList;
+        //}
 
     }
 }

@@ -10,14 +10,19 @@ namespace NewEconomy
     [Category("Location Domain Tests")]
     internal class ResourceTierPoolTest
     {
-        ResourceTierPool pool;
-        ResourceTierPool emptyPool;
+        ResourcePool pool;
+        ResourcePool emptyPool;
 
         [SetUp]
         public void Setup()
         {
-            pool = new ResourceTierPool(10.0f, 1.0f, 10.0f, 20.0f, 30.0f);
-            emptyPool = new ResourceTierPool(0.0f, 1.0f, 10.0f, 20.0f, 30.0f);
+            Data.LocationResource data =
+                Data.LocationResource.generateDebugData(Data.LocationResource.Type.Food);
+            data.resources = 10.0f;
+            pool = new ResourcePool(data, 1.0f, 10.0f, 20.0f, 30.0f);
+            Data.LocationResource emptyData =
+                Data.LocationResource.generateDebugData(Data.LocationResource.Type.Food);
+            emptyPool = new ResourcePool(emptyData, 1.0f, 10.0f, 20.0f, 30.0f);
         }
         [Test]
         public void TickReducesAmount()
@@ -57,51 +62,42 @@ namespace NewEconomy
     [Category("Location Domain Tests")]
     internal class ResourceTest
     {
-        Resource domain;
-            
+        Resource resource;
+        Data.LocationResource data;
+    
         [SetUp]
         public void Setup()
         {
-            ResourceTierPool tier1 = new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f);
-            ResourceTierPool tier2 = new ResourceTierPool(5.0f, 1.0f, 10.0f, 20.0f, 30.0f);
-            ResourceTierPool tier3 = new ResourceTierPool(10.0f, 1.0f, 10.0f, 20.0f, 30.0f);
-            domain = new Resource(Resource.Type.Culture, new ResourceTierPool[] { tier1, tier2, tier3 });
+            data = Data.LocationResource.generateDebugData(Data.LocationResource.Type.Food);
+            data.resources = 5.0f;
+            resource = new Resource(data, new ResourcePool(data, 1.0f, 10.0f, 20.0f, 30.0f));
         }
         [Test]
-        public void TickTicksAllPools()
+        public void TickTicksPool()
         {
-            domain.tick(1.0f);
-            Assert.That(domain.getResources(1), Is.EqualTo(4.0f));
-            Assert.That(domain.getResources(2), Is.EqualTo(4.0f));
-            Assert.That(domain.getResources(3), Is.EqualTo(9.0f));
+            //resource.tick(1.0f);
+            //Assert.That(resource.getResources(), Is.EqualTo(4.0f));
         }
         [Test]
-        public void DeficitFromLowerTierIsSubstractedFromUpperAndReseted()
+        public void DeficitIsReseted()
         {
-            domain.tick(6.0f);
-            Assert.That(domain.getResources(1), Is.EqualTo(0.0f));
-            Assert.That(domain.getResources(2), Is.EqualTo(0.0f));
-            Assert.That(domain.getResources(3), Is.EqualTo(2.0f));
-            Assert.That(domain.getPool(1).getDeficit(), Is.EqualTo(0.0f));
-            Assert.That(domain.getPool(2).getDeficit(), Is.EqualTo(0.0f));
-            Assert.That(domain.getPool(3).getDeficit(), Is.EqualTo(0.0f));
+            //resource.tick(6.0f);
+            //Assert.That(resource.getResources(), Is.EqualTo(0.0f));
         }
         [Test]
-        public void FailureToCompensateDeficitLeadsToShortage()
+        public void DeficitLeadsToShortage()
         {
-            domain.tick(1.0f);
-            Assert.That(domain.state, Is.EqualTo(Resource.State.Sustain));
-            domain.tick(6.0f);
-            Assert.That(domain.state, Is.EqualTo(Resource.State.Shortage));
+            resource.tick(1.0f);
+            Assert.That(data.state, Is.EqualTo(Data.LocationResource.State.Sustain));
+			resource.tick(6.0f);
+            Assert.That(data.state, Is.EqualTo(Data.LocationResource.State.Shortage));
         }
         [Test]
-        public void AllTiersAtGrowLimitLeadsToReadyToUpgrade()
+        public void GrowLimitLeadsToReadyToUpgrade()
         {
-            domain.getPool(1).add(16.0f);
-            domain.getPool(2).add(20.0f);
-            domain.getPool(3).add(30.0f);
-            domain.tick(1.0f);
-            Assert.That(domain.state, Is.EqualTo(Resource.State.ReadyToUpgrade));
+            //resource.pool.add(16.0f);
+            //resource.tick(1.0f);
+            //Assert.That(resource.state, Is.EqualTo(Resource.State.AtGrowLimit));
         }
     }
 }

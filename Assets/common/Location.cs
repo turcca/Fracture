@@ -40,11 +40,12 @@ public class Stockpile
 
 public class Location
 {
+    private Data.Location data;
+
     public string name { get; private set; }
     public string description { get; private set; }
     public string id { get; private set; }
     public Vector3 position { get; private set; }
-    public LocationFeatures features { get; private set; }
 
     //public int numShips = 1;
 
@@ -56,27 +57,26 @@ public class Location
     //LocationIndustry industry;
     //Inventory Stockpile;
 
-    NewEconomy.LocationEconomy economy;
-    NewIdeology.LocationIdeology ideology;
+    public NewEconomy.LocationEconomy economy;
+    public NewIdeology.LocationIdeology ideology;
 
     public Location(string id, Vector3 position, NewEconomy.LocationEconomy economy)
-        : this(id, position, new LocationFeatures(), economy)
+        : this(id, position, new Data.Location(), economy)
     {
     }
 
-    public Location(string id, Vector3 position, LocationFeatures locationFeatures, NewEconomy.LocationEconomy economy)
+    public Location(string id, Vector3 position, Data.Location data, NewEconomy.LocationEconomy economy)
     {
         this.id = id;
         this.name = id;
         this.description = Tools.STRING_NOT_ASSIGNED;
         this.position = position;
-        this.features = locationFeatures;
+        this.data = data;
         this.economy = economy;
     }
 
     public void tick(float days)
     {
-        economy.updateFeatures(features);
         economy.tick(days);
     }
 
@@ -174,7 +174,7 @@ public class Location
     public string toDebugString()
     {
         return "Name: " + name + "\n" +
-            "Features: " + features.toDebugString() + "\n" +
+            "Features: " + data.features.toDebugString() + "\n" +
             "Economy:\n" + economy.toDebugString() + "\n";
             //"---\n" + "Politics:\n" + ideology.toDebugString();
             //"---\n" + "Economy:\n" + industry.toDebugString();
