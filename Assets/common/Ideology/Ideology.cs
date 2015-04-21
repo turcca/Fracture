@@ -9,7 +9,6 @@ namespace NewIdeology
     {
         private Location location;
 
-		// Turkka laitto nää tähän toisesta Ideology.sc:stä, oli muuten tyhjä ---->
 		static public string[] getIdeologyNames()
 		{
 			return new string[]
@@ -163,6 +162,5 @@ namespace NewIdeology
 		public Dictionary<string, float> support = new Dictionary<string, float>();
 		public Effects effects = new Effects();
 
-		// <--- end of copy-paste
     }
 }

@@ -70,7 +70,7 @@ namespace NewEconomy
         {
             data = Data.Resource.generateDebugData(Data.Resource.Type.Food);
             data.resources = 5.0f;
-            resource = new Resource(data, new ResourcePool(data, 1.0f, 10.0f, 20.0f, 30.0f));
+            //resource = new Resource(data, new ResourcePool(data, 1.0f, 10.0f, 20.0f, 30.0f));
         }
         [Test]
         public void TickTicksPool()

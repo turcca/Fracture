@@ -16,7 +16,7 @@ public class Resource
         IndustryT1, IndustryT2, IndustryT3, IndustryT4, EconomyT1, EconomyT2,
         EconomyT3, EconomyT4, MilitaryT1, MilitaryT2, MilitaryT3, MilitaryT4, Unknown
     }
-    public enum Policy { Grow, Sustain, Stockpile, BareMinimum, Downsize }
+    public enum Policy { Grow, GrowTech, Sustain, Stockpile, BareMinimum, Downsize }
     public enum State { Shortage, Sustain, AtGrowLimit }
 
 

@@ -24,11 +24,11 @@ namespace NewEconomy
                         if (i == lastIndex || sortedResourceTypes[i].Value < 0.3f)
                             location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Downsize);
                         // set negative ones to 'Import'
-                        //else if (sortedResourceTypes[i].Value < 1.0f)
-                        //    location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Import);
-                        //// set positive ones to 'export'
-                        //else if (sortedResourceTypes[i].Value > 1.0f)
-                        //    location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Export);
+                        else if (sortedResourceTypes[i].Value < 1.0f)
+                            location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Stockpile);
+                        // set positive ones to 'export'
+                        else if (sortedResourceTypes[i].Value > 1.0f)
+                            location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.BareMinimum);
                         // else sustain
                         else location.setPolicy(sortedResourceTypes[i].Key,
                             Data.Resource.Policy.Sustain);
@@ -36,53 +36,68 @@ namespace NewEconomy
                 }
                 else Debug.LogWarning("WARNING: lowest sorted value >=1, even if 'totalEffectiveMul was <1");
             }
-            // Positive growth! Find out best resources to upgrade (if total effective multiplier >=1)
+            // Positive growth! Find out best resources to upgrade (total effective multiplier >=1)
             else
             {
-                // POLICY: find overall strategy goal & figure out needed resources for that
-                Data.Resource.Type resourceGoal = sortedResourceTypes[0].Key;
-                List<Data.Resource.Type> resourceGoals = new List<Data.Resource.Type>();
-                Data.Tech.Type? techGoal = Data.Tech.Type.Technology;
+                // POLICY: find overall strategy goal & figure out needed resources for it
+                location.setResourceGoal(null);
 
                 ///@todo ASSET GOALS?
 
-
-                // see if resource goal is achiavable
+                // see in order which resource goal is achiavable
                 foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
                 {
-                    if (location.resources[sorted.Key].level < 4)
+                    if (location.resourceGoal == null &&
+                        location.resources[sorted.Key].level < 4 &&
+                        location.hasEnoughTechToUpgrade(sorted.Key))
                     {
-                        if (location.hasEnoughTechToUpgrade(sorted.Key)) 
-                        {
-                            // >resource goal
-                            resourceGoals.Add (sorted.Key);
-                            techGoal = null;
-                            break;
-                        }
+                        // >resource goal
+                        location.setResourceGoal(sorted.Key);
+                        location.setTechGoal(null);
+                        // set policy for resource grow
+                        location.setPolicy(sorted.Key, Data.Resource.Policy.Grow);
+                    }
+                    else 
+                    {
+                        // if producing, export
+                        if (sorted.Value > 1.0f)
+                            location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
+                        // else needs to import
+                        else if (sorted.Value < 1.0f)
+                            location.setPolicy(sorted.Key, Data.Resource.Policy.Stockpile);
+                        else
+                            location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
                     }
                 }
                 // needs a tech goal
-                if (techGoal.HasValue)
+                if (location.resourceGoal == null)
                 {
                     // >needs tech upgrade
-                    techGoal = Tech.getEligibleTechGoal(resourceGoal, location);
-                    resourceGoals = Tech.getResourcesForTech(techGoal.Value, location);
-                }
+                    location.setTechGoal(Tech.getEligibleTechGoal(location.resourceGoal, location));
 
-                // go through resources and set policies
-                foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
-                {
-                    // if resource is listed in resourceGoals, grow
-                    if (resourceGoals.Contains(sorted.Key))
-                        location.setPolicy(sorted.Key, Data.Resource.Policy.Grow);
-                    // if producing, export
-                    //else if (sorted.Value > 1.0f)
-                    //    location.setPolicy(sorted.Key, Data.Resource.Policy.Export);
-                    //// else needs to import
-                    //else if (sorted.Value < 1.0f)
-                    //    location.setPolicy(sorted.Key, Data.Resource.Policy.Import);
-                    else
-                        location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
+                    if (location.techGoal.HasValue)
+                    {
+                        List<Data.Resource.Type> resourceGoals = Tech.getResourcesForTech(location.techGoal.Value, location);
+
+                        // go through resources and set policies for tech upgrade
+                        foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
+                        {
+                            // if resource is listed in resourceGoals, grow
+                            if (resourceGoals.Contains(sorted.Key))
+                                location.setPolicy(sorted.Key, Data.Resource.Policy.GrowTech);
+                            else
+                            {
+                                // if producing, export
+                                if (sorted.Value > 1.0f)
+                                    location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
+                                // else needs to import
+                                else if (sorted.Value < 1.0f)
+                                    location.setPolicy(sorted.Key, Data.Resource.Policy.Stockpile);
+                                else
+                                    location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
+                            }
+                        }
+                    }
                 }
                 ///todo check after resource state allocation if total import mul > export mul. Can policies can be afforded?
             }
@@ -91,17 +106,14 @@ namespace NewEconomy
 
         internal void manageLocationUpgrades(LocationEconomy location)
         {
-            //foreach (Resource resource in location.getResources())
-            //{
-            //    if (resource.state == Resource.State.AtGrowLimit)
-            //    {
-            //        resource.upgrade();
-            //    }
-            //    if (resource.policy == Resource.Policy.Downsize)
-            //    {
-            //        resource.downgrade();
-            //    }
-            //}
+            if (location.resourceGoal.HasValue)
+            {
+                location.upgradeResource((Data.Resource.Type)location.resourceGoal);
+            }
+            else if (location.techGoal.HasValue)
+            {
+                location.upgradeTech((Data.Tech.Type)location.techGoal);
+            }
         }
 
         internal void setupTrades(LocationEconomy location)
@@ -115,6 +127,9 @@ namespace NewEconomy
         internal Dictionary<Data.Resource.Type, Resource> resources = new Dictionary<Data.Resource.Type, Resource>();
 		internal Dictionary<Data.Tech.Type, Tech> technologies = new Dictionary<Data.Tech.Type, Tech>();
 
+        public Data.Tech.Type? techGoal;          // for debugging purposes, expose to inspector
+        public Data.Resource.Type? resourceGoal;  
+
         Location location;
 		LocationEconomyAI ai;
 
@@ -126,13 +141,15 @@ namespace NewEconomy
             foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
             {
                 Data.Resource resourceData = Data.Resource.generateDebugData(type);
-                resources[type] = new Resource(resourceData, new ResourcePool(resourceData));
+                resources[type] = new Resource(resourceData, new ResourcePool(resourceData), location);
             }
             foreach (Data.Tech.Type type in Enum.GetValues(typeof(Data.Tech.Type)))
             {
                 Data.Tech techData = Data.Tech.generateDebugData(type);
                 technologies.Add(type, new Tech(techData));
-            }   
+            }  
+            this.techGoal = null;
+            this.resourceGoal = null;
         }
 
         // ----------------------------------------------------------TICK
@@ -156,6 +173,15 @@ namespace NewEconomy
             resources[type].policy = policy;
         }
 
+        internal void setTechGoal(Data.Tech.Type? type)
+        {
+            techGoal = type;
+        }
+        internal void setResourceGoal(Data.Resource.Type? type)
+        {
+            resourceGoal = type;
+        }
+
         internal bool hasEnoughMaterialsToUpgrade(Data.Resource.Type type)
         {
             return resources[type].state == Data.Resource.State.AtGrowLimit;
@@ -170,21 +196,32 @@ namespace NewEconomy
                 if (type == Data.Resource.Type.Industry || type == Data.Resource.Type.Mineral ||
                     type == Data.Resource.Type.Economy)
                 {
-                    if (resources[type].level < technologies[Data.Tech.Type.Infrastructure].level)
+                    if (resources[type].level >= technologies[Data.Tech.Type.Infrastructure].level)
                     {
-                        return true;
+                        return false;
                     }
                 }
                 // not enough military tech
                 else if (type == Data.Resource.Type.Military)
                 {
-                    if (resources[type].level < technologies[Data.Tech.Type.Military].level)
+                    if (resources[type].level >= technologies[Data.Tech.Type.Military].level)
                     {
-                        return true;
+                        return false;
                     }
                 }
+                // has enough technology
+                else return true;
             }
             return false;
+        }
+        internal bool hasEnoughMaterialsToUpgradeTech(Data.Tech.Type type)
+        {
+            foreach (Resource resource in resources.Values)
+            {
+                // if resource is set to 'grow' (is part of the tech goal) & doesn't have enough resource to upgrade tech = fails
+                if (resource.policy == Data.Resource.Policy.Grow && resource.state != Data.Resource.State.AtGrowLimit) return false;
+            }
+            return true;
         }
 
         internal void upgradeResource(Data.Resource.Type type)
@@ -192,6 +229,13 @@ namespace NewEconomy
             if (hasEnoughMaterialsToUpgrade(type) && hasEnoughTechToUpgrade(type))
             {
                 resources[type].upgrade();
+            }
+        }
+        internal void upgradeTech(Data.Tech.Type type)
+        {
+            if (hasEnoughMaterialsToUpgradeTech(type)) // tech prerequisites already checked in policy
+            {
+                technologies[type].upgrade();
             }
         }
 
