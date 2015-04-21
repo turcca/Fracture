@@ -19,7 +19,16 @@ namespace NewEconomy
             this.data = data;
         }
 
-        internal static Data.Tech.Type? getEligibleTechGoal(Data.Resource.Type resourceGoal,
+        internal void upgrade()
+        {
+            data.level++;
+        }
+        internal void downgrade()
+        {
+            data.level--;
+        }
+
+        internal static Data.Tech.Type? getEligibleTechGoal(Data.Resource.Type? resourceGoal,
                                                             LocationEconomy location)
         {            
             Data.Tech.Type? techGoal;

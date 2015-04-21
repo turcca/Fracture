@@ -60,10 +60,6 @@ namespace NewEconomy
         {
             return data.resources > targetLimit ? data.resources - targetLimit : 0.0f;
         }
-        public void setProduction(float amount)
-        {
-            productionRate = amount;
-        }
 
         public void tick(float delta)
         {
@@ -107,6 +103,11 @@ namespace NewEconomy
             targetLimit = limit;
         }
 
+        public void setProduction(float amount)
+        {
+            productionRate = amount;
+        }
+
         internal void setConsumption(float p)
         {
             consumptionRate = p;
@@ -122,6 +123,7 @@ namespace NewEconomy
     {
         private ResourcePool pool;
         private Data.Resource data;
+        private Location location;
 
         public int level
         {
@@ -139,10 +141,11 @@ namespace NewEconomy
             set { data.policy = value; }
         }
 
-        public Resource(Data.Resource data, ResourcePool pool)
+        public Resource(Data.Resource data, ResourcePool pool, Location location)
         {
             this.data = data;
             this.pool = pool;
+            this.location = location;
         }
         public float getResources()
         {
@@ -188,10 +191,14 @@ namespace NewEconomy
 
         private void handlePolicyChanges()
         {
+            // set limits
             switch (data.policy)
             {
                 case Data.Resource.Policy.Grow:
                     pool.setTargetLimit(pool.growLimit);
+                    break;
+                case Data.Resource.Policy.GrowTech:
+                    pool.setTargetLimit(pool.growLimit); // todo tech cost /technology ?
                     break;
                 case Data.Resource.Policy.Sustain:
                     pool.setTargetLimit(pool.consumptionRate * Parameters.resourcePolicyStockpileDays);
@@ -209,6 +216,7 @@ namespace NewEconomy
                     //noop
                     break;
             }
+
         }
         
         internal string toDebugString()
@@ -222,27 +230,32 @@ namespace NewEconomy
 
         internal void upgrade()
         {
-            data.level++;
-            data.state = Data.Resource.State.Sustain;
-            pool.setGrowLimit(data.level * 10.0f);
-            pool.spend(pool.get() * 0.8f);
-            setState();
+            if (data.level < 4) 
+            {
+                data.level++;
+                data.state = Data.Resource.State.Sustain;
+                pool.setGrowLimit(data.level * 10.0f);
+                pool.spend(pool.get() * 0.8f);
+                setState();
+            }
+            else Debug.LogWarning ("Attempting to upgrade level 4 resource");
         }
         internal void downgrade()
         {
-            if (data.level > 0) data.level--;
+            if (data.level > 0) 
+            {
+                data.level--;
+                setState();
+            }
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
-            setState();
         }
 
         internal void updateFeatures()
         {
-            ///@todo production, consumption based on features
-            ///      use random until reasonable values inserted
-            UnityEngine.Random.seed = (int)data.type;
-            //pool.setProduction(pool.productionRate * features.resourceMultiplier[data.type]);
-            pool.setProduction(3.0f);
-            pool.setConsumption(UnityEngine.Random.Range(0.0f, 2.0f));
+            pool.setConsumption(Parameters.resourceProducedDaily *              // static multiplier for resource production rate
+                                Parameters.tierScaleMultiplier(data.level));    // tier-based multiplier for production/consumption scale 
+            pool.setProduction(pool.consumptionRate *                           // base
+                               location.economy.getEffectiveMul(data.type));    // locatin's feature mul * population ideology stat mul
         }
     }
 
