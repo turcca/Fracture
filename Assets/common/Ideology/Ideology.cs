@@ -7,6 +7,8 @@ namespace NewIdeology
 
     public class LocationIdeology
     {
+        private Location location;
+
 		// Turkka laitto nää tähän toisesta Ideology.sc:stä, oli muuten tyhjä ---->
 		static public string[] getIdeologyNames()
 		{
@@ -82,8 +84,10 @@ namespace NewIdeology
 		//    };
 		//}
 		
-		public LocationIdeology()
+		public LocationIdeology(Location location)
 		{
+            this.location = location;
+
 			foreach (string ideology in getIdeologyNames())
 			{
 				support[ideology] = 0.0f;

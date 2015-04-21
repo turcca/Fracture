@@ -29,15 +29,13 @@ public class Game
                 {
                     NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
                     Data.Location data = new Data.Location();
-                    locations.Add(id, new Location(id, loc.gameObject.transform.position,
-                                  new NewEconomy.LocationEconomy(data, ai)));
+                    locations.Add(id, new Location(id, loc.gameObject.transform.position));
                 }
                 else
                 {
                     NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
                     Data.Location data = new Data.Location();
-                    locations.Add(id, new Location(id, loc.gameObject.transform.position,
-                                  new NewEconomy.LocationEconomy(data, ai)));
+                    locations.Add(id, new Location(id, loc.gameObject.transform.position));
                     Tools.debug("Id '" + id + "' not found in location data!");
                 }
             }

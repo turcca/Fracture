@@ -16,12 +16,12 @@ namespace NewEconomy
         [SetUp]
         public void Setup()
         {
-            Data.LocationResource data =
-                Data.LocationResource.generateDebugData(Data.LocationResource.Type.Food);
+            Data.Resource data =
+                Data.Resource.generateDebugData(Data.Resource.Type.Food);
             data.resources = 10.0f;
             pool = new ResourcePool(data, 1.0f, 10.0f, 20.0f, 30.0f);
-            Data.LocationResource emptyData =
-                Data.LocationResource.generateDebugData(Data.LocationResource.Type.Food);
+            Data.Resource emptyData =
+                Data.Resource.generateDebugData(Data.Resource.Type.Food);
             emptyPool = new ResourcePool(emptyData, 1.0f, 10.0f, 20.0f, 30.0f);
         }
         [Test]
@@ -63,12 +63,12 @@ namespace NewEconomy
     internal class ResourceTest
     {
         Resource resource;
-        Data.LocationResource data;
+        Data.Resource data;
     
         [SetUp]
         public void Setup()
         {
-            data = Data.LocationResource.generateDebugData(Data.LocationResource.Type.Food);
+            data = Data.Resource.generateDebugData(Data.Resource.Type.Food);
             data.resources = 5.0f;
             resource = new Resource(data, new ResourcePool(data, 1.0f, 10.0f, 20.0f, 30.0f));
         }
@@ -88,9 +88,9 @@ namespace NewEconomy
         public void DeficitLeadsToShortage()
         {
             resource.tick(1.0f);
-            Assert.That(data.state, Is.EqualTo(Data.LocationResource.State.Sustain));
+            Assert.That(data.state, Is.EqualTo(Data.Resource.State.Sustain));
 			resource.tick(6.0f);
-            Assert.That(data.state, Is.EqualTo(Data.LocationResource.State.Shortage));
+            Assert.That(data.state, Is.EqualTo(Data.Resource.State.Shortage));
         }
         [Test]
         public void GrowLimitLeadsToReadyToUpgrade()

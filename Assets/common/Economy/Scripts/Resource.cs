@@ -18,14 +18,14 @@ namespace NewEconomy
      */
     public class ResourcePool
     {
-        private Data.LocationResource data;
+        private Data.Resource data;
         public float consumptionRate { get; private set; }
         public float productionRate { get; private set; }
         public float targetLimit { get; private set; }
         public float growLimit { get;  private set; }
         public float overflowLimit { get; private set; }
 
-        public ResourcePool(Data.LocationResource data, float consumptionRate,
+        public ResourcePool(Data.Resource data, float consumptionRate,
                             float targetLimit = 0.0f, float growLimit = 0.0f,
                             float overflowLimit = 0.0f)
         {
@@ -35,7 +35,7 @@ namespace NewEconomy
             this.targetLimit = targetLimit;
             this.overflowLimit = overflowLimit;
         }
-        public ResourcePool(Data.LocationResource data)
+        public ResourcePool(Data.Resource data)
         {
             this.data = data;
             this.consumptionRate = 0.0f;
@@ -121,9 +121,25 @@ namespace NewEconomy
     public class Resource
     {
         private ResourcePool pool;
-        private Data.LocationResource data;
+        private Data.Resource data;
 
-        public Resource(Data.LocationResource data, ResourcePool pool)
+        public int level
+        {
+            get { return data.level; }
+            private set { data.level = value; }
+        }
+        public Data.Resource.State state
+        {
+            get { return data.state; }
+            private set { data.state = value; }
+        }
+        public Data.Resource.Policy policy
+        {
+            get { return data.policy; }
+            set { data.policy = value; }
+        }
+
+        public Resource(Data.Resource data, ResourcePool pool)
         {
             this.data = data;
             this.pool = pool;
@@ -158,15 +174,15 @@ namespace NewEconomy
         {
             if (pool.getAndResetDeficit() > 0.0f)
             {
-                data.state = Data.LocationResource.State.Shortage;
+                data.state = Data.Resource.State.Shortage;
             }
             else if (pool.atGrowLimit())
             {
-                data.state = Data.LocationResource.State.AtGrowLimit;
+                data.state = Data.Resource.State.AtGrowLimit;
             }
             else
             {
-                data.state = Data.LocationResource.State.Sustain;
+                data.state = Data.Resource.State.Sustain;
             }
         }
 
@@ -174,19 +190,19 @@ namespace NewEconomy
         {
             switch (data.policy)
             {
-                case Data.LocationResource.Policy.Grow:
+                case Data.Resource.Policy.Grow:
                     pool.setTargetLimit(pool.growLimit);
                     break;
-                case Data.LocationResource.Policy.Sustain:
+                case Data.Resource.Policy.Sustain:
                     pool.setTargetLimit(pool.consumptionRate * Parameters.resourcePolicyStockpileDays);
                     break;
-                case Data.LocationResource.Policy.Stockpile:
+                case Data.Resource.Policy.Stockpile:
                     pool.setTargetLimit(pool.overflowLimit);
                     break;
-                case Data.LocationResource.Policy.BareMinimum:
+                case Data.Resource.Policy.BareMinimum:
                     pool.setTargetLimit(pool.consumptionRate);
                     break;
-                case Data.LocationResource.Policy.Downsize:
+                case Data.Resource.Policy.Downsize:
                     pool.setTargetLimit(0.0f);
                     break;
                 default:
@@ -197,17 +213,17 @@ namespace NewEconomy
         
         internal string toDebugString()
         {
-            string rv = Enum.GetName(typeof(Data.LocationResource.Type), data.type) + " " + pool.get().ToString("F") +
+            string rv = Enum.GetName(typeof(Data.Resource.Type), data.type) + " " + pool.get().ToString("F") +
                 " (lvl " + data.level.ToString() + ") " +
-                "[" + Enum.GetName(typeof(Data.LocationResource.State), data.state) + "] " +
-                "<" + Enum.GetName(typeof(Data.LocationResource.Policy), data.policy) + ">";
+                "[" + Enum.GetName(typeof(Data.Resource.State), data.state) + "] " +
+                "<" + Enum.GetName(typeof(Data.Resource.Policy), data.policy) + ">";
             return rv;            
         }
 
         internal void upgrade()
         {
             data.level++;
-            data.state = Data.LocationResource.State.Sustain;
+            data.state = Data.Resource.State.Sustain;
             pool.setGrowLimit(data.level * 10.0f);
             pool.spend(pool.get() * 0.8f);
             setState();

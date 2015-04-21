@@ -9,7 +9,8 @@ namespace Data
 
     public class LocationFeatures
     {
-        public Dictionary<LocationResource.Type, float> resourceMultiplier { get; private set; }
+        public Dictionary<Resource.Type, float> resourceMultiplier =
+            new Dictionary<Resource.Type, float>();
 
         // todo: change to baseIdeology stats
         public float frontier = 0.2f;
@@ -39,24 +40,24 @@ namespace Data
 
         public LocationFeatures()
         {
-            resourceMultiplier = new Dictionary<LocationResource.Type, float>();
-            foreach (LocationResource.Type type in Enum.GetValues(typeof(LocationResource.Type)))
+            foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
             {
                 resourceMultiplier.Add(type, 1.0f);
             }
         }
+
         public LocationFeatures(string data)
             : this()
         {
             string[] dataChunk = data.Split(',');
-            resourceMultiplier[LocationResource.Type.Food] = float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.Mineral] = float.Parse(dataChunk[1], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.Industry] = float.Parse(dataChunk[2], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.Economy] = float.Parse(dataChunk[3], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.Innovation] = float.Parse(dataChunk[4], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.Culture] = float.Parse(dataChunk[5], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.Military] = float.Parse(dataChunk[6], CultureInfo.InvariantCulture.NumberFormat);
-            resourceMultiplier[LocationResource.Type.BlackMarket] = float.Parse(dataChunk[7], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Food] = float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Mineral] = float.Parse(dataChunk[1], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Industry] = float.Parse(dataChunk[2], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Economy] = float.Parse(dataChunk[3], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Innovation] = float.Parse(dataChunk[4], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Culture] = float.Parse(dataChunk[5], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.Military] = float.Parse(dataChunk[6], CultureInfo.InvariantCulture.NumberFormat);
+            resourceMultiplier[Resource.Type.BlackMarket] = float.Parse(dataChunk[7], CultureInfo.InvariantCulture.NumberFormat);
 
             // commented out until new data is made
             //// todo: change to baseIdeology stats

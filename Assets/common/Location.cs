@@ -59,20 +59,26 @@ public class Location
 
     public NewEconomy.LocationEconomy economy;
     public NewIdeology.LocationIdeology ideology;
+    public Data.LocationFeatures features
+    {
+        get { return data.features; }
+    }
 
-    public Location(string id, Vector3 position, NewEconomy.LocationEconomy economy)
-        : this(id, position, new Data.Location(), economy)
+    public Location(string id, Vector3 position)
+        : this(id, position, new Data.Location())
     {
     }
 
-    public Location(string id, Vector3 position, Data.Location data, NewEconomy.LocationEconomy economy)
+    public Location(string id, Vector3 position, Data.Location data)
     {
         this.id = id;
         this.name = id;
         this.description = Tools.STRING_NOT_ASSIGNED;
         this.position = position;
         this.data = data;
-        this.economy = economy;
+
+        this.economy = new NewEconomy.LocationEconomy(this, new NewEconomy.LocationEconomyAI());
+        this.ideology = new NewIdeology.LocationIdeology(this);
     }
 
     public void tick(float days)
