@@ -223,6 +223,7 @@ namespace NewEconomy
         {
             string rv = Enum.GetName(typeof(Data.Resource.Type), data.type) + " " + pool.get().ToString("F") +
                 " (lvl " + data.level.ToString() + ") " +
+                "+" + pool.productionRate.ToString("F") + " -" + pool.consumptionRate.ToString("F") + "  " +
                 "[" + Enum.GetName(typeof(Data.Resource.State), data.state) + "] " +
                 "<" + Enum.GetName(typeof(Data.Resource.Policy), data.policy) + ">";
             return rv;            

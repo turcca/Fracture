@@ -75,24 +75,27 @@ namespace NewEconomy
                     // >needs tech upgrade
                     location.setTechGoal(Tech.getEligibleTechGoal(location.resourceGoal, location));
 
-                    List<Data.Resource.Type> resourceGoals = Tech.getResourcesForTech(location.techGoal.Value, location);
-                
-                    // go through resources and set policies for tech upgrade
-                    foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
+                    if (location.techGoal.HasValue)
                     {
-                        // if resource is listed in resourceGoals, grow
-                        if (resourceGoals.Contains(sorted.Key))
-                            location.setPolicy(sorted.Key, Data.Resource.Policy.GrowTech);
-                        else
+                        List<Data.Resource.Type> resourceGoals = Tech.getResourcesForTech(location.techGoal.Value, location);
+
+                        // go through resources and set policies for tech upgrade
+                        foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
                         {
-                            // if producing, export
-                            if (sorted.Value > 1.0f)
-                                location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
-                            // else needs to import
-                            else if (sorted.Value < 1.0f)
-                                location.setPolicy(sorted.Key, Data.Resource.Policy.Stockpile);
+                            // if resource is listed in resourceGoals, grow
+                            if (resourceGoals.Contains(sorted.Key))
+                                location.setPolicy(sorted.Key, Data.Resource.Policy.GrowTech);
                             else
-                                location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
+                            {
+                                // if producing, export
+                                if (sorted.Value > 1.0f)
+                                    location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
+                                // else needs to import
+                                else if (sorted.Value < 1.0f)
+                                    location.setPolicy(sorted.Key, Data.Resource.Policy.Stockpile);
+                                else
+                                    location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
+                            }
                         }
                     }
                 }
