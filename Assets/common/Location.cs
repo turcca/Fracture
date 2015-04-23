@@ -86,6 +86,8 @@ public class Location
     public void tick(float days)
     {
         economy.tick(days);
+        // todo: foreach ship 
+        //NewEconomy.LocationTrade.getTradePartnerForShip(ship);
     }
 
     //void initIdeologies()

@@ -122,8 +122,6 @@ namespace NewEconomy
         internal void setupTrades(LocationEconomy location)
         {
             location.tradeItems = getTradeList(location);
-
-
         }
 
         // gathers a list of articles, each with import/export status, quotas and weights 

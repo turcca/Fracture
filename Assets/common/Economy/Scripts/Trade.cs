@@ -6,10 +6,35 @@ namespace NewEconomy
 {
     public class LocationTrade
     {
+        public static KeyValuePair<Location, List<Data.TradeItem>> getTradePartnerForShip (Location home/*, todo: NPCShip ship - if ship knows its Location it's enough*/)
+        {
+            KeyValuePair<float, List<Data.TradeItem>> candidate = new KeyValuePair<float, List<Data.TradeItem>>();
+            List<Data.TradeItem> bestPartnerTradeList = new List<Data.TradeItem>();
+            Location bestPartner = home;
+            float bestScore = 0.0f;
+
+            foreach(Location partner in Root.game.locations.Values)
+            {
+                if (partner != home)
+                {
+                    candidate = scoreTradeListPair(home, partner);
+                    if (candidate.Key > bestScore)
+                    {
+                        bestScore = candidate.Key;
+                        bestPartner = partner;
+                        bestPartnerTradeList = candidate.Value;
+                    }
+                }
+            }
+            return new KeyValuePair<Location, List<Data.TradeItem>>(bestPartner, bestPartnerTradeList);
+        }
+
+        // score (needs to be divided by distance*2 and compared against other location pairs) / trade list for ship
         // this is one of the methods that gets called a lot during trade, so some optimation is good
-        public List<Data.TradeItem> getTradeList(Location fromLocation, Location toLocation/*, NPCShip ship*/)
+        static KeyValuePair<float, List<Data.TradeItem>> scoreTradeListPair(Location fromLocation, Location toLocation/*, float NPCShip.cargoHold*/)
         {
             List<Data.TradeItem> sortedItems = new List<Data.TradeItem>();
+            float cargoCapacity = 10.0f; // todo: use from ship data
 
             // make trade list
             int itemCount = fromLocation.economy.tradeItems.Count-1;
@@ -28,7 +53,6 @@ namespace NewEconomy
             // go through list and allocate trade amounts to and from according to capacity
             // calculate score
             float score = 0;
-            float cargoCapacity = 10.0f; // todo: use from ship data
             float exportCapacity = cargoCapacity;
             float importCapacity = cargoCapacity;
 
@@ -38,20 +62,46 @@ namespace NewEconomy
                 {
                     if (item.isExported)
                     {
-                        item.amount = item.amount > exportCapacity ? 
+                        if (exportCapacity > 0.0f)
+                        {
+                            if (item.amount <= exportCapacity)
+                            {
+                                exportCapacity -= item.amount;
+                                score += (item.amount * item.weight);
+                            }
+                            else
+                            {
+                                item.amount = exportCapacity;
+                                score += (item.amount * item.weight);
+                                exportCapacity = 0.0f;
+                            }
+                        }
                     }
                     else
                     {
-
+                        if (importCapacity > 0.0f)
+                            {
+                            if (item.amount <= importCapacity)
+                            {
+                                importCapacity -= item.amount;
+                                score += (item.amount * item.weight);
+                            }
+                            else
+                            {
+                                item.amount = importCapacity;
+                                score += (item.amount * item.weight);
+                                importCapacity = 0.0f;
+                            }
+                        }
                     }
                 }
             }
-            
-            
-            return sortedItems;
+            // todo: factore in node-based distance-calculation x2 
+            // score /= (distance *2)
+            return new KeyValuePair<float, List<Data.TradeItem>>(score, sortedItems);
         }
     
-        internal Data.TradeItem getResolvedItem(Data.TradeItem fromItem, Data.TradeItem toItem)
+        static Data.TradeItem getResolvedItem(Data.TradeItem fromItem, Data.TradeItem toItem)
         {
             Data.TradeItem resolvedItem = new Data.TradeItem();
 
