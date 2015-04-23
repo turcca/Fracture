@@ -47,6 +47,8 @@ public class Location
     public string id { get; private set; }
     public Vector3 position { get; private set; }
 
+    public float population; 
+
     //public int numShips = 1;
 
     //public IdeologyData ideology;
