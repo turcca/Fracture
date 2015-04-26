@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -273,15 +273,16 @@ namespace NewEconomy
         internal void updateFeatures()
         {
             float popScale = Parameters.populationScaleMultiplier(location.population);
-
             pool.setGrowLimit(Parameters.upgradeCostMultiplier(data.level) * popScale);
-
-            pool.setConsumption(Parameters.resourceProducedDaily *              // static multiplier for resource production rate
-                                popScale *                                      // population multiplier
-                                Parameters.tierScaleMultiplier(data.level));    // tier-based multiplier for production/consumption scale 
-
-            pool.setProduction(pool.consumptionRate *                           // base
-                               location.economy.getEffectiveMul(data.type));    // locatin's feature mul * population ideology stat mul
+            // consumption:
+            // resource production multiplier * population multiplier * tier multiplier
+            pool.setConsumption(Parameters.resourceProducedDaily *
+                                popScale *
+                                Parameters.tierScaleMultiplier(data.level));
+            // prooduction:
+            // consumption rate * effective multiplier (features * ideology)
+            pool.setProduction(pool.consumptionRate *
+                               location.economy.getEffectiveMul(data.type));
         }
 
     }

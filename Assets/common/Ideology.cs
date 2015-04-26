@@ -151,15 +151,6 @@ public class IdeologyData
         public float violent;
         public float aristocracy;
         public float imperialism;
-
-        public float foodMul;
-        public float mineralsMul;
-        public float blackMarketMul;
-        public float innovationMul;
-        public float cultureMul;
-        public float industryMul;
-        public float economyMul;
-        public float militaryMul;
     }
 
     //static public string[] getEffectNames()
@@ -187,11 +178,21 @@ public class IdeologyData
     //    };
     //}
 
+
+    public Dictionary<Data.Resource.Type, float> resourceMultiplier =
+        new Dictionary<Data.Resource.Type, float>(); 
+    public Dictionary<string, float> support = new Dictionary<string, float>();
+    public Effects effects = new Effects();
+
     public IdeologyData()
     {
         foreach (string ideology in getIdeologyNames())
         {
             support[ideology] = 0.0f;
+        }
+        foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
+        {
+            resourceMultiplier.Add(type, 0.0f);
         }
         calculateEffects();
     }
@@ -219,36 +220,14 @@ public class IdeologyData
         effects.aristocracy = (support["cult"] * -0.3f  + support["technocrat"] * 0.1f  + support["mercantile"] * 1.0f  + support["bureaucracy"] * 0.3f + support["liberal"] * -0.7f + support["nationalist"] * -0.3f   + support["aristocrat"] * 1.0f + support["imperialist"] * 0.5f  + support["navigators"] * 1.0f  + support["brotherhood"] * 0.7f  + support["transhumanist"] * -1.0f);
         effects.imperialism = (support["cult"] * 0.8f   + support["technocrat"] * -0.1f + support["mercantile"] * -0.2f + support["bureaucracy"] * 0.05f + support["liberal"] * -0.5f + support["nationalist"] * -1.0f + support["aristocrat"] * 0.5f + support["imperialist"] * 1.0f   + support["navigators"] * 0.1f  + support["brotherhood"] * 0.05f + support["transhumanist"] * -1.0f);
 
-        effects.foodMul        = effects.pgrowth +1;
-        effects.mineralsMul    = effects.industry +1;
-        effects.blackMarketMul = 1-effects.altruism;
-        effects.innovationMul  = effects.innovation +1;
-        effects.cultureMul     = (effects.diplomacy+effects.happiness+effects.altruism)/3 +1;
-        effects.industryMul    = effects.industry +1;
-        effects.economyMul     = effects.economy +1;
-        effects.militaryMul    = effects.military +1;
-
-
-//        effects.pgrowth = (support["cult"] * 100 + support["technocrat"] * -60 + support["mercantile"] * -100 + support["bureaucracy"] * 60 + support["liberal"] * -100 + support["nationalist"] * 80 + support["aristocrat"] * 70 + support["imperialist"] * 20 + support["navigators"] * -300 + support["brotherhood"] * -70 + support["transhumanist"] * 60) / 100;
-//        effects.industry = (support["cult"] * 20 + support["technocrat"] * 100 + support["mercantile"] * 30 + support["bureaucracy"] * 80 + support["liberal"] * -40 + support["nationalist"] * 80 + support["aristocrat"] * 20 + support["imperialist"] * -10 + support["navigators"] * -50 + support["brotherhood"] * -100 + support["transhumanist"] * 0) / 100;
-//        effects.economy = (support["cult"] * -100 + support["technocrat"] * 30 + support["mercantile"] * 100 + support["bureaucracy"] * 60 + support["liberal"] * -30 + support["nationalist"] * -10 + support["aristocrat"] * 40 + support["imperialist"] * -10 + support["navigators"] * 50 + support["brotherhood"] * 0 + support["transhumanist"] * -20) / 100;
-//        effects.diplomacy = (support["cult"] * -100 + support["technocrat"] * 0 + support["mercantile"] * 200 + support["bureaucracy"] * 10 + support["liberal"] * 200 + support["nationalist"] * -100 + support["aristocrat"] * -20 + support["imperialist"] * 20 + support["navigators"] * 100 + support["brotherhood"] * 20 + support["transhumanist"] * 150) / 100;
-//        effects.happiness = (support["cult"] * -30 + support["technocrat"] * 20 + support["mercantile"] * 70 + support["bureaucracy"] * 0 + support["liberal"] * 100 + support["nationalist"] * 30 + support["aristocrat"] * -50 + support["imperialist"] * -20 + support["navigators"] * 20 + support["brotherhood"] * 10 + support["transhumanist"] * 100) / 100;
-//        effects.affluence = (support["cult"] * -70 + support["technocrat"] * 30 + support["mercantile"] * 100 + support["bureaucracy"] * 10 + support["liberal"] * 60 + support["nationalist"] * -30 + support["aristocrat"] * 30 + support["imperialist"] * 0 + support["navigators"] * 60 + support["brotherhood"] * 0 + support["transhumanist"] * -10) / 100;
-//        effects.innovation = (support["cult"] * -100 + support["technocrat"] * 70 + support["mercantile"] * 20 + support["bureaucracy"] * -10 + support["liberal"] * 100 + support["nationalist"] * -20 + support["aristocrat"] * -30 + support["imperialist"] * -20 + support["navigators"] * 70 + support["brotherhood"] * 50 + support["transhumanist"] * 100) / 100;
-//        effects.morale = (support["cult"] * 100 + support["technocrat"] * -20 + support["mercantile"] * -90 + support["bureaucracy"] * -20 + support["liberal"] * -100 + support["nationalist"] * 80 + support["aristocrat"] * 50 + support["imperialist"] * 30 + support["navigators"] * -20 + support["brotherhood"] * -10 + support["transhumanist"] * -100) / 100;
-//        effects.altruism = (support["cult"] * 80 + support["technocrat"] * 20 + support["mercantile"] * -100 + support["bureaucracy"] * -60 + support["liberal"] * 100 + support["nationalist"] * 20 + support["aristocrat"] * -50 + support["imperialist"] * -20 + support["navigators"] * -30 + support["brotherhood"] * -10 + support["transhumanist"] * 0) / 100;
-//        effects.military = (support["cult"] * 100 + support["technocrat"] * 20 + support["mercantile"] * -60 + support["bureaucracy"] * 10 + support["liberal"] * -100 + support["nationalist"] * 100 + support["aristocrat"] * 80 + support["imperialist"] * 40 + support["navigators"] * 20 + support["brotherhood"] * 0 + support["transhumanist"] * -50) / 100;
-//
-//        effects.holy = (support["cult"] * 100 + support["technocrat"] * -20 + support["mercantile"] * -40 + support["bureaucracy"] * -10 + support["liberal"] * -60 + support["nationalist"] * 0 + support["aristocrat"] * -30 + support["imperialist"] * 60 + support["navigators"] * 0 + support["brotherhood"] * 10 + support["transhumanist"] * -100) / 100;
-//        effects.psych = (support["cult"] * -70 + support["technocrat"] * -100 + support["mercantile"] * 20 + support["bureaucracy"] * -20 + support["liberal"] * 40 + support["nationalist"] * -50 + support["aristocrat"] * 30 + support["imperialist"] * 20 + support["navigators"] * 100 + support["brotherhood"] * 200 + support["transhumanist"] * 60) / 100;
-//        effects.navigation = (support["cult"] * -40 + support["technocrat"] * 70 + support["mercantile"] * 100 + support["bureaucracy"] * -10 + support["liberal"] * 20 + support["nationalist"] * -100 + support["aristocrat"] * 10 + support["imperialist"] * 30 + support["navigators"] * 200 + support["brotherhood"] * 60 + support["transhumanist"] * 40) / 100;
-//        effects.purity = (support["cult"] * 100 + support["technocrat"] * -50 + support["mercantile"] * -60 + support["bureaucracy"] * 10 + support["liberal"] * -60 + support["nationalist"] * 40 + support["aristocrat"] * -30 + support["imperialist"] * 20 + support["navigators"] * -100 + support["brotherhood"] * -30 + support["transhumanist"] * -100) / 100;
-//
-//        effects.police = (support["cult"] * 100 + support["technocrat"] * -20 + support["mercantile"] * -60 + support["bureaucracy"] * 40 + support["liberal"] * -100 + support["nationalist"] * 70 + support["aristocrat"] * 80 + support["imperialist"] * 30 + support["navigators"] * -20 + support["brotherhood"] * -40 + support["transhumanist"] * -200) / 100;
-//        effects.violent = (support["cult"] * 100 + support["technocrat"] * -20 + support["mercantile"] * -70 + support["bureaucracy"] * 0 + support["liberal"] * -100 + support["nationalist"] * 100 + support["aristocrat"] * 60 + support["imperialist"] * 30 + support["navigators"] * -50 + support["brotherhood"] * -60 + support["transhumanist"] * 20) / 100;
-//        effects.aristocracy = (support["cult"] * -30 + support["technocrat"] * 10 + support["mercantile"] * 100 + support["bureaucracy"] * 30 + support["liberal"] * -70 + support["nationalist"] * -30 + support["aristocrat"] * 100 + support["imperialist"] * 50 + support["navigators"] * 100 + support["brotherhood"] * 70 + support["transhumanist"] * -100) / 100;
-//        effects.imperialism = (support["cult"] * 80 + support["technocrat"] * -10 + support["mercantile"] * -20 + support["bureaucracy"] * 5 + support["liberal"] * -50 + support["nationalist"] * -100 + support["aristocrat"] * 50 + support["imperialist"] * 100 + support["navigators"] * 10 + support["brotherhood"] * 5 + support["transhumanist"] * -100) / 100;
+        resourceMultiplier[Data.Resource.Type.Food]        = effects.pgrowth +1;
+        resourceMultiplier[Data.Resource.Type.Mineral]     = effects.industry +1;
+        resourceMultiplier[Data.Resource.Type.BlackMarket] = 1-effects.altruism;
+        resourceMultiplier[Data.Resource.Type.Innovation]  = effects.innovation +1;
+        resourceMultiplier[Data.Resource.Type.Culture]     = (effects.diplomacy+effects.happiness+effects.altruism)/3 +1;
+        resourceMultiplier[Data.Resource.Type.Industry]    = effects.industry +1;
+        resourceMultiplier[Data.Resource.Type.Economy]     = effects.economy +1;
+        resourceMultiplier[Data.Resource.Type.Military]    = effects.military +1;
     }
 
     public string toDebugString()
@@ -260,7 +239,4 @@ public class IdeologyData
         }
         return rv;
     }
-
-    public Dictionary<string, float> support = new Dictionary<string, float>();
-    public Effects effects = new Effects();
 }

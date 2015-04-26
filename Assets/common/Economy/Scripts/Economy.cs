@@ -363,16 +363,7 @@ namespace NewEconomy
         internal float getEffectiveMul(Data.Resource.Type type)
         {
             // should probably get all the multipliers at once for getSortedResourceTypes
-            //return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type];
-            if (type == Data.Resource.Type.Food) return location.features.resourceMultiplier[Data.Resource.Type.Food] * location.ideology.effects.foodMul;
-            else if (type == Data.Resource.Type.Mineral) return location.features.resourceMultiplier[Data.Resource.Type.Mineral] * location.ideology.effects.mineralsMul;
-            else if (type == Data.Resource.Type.BlackMarket) return location.features.resourceMultiplier[Data.Resource.Type.BlackMarket] * location.ideology.effects.blackMarketMul;
-            else if (type == Data.Resource.Type.Innovation) return location.features.resourceMultiplier[Data.Resource.Type.Innovation] * location.ideology.effects.innovationMul;
-            else if (type == Data.Resource.Type.Culture) return location.features.resourceMultiplier[Data.Resource.Type.Culture] * location.ideology.effects.cultureMul;
-            else if (type == Data.Resource.Type.Industry) return location.features.resourceMultiplier[Data.Resource.Type.Industry] * location.ideology.effects.industryMul;
-            else if (type == Data.Resource.Type.Economy) return location.features.resourceMultiplier[Data.Resource.Type.Economy] * location.ideology.effects.economyMul;
-            else if (type == Data.Resource.Type.Military) return location.features.resourceMultiplier[Data.Resource.Type.Military] * location.ideology.effects.militaryMul;
-            else { Debug.LogWarning("WARNING: bad input type."); return 0; }
+            return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type];
         }
 
         internal List<KeyValuePair<Data.Resource.Type, float>> getSortedResourceTypes()
