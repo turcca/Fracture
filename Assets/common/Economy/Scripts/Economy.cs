@@ -10,6 +10,13 @@ namespace NewEconomy
         public void setPolicies(LocationEconomy location)
         {
             List<KeyValuePair<Data.Resource.Type, float>> sortedResourceTypes = location.getSortedResourceTypes();
+
+            // set effective value
+            foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
+            {
+                location.resources[sorted.Key].setEffectiveMultiplier(sorted.Value);
+            }
+
             // if negative total growth
             if (location.getTotalEffectiveLocationResourceMultiplier() < 1.0f)
             {
@@ -25,7 +32,7 @@ namespace NewEconomy
                             location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Downsize);
                         // set negative ones to 'Import'
                         else if (sortedResourceTypes[i].Value < 1.0f)
-                            location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Stockpile);
+                            location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Sustain);
                         // set positive ones to 'export'
                         else if (sortedResourceTypes[i].Value > 1.0f)
                             location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.BareMinimum);
@@ -63,8 +70,6 @@ namespace NewEconomy
                         if (sorted.Value > 1.0f)
                             location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
                         // else needs to import
-                        else if (sorted.Value < 1.0f)
-                            location.setPolicy(sorted.Key, Data.Resource.Policy.Stockpile);
                         else
                             location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
                     }
@@ -91,8 +96,6 @@ namespace NewEconomy
                                 if (sorted.Value > 1.0f)
                                     location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
                                 // else needs to import
-                                else if (sorted.Value < 1.0f)
-                                    location.setPolicy(sorted.Key, Data.Resource.Policy.Stockpile);
                                 else
                                     location.setPolicy(sorted.Key, Data.Resource.Policy.Sustain);
                             }
@@ -118,7 +121,91 @@ namespace NewEconomy
 
         internal void setupTrades(LocationEconomy location)
         {
-            // todo
+            location.tradeItems = getTradeList(location);
+        }
+
+        // gathers a list of articles, each with import/export status, quotas and weights 
+        // to be compared against tradeList of other locations for best match
+        public List<Data.TradeItem> getTradeList(LocationEconomy location)
+        {
+            List<Data.TradeItem> list = new List<Data.TradeItem>();
+            Data.TradeItem current = new Data.TradeItem();
+            
+            foreach (KeyValuePair<Data.Resource.Type, Resource> resource in location.resources)
+            {
+                current.type = resource.Key;
+                current.amount = resource.Value.getResourcesOverTargetLimit();
+                
+                // export
+                if (current.amount > 0.0f)
+                {
+                    current.isExported = true;
+                    current.weight = resource.Value.effectiveMultiplier;
+                    
+                    // set weights
+                    switch (resource.Value.policy)
+                    {
+                        case Data.Resource.Policy.Grow:
+                            current.weight *= 0.9f;
+                            break;
+                        case Data.Resource.Policy.GrowTech:
+                            current.weight *= 0.9f;
+                            break;
+                        case Data.Resource.Policy.Sustain:
+                            current.weight *= 0.5f;
+                            break;
+                        case Data.Resource.Policy.Stockpile:
+                            current.weight *= 0.8f;
+                            break;
+                        case Data.Resource.Policy.BareMinimum:
+                            current.weight *= 2.0f;
+                            break;
+                        case Data.Resource.Policy.Downsize:
+                            current.weight *= 0.0f;
+                            break;
+                        default:
+                            current.weight *= 1.0f;
+                            break;
+                    }
+                }  
+                // import
+                else 
+                {
+                    current.isExported = false;
+                    current.amount = -current.amount;
+                    current.weight = resource.Value.effectiveMultiplier > 2.0f ? 0 : 2.0f-resource.Value.effectiveMultiplier;
+                    if (resource.Value.state == Data.Resource.State.Shortage) current.weight *= 3.0f;
+                    
+                    // set weights
+                    switch (resource.Value.policy)
+                    {
+                        case Data.Resource.Policy.Grow:
+                            current.weight *= 1.1f;
+                            break;
+                        case Data.Resource.Policy.GrowTech:
+                            current.weight *= 1.1f;
+                            break;
+                        case Data.Resource.Policy.Sustain:
+                            current.weight *= 1.2f;
+                            break;
+                        case Data.Resource.Policy.Stockpile:
+                            current.weight *= 1.0f;
+                            break;
+                        case Data.Resource.Policy.BareMinimum:
+                            current.weight *= 1.0f;
+                            break;
+                        case Data.Resource.Policy.Downsize:
+                            current.weight *= 1.0f;
+                            break;
+                        default:
+                            current.weight *= 1.0f;
+                            break;
+                    }
+                }
+                
+                list.Add(current);
+            }
+            return list;
         }
     }
 
@@ -126,6 +213,8 @@ namespace NewEconomy
     {
         internal Dictionary<Data.Resource.Type, Resource> resources = new Dictionary<Data.Resource.Type, Resource>();
 		internal Dictionary<Data.Tech.Type, Tech> technologies = new Dictionary<Data.Tech.Type, Tech>();
+
+        public List<Data.TradeItem> tradeItems = new List<Data.TradeItem>();
 
         public Data.Tech.Type? techGoal;          // for debugging purposes, expose to inspector
         public Data.Resource.Type? resourceGoal;  
@@ -143,11 +232,13 @@ namespace NewEconomy
                 Data.Resource resourceData = Data.Resource.generateDebugData(type);
                 resources[type] = new Resource(resourceData, new ResourcePool(resourceData), location);
             }
+
             foreach (Data.Tech.Type type in Enum.GetValues(typeof(Data.Tech.Type)))
             {
                 Data.Tech techData = Data.Tech.generateDebugData(type);
                 technologies.Add(type, new Tech(techData));
-            }  
+            }
+ 
             this.techGoal = null;
             this.resourceGoal = null;
         }
@@ -303,5 +394,6 @@ namespace NewEconomy
             );
             return sortedList;
         }
+ 
     }
 }

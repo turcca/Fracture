@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -60,6 +60,10 @@ namespace NewEconomy
         {
             return data.resources > targetLimit ? data.resources - targetLimit : 0.0f;
         }
+        public float getResourcesOverTargetLimit()
+        {
+            return data.resources - targetLimit;
+        }
 
         public void tick(float delta)
         {
@@ -68,7 +72,7 @@ namespace NewEconomy
             data.resources -= consumptionRate * delta;
 
             // spoilage
-            Mathf.Clamp(data.resources, 0.0f, overflowLimit);
+            //Mathf.Clamp(data.resources, 0.0f, overflowLimit);
 
         }
         internal void spend(float amount)
@@ -123,7 +127,9 @@ namespace NewEconomy
     {
         private ResourcePool pool;
         private Data.Resource data;
-        private Location location;
+        internal Location location;
+
+        public float effectiveMultiplier { get; private set; }
 
         public int level
         {
@@ -233,10 +239,11 @@ namespace NewEconomy
         {
             if (data.level < 4) 
             {
+                pool.spend(pool.growLimit);
                 data.level++;
-                data.state = Data.Resource.State.Sustain;
-                pool.setGrowLimit(data.level * 10.0f);
-                pool.spend(pool.get() * 0.8f);
+                data.policy = Data.Resource.Policy.Sustain;
+                updateFeatures();
+                handlePolicyChanges();
                 setState();
             }
             else Debug.LogWarning ("Attempting to upgrade level 4 resource");
@@ -246,18 +253,37 @@ namespace NewEconomy
             if (data.level > 0) 
             {
                 data.level--;
+                updateFeatures();
+                handlePolicyChanges();
                 setState();
             }
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
         }
+        internal void setEffectiveMultiplier(float effectiveMul)
+        {
+            effectiveMultiplier = effectiveMul;
+            //exportWeight = effectiveValue;
+            //importWeight = effectiveValue > 2.0f ? 0 : 2.0f-effectiveValue;
+        }
+        public float getResourcesOverTargetLimit()
+        {
+            return pool.getResourcesOverTargetLimit();
+        }
 
         internal void updateFeatures()
         {
+            float popScale = Parameters.populationScaleMultiplier(location.population);
+
+            pool.setGrowLimit(Parameters.upgradeCostMultiplier(data.level) * popScale);
+
             pool.setConsumption(Parameters.resourceProducedDaily *              // static multiplier for resource production rate
+                                popScale *                                      // population multiplier
                                 Parameters.tierScaleMultiplier(data.level));    // tier-based multiplier for production/consumption scale 
+
             pool.setProduction(pool.consumptionRate *                           // base
                                location.economy.getEffectiveMul(data.type));    // locatin's feature mul * population ideology stat mul
         }
+
     }
 
 }
