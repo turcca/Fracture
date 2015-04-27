@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace NewEconomy
+namespace Simulation
 {
     public class LocationEconomyAI
     {
@@ -385,6 +385,16 @@ namespace NewEconomy
             );
             return sortedList;
         }
- 
+
+
+        internal void export(Data.Resource.Type type, float amount)
+        {
+            resources[type].export(amount);
+        }
+
+        internal void import(Data.Resource.Type type, float amount)
+        {
+            resources[type].import(amount);
+        }
     }
 }

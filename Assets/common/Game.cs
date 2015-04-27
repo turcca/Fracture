@@ -9,10 +9,8 @@ public class Game
     public Dictionary<string, Location> locations { get; private set; } 
     public EventManager events {get; private set; } 
     public Player player { get; private set; }
-    public NavNetwork tradeNetwork { get; private set; }
-    public List<NPCShip> ships { get; private set; }
-
-    bool testingMode = false;
+    public Navigation.NavNetwork navNetwork { get; private set; }
+    public List<Simulation.NPCShip> ships { get; private set; }
 
     internal void initLocations()
     {
@@ -27,13 +25,13 @@ public class Game
                 string id = loc.getId();
                 if (locationFeatures.ContainsKey(id))
                 {
-                    NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
+                    Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
                     Data.Location data = new Data.Location();
                     locations.Add(id, new Location(id, loc.gameObject.transform.position));
                 }
                 else
                 {
-                    NewEconomy.LocationEconomyAI ai = new NewEconomy.LocationEconomyAI();
+                    Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
                     Data.Location data = new Data.Location();
                     locations.Add(id, new Location(id, loc.gameObject.transform.position));
                     Tools.debug("Id '" + id + "' not found in location data!");
@@ -44,21 +42,20 @@ public class Game
         {
             // for scene testing purposes
             //locations.Add("a", new Location("1c01", locationData["1c01"], new Vector2(0, 0)));
-            testingMode = true;
             return;
         }
 
         //// all locations
-        //Location[] arr = new Location[locations.Count];
-        //locations.Values.CopyTo(arr, 0);
+        Location[] arr = new Location[locations.Count];
+        locations.Values.CopyTo(arr, 0);
         //// all navpoints
         //GameObject navRoot = GameObject.Find("NavpointRoot");
-        //List<NavpointId> navs = new List<NavpointId>();
+        List<NavpointId> navs = new List<NavpointId>();
         //foreach (NavpointId nav in navRoot.GetComponentsInChildren<NavpointId>())
         //{
         //    navs.Add(nav);
         //}
-        //tradeNetwork = new NavNetwork(arr, navs);
+        navNetwork = new Navigation.NavNetwork(arr, navs);
     }
 
     internal void initEvents()
@@ -68,13 +65,14 @@ public class Game
 
     internal void initNPCShips()
     {
-        ships = new List<NPCShip>();
-
-        if (testingMode) return;
-
+        ships = new List<Simulation.NPCShip>();
         foreach (Location location in locations.Values)
         {
-            location.initShips();
+            ///@todo read amount of ships from data/location
+            for (int i = 0; i < 5; i++)
+            {
+                ships.Add(new Simulation.NPCShip(location));
+            }
         }
     }
 

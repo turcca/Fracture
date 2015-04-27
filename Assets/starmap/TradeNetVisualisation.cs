@@ -6,18 +6,18 @@ public class TradeNetVisualisation : MonoBehaviour
 {
     public GameObject tradeShipPrefab;
 
-    NPCShip trackedShip;
+    Simulation.NPCShip trackedShip;
 
     // Use this for initialization
     void Start()
     {
-        foreach (NPCShip ship in Root.game.ships)
+        foreach (Simulation.NPCShip ship in Root.game.ships)
         {
             createShip(ship);
         }
     }
 
-    private void createShip(NPCShip ship)
+    private void createShip(Simulation.NPCShip ship)
     {
         GameObject shipObj = (GameObject)GameObject.Instantiate(tradeShipPrefab, ship.position, Quaternion.identity);
         TradeShip shipData = shipObj.GetComponent<TradeShip>();
@@ -40,9 +40,9 @@ public class TradeNetVisualisation : MonoBehaviour
         //    }
         //}
 
-        foreach (NavNode node in Root.game.tradeNetwork.navNodes)
+        foreach (Navigation.NavNode node in Root.game.navNetwork.navNodes)
         {
-            foreach (NavNode neighbour in node.links)
+            foreach (Navigation.NavNode neighbour in node.links)
             {
                 Gizmos.color = new Color(1.0f, 1.0f, 1.0f);
                 Gizmos.DrawLine(node.position, neighbour.position);
@@ -85,7 +85,7 @@ public class TradeNetVisualisation : MonoBehaviour
         }
     }
 
-    public void trackShip(NPCShip ship)
+    public void trackShip(Simulation.NPCShip ship)
     {
         trackedShip = ship;
     }

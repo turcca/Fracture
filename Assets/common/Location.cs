@@ -6,36 +6,36 @@ using System.Linq;
 
 public class Stockpile
 {
-    public Stockpile()
-    {
-        foreach (string name in Economy.getCommodityNames())
-        {
-            // use random until real values are inserted to exel
-            commodities.Add(name, UnityEngine.Random.Range(0,99));
-            lacking.Add(name, UnityEngine.Random.Range(0, 99));
-            tradable.Add(name, UnityEngine.Random.Range(0, 99));
-        }
-    }
+    //public Stockpile()
+    //{
+    //    foreach (string name in Economy.getCommodityNames())
+    //    {
+    //        // use random until real values are inserted to exel
+    //        commodities.Add(name, UnityEngine.Random.Range(0,99));
+    //        lacking.Add(name, UnityEngine.Random.Range(0, 99));
+    //        tradable.Add(name, UnityEngine.Random.Range(0, 99));
+    //    }
+    //}
 
-    public Dictionary<string, int> commodities = new Dictionary<string, int>();
-    public Dictionary<string, int> lacking = new Dictionary<string, int>();
-    public Dictionary<string, int> tradable = new Dictionary<string, int>();
+    //public Dictionary<string, int> commodities = new Dictionary<string, int>();
+    //public Dictionary<string, int> lacking = new Dictionary<string, int>();
+    //public Dictionary<string, int> tradable = new Dictionary<string, int>();
 
-    public List<string> getImportList()
-    {
-        var rv = from pair in lacking
-                 orderby pair.Value descending
-                 select pair.Key;
-        return rv.ToList<string>();
-    }
+    //public List<string> getImportList()
+    //{
+    //    var rv = from pair in lacking
+    //             orderby pair.Value descending
+    //             select pair.Key;
+    //    return rv.ToList<string>();
+    //}
 
-    public List<string> getExportList()
-    {
-        var rv = from pair in tradable
-                 orderby pair.Value descending
-                 select pair.Key;
-        return rv.ToList<string>();
-    }
+    //public List<string> getExportList()
+    //{
+    //    var rv = from pair in tradable
+    //             orderby pair.Value descending
+    //             select pair.Key;
+    //    return rv.ToList<string>();
+    //}
 }
 
 public class Location
@@ -59,8 +59,8 @@ public class Location
     //LocationIndustry industry;
     //Inventory Stockpile;
 
-    public NewEconomy.LocationEconomy economy;
-    public NewIdeology.LocationIdeology ideology;
+    public Simulation.LocationEconomy economy;
+    public Simulation.LocationIdeology ideology;
     public Data.LocationFeatures features
     {
         get { return data.features; }
@@ -79,8 +79,8 @@ public class Location
         this.position = position;
         this.data = data;
 
-        this.economy = new NewEconomy.LocationEconomy(this, new NewEconomy.LocationEconomyAI());
-        this.ideology = new NewIdeology.LocationIdeology(this);
+        this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
+        this.ideology = new Simulation.LocationIdeology(this);
     }
 
     public void tick(float days)
@@ -210,11 +210,16 @@ public class Location
     }
 
 
-    public void initShips()
+    public List<Simulation.NPCShip> getFreeShips()
     {
-        //for (int i = 0; i < numShips; ++i )
-        //{
-        //    Game.universe.ships.Add(new NPCShip(this));
-        //}
+        List<Simulation.NPCShip> rv = new List<Simulation.NPCShip>();
+        foreach (Simulation.NPCShip ship in Root.game.ships)
+        {
+            if (ship.home == this && ship.free)
+            {
+                rv.Add(ship);
+            }
+        }
+        return rv;
     }
 }

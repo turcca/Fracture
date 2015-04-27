@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace NewEconomy
+namespace Simulation
 {
     public static class Parameters
     {

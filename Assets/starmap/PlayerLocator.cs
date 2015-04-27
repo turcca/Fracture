@@ -42,7 +42,7 @@ public class PlayerLocator : MonoBehaviour
             {
                 ui = GameObject.Find("GameCanvas").GetComponent<GameMenuSystem>();
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 return false;
             }

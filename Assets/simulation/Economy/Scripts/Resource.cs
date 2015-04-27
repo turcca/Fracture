@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace NewEconomy
+namespace Simulation
 {
     /**
      * Resource pool keeps track of resouce consumption/production.
@@ -89,6 +89,11 @@ namespace NewEconomy
         public void add(float amount)
         {
             data.resources += amount;
+        }
+
+        public void sub(float amount)
+        {
+            data.resources -= amount;
         }
 
         internal bool atGrowLimit()
@@ -285,6 +290,16 @@ namespace NewEconomy
                                location.economy.getEffectiveMul(data.type));
         }
 
+
+        internal void export(float amount)
+        {
+            pool.sub(amount);
+        }
+
+        internal void import(float amount)
+        {
+            pool.add(amount);
+        }
     }
 
 }

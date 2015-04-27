@@ -38,6 +38,7 @@ static public class Root
 #else
         game = new Game();
         game.initLocations();
+        game.initNPCShips();
 #endif
 
 //        EventAdder.addAllEvents();

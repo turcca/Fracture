@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NewEconomy
+namespace Simulation
 {
     public class LocationTrade
     {

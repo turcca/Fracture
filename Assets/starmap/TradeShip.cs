@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TradeShip : MonoBehaviour
 {
-    NPCShip trackedShip;
+    Simulation.NPCShip trackedShip;
 
     TradeNetVisualisation visualisation;
 
@@ -22,7 +22,7 @@ public class TradeShip : MonoBehaviour
         }
     }
 
-    public void trackShip(NPCShip ship)
+    public void trackShip(Simulation.NPCShip ship)
     {
         trackedShip = ship;
     }
