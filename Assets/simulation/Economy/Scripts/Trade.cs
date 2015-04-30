@@ -1,23 +1,23 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace Simulation
 {
     public class LocationTrade
     {
-        public static KeyValuePair<Location, List<Data.TradeItem>> getTradePartnerForShip (Location home/*, todo: NPCShip ship - if ship knows its Location it's enough*/)
+        public static void setTradePartnerForShip (NPCShip ship)
         {
             KeyValuePair<float, List<Data.TradeItem>> candidate = new KeyValuePair<float, List<Data.TradeItem>>();
             List<Data.TradeItem> bestPartnerTradeList = new List<Data.TradeItem>();
-            Location bestPartner = home;
+            Location bestPartner = ship.home;
             float bestScore = 0.0f;
-
             foreach(Location partner in Root.game.locations.Values)
             {
-                if (partner != home)
+                if (partner != ship.home)
                 {
-                    candidate = scoreTradeListPair(home, partner);
+                    candidate = scoreTradeListPair(ship.home, partner, ship.cargoSpace);
                     if (candidate.Key > bestScore)
                     {
                         bestScore = candidate.Key;
@@ -26,19 +26,24 @@ namespace Simulation
                     }
                 }
             }
-            return new KeyValuePair<Location, List<Data.TradeItem>>(bestPartner, bestPartnerTradeList);
+            if (Parameters.isTradeScoreEnough(bestScore))
+            {
+                ship.tradeList = bestPartnerTradeList;
+                ship.destination = bestPartner;
+            }
+            else ship.destination = ship.home;
         }
 
         // score (needs to be divided by distance*2 and compared against other location pairs) / trade list for ship
         // this is one of the methods that gets called a lot during trade, so some optimation is good
-        static KeyValuePair<float, List<Data.TradeItem>> scoreTradeListPair(Location fromLocation, Location toLocation/*, float NPCShip.cargoHold*/)
-        {
+        static KeyValuePair<float, List<Data.TradeItem>> scoreTradeListPair(Location fromLocation, Location toLocation, float cargoSpace)
+        { 
             List<Data.TradeItem> sortedItems = new List<Data.TradeItem>();
-            float cargoCapacity = 10.0f; // todo: use from ship data
 
             // make trade list
-            int itemCount = fromLocation.economy.tradeItems.Count-1;
-            for (int i = 0; i > itemCount; i++)
+            int itemCount = fromLocation.economy.tradeItems.Count;
+
+            for (int i = 0; i < itemCount; i++)
             {
                 sortedItems.Add(getResolvedItem(fromLocation.economy.tradeItems[i], toLocation.economy.tradeItems[i]));
             }
@@ -53,8 +58,8 @@ namespace Simulation
             // go through list and allocate trade amounts to and from according to capacity
             // calculate score
             float score = 0;
-            float exportCapacity = cargoCapacity;
-            float importCapacity = cargoCapacity;
+            float exportCapacity = cargoSpace;
+            float importCapacity = cargoSpace;
 
             foreach (Data.TradeItem item in sortedItems)
             {
@@ -104,7 +109,6 @@ namespace Simulation
         static Data.TradeItem getResolvedItem(Data.TradeItem fromItem, Data.TradeItem toItem)
         {
             Data.TradeItem resolvedItem = new Data.TradeItem();
-
             // exporting
             if (fromItem.isExported && !toItem.isExported)
             {

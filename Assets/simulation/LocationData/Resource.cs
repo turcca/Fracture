@@ -24,9 +24,9 @@ namespace Data
         public Policy policy = Policy.Sustain;
         public State state = State.Sustain;
         public Type type;
-        public int level = 0;
+        public int level = 1;
 
-        public float resources = 0.0f;
+        public float resources = 10.0f;
 
         public Resource(Type type)
         {
@@ -50,11 +50,6 @@ namespace Data
         public Resource.Type type;
         public float amount = 0;
         public float weight = 0.0f;
-        // Location fromLocation;
-        public TradeItem(/*Resource.Type type*/) 
-        { 
-            //this.type = type; 
-        }
     }
 }
 

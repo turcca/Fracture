@@ -9,7 +9,7 @@ namespace Data
         public enum Type { Technology, Infrastructure, Military };
 
         public Tech.Type type;
-        public int level = 0;
+        public int level = 1;
 
         public Tech(Type type)
         {

@@ -47,7 +47,7 @@ public class Location
     public string id { get; private set; }
     public Vector3 position { get; private set; }
 
-    public float population; 
+    public float population = 10.0f; 
 
     //public int numShips = 1;
 
@@ -86,8 +86,6 @@ public class Location
     public void tick(float days)
     {
         economy.tick(days);
-        // todo: foreach ship 
-        //NewEconomy.LocationTrade.getTradePartnerForShip(ship);
     }
 
     //void initIdeologies()

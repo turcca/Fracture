@@ -151,17 +151,19 @@ public class Game
     {
         if (GameState.getState() != GameState.State.Event)
         {
+            // economy, ideology
             foreach (Location location in locations.Values)
             {
                 location.tick(days);
             }
             //player.tick(days);
             //events.tick(days);
-
-            //foreach (NPCShip ship in ships)
-            //{
-            //    ship.tick(days);
-            //}
+            // ships, trade
+            foreach (Simulation.NPCShip ship in ships)
+            {
+                ship.sendFreeShips();
+                ship.tick(days);
+            }
         }
     }
 }

@@ -48,17 +48,19 @@ namespace Simulation
             {
                 // POLICY: find overall strategy goal & figure out needed resources for it
                 location.setResourceGoal(null);
-
+                bool foundGrowth = false;
                 ///@todo ASSET GOALS?
 
                 // see in order which resource goal is achiavable
                 foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
                 {
-                    if (location.resourceGoal == null &&
+                    if (!foundGrowth &&
+                        //location.resourceGoal == null &&
                         location.resources[sorted.Key].level < 4 &&
                         location.hasEnoughTechToUpgrade(sorted.Key))
                     {
                         // >resource goal
+                        foundGrowth = true;
                         location.setResourceGoal(sorted.Key);
                         location.setTechGoal(null);
                         // set policy for resource grow
@@ -66,6 +68,8 @@ namespace Simulation
                     }
                     else 
                     {
+                        if (!location.resourceGoal.HasValue)
+                            location.setResourceGoal(sorted.Key);
                         // if producing, export
                         if (sorted.Value > 1.0f)
                             location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
@@ -75,10 +79,11 @@ namespace Simulation
                     }
                 }
                 // needs a tech goal
-                if (location.resourceGoal == null)
+                if (!foundGrowth)
                 {
                     // >needs tech upgrade
                     location.setTechGoal(Tech.getEligibleTechGoal(location.resourceGoal, location));
+                    location.setResourceGoal(null);
 
                     if (location.techGoal.HasValue)
                     {
@@ -250,6 +255,7 @@ namespace Simulation
 
             foreach (Resource resource in resources.Values)
             {
+                //if (float.IsNaN(resource.getResources())) Debug.Log ("nan"); else Debug.Log (resource.toDebugString()); 
                 resource.tick(delta);
             }
 
@@ -258,6 +264,7 @@ namespace Simulation
             ai.setupTrades(this);
         }
         // ----------------------------------------------------------
+
 
         internal void setPolicy(Data.Resource.Type type, Data.Resource.Policy policy)
         {
@@ -333,9 +340,13 @@ namespace Simulation
         internal string toDebugString()
         {
             string rv = "";
+            rv += "Total effective multiplier: "+Mathf.Round (getTotalEffectiveLocationResourceMultiplier()*100)/100 + "\n";
+            if (resourceGoal.HasValue) rv += "Resource Goal: " + Enum.GetName(typeof(Data.Resource.Type), resourceGoal) + "\n";
+            if (techGoal.HasValue) rv += "Tech Goal: "+ Enum.GetName(typeof(Data.Tech.Type), techGoal) + "\n";
+            rv += "Tech: "+technologies[Data.Tech.Type.Technology].level+", Infra: "+technologies[Data.Tech.Type.Infrastructure].level+", Milit: "+technologies[Data.Tech.Type.Military].level +"\n";
             foreach (Resource resource in resources.Values)
             {
-                rv = rv + resource.toDebugString() + "\n";
+                rv += resource.toDebugString() + "\n";
             }
             return rv;
         }
@@ -380,12 +391,16 @@ namespace Simulation
                 delegate(KeyValuePair<Data.Resource.Type, float> firstPair,
                             KeyValuePair<Data.Resource.Type, float> nextPair)
                 {
-                    return firstPair.Value.CompareTo(nextPair.Value);
+                    return nextPair.Value.CompareTo(firstPair.Value);
                 }
             );
             return sortedList;
         }
 
+        internal void updateTradeItems()
+        {
+            this.tradeItems = ai.getTradeList(this);
+        }
 
         internal void export(Data.Resource.Type type, float amount)
         {
@@ -395,6 +410,15 @@ namespace Simulation
         internal void import(Data.Resource.Type type, float amount)
         {
             resources[type].import(amount);
+        }
+        internal bool hasShortage()
+        {
+            foreach (var pair in resources)
+            {
+                if (pair.Value.state == Data.Resource.State.Shortage)
+                    return true;
+            }
+            return false;
         }
     }
 }
