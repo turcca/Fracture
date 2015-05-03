@@ -30,7 +30,9 @@ namespace Simulation
 
         internal static Data.Tech.Type? getEligibleTechGoal(Data.Resource.Type? resourceGoal,
                                                             LocationEconomy location)
-        {            
+        {   
+            if (!resourceGoal.HasValue) return null;
+
             Data.Tech.Type? techGoal;
             
             // accrue tech goal from most successful resource / Technology Infrastructure Military
@@ -42,11 +44,7 @@ namespace Simulation
             else if (resourceGoal == Data.Resource.Type.Industry) techGoal = Data.Tech.Type.Military;
             else if (resourceGoal == Data.Resource.Type.Economy) techGoal = Data.Tech.Type.Technology;
             else if (resourceGoal == Data.Resource.Type.Military) techGoal = Data.Tech.Type.Military;
-            else
-            {
-                Debug.Log("WARNING: no proper key found");
-                return null;
-            }
+            else techGoal = null;
 
             // check tech level pre-requisits for selected tech goal
             if (techGoal == Data.Tech.Type.Technology)

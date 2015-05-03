@@ -250,6 +250,7 @@ namespace Simulation
                 updateFeatures();
                 handlePolicyChanges();
                 setState();
+                //Debug.Log ("upgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + data.level);
             }
             else Debug.LogWarning ("Attempting to upgrade level 4 resource");
         }
@@ -261,14 +262,13 @@ namespace Simulation
                 updateFeatures();
                 handlePolicyChanges();
                 setState();
+                //Debug.Log ("downgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + data.level);
             }
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
         }
         internal void setEffectiveMultiplier(float effectiveMul)
         {
             effectiveMultiplier = effectiveMul;
-            //exportWeight = effectiveValue;
-            //importWeight = effectiveValue > 2.0f ? 0 : 2.0f-effectiveValue;
         }
         public float getResourcesOverTargetLimit()
         {
@@ -284,7 +284,7 @@ namespace Simulation
             pool.setConsumption(Parameters.resourceProducedDaily *
                                 popScale *
                                 Parameters.tierScaleMultiplier(data.level));
-            // prooduction:
+            // production:
             // consumption rate * effective multiplier (features * ideology)
             pool.setProduction(pool.consumptionRate *
                                location.economy.getEffectiveMul(data.type));

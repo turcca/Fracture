@@ -5,84 +5,52 @@ namespace Simulation
 {
     public class Trade
     {
-        public static void tradeResources(Location from, Location to, Data.Resource.Type import, Data.Resource.Type export, NPCShip ship)
+        public static void tradeResources(NPCShip ship)
         {
-            float amount = ship.cargoSpace;
-            ship.embarkTo(to);
-
-            from.economy.export(export, amount);
-            from.economy.import(import, amount);
-            to.economy.export(import, amount);
-            to.economy.import(export, amount);
+            foreach (Data.TradeItem item in ship.tradeList)
+            {
+                if (item.amount > 0.0f)
+                {
+                    if (item.isExported)
+                    {
+                        ship.home.economy.export(item.type, item.amount);
+                        ship.destination.economy.import (item.type, item.amount);
+                    }
+                    else
+                    {
+                        ship.home.economy.import(item.type, item.amount);
+                        ship.destination.economy.export(item.type, item.amount);
+                    }
+                }
+            }
+            ship.home.economy.updateTradeItems();
+            ship.destination.economy.updateTradeItems();
+        }
+        // if ship is lost or loses cargo in transit, reverse retroactively trades
+        public static void reverseTradeResources(NPCShip ship)
+        {
+            foreach (Data.TradeItem item in ship.tradeList)
+            {
+                if (item.amount > 0.0f)
+                {
+                    if (item.isExported)
+                    {
+                        if (ship.isGoingToDestination) // ship is still en route to destination and hasn't delivered exports
+                        {
+                            ship.home.economy.import(item.type, item.amount);
+                            ship.destination.economy.export (item.type, item.amount);
+                        }
+                    }
+                    else
+                    {
+                        ship.home.economy.export(item.type, item.amount);
+                        ship.destination.economy.import(item.type, item.amount);
+                    }
+                }
+            }
+            ship.home.economy.updateTradeItems();
+            ship.destination.economy.updateTradeItems();
         }
 
-        public static void transferAll(
-            System.Collections.Generic.Dictionary<string, int> from,
-            System.Collections.Generic.Dictionary<string, int> to)
-        {
-            //foreach (KeyValuePair<string, int> commodity in from)
-            //{
-            //    to[commodity.Key] += commodity.Value;
-            //}
-            //foreach (string commodity in Economy.getCommodityNames())
-            //{
-            //    from[commodity] = 0;
-            //}
-        }
-
-
-        public static Location findBestImportLocation(List<string> importList, Location home)
-        {
-            //List<Location> potentials = Root.game.navNetwork.getNearestLocations(home);
-            //Location bestDestination = home;
-            //int maxScore = 0;
-            //for (int i = 0; i < 10; ++i)
-            //{
-            //    int score = scoreImportPotential(importList, potentials[i]);
-            //    if (score > maxScore)
-            //    {
-            //        bestDestination = potentials[i];
-            //        maxScore = score;
-            //    }
-            //}
-            //return bestDestination;
-            return null;
-        }
-
-        private static int scoreImportPotential(List<string> importList, Location location)
-        {
-            //List<string> exportList = location.stockpile.getExportList();
-            //int score = 0;
-            //for (int priority = 0; priority < importList.Count; ++priority)
-            //{
-            //    string want = importList[priority];
-            //    for (int distance = 0; distance < exportList.Count; ++distance)
-            //    {
-            //        string offer = exportList[distance];
-            //        if (offer == want)
-            //        {
-            //            score = score + (20 - priority) * (10 - distance);
-            //        }
-            //        if (distance > 10) break;
-            //    }
-            //    if (priority > 20) break;
-            //}
-            //return score;
-            return 0;
-        }
-
-        internal static void tradeShipInventory(Simulation.NPCShip ship, Location loc)
-        {
-            //List<string> shipWants = ship.wantedCommodityList;
-            //foreach (string commodity in shipWants)
-            //{
-            //    while (loc.stockpile.tradable[commodity] > 0 && ship.inventory.getUsedCargoSpace() < ship.inventory.maxCargoSpace)
-            //    {
-            //        loc.stockpile.tradable[commodity]--;
-            //        ship.inventory.commodities[commodity]++;
-            //    }
-            //    if (ship.inventory.getUsedCargoSpace() >= ship.inventory.maxCargoSpace) break;
-            //}
-        }
     }
 }

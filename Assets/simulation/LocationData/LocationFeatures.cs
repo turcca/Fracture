@@ -42,7 +42,7 @@ namespace Data
         {
             foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
             {
-                resourceMultiplier.Add(type, 1.0f);
+                resourceMultiplier.Add(type, Mathf.Round((1.0f+(UnityEngine.Random.value/2.0f-0.21f))*100)/100); ///@todo load real multipliers
             }
         }
 
