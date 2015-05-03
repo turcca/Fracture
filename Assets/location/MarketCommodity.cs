@@ -38,8 +38,8 @@ public class MarketCommodity : MonoBehaviour
         trackedLocation = locationId;
         trackedCommodity = commodity;
 
-        playerCredits = GameObject.Find("playerCredits").GetComponent<Text>();
-        playerCargo = GameObject.Find("playerCargo").GetComponent<Text>();
+        //playerCredits = GameObject.Find("playerCredits").GetComponent<Text>();
+        //playerCargo = GameObject.Find("playerCargo").GetComponent<Text>();
         //lineGraph = GameObject.Find("CommodityLineGraph").GetComponent<Image>();
         //lineGraphHor = GameObject.Find("CommodityLineGraphHor").GetComponent<Image>();
         //inlineGraphHor.enabled = false;

@@ -1,5 +1,5 @@
 ﻿// use simulation flag to run simulation tests
-#define SIMULATION
+//#define SIMULATION
 
 using UnityEngine;
 using System.Collections;

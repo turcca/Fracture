@@ -220,4 +220,14 @@ public class Location
         }
         return rv;
     }
+
+    public PlayerTradeList getPlayerTradeList()
+    {
+        PlayerTradeList tradeList = new PlayerTradeList();
+        foreach (Data.Resource.Type resource in economy.resources.Keys)
+        {
+            // build list
+        }
+        return tradeList;
+    }
 }

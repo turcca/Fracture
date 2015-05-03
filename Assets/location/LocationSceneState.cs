@@ -6,6 +6,7 @@ public class LocationSceneState : MonoBehaviour
     public string trackedLocation = "not_set";
     public MenuSystem menu;
     public GameObject diplomacy;
+    public PlayerTradeList tradeList;
 
     void Awake()
     {
@@ -17,6 +18,7 @@ public class LocationSceneState : MonoBehaviour
         else
         {
             Tools.error("Could not find location: " + playerLocation);
+            trackedLocation = "test";
         }
 
         try
@@ -28,6 +30,8 @@ public class LocationSceneState : MonoBehaviour
         {
             Application.LoadLevelAdditive("default");
         }
+
+        tradeList = Root.game.locations[playerLocation].getPlayerTradeList();
 
         //Application.LoadLevelAdditive("uiScene");
     }

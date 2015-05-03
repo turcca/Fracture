@@ -40,8 +40,10 @@ public class Game
         }
         else
         {
-            // for scene testing purposes
-            //locations.Add("a", new Location("1c01", locationData["1c01"], new Vector2(0, 0)));
+            Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
+            Data.Location data = new Data.Location();
+            locations.Add("test", new Location("test", new Vector3(0,0,0)));
+            Tools.debug("Using test location!");
             return;
         }
 
