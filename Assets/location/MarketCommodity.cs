@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 public class MarketCommodity : MonoBehaviour
 {
-    public string trackedCommodity = "not defined";
+    public Data.Resource.SubType trackedCommodity;
     public LocationSceneState state;
 
-    public Text name;
+    public Text commodityName;
     public Text price;
     public Text cargoAmount;
     public Text storeAmount;
@@ -19,7 +20,7 @@ public class MarketCommodity : MonoBehaviour
     private Text playerCargo;
     private Image lineGraph;
     private Image lineGraphHor;
-    private string trackedLocation = "not defined";
+    //private string trackedLocation = "not defined";
 
 
     // Use this for initialization
@@ -33,31 +34,21 @@ public class MarketCommodity : MonoBehaviour
     {
     }
 
-    public void trackLocation(string locationId, string commodity)
+    internal void trackLocation(LocationSceneState state, Data.Resource.SubType commodity)
     {
-        trackedLocation = locationId;
+        this.state = state;
+        //trackedLocation = state.trackedLocation;
         trackedCommodity = commodity;
-
-        //playerCredits = GameObject.Find("playerCredits").GetComponent<Text>();
-        //playerCargo = GameObject.Find("playerCargo").GetComponent<Text>();
-        //lineGraph = GameObject.Find("CommodityLineGraph").GetComponent<Image>();
-        //lineGraphHor = GameObject.Find("CommodityLineGraphHor").GetComponent<Image>();
-        //inlineGraphHor.enabled = false;
-
-        updateCommodityInfo(trackedLocation, trackedCommodity);
+        updateCommodityInfo();
     }
 
-    private void updateCommodityInfo(string location, string commodity)
+    private void updateCommodityInfo()
     {
-        //name.text = Economy.commodityInfo[commodity].name;
-        //price.text = Game.universe.locations[location].getCommodityPrice(commodity).ToString();
-        //cargoAmount.text = Game.universe.player.cargo.commodities[commodity].ToString();
-        //storeAmount.text = Game.universe.locations[location].stockpile.tradable[commodity].ToString();
-
-
-        //playerCredits.text = Game.universe.player.cargo.credits.ToString();
-        //playerCargo.text = Game.universe.player.cargo.getUsedCargoSpace().ToString() + "/" +
-        //                   Game.universe.player.cargo.maxCargoSpace.ToString();
+        ///@todo set readable names
+        commodityName.text = Enum.GetName(typeof(Data.Resource.SubType), trackedCommodity);
+        price.text = "0";
+        storeAmount.text = state.tradeList.commodities[trackedCommodity].ToString();
+        cargoAmount.text = "0"; //Root.game.player.cargo.commodities[].ToString();
     }
 
     public void msgMouseEnter()

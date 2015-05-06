@@ -31,7 +31,7 @@ public class LocationSceneState : MonoBehaviour
             Application.LoadLevelAdditive("default");
         }
 
-        tradeList = Root.game.locations[playerLocation].getPlayerTradeList();
+        tradeList = Root.game.locations[trackedLocation].getPlayerTradeList();
 
         //Application.LoadLevelAdditive("uiScene");
     }

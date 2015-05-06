@@ -25,14 +25,14 @@ public class Game
                 string id = loc.getId();
                 if (locationFeatures.ContainsKey(id))
                 {
-                    Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
-                    Data.Location data = new Data.Location();
+                    //Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
+                    //Data.Location data = new Data.Location();
                     locations.Add(id, new Location(id, loc.gameObject.transform.position));
                 }
                 else
                 {
-                    Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
-                    Data.Location data = new Data.Location();
+                    //Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
+                    //Data.Location data = new Data.Location();
                     locations.Add(id, new Location(id, loc.gameObject.transform.position));
                     Tools.debug("Id '" + id + "' not found in location data!");
                 }
@@ -40,8 +40,8 @@ public class Game
         }
         else
         {
-            Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
-            Data.Location data = new Data.Location();
+            //Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
+            //Data.Location data = new Data.Location();
             locations.Add("test", new Location("test", new Vector3(0,0,0)));
             Tools.debug("Using test location!");
             return;

@@ -420,9 +420,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d99d5b5529fe244c9c6d729519ceb5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackedCommodity: grain
+  trackedCommodity: 0
   state: {fileID: 0}
-  name: {fileID: 11400012}
+  commodityName: {fileID: 11400012}
   price: {fileID: 11400020}
   cargoAmount: {fileID: 11400010}
   storeAmount: {fileID: 11400022}
