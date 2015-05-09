@@ -223,8 +223,9 @@ GameObject:
   - 4: {fileID: 1678773249}
   - 114: {fileID: 1678773250}
   - 114: {fileID: 1678773251}
+  - 114: {fileID: 1678773252}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Debug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,3 +265,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c13506952240ada6c96d05d681879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1678773252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1678773248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb21315346a106479b0f150c6791e42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tradeShipPrefab: {fileID: 100000, guid: 8ad8b23ca7d6dc542a1434cb4704ccc0, type: 2}

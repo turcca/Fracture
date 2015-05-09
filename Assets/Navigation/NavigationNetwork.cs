@@ -139,7 +139,7 @@ namespace Navigation
                 }
             }
             //Debug.Log("Shortest path from " + from.id + " to " + to.id + ": ");
-            //foreach(NavNode n in rv)
+            //foreach(NavNode n in nodes)
             //{
             //    Debug.Log(n.id);
             //}

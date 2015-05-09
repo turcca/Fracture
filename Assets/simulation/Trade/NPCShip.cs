@@ -100,8 +100,9 @@ namespace Simulation
         public void embarkTo(Location to)
         {
             Debug.Log ("sent ship from "+home.id+" to "+destination.id+"");
-            Navigation.Path path = Root.game.navNetwork.getPath(Root.game.navNetwork.getNavNodeFor(destination),
-                                                                  Root.game.navNetwork.getNavNodeFor(to));
+            Navigation.Path path = Root.game.navNetwork.getPath(Root.game.navNetwork.getNavNodeFor(home),
+                                                                Root.game.navNetwork.getNavNodeFor(to));
+            Debug.Log(path.nodes.Count);
             navPoints = path.nodes;
             free = false;
         }

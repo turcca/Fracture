@@ -10,7 +10,7 @@ public class TradeShip : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        visualisation = GameObject.Find("Debug Visualisation").GetComponent<TradeNetVisualisation>();
+        visualisation = GameObject.Find("Debug").GetComponent<TradeNetVisualisation>();
     }
 
     // Update is called once per frame
