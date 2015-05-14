@@ -186,7 +186,7 @@ namespace Simulation
 
         private void setState()
         {
-            if (pool.getAndResetDeficit() > 0.0f)
+            if (pool.getDeficit() > 0.0f)
             {
                 data.state = Data.Resource.State.Shortage;
             }

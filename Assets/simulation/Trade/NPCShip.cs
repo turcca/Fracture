@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace Simulation
 {
@@ -13,8 +14,8 @@ namespace Simulation
         public float cargoSpace { get; private set; }
 
         public List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
-        public List<string> wantedCommodityList = new List<string>();
-        public CommodityInventory inventory = new CommodityInventory();
+        //public List<string> wantedCommodityList = new List<string>();
+        //public CommodityInventory inventory = new CommodityInventory();
 
         List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>();
 
@@ -28,7 +29,7 @@ namespace Simulation
             this.destination = home;
             this.position = home.position;
             this.captain = NameGenerator.getName("");
-            this.cargoSpace = 10.0f;
+            this.cargoSpace = 1.0f;
             this.free = true;
             this.tradeShip = true; ///@todo military ships
         }
@@ -60,13 +61,13 @@ namespace Simulation
             {
                 if (tradeShip)
                 {  
+                    // checks for trade mission scoring to meet the treshold, set destination (no partner, destination = home)
                     LocationTrade.setTradePartnerForShip(this);
-                    // checks for trade mission scoring to meet the treshold
                     if (destination != home)
                     {
                         Trade.tradeResources(this);
-                        embarkTo(destination);
                         isGoingToDestination = true;
+                        embarkTo();
                     }
                 }
                 else
@@ -82,6 +83,7 @@ namespace Simulation
             if (!isGoingToDestination)
             {
                 tradeList.Clear ();
+                destination = home;
                 free = true;
             }
             // arrive at the destination
@@ -92,19 +94,61 @@ namespace Simulation
                     // noop
                     ///@todo create a delay of couple of days before returning?
                     isGoingToDestination = false;
-                    embarkTo(home);
+                    embarkTo();
                 }
             }
         }
 
-        public void embarkTo(Location to)
+        public void embarkTo(Location to = null)
         {
-            Debug.Log ("sent ship from "+home.id+" to "+destination.id+"");
-            Navigation.Path path = Root.game.navNetwork.getPath(Root.game.navNetwork.getNavNodeFor(home),
-                                                                Root.game.navNetwork.getNavNodeFor(to));
-            Debug.Log(path.nodes.Count);
-            navPoints = path.nodes;
             free = false;
+            Navigation.Path path;
+
+            // manually setting destination
+            if (to != null)
+            {
+                Debug.Log ("sending ship to "+to.id+"");
+                path = Root.game.navNetwork.getPath(Root.game.navNetwork.getNavNodeFor(destination),
+                                                                    Root.game.navNetwork.getNavNodeFor(to));
+                destination = to;
+            }
+            // destination is pre-set
+            else
+            {
+                if (isGoingToDestination) path = Root.game.navNetwork.getPath(Root.game.navNetwork.getNavNodeFor(home),
+                                                                    Root.game.navNetwork.getNavNodeFor(destination));
+
+                else path = Root.game.navNetwork.getPath(Root.game.navNetwork.getNavNodeFor(destination),
+                                                                         Root.game.navNetwork.getNavNodeFor(home));
+
+                //if (isGoingToDestination) Debug.Log ("sent ship from "+home.id+" to "+destination.id+" distance (nodes): "+ path.nodes.Count);
+                //else Debug.Log ("ship returning to "+home.id+" from "+destination.id+" distance (nodes): "+ path.nodes.Count);
+            }
+            navPoints = path.nodes;
+        }
+
+        internal string cargoToDebugString()
+        {
+            string rv = "";
+            foreach (Data.TradeItem item in tradeList)
+            {
+                if (item.amount > 0)
+                {
+                    if (item.isExported)
+                    {
+                        if (isGoingToDestination) rv+= "Exporting ";
+                        else rv+= "(exported) ";
+                    }
+                    else 
+                    {
+                        if (isGoingToDestination) rv+= "(getting) ";
+                        else rv+= "Importing ";
+                    }
+
+                    rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ item.amount +"\n";
+                }
+            }
+            return rv;            
         }
     }
 }

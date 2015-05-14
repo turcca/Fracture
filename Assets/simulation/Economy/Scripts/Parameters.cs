@@ -7,8 +7,8 @@ namespace Simulation
     {
         public static float playerResourceInfluenceNormalizationPerDay = 5.0f;
         public static float resourcePolicyStockpileDays = 5.0f;
-        public static float resourceProducedDaily = 10.0f;
-        public static float shipMovementMultiplier = 1000.0f;
+        public static float resourceProducedDaily = 1.0f;
+        public static float shipMovementMultiplier = 400.0f;
 
         public static float[] TierMultipliers = new float[] { 0.25f, 0.5f, 0.75f, 1.0f  };
         public static float tierScaleMultiplier(int tier)

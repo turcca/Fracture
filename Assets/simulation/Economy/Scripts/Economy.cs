@@ -131,7 +131,7 @@ namespace Simulation
 
         // gathers a list of articles, each with import/export status, quotas and weights 
         // to be compared against tradeList of other locations for best match
-        public List<Data.TradeItem> getTradeList(LocationEconomy location)
+        internal List<Data.TradeItem> getTradeList(LocationEconomy location)
         {
             List<Data.TradeItem> list = new List<Data.TradeItem>();
             Data.TradeItem current = new Data.TradeItem();
@@ -207,8 +207,7 @@ namespace Simulation
                             break;
                     }
                 }
-                
-                list.Add(current);
+                list.Add(new Data.TradeItem(current));
             }
             return list;
         }
@@ -221,7 +220,7 @@ namespace Simulation
 
         public List<Data.TradeItem> tradeItems = new List<Data.TradeItem>();
 
-        public Data.Tech.Type? techGoal;          // for debugging purposes, expose to inspector
+        public Data.Tech.Type? techGoal;
         public Data.Resource.Type? resourceGoal;  
 
         Location location;
@@ -348,6 +347,48 @@ namespace Simulation
             {
                 rv += resource.toDebugString() + "\n";
             }
+            rv += tradeListToDebugString();
+            rv += shortagesToDebugString();
+
+            return rv;
+        }
+        internal string tradeListToDebugString()
+        {
+            string rv = "\n tradeList: \n";
+            foreach (Data.TradeItem item in tradeItems)
+            {
+                if (item.amount > 0)
+                {
+                    rv += item.isExported ? "exportable: " : "importable :";
+                    rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ item.amount +"\n";
+                }
+            }
+            return rv;
+        }
+        internal string shortagesToDebugString()
+        {
+            string rv = "";
+            foreach (Data.Resource.Type type in getShortagedResources())
+            {
+                rv += "Shortage: "+ Enum.GetName(typeof(Data.Resource.Type), type) + "@ ["+ location.id +"]";
+            }
+            if (rv != "")
+            {
+                float m = Mathf.Round(getTotalEffectiveLocationResourceMultiplier()* 100.0f)/100.0f;
+                rv += " [total eff mul: "+ m +"] \n";
+            }
+            return rv;
+        }
+        internal string shortagesToDebugStringFloating()
+        {
+            string rv = "";
+            foreach (KeyValuePair<Data.Resource.Type, Resource> resource in resources)
+            {
+                if (resource.Value.state == Data.Resource.State.Shortage)
+                {
+                    rv += "Shortage: "+ Enum.GetName(typeof(Data.Resource.Type), resource.Key) + (" ("+Mathf.Round(resource.Value.getResources()*10)/10 +")\n");
+                }
+            }
             return rv;
         }
 
@@ -364,7 +405,7 @@ namespace Simulation
         }
         public float getTotalEffectiveLocationResourceMultiplier()
         {
-            float mul = 1;
+            float mul = 1.0f;
             foreach (var pair in resources)
             {
                 mul *= pair.Value.level > 0 ? getEffectiveMul(pair.Key) : 1.0f;
@@ -419,6 +460,17 @@ namespace Simulation
                     return true;
             }
             return false;
+        }
+        internal List<Data.Resource.Type> getShortagedResources()
+        {
+            List<Data.Resource.Type> shortages = new List<Data.Resource.Type>();
+
+            foreach (KeyValuePair<Data.Resource.Type, Resource> resource in resources)
+            {
+                if (resource.Value.state == Data.Resource.State.Shortage)
+                    shortages.Add(resource.Key);
+            }
+            return shortages;
         }
     }
 }

@@ -47,7 +47,7 @@ public class Location
     public string id { get; private set; }
     public Vector3 position { get; private set; }
 
-    public float population = 10.0f; 
+    public float population = Mathf.Round(Mathf.Pow(UnityEngine.Random.value, 2) *500); 
 
     //public int numShips = 1;
 
@@ -181,7 +181,7 @@ public class Location
 
     public string toDebugString()
     {
-        return "Name: " + name + "\n" +
+        return "Name: " + name + " (pop: "+population+")\n" +
             "Features: " + data.features.toDebugString() + "\n" +
             "Economy:\n" + economy.toDebugString() + "\n";
             //"---\n" + "Politics:\n" + ideology.toDebugString();

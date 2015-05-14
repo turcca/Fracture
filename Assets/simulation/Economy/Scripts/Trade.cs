@@ -28,8 +28,12 @@ namespace Simulation
             }
             if (Parameters.isTradeScoreEnough(bestScore))
             {
-                ship.tradeList = bestPartnerTradeList;
-                ship.destination = bestPartner;
+                if (bestPartner != ship.home)
+                {
+                    ship.tradeList = bestPartnerTradeList;
+                    ship.destination = bestPartner;
+                }
+                else Debug.LogWarning("WARNING! bestPartner == home");
             }
             else ship.destination = ship.home;
         }
@@ -47,6 +51,24 @@ namespace Simulation
             {
                 sortedItems.Add(getResolvedItem(fromLocation.economy.tradeItems[i], toLocation.economy.tradeItems[i]));
             }
+            //Debug.Log("from count: "+fromLocation.economy.tradeItems.Count+" / to count: "+toLocation.economy.tradeItems.Count);
+
+            /*
+            foreach (Data.TradeItem fromItem in fromLocation.economy.tradeItems)
+            {
+                //kaikki tradeItems on militarya
+                //Debug.Log("fromItem: " + Enum.GetName(typeof(Data.Resource.Type), fromItem.type));
+                foreach (Data.TradeItem toItem in toLocation.economy.tradeItems)
+                {
+                    if (fromItem.type == toItem.type)
+                    {
+                        //Debug.Log("found pair: "+ Enum.GetName(typeof(Data.Resource.Type), toItem.type));
+                        sortedItems.Add(getResolvedItem(fromItem, toItem));
+                        break;
+                    }
+                }
+            }*/
+
             // Sort list by weights (trade value to both locations)
             sortedItems.Sort(
                 delegate(Data.TradeItem first,

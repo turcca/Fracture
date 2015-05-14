@@ -26,7 +26,7 @@ namespace Data
         public Type type;
         public int level = 1;
 
-        public float resources = 10.0f;
+        public float resources = 5.0f;
 
         public Resource(Type type)
         {
@@ -50,6 +50,17 @@ namespace Data
         public Resource.Type type;
         public float amount = 0;
         public float weight = 0.0f;
+
+        public TradeItem(TradeItem item = null)
+        {
+            if (item != null)
+            {
+                this.isExported = item.isExported;
+                this.type = item.type;
+                this.amount = item.amount;
+                this.weight = item.weight;
+            }
+        }
     }
 }
 
