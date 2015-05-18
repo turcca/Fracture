@@ -22,7 +22,7 @@ public class SimulationUI : MonoBehaviour
 
         string planetInfo = "";
         planetInfo += Root.game.locations[selectedPlanet].toDebugString();
-        GUI.Label(new Rect(0, 0, 300, 900), planetInfo);
+        GUI.Label(new Rect(0, 0, 400, 900), planetInfo);
         //if (GUI.Button(new Rect(300, 0, 100, 100), "go"))
         //{
         //    Application.LoadLevel("locationScene");

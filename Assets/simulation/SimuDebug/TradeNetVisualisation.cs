@@ -66,13 +66,13 @@ public class TradeNetVisualisation : MonoBehaviour
             Vector3 pos = Camera.main.WorldToScreenPoint(trackedShip.position);
             GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 20),
                 "Captain: " + trackedShip.captain);
-            if (trackedShip.wantedCommodityList.Count >= 2)
-            {
-                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y + 15, 300, 20),
-                    "Wants: " + trackedShip.wantedCommodityList[0] + ", " + trackedShip.wantedCommodityList[1]);
-            }
+
+                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y + 15, 300, 20* trackedShip.tradeList.Count),
+                      trackedShip.cargoToDebugString());
+                      //"Wants: " + trackedShip.wantedCommodityList[0] + ", " + trackedShip.wantedCommodityList[1]);
 
             int cursor = 30;
+            /*
             foreach (KeyValuePair<string, int> pair in trackedShip.inventory.commodities)
             {
                 if (pair.Value > 0)
@@ -82,8 +82,19 @@ public class TradeNetVisualisation : MonoBehaviour
                     cursor += 15;
                 }
             }
+            */
+        }
+        foreach (Location location in Root.game.locations.Values)
+        {
+            if (location.economy.hasShortage())
+            {
+                Vector3 pos = Camera.main.WorldToScreenPoint(location.position);
+                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 60),
+                          location.id +"\n" + location.economy.shortagesToDebugStringFloating());
+            }
         }
     }
+
 
     public void trackShip(Simulation.NPCShip ship)
     {

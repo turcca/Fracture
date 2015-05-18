@@ -40,10 +40,18 @@ namespace Data
 
         public LocationFeatures()
         {
-            foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
-            {
-                resourceMultiplier.Add(type, Mathf.Round((1.0f+(UnityEngine.Random.value/2.0f-0.21f))*100)/100); ///@todo load real multipliers
-            }
+            float tmul = 0;// temp: do not generate planets with total resources <1 (until real multipliers are loaded)
+            while (tmul < 1.0f || tmul > 1.3f)//
+            {//
+                resourceMultiplier.Clear();//
+                tmul = 1;//
+                foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
+                {
+                    float mul = Mathf.Round((1.0f+(UnityEngine.Random.value/2.0f-0.21f))*100)/100;//
+                    tmul *= mul;//
+                    resourceMultiplier.Add(type, mul); ///@todo load real multipliers
+                }
+            }//
         }
 
         public LocationFeatures(string data)

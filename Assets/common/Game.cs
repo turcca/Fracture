@@ -71,7 +71,7 @@ public class Game
         foreach (Location location in locations.Values)
         {
             ///@todo read amount of ships from data/location
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 ships.Add(new Simulation.NPCShip(location));
             }
@@ -149,6 +149,7 @@ public class Game
         return closestPlanet;
     }
 
+    // ------------------------------------------------------------------
     public void tick(float days)
     {
         if (GameState.getState() != GameState.State.Event)
@@ -167,5 +168,28 @@ public class Game
                 ship.tick(days);
             }
         }
+    }
+    // ------------------------------------------------------------------
+
+    internal string locationShortagesToDebugString()
+    {
+        string rv = "";
+        int n = 0;
+        foreach (Location location in locations.Values)
+        {
+            string s = location.economy.shortagesToDebugString();
+            string a = "";
+            if (s != "") 
+            {
+                n++;
+                a +=  s;
+            }
+            if (a != "")
+                rv += a;
+        }
+        if (n == 0)
+            return "";
+        else
+            return "Shortages: ["+n+"] \n"+rv;
     }
 }
