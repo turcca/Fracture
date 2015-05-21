@@ -13,7 +13,6 @@ namespace Data
             new Dictionary<Tech.Type, Tech>();
         public LocationFeatures features = new LocationFeatures();
 
-
         public Location()
         {
             foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))

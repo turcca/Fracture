@@ -42,7 +42,10 @@ public class Location
 {
     private Data.Location data;
 
-    public string name { get; private set; }
+    public string name
+    {
+        get { return data.features.name; }
+    }
     public string description { get; private set; }
     public string id { get; private set; }
     public Vector3 position { get; private set; }
@@ -74,7 +77,6 @@ public class Location
     public Location(string id, Vector3 position, Data.Location data)
     {
         this.id = id;
-        this.name = id;
         this.description = Tools.STRING_NOT_ASSIGNED;
         this.position = position;
         this.data = data;

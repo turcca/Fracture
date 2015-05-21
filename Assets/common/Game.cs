@@ -92,7 +92,7 @@ public class Game
         FileInfo src = null;
         StreamReader reader = null;
  
-        src = new FileInfo (Application.dataPath + "/data/locations.csv");
+        src = new FileInfo (Application.dataPath + "/data/locations.tsv");
         if (src != null && src.Exists)
         {
             reader = src.OpenText();
@@ -127,9 +127,11 @@ public class Game
                 else if (dataBlock)
                 {
                     // first block contains id, rest is data
-                    rv.Add(line.Split(',')[0], DataParser.parseLocationFeatures(line));
+                    rv.Add(line.Split('\t')[0], DataParser.parseLocationFeatures(line));
                 }
             }
+
+            Debug.Log("2v08: " + rv["2v08"].description2 + " --- " + "populiation: " + rv["2v08"].population);
         }
         return rv;
     }
