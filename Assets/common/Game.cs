@@ -26,8 +26,9 @@ public class Game
                 if (locationFeatures.ContainsKey(id))
                 {
                     //Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
-                    //Data.Location data = new Data.Location();
-                    locations.Add(id, new Location(id, loc.gameObject.transform.position));
+                    Data.Location data = new Data.Location();
+                    data.features = locationFeatures[id];
+                    locations.Add(id, new Location(id, loc.gameObject.transform.position, data));
                 }
                 else
                 {
