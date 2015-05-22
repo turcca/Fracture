@@ -13,6 +13,9 @@ namespace Data
             new Dictionary<Tech.Type, Tech>();
         public LocationFeatures features = new LocationFeatures();
 
+        public enum Visibility { Connected, Hiding, Lost };
+
+
         public Location()
         {
             foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))

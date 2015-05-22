@@ -12,7 +12,12 @@ namespace Data
         public string subsector = "NO_SUBSECTOR";
         public string description1 = "NO_DESCRIPTION1";
         public string description2 = "NO_DESCRIPTION2";
-        public bool hidden = false;
+        public Data.Location.Visibility visibility = Data.Location.Visibility.Connected;
+
+        public Dictionary<Faction.FactionID, float> factionCtrl = new Dictionary<Faction.FactionID, float>();
+        public Dictionary<Faction.IdeologyID, float> baseIdeology = new Dictionary<Faction.IdeologyID, float>();
+
+        public Faction.FactionID? hq = null;
 
         public Dictionary<Resource.Type, float> resourceMultiplier =
             new Dictionary<Resource.Type, float>();
@@ -41,13 +46,21 @@ namespace Data
         public int infrastructure = 0;
         public int militaryTechLevel = 0;
         public float population = 10.0f;
-        public int assets = 0;
+        public int assetStation = 0;
 
         public LocationFeatures()
         {
             foreach (Resource.Type type in Enum.GetValues(typeof(Resource.Type)))
             {
                 resourceMultiplier.Add(type, 1.0f);
+            }
+            foreach (Faction.FactionID faction in System.Enum.GetValues(typeof(Faction.FactionID)))
+            {
+                factionCtrl.Add(faction, 0.0f);
+            }
+            foreach (Faction.IdeologyID ideology in System.Enum.GetValues(typeof(Faction.IdeologyID)))
+            {
+                baseIdeology.Add(ideology, 0.0f);
             }
         }
 
