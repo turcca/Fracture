@@ -4,6 +4,9 @@ using System.Globalization;
 
 public class Faction
 {
+    public enum FactionID { noble1, noble2, noble3, noble4, guild1, guild2, guild3, church, heretic };
+    public enum IdeologyID { cult, technocrat, mercantile, bureaucracy, liberal, nationalist, aristocrat, imperialist, navigators, brotherhood, transhumanist }
+
     static public string getFactionName(string id)
     {
         Dictionary<string, string> names = new Dictionary<string, string>()

@@ -277,7 +277,7 @@ namespace Simulation
 
         internal void updateFeatures()
         {
-            float popScale = Parameters.populationScaleMultiplier(location.population);
+            float popScale = Parameters.populationScaleMultiplier(location.features.population);
             pool.setGrowLimit(Parameters.upgradeCostMultiplier(data.level) * popScale);
             // consumption:
             // resource production multiplier * population multiplier * tier multiplier

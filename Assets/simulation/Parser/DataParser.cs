@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Globalization;
 
 public static class DataParser
@@ -19,9 +19,57 @@ public static class DataParser
                     break;
                 case 4: data.description2 = value;
                     break;
-                case 5: data.hidden = value == "hiding" ? true : false;
+                case 5: data.visibility = (Data.Location.Visibility) System.Enum.Parse(typeof(Data.Location.Visibility), value);
                     break;
 
+                    // faction control
+                case 6: data.factionCtrl[Faction.FactionID.noble1] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 7: data.factionCtrl[Faction.FactionID.noble2] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 8: data.factionCtrl[Faction.FactionID.noble3] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 9: data.factionCtrl[Faction.FactionID.noble4] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 10: data.factionCtrl[Faction.FactionID.guild1] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 11: data.factionCtrl[Faction.FactionID.guild2] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 12: data.factionCtrl[Faction.FactionID.guild3] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 13: data.factionCtrl[Faction.FactionID.church] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 14: data.factionCtrl[Faction.FactionID.heretic] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+
+                case 15: data.hq = value == "" ? (Faction.FactionID?) null : (Faction.FactionID) System.Enum.Parse(typeof(Faction.FactionID), value);
+                    break;
+
+                    // base ideologies
+                case 16: data.baseIdeology[Faction.IdeologyID.cult] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 17: data.baseIdeology[Faction.IdeologyID.technocrat] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 18: data.baseIdeology[Faction.IdeologyID.mercantile] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 19: data.baseIdeology[Faction.IdeologyID.bureaucracy] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 20: data.baseIdeology[Faction.IdeologyID.liberal] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 21: data.baseIdeology[Faction.IdeologyID.nationalist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 22: data.baseIdeology[Faction.IdeologyID.aristocrat] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 23: data.baseIdeology[Faction.IdeologyID.imperialist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 24: data.baseIdeology[Faction.IdeologyID.navigators] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 25: data.baseIdeology[Faction.IdeologyID.brotherhood] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+                case 26: data.baseIdeology[Faction.IdeologyID.transhumanist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                    break;
+
+                    // resource multipliers
                 case 27: data.resourceMultiplier[Data.Resource.Type.Food] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
                 case 28: data.resourceMultiplier[Data.Resource.Type.Mineral] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
@@ -39,6 +87,7 @@ public static class DataParser
                 case 34: data.resourceMultiplier[Data.Resource.Type.Military] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
 
+                    // tech levels
                 case 35: data.techLevel = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
                 case 36: data.infrastructure = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
@@ -48,7 +97,9 @@ public static class DataParser
 
                 case 38: data.population =  float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 39: data.assets = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+
+                    // assets
+                case 39: data.assetStation = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
 
                 default:
