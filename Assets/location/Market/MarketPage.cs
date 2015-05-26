@@ -16,6 +16,7 @@ public class MarketPage : MonoBehaviour
     {
         int order = 0;
         //foreach (KeyValuePair<string, CommodityInfo> entry in Economy.commodityInfo)
+        grid.transform.DetachChildren();
         foreach(var pair in state.tradeList.commodities)
         {
             // add commodity

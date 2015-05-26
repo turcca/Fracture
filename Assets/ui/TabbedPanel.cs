@@ -12,11 +12,13 @@ public class TabbedPanel : MonoBehaviour
 
     void OnDisable()
     {
+        Debug.Log("disable: " + gameObject.name);
         tab.deactivate();
     }
 
     void OnEnable()
     {
+        Debug.Log("enable: " + gameObject.name);
         tab.activate();
     }
 

@@ -224,10 +224,11 @@ public class Location
     public PlayerTradeList getPlayerTradeList()
     {
         PlayerTradeList tradeList = new PlayerTradeList();
-        //foreach (Data.Resource.Type resource in economy.resources.Keys)
-        //{
-        //    // build list
-        //}
+        foreach (Data.Resource.Type resource in economy.resources.Keys)
+        {
+            // build list
+            //economy.resources[resource].getResourcesOverTargetLimit();
+        }
         return tradeList;
     }
 }
