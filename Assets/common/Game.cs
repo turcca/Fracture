@@ -160,15 +160,15 @@ public class Game
             // economy, ideology
             foreach (Location location in locations.Values)
             {
-                location.tick(days);
+                //location.tick(days);
             }
             //player.tick(days);
             //events.tick(days);
             // ships, trade
             foreach (Simulation.NPCShip ship in ships)
             {
-                ship.sendFreeShips();
-                ship.tick(days);
+                //ship.sendFreeShips();
+                //ship.tick(days);
             }
         }
     }

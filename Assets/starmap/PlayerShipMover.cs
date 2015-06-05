@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerShipMover : MonoBehaviour
 {
     Vector3 target = new Vector3(0, 0, 0);
-    float speed = 5.0f;
+    float speed = 8.0f;
     float rotationSpeed = 2.0f;
 
     // Use this for initialization

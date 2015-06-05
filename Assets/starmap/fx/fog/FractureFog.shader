@@ -38,16 +38,9 @@
 		#define SCALE		    0.1
 		#define BIAS   		   +0.0
 		#define POWER			1.0		
-		#define OCTAVES   		4
-		#define SWITCH_TIME 	5.0
+		#define OCTAVES   		8
 		#define WARP_INTENSITY	0.00
 		#define WARP_FREQUENCY	16.0		
-
-		float t = 1.0f;
-		float function() { return fmod(t,4.0); }
-		bool  multiply_by_F1() { return fmod(t,8.0)  >= 4.0; }
-		bool  inverse() {return fmod(t,16.0) >= 8.0; }
-		float distance_type() {return	fmod(t/16.0,4.0);}
 
 		float2 hash(float2 p)
 		{
@@ -64,17 +57,17 @@
 
 		    return lerp( lerp( dot( hash( i + float2(0.0,0.0) ), f - float2(0.0,0.0) ), 
 		                       dot( hash( i + float2(1.0,0.0) ), f - float2(1.0,0.0) ), u.x),
-		                lerp( dot( hash( i + float2(0.0,1.0) ), f - float2(0.0,1.0) ), 
+		                 lerp( dot( hash( i + float2(0.0,1.0) ), f - float2(0.0,1.0) ), 
 		                       dot( hash( i + float2(1.0,1.0) ), f - float2(1.0,1.0) ), u.x), u.y);
 		}
 
-		float voronoi(float2 x)
+		float voronoi(float2 x, float mod)
 		{
 		    float2 n = floor(x);
 		    float2 f = frac(x);
 
-			float F1 = 8.0;
-			float F2 = 8.0;
+			float F1 = 8.0+ 4.0*mod;
+			float F2 = 8.0+ 4.0*mod;
 			
 			
 		    for( int j=-1; j<=1; j++ )
@@ -83,15 +76,16 @@
 		        float2 g = float2(i,j);
 		        float2 o = hash(n + g);
 
-		        o = 0.5 + 0.41*sin( _Time.y + 6.2831*o ); // animate
+		        o = 0.5 + 0.41*sin(_Time.y + 6.2831*o ); // animate
 
 				float2 r = g - f + o;
 
-				float d = 	distance_type() < 1.0 ? dot(r,r)  :				// euclidean^2
-						  	distance_type() < 2.0 ? sqrt(dot(r,r)) :			// euclidean
-							distance_type() < 3.0 ? abs(r.x) + abs(r.y) :		// manhattan
-							distance_type() < 4.0 ? max(abs(r.x), abs(r.y)) :	// chebyshev
-							0.0;
+				float d = dot(r,r);
+				 	//dot(r,r)  :				// euclidean^2
+					//qrt(dot(r,r)) :			// euclidean
+					//abs(r.x) + abs(r.y) :		// manhattan
+					//max(abs(r.x), abs(r.y)) :	// chebyshev
+					//0.0;
 
 				if( d<F1 ) 
 				{ 
@@ -104,19 +98,21 @@
 				}
 		    }
 			
-			float c = function() < 1.0 ? F1 : 
-					  function() < 2.0 ? F2 : 
-					  function() < 3.0 ? F2-F1 :
-					  function() < 4.0 ? (F1+F2)/2.0 : 
-					  0.0;
+			float c = F2;
+					//F1 : 
+					//F2 : 
+					//F2-F1 :
+					//(F1+F2)/2.0 : 
+					//0.0;
 				
-			if( multiply_by_F1() )	c *= F1;
-			if( inverse() )			c = 1.0 - c;
+			c = 1.0f - c;
+			//c *= F1;
+			//c = 1.0f - c;
 			
 		    return c;
 		}
 
-		float fbm(float2 p)
+		float fbm(float2 p, float mod)
 		{
 			float s = 0.0;
 			float m = 0.0;
@@ -124,7 +120,7 @@
 			
 			for( int i=0; i<OCTAVES; i++ )
 			{
-				s += a * voronoi(p);
+				s += a * voronoi(p, mod);
 				m += a;
 				a *= 0.5;
 				p *= 2.0;
@@ -173,6 +169,8 @@
   			return clamp(c, 0.0f, 1.0f);
 		}
 
+		// --------------------- main
+
 		void surf (Input IN, inout SurfaceOutput o) {
 			// Albedo comes from a texture tinted by color
 			float2 world_coord = IN.uv_MainTex*200.0f-100.0f + _WorldPosition.xz;
@@ -184,22 +182,26 @@
 			float2 target = IN.uv_MainTex;
 			float alpha = ray_march(origin, target);
 			alpha = alpha * alpha * alpha;
-						
-
+					
 			float x = target.x*2.0f-1.0f;
 			float y = target.y*2.0f-1.0f;
 			o.Normal = normalize(float3(x,y, 1.0 - alpha));
 			o.Alpha = alpha;
-			
-			
+
+						
+
+			float2 density_map_coord = (world_coord + float2(500.0f, 250.0f)) / float2(1000.0f, 500.0f);
+			float density_map = (tex2D(_DensityTex, density_map_coord.xy).r);
+
 			float2 p = world_coord;
 			float w = noise( p * WARP_FREQUENCY );
 			p += WARP_INTENSITY * float2(w, -w);
-    		float c = POWER*fbm( SCALE*p ) + BIAS;
-    		float3 col = c * float3( 1.0, 1.0, 1.0 );
+    		float c = POWER * fbm(SCALE*p, density_map) + BIAS;
+    		float3 col = c * float3( 0.5, 0.7, 1.0 );
     
 			o.Albedo = col;
 			o.Emission = col;
+			o.Alpha = clamp (alpha + length(col)*0.1f, 0.0f, 1.0f);
 			
 			//float3 normalOffset = tex2D(_NormalTex, (IN.uv_MainTex + _WorldPosition.xz/200.0f) * 5.0f);
 			//normalOffset = normalOffset*2.0-1.0;

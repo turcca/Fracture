@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: .0779087543, g: .0808823705, b: .0786675364, a: 1}
+  m_Color: {r: .844290674, g: .875223756, b: .897058845, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 40d2ed6a4e14dfe4eb404ce06c588f66, type: 3}
     m_FontSize: 16
@@ -114,9 +114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: .818663538, g: .83088237, b: .821781456, a: 1}
-  m_Sprite: {fileID: 21300000, guid: 71143934b6724964fbd4fb47d19fe850, type: 3}
-  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: .117647059}
+  m_Sprite: {fileID: 21300000, guid: 8280d30b2228d734e8aac7d5ea25beef, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 0
   m_FillMethod: 4
@@ -147,7 +147,7 @@ MonoBehaviour:
     m_PressedColor: {r: .345098048, g: .345098048, b: .345098048, a: .698039234}
     m_DisabledColor: {r: .250980407, g: .250980407, b: .250980407, a: 0}
     m_ColorMultiplier: 2
-    m_FadeDuration: .300000012
+    m_FadeDuration: 0
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -223,7 +223,7 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: .5}
   m_AnchorMax: {x: 0, y: .5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 132, y: 0}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0, y: .5}
 --- !u!224 &22400002
@@ -273,4 +273,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100004}
   m_IsPrefabParent: 1
-  m_IsExploded: 1
