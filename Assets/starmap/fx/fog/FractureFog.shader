@@ -197,7 +197,7 @@
 			float w = noise( p * WARP_FREQUENCY );
 			p += WARP_INTENSITY * float2(w, -w);
     		float c = POWER * fbm(SCALE*p, density_map) + BIAS;
-    		float3 col = c * float3( 0.5, 0.7, 1.0 );
+    		float3 col = c * float3( 0.0, 0.0, 0.0 );
     
 			o.Albedo = col;
 			o.Emission = col;
