@@ -136,7 +136,7 @@
 			float2 density_map_coord = (world_coord + float2(500.0f, 250.0f)) / float2(1000.0f, 500.0f);
 			float density_map = (tex2D(_DensityTex, density_map_coord.xy).r) * 0.5f + 0.1f;
 			
-			float dens = density_map * 20.0f;
+			float dens = density_map * 10.0f;
 			float rand = tex2D(_NoiseTex, p.xy+_WorldPosition.xz/200.0f).r * 2.0f;
 			float rand2 = tex2D(_NoiseTex, p.xy*10.0f);
 			return dens + rand + rand2;
