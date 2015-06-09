@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DiplomacyPage : MonoBehaviour
 {
@@ -19,16 +20,34 @@ public class DiplomacyPage : MonoBehaviour
 
     private void populateFactionPanels()
     {
-        //foreach (var entry in location.faction.control)
-        //{
-        //    if (entry.Value > 0.01)
-        //    {
-        //        addMenuItem(entry.Key, entry.Value);
-        //    }
-        //}
+        List<KeyValuePair<Faction.FactionID, float>> sortedControl = new List<KeyValuePair<Faction.FactionID, float>>();
+
+        foreach (var entry in location.features.factionCtrl)
+        {
+            if (entry.Value > 0.01)
+            {
+                sortedControl.Add(new KeyValuePair<Faction.FactionID, float>(entry.Key, entry.Value));
+            }
+        }
+        if (sortedControl.Count > 0)
+        {
+            // Sort list by values
+            sortedControl.Sort(
+                delegate(KeyValuePair<Faction.FactionID, float> firstPair,
+                     KeyValuePair<Faction.FactionID, float> nextPair)
+                {
+                return nextPair.Value.CompareTo(firstPair.Value);
+                }
+            );
+
+            foreach (var item in sortedControl)
+            {
+                addMenuItem(item.Key, item.Value);
+            }
+        }
     }
 
-    private void addMenuItem(string faction, float support)
+    private void addMenuItem(Faction.FactionID faction, float support)
     {
         GameObject factionPanel = (GameObject)GameObject.Instantiate(factionListItem);
         factionPanel.GetComponent<FactionMeetPanel>().setup(scene.trackedLocation, faction,

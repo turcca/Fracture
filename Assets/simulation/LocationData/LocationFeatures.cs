@@ -9,6 +9,7 @@ namespace Data
     public class LocationFeatures 
     {
         public string name = "NO_NAME";
+        //public string ruler = "NO_RULER";
         public string subsector = "NO_SUBSECTOR";
         public string description1 = "NO_DESCRIPTION1";
         public string description2 = "NO_DESCRIPTION2";
@@ -16,11 +17,11 @@ namespace Data
 
         public Dictionary<Faction.FactionID, float> factionCtrl = new Dictionary<Faction.FactionID, float>();
         public Dictionary<Faction.IdeologyID, float> baseIdeology = new Dictionary<Faction.IdeologyID, float>();
+        public Dictionary<Faction.FactionID, string> ruler = new Dictionary<Faction.FactionID, string>();
 
         public Faction.FactionID? hq = null;
 
-        public Dictionary<Resource.Type, float> resourceMultiplier =
-            new Dictionary<Resource.Type, float>();
+        public Dictionary<Resource.Type, float> resourceMultiplier = new Dictionary<Resource.Type, float>(); // location feature multiplier
 
         // todo: change to baseIdeology stats
         //public float frontier = 0.2f;
@@ -57,6 +58,7 @@ namespace Data
             foreach (Faction.FactionID faction in System.Enum.GetValues(typeof(Faction.FactionID)))
             {
                 factionCtrl.Add(faction, 0.0f);
+                ruler.Add (faction, NameGenerator.getName(faction));
             }
             foreach (Faction.IdeologyID ideology in System.Enum.GetValues(typeof(Faction.IdeologyID)))
             {

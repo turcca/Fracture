@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class NameGenerator
 {
+    public static string getName(Faction.FactionID faction)
+    {
+        return getName (Faction.factionToString(faction));
+    }
     public static string getName(string factionId)
     {
         string[] latin =

@@ -7,6 +7,22 @@ public class Faction
     public enum FactionID { noble1, noble2, noble3, noble4, guild1, guild2, guild3, church, heretic };
     public enum IdeologyID { cult, technocrat, mercantile, bureaucracy, liberal, nationalist, aristocrat, imperialist, navigators, brotherhood, transhumanist }
 
+    static public string getFactionName(Faction.FactionID id)
+    {
+        switch(id)
+        {
+            case FactionID.noble1: return "House Furia";
+            case FactionID.noble2: return "House Rathmund";
+            case FactionID.noble3: return "House Valeria";
+            case FactionID.noble4: return "House Tarquinia";
+            case FactionID.guild1: return "Everlasting Union";
+            case FactionID.guild2: return "Dacei Family";
+            case FactionID.guild3: return "Coruna Cartel";
+            case FactionID.church: return "Church";
+            case FactionID.heretic: return "Heretics";
+            default: return "";
+        }
+    }
     static public string getFactionName(string id)
     {
         Dictionary<string, string> names = new Dictionary<string, string>()
@@ -23,7 +39,38 @@ public class Faction
         };
         return names[id];
     }
-
+    static public string factionToString (FactionID faction)
+    {
+        switch(faction)
+        {
+            case FactionID.noble1: return "noble1";
+            case FactionID.noble2: return "noble2";
+            case FactionID.noble3: return "noble3";
+            case FactionID.noble4: return "noble4";
+            case FactionID.guild1: return "guild1";
+            case FactionID.guild2: return "guild2";
+            case FactionID.guild3: return "guild3";
+            case FactionID.church: return "church";
+            case FactionID.heretic: return "cult";
+            default: return "";
+        }
+    }
+    static public FactionID factionToEnum (string faction)
+    {
+        switch(faction)
+        {
+            case "noble1": return FactionID.noble1;
+            case "noble2": return FactionID.noble2;
+            case "noble3": return FactionID.noble3;
+            case "noble4": return FactionID.noble4;
+            case "guild1": return FactionID.guild1;
+            case "guild2": return FactionID.guild2;
+            case "guild3": return FactionID.guild3;
+            case "church": return FactionID.church;
+            case "cult": return FactionID.heretic;
+        default: return FactionID.noble1;
+        }
+    }
     static public string getTitle(string id)
     {
         Dictionary<string, string> names = new Dictionary<string, string>()
@@ -44,7 +91,7 @@ public class Faction
 
 public class FactionData
 {
-    public Dictionary<string, float> control = new Dictionary<string, float>();
+    //public Dictionary<string, float> control = new Dictionary<string, float>();
     public Dictionary<string, string> ruler = new Dictionary<string, string>();
 
     static public string[] getFactionIds()
@@ -65,6 +112,7 @@ public class FactionData
     }
     public FactionData(string data)
     {
+        /*
         string[] dataChunk = data.Split(',');
         control["noble1"] = float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
         control["noble2"] = float.Parse(dataChunk[1], CultureInfo.InvariantCulture.NumberFormat);
@@ -75,7 +123,7 @@ public class FactionData
         control["guild3"] = float.Parse(dataChunk[6], CultureInfo.InvariantCulture.NumberFormat);
         control["church"] = float.Parse(dataChunk[7], CultureInfo.InvariantCulture.NumberFormat);
         control["heretic"] = float.Parse(dataChunk[8], CultureInfo.InvariantCulture.NumberFormat);
-
+*/
         // randomize rulers
         ruler["noble1"] = NameGenerator.getName("noble1");
         ruler["noble2"] = NameGenerator.getName("noble2");
@@ -87,7 +135,7 @@ public class FactionData
         ruler["church"] = NameGenerator.getName("church");
         ruler["cult"] = NameGenerator.getName("cult");
     }
-
+    /*
     public float getTotalControl()
     {
         float rv = 0.0f;
@@ -97,7 +145,6 @@ public class FactionData
         }
         return rv;
     }
-
     public string getStrongest()
     {
         string rv = "";
@@ -112,6 +159,7 @@ public class FactionData
         }
         return rv;
     }
+    */
 }
 
 public class IdeologyData
