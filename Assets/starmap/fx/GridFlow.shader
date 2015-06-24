@@ -64,7 +64,7 @@
 
 // Thanks to Bart Campman, Pjotr Svetachov and Martijn Kragtwijk for their help.
 
-Shader "Custom/TiledDirectionalFlow" 
+Shader "Custom/GridFlow" 
 {
 	Properties 
 	{
@@ -109,16 +109,6 @@ Shader "Custom/TiledDirectionalFlow"
 			float3 myNormal;
 			
 			float2 mytexFlowCoord = IN.uv_FlowMap * texScale;
-			// ff is the factor that blends the tiles.
-			float2 ff =  abs(2.0*(frac(mytexFlowCoord)) - 1.0) -0.5; 	  
-			// take a third power, to make the area with more or less equal contribution
-			// of more tile bigger
-			ff = 0.5-4.0*ff*ff*ff;
-			// ffscale is a scaling factor that compensates for the effect that
-			// adding normal vectors together tends to get them closer to the average normal
-			// which is a visible effect. For more or less random waves, this factor
-			// compensates for it 
-			float2 ffscale = sqrt(ff*ff + (1-ff)*(1-ff));
 			float2 Tcoord = IN.uv_WaterNormalMap * texScale2;
 			
 			// offset makes the water move
@@ -139,64 +129,7 @@ Shader "Custom/TiledDirectionalFlow"
 		    // this is the normal for tile A
 		    float2 NormalT0 = tex2D(_WaterNormalMap, mul(rotmat, Tcoord) - _offset).rg;
 		    
-		    // for the next tile (B) I shift by half the tile size in the x-direction
-		    flow = tex2D( _FlowMap, floor((mytexFlowCoord + float2(0.5,0)))/ texScale ).rgb;		   
-		    speed += flow.xy*2.0 -0.5;
-		    
-		    flowdir = normalize(flow.xy - 0.5);
-		    rotmat = float2x2(flowdir.x, -flowdir.y, flowdir.y ,flowdir.x);
-			// and the normal for tile B...
-			// multiply the offset by some number close to 1 to give it a different speed
-			// The result is that after blending the water starts to animate and look
-			// realistic, instead of just sliding in some direction.
-			// This is also why I took the third power of ff above, so the area where the
-			// water animates is as big as possible
-			// adding a small arbitrary constant isn't really needed, but helps to show
-			// a bit less tiling in the beginning of the program. After a few seconds, the
-			// tiling cannot be seen anymore so this constant could be removed.
-			// For the quick demo I leave them in. In a simulation that keeps running for
-			// some time, you could just as well remove these small constant offsets
-			float2 NormalT1 = tex2D(_WaterNormalMap, mul(rotmat, Tcoord) - _offset*1.06+0.62).rg ; 
-			
-			// blend them together using the ff factor
-			// use ff.x because this tile is shifted in the x-direction 
-			float2 NormalTAB = ff.x * NormalT0 + (1.0-ff.x) * NormalT1;
-			
-			// the scaling of NormalTab and NormalTCD is moved to a single scale of
-			// NormalT later in the program, which is mathematically identical to
-			// NormalTAB = (NormalTAB - 0.5) / ffscale.x + 0.5;
-			
-			// tile C is shifted in the y-direction 
-			flow = tex2D( _FlowMap, floor((mytexFlowCoord + float2(0.0,0.5)))/ texScale ).rgb;
-		    speed += flow.xy*2.0 -0.5;
-			
-			flowdir = normalize(flow.xy - 0.5);
-			rotmat = float2x2(flowdir.x, -flowdir.y, flowdir.y ,flowdir.x);	      
-			NormalT0 = tex2D(_WaterNormalMap, mul(rotmat, Tcoord) - _offset*1.33+0.27).rg;
-			
-			// tile D is shifted in both x- and y-direction
-			flow = tex2D( _FlowMap, floor((mytexFlowCoord + float2(0.5,0.5)))/ texScale ).rgb;
-			speed += flow.xy*2.0 -0.5;
-			
-			flowdir = normalize(flow.xy - 0.5);
-			rotmat = float2x2(flowdir.x, -flowdir.y, flowdir.y ,flowdir.x);
-			NormalT1 = tex2D(_WaterNormalMap, mul(rotmat, Tcoord) - _offset*1.24).rg ;
-		
-			float2 NormalTCD = ff.x * NormalT0 + (1.0-ff.x) * NormalT1;
-			// NormalTCD = (NormalTCD - 0.5) / ffscale.x + 0.5;
-
-			// now blend the two values together
-			float2 NormalT = ff.y * NormalTAB + (1.0-ff.y) * NormalTCD;
-			
-			// this line below used to be here for scaling the result
-			//NormalT = (NormalT - 0.5) / ffscale.y + 0.5;
-			
-			// below the new, direct scaling of NormalT
-			NormalT = (NormalT - 0.5) / (ffscale.y * ffscale.x);
-			// scaling by 0.3 is arbritrary, and could be done by just
-			// changing the values in the normal map
-			// without this factor, the waves look very strong
-			NormalT *= 0.8f;
+			float2 NormalT = NormalT0 * 0.8f;
 			// to make the water more transparent 
 			//transp = tex2D( _FlowMap, IN.uv_FlowMap ).a;
 			// and scale the normals with the transparency
@@ -242,6 +175,19 @@ Shader "Custom/TiledDirectionalFlow"
 
 			o.Albedo = base.rgb;
 			o.Emission = base.rgb*0.1f;
+			o.Alpha = 1.0f;
+			
+			float x = fmod(Tcoord.x*texScale*0.5f, 1.0f);
+			if (x < 0.01f || x > 0.98f)
+			{
+				o.Albedo += float3(0.2f,0.2f,0.3f);
+			}
+
+			float y = fmod(Tcoord.y*texScale*0.25f, 1.0f);
+			if (y < 0.01f || y > 0.98f)
+			{
+				o.Albedo += float3(0.2f,0.2f,0.3f);
+			}
 		}
 		ENDCG
 	} 

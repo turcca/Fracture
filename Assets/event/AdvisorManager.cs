@@ -53,9 +53,4 @@ public class AdvisorManager : MonoBehaviour
             advisor.hideAdvice();
         }
     }
-
-    internal static AdvisorManager get()
-    {
-        return GameObject.Find("Advisors").GetComponent<AdvisorManager>();
-    }
 }

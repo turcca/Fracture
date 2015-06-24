@@ -53,7 +53,7 @@ public class ParticleStorm : MonoBehaviour
         x = mapX(particle.position.x);
         z = mapZ(particle.position.z);
         vec.Set(flowMap[x,z].x, 0, flowMap[x,z].y);
-        Vector3 flow = vec * 200.0f;
+        Vector3 flow = vec * 100.0f;
 
         particle.velocity = flow * 0.5f + particle.velocity * 0.5f;
         particle.color = new Color(1.0f, 1.0f, 1.0f, flow.sqrMagnitude*10.0f);

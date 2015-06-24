@@ -27,7 +27,7 @@ public class SideWindow : MonoBehaviour
     public void hide()
     {
         animator.SetInteger("State", (int)State.Hidden);
-        AdvisorManager.get().hideAdvices();
+        //AdvisorManager.get().hideAdvices();
     }
 
     public static SideWindow get()

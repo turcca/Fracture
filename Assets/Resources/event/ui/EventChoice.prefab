@@ -66,8 +66,8 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_TargetGraphic: {fileID: 11400004}
   m_Interactable: 1
+  m_TargetGraphic: {fileID: 11400004}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -82,7 +82,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_Enabled: 1
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &11400004
@@ -96,8 +96,8 @@ MonoBehaviour:
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Mat: {fileID: 0}
-  m_Color: {r: .1953125, g: .1953125, b: .1953125, a: 1}
+  m_Material: {fileID: 0}
+  m_Color: {r: .844290674, g: .875223756, b: .897058845, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 40d2ed6a4e14dfe4eb404ce06c588f66, type: 3}
     m_FontSize: 18
@@ -146,4 +146,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1
