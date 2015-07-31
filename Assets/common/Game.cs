@@ -34,7 +34,8 @@ public class Game
                 {
                     //Simulation.LocationEconomyAI ai = new Simulation.LocationEconomyAI();
                     //Data.Location data = new Data.Location();
-                    locations.Add(id, new Location(id, loc.gameObject.transform.position));
+                    if (locations.ContainsKey (id)) Debug.LogWarning ("WARNING: location '"+id+"' already existed");
+                    else locations.Add(id, new Location(id, loc.gameObject.transform.position));
                     Tools.debug("Id '" + id + "' not found in location data!");
                 }
             }

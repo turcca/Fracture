@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace Simulation
 {
-
     public class LocationIdeology
     {
         private Location location;
@@ -75,8 +74,7 @@ namespace Simulation
 		//    };
 		//}
 
-        public Dictionary<Data.Resource.Type, float> resourceMultiplier =
-            new Dictionary<Data.Resource.Type, float>();
+        public Dictionary<Data.Resource.Type, float> resourceMultiplier = new Dictionary<Data.Resource.Type, float>(); // ideology-based multiplier
         public Dictionary<string, float> support = new Dictionary<string, float>();
         public Effects effects = new Effects();
 
