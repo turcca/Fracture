@@ -136,6 +136,11 @@ public class EventBase
     {
         return Root.game.player.getCharacter(job).getStat(s);
     }
+    protected double getShipStat(string s)
+    {
+        //todo
+        return 0.0;
+    }
     protected Character getAdvisor()
     {
         return advisor;

@@ -267,6 +267,15 @@ public class Character
     { 
         return stats[skill];
     }
+    public float getStat (string statName)
+    {
+        return stats[(Stat)Enum.Parse(typeof(Stat), statName)];
+    }
+    public bool isIdeology(string ideologyName)
+    {
+        // used in events, needed?
+        return false;
+    }
 
     public void addStat (Stat skill, float amount) 
     { 

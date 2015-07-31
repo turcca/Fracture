@@ -30,7 +30,6 @@ public class EventGenerator
         }
 
         string outFile = Application.dataPath + "/event/generated/Events.cs";
-        Debug.Log(generatedScript);
         StreamWriter sw = File.CreateText(outFile);
         sw.Write(generatedScript);
         sw.Close();
@@ -84,10 +83,10 @@ public class EventGenerator
             }
             else if (Regex.Match(tag, @"^\@location[\s\{=]").Success)
             {
-                string id = getNextValue(tag.Substring(8));
-                id = Regex.Replace(id, @"getLocation\((.*)\)", "$1");
+                string id = getNextValue(tag.Substring(10));
+                id = Regex.Replace(id, @"getLocation\((.*)\)", "\"$1\"");
                 id = Regex.Replace(id, "currentLocation", "getPlayerLocationID()");
-                writeLine("location=" + id +";");
+                writeLine("location=" + id + ";");
             }
             else if (Regex.Match(tag, @"^\@character[\s\{=]").Success)
             {
@@ -118,7 +117,7 @@ public class EventGenerator
     {
         checkAndConsumeConditional(ref tag);
         writeLine("{");
-        writeLine("p = p * " + getNextValue(tag) + ";");
+        writeLine("//p = p * " + getNextValue(tag) + ";");
         writeLine("}");
 
     }
@@ -162,7 +161,6 @@ public class EventGenerator
         {
             if (Regex.Match(tag, @"^\@t[\s\{]").Success)
             {
-                Debug.Log(tag);
                 readText(tag.Substring(2));
             }
         }
@@ -266,7 +264,7 @@ public class EventGenerator
         if (tag.Contains("="))
         {
             string value = tag.Substring(tag.IndexOf("=") + 1);
-            return value.Substring(0, value.IndexOfAny(new char[] { '\n', '$' }) - 1);
+            return value.Substring(0, value.IndexOfAny(new char[] { '\n', '$' }));
         }
         else
         {
@@ -303,18 +301,20 @@ public class EventGenerator
         cond = Regex.Replace(cond, "OR", "||");
         cond = Regex.Replace(cond, "NOT", "!=");
         cond = Regex.Replace(cond, "NO", "!");
-        cond = Regex.Replace(cond, @"o( |=)", "outcome$1");
-        cond = Regex.Replace(cond, @"c( |=)", "choice$1");
+        cond = Regex.Replace(cond, @"^o( |=)", "outcome$1");
+        cond = Regex.Replace(cond, @"^c( |=)", "choice$1");
+        cond = Regex.Replace(cond, @"shipStat\(([a-z]*)\)", "getShipStat(\"$1\")", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "character.([a-z]*)", "getCharacterStat(Character.Stat.$1)", RegexOptions.IgnoreCase);
-        cond = Regex.Replace(cond, "advisor", "getAdvisor()", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, "TheAdvisor", "getAdvisor()", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "locationObject", "locationObject", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "gameTime", "getElapsedDays()", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, "warpmag", "getWarpMagnitude()", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "finder.magnitude", "getWarpMagnitude()", RegexOptions.IgnoreCase);
         //@todo
         cond = Regex.Replace(cond, @"playerLoc\(.atLocation.,.*\)", "(getPlayerLocationID() == location)", RegexOptions.IgnoreCase);
         //@todo
         cond = Regex.Replace(cond, @"playerLoc\(.inLocation.,.*\)", "(getPlayerLocationID() == location)", RegexOptions.IgnoreCase);
-        cond = Regex.Replace(cond, @"Event\[(.*)\]", "getEvent($1)", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, @"Event\[""(.*?)""\]", "getEvent(\"$1\")", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, @"theCaptain.([a-z]*)", "getCharacterStat(Character.Job.captain, Character.Stat.$1)", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, @"location\.ideologyStats\[.([a-z]+).\]", "getLocation().ideology.effects.$1", RegexOptions.IgnoreCase);
 
