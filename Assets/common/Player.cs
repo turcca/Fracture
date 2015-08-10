@@ -35,6 +35,7 @@ public class Player
     private Dictionary<Character.Job, int> advisors = new Dictionary<Character.Job, int>();
 
     public Vector3 position = new Vector3(0, 0, 0);
+    public float warpMagnitude = 0.0f;
     private string locationId = "";
 
     private float elapsedDays = 0;
