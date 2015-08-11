@@ -46,15 +46,15 @@ public class FactionMeetPanel : MonoBehaviour
     {
         Dictionary<Faction.FactionID, string> factionLogoMap = new Dictionary<Faction.FactionID,string>
         {
-            {Faction.FactionID.noble1, "Logo_Faction_Church"},
-            {Faction.FactionID.noble2, "Logo_Faction_Heretics"},
-            {Faction.FactionID.noble3, "Logo_Faction_Furia"},
-            {Faction.FactionID.noble4, "Logo_Faction_Rathmund"},
-            {Faction.FactionID.guild1, "Logo_Faction_Valeria"},
-            {Faction.FactionID.guild2, "Logo_Faction_Tarquinia"},
-            {Faction.FactionID.guild3, "Logo_Faction_Union"},
-            {Faction.FactionID.church, "Logo_Faction_Dacei"},
-            {Faction.FactionID.heretic, "Logo_Faction_Caruna Cartel"}
+            {Faction.FactionID.noble1, "Logo_Faction_Furia"},
+            {Faction.FactionID.noble2, "Logo_Faction_Rathmund"},
+            {Faction.FactionID.noble3, "Logo_Faction_Tarquinia"},
+            {Faction.FactionID.noble4, "Logo_Faction_Valeria"},
+            {Faction.FactionID.guild1, "Logo_Faction_Union"},
+            {Faction.FactionID.guild2, "Logo_Faction_Dacei"},
+            {Faction.FactionID.guild3, "Logo_Faction_Coruna Cartel"},
+            {Faction.FactionID.church, "Logo_Faction_Church"},
+            {Faction.FactionID.heretic, "Logo_Faction_Heretics"}
         };
 
         factionImage.sprite = Resources.Load<Sprite>("ui/factions/" + factionLogoMap[faction]);
@@ -71,26 +71,10 @@ public class FactionMeetPanel : MonoBehaviour
         // office level from faction control value
         float c = Root.game.locations[location].features.factionCtrl[faction];
 
-        if (c <= 0.12) return "Contact";
-        else if (c <= 0.3) return "Representative";
-        else if (c <= 0.5) return "Office";
-        else if (c <= 0.8) return "Administrator";
+        if (c <= 0.12f) return "Contact";
+        else if (c <= 0.3f) return "Representative";
+        else if (c <= 0.5f) return "Office";
+        else if (c <= 0.8f) return "Administrator";
         else return "Administrator";
     }
-
-    //private string getAppointmentLabel(string faction, int officeLevel)
-    //{
-    //    string name = faction + " ";
-
-    //    // office level from faction control value
-    //    //if (officeLevel == 5) name += WorldState.faction[f.id].names[5];    // official (Senator, Councillor, Bishop, Minister...)
-    //    if (officeLevel == 5) name += "TODOSenatorTODO";
-    //    else if (officeLevel == 4) name += "Administrator";
-    //    else if (officeLevel == 3) name += "Office";
-    //    else if (officeLevel == 2) name += "Representative";
-    //    else if (officeLevel == 1) name += "Contact";
-    //    else Debug.LogError("input was " + officeLevel);
-
-    //    return name;
-    //}
 }

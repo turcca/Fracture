@@ -13,8 +13,8 @@ public class Faction
         {
             case FactionID.noble1: return "House Furia";
             case FactionID.noble2: return "House Rathmund";
-            case FactionID.noble3: return "House Valeria";
-            case FactionID.noble4: return "House Tarquinia";
+            case FactionID.noble3: return "House Tarquinia";
+            case FactionID.noble4: return "House Valeria";
             case FactionID.guild1: return "Everlasting Union";
             case FactionID.guild2: return "Dacei Family";
             case FactionID.guild3: return "Coruna Cartel";
