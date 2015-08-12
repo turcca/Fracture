@@ -7,10 +7,10 @@ public class ParticleStorm : MonoBehaviour
     ParticleSystem.Particle[] particles;
     int numParticles;
 
-    public Texture2D flowTexture;
-    public GameObject player;
 
-    public Vector2[,] flowMap;
+    public GameObject player;
+    ParticleFlowData data;
+
 
     // Use this for initialization
     void Awake()
@@ -24,15 +24,7 @@ public class ParticleStorm : MonoBehaviour
         pSystem = gameObject.GetComponent<ParticleSystem>();
         particles = new ParticleSystem.Particle[pSystem.maxParticles];
 
-        flowMap = new Vector2[flowTexture.width, flowTexture.height];
-        for (int i=0; i<flowTexture.width;++i)
-            for (int j=0; j<flowTexture.height;++j)
-            {
-            //flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, j).r - 0.5f, flowTexture.GetPixel(i,j).g * (-1.0f) + 0.5f);
-            flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, flowTexture.height-j).r - 0.5f, flowTexture.GetPixel(i,flowTexture.height-j).g * (1.0f) - 0.5f);
-            flowMap[i, j] *= 1.8f;
-            }
-
+        data = new ParticleFlowData();
     }
 
     // Update is called once per frame
@@ -55,7 +47,7 @@ public class ParticleStorm : MonoBehaviour
     {
         x = mapX(particle.position.x);
         z = mapZ(particle.position.z);
-        vec.Set(flowMap[x,z].x, 0, flowMap[x,z].y);
+        vec.Set(data.flowMap[x,z].x, 0, data.flowMap[x,z].y);
         Vector3 flow = vec * 30.0f;
 
         particle.velocity = flow; // * 0.5f + particle.velocity * 0.5f;
@@ -65,21 +57,21 @@ public class ParticleStorm : MonoBehaviour
     private int mapZ(float p)
     {
         //return Mathf.Clamp(Mathf.FloorToInt((p+250.0f) / 500.0f * flowTexture.height), 0, flowTexture.height-1);
-        return Mathf.Clamp(Mathf.FloorToInt((p+287.5f) / 575.0f * flowTexture.height), 0, flowTexture.height-1);
+        return Mathf.Clamp(Mathf.FloorToInt((p+287.5f) / 575.0f * data.flowTexture.height), 0, data.flowTexture.height-1);
     }
 
     private int mapX(float p)
     {
         //return Mathf.Clamp(Mathf.FloorToInt((p+500.0f) / 1000.0f * flowTexture.width), 0, flowTexture.width-1);
-        return Mathf.Clamp(Mathf.FloorToInt((p+550.0f) / 1100.0f * flowTexture.width), 0, flowTexture.width-1);
+        return Mathf.Clamp(Mathf.FloorToInt((p+550.0f) / 1100.0f * data.flowTexture.width), 0, data.flowTexture.width-1);
     }
 
     public float getWarpMagnitude (Vector3 pos)
     {
         int xi = mapX(pos.x);
         int zi = mapZ(pos.z);
-        float xf = flowMap[xi,zi].x;
-        float yf = flowMap[xi,zi].y;
+        float xf = data.flowMap[xi,zi].x;
+        float yf = data.flowMap[xi,zi].y;
         return Mathf.Sqrt (xf*xf+yf*yf);
     }
 }

@@ -8,10 +8,12 @@ public class WeatherDebugGizmos : MonoBehaviour {
     public ParticleStorm ps;
 
     GameObject created;
-
+    ParticleFlowData data;
 
     void Start()
     {
+        data = new ParticleFlowData ();
+
         if (on)
         {
             ps = gameObject.GetComponent<ParticleStorm>();
@@ -39,14 +41,14 @@ public class WeatherDebugGizmos : MonoBehaviour {
             Vector2 v = new Vector2(0,0);
             int count = 0;
 
-            for (int i=0; i<ps.flowTexture.width;++i)
-                for (int j=0; j<ps.flowTexture.height;++j)
+            for (int i=0; i<data.flowTexture.width;++i)
+                for (int j=0; j<data.flowTexture.height;++j)
             {
                 //Debug.Log ("i: "+i+", j: "+j);
                 if (i % Nth == 0 && j % Nth == 0)
                 {
                     //ps.flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, j).r - 0.5f, ps.flowTexture.GetPixel(i,j).g * (-1.0f) + 0.5f);
-                    v = ps.flowMap[i,j];
+                    v = data.flowMap[i,j];
 
                     Color c = assignColor(Mathf.Sqrt (v.x*v.x+v.y*v.y));
 
@@ -84,11 +86,11 @@ public class WeatherDebugGizmos : MonoBehaviour {
     }
     private float toMapX(int p)
     {
-        return p*1100.0f / ps.flowTexture.width -550.0f;
+        return p*1100.0f / data.flowTexture.width -550.0f;
     }
     private float toMapZ(int p)
     {
-        return p*575.0f / ps.flowTexture.height -287.5f;
+        return p*575.0f / data.flowTexture.height -287.5f;
     }
     
     /*    
