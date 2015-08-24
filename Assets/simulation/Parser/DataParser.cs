@@ -46,27 +46,27 @@ public static class DataParser
                     break;
 
                     // base ideologies
-                case 16: data.baseIdeology[Faction.IdeologyID.cult] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 16: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.cult] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 17: data.baseIdeology[Faction.IdeologyID.technocrat] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 17: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.technocrat] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 18: data.baseIdeology[Faction.IdeologyID.mercantile] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 18: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.mercantile] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 19: data.baseIdeology[Faction.IdeologyID.bureaucracy] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 19: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.bureaucracy] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 20: data.baseIdeology[Faction.IdeologyID.liberal] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 20: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.liberal] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 21: data.baseIdeology[Faction.IdeologyID.nationalist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 21: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.nationalist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 22: data.baseIdeology[Faction.IdeologyID.aristocrat] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 22: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.aristocrat] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 23: data.baseIdeology[Faction.IdeologyID.imperialist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 23: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.imperialist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 24: data.baseIdeology[Faction.IdeologyID.navigators] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 24: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.navigators] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 25: data.baseIdeology[Faction.IdeologyID.brotherhood] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 25: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.brotherhood] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 26: data.baseIdeology[Faction.IdeologyID.transhumanist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 26: data.baseIdeology[Simulation.LocationIdeology.IdeologyID.transhumanist] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
 
                     // resource multipliers

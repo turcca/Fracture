@@ -5,7 +5,6 @@ using System.Globalization;
 public class Faction
 {
     public enum FactionID { noble1, noble2, noble3, noble4, guild1, guild2, guild3, church, heretic };
-    public enum IdeologyID { cult, technocrat, mercantile, bureaucracy, liberal, nationalist, aristocrat, imperialist, navigators, brotherhood, transhumanist }
 
     static public string getFactionName(Faction.FactionID id)
     {
@@ -161,7 +160,7 @@ public class FactionData
     }
     */
 }
-
+/*
 public class IdeologyData
 {
     static public string[] getIdeologyNames()
@@ -203,7 +202,6 @@ public class IdeologyData
         public float aristocracy;
         public float imperialism;
     }
-
     //static public string[] getEffectNames()
     //{
     //    return new string[]
@@ -228,7 +226,6 @@ public class IdeologyData
     //        "imperialism"
     //    };
     //}
-
 
     public Dictionary<Data.Resource.Type, float> resourceMultiplier =
         new Dictionary<Data.Resource.Type, float>(); 
@@ -291,3 +288,4 @@ public class IdeologyData
         return rv;
     }
 }
+*/

@@ -27,5 +27,10 @@ public class SimulationUI : MonoBehaviour
         //{
         //    Application.LoadLevel("locationScene");
         //}
+
+        // debugging ideology mul
+        Debug.Log (Root.game.locations[selectedPlanet].name + "\n"+
+                   "economy ideology mul: "+ Root.game.locations[selectedPlanet].ideology.resourceMultiplier[Data.Resource.Type.Economy]
+                   );
     }
 }

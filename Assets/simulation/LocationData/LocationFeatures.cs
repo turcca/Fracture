@@ -16,7 +16,7 @@ namespace Data
         public Data.Location.Visibility visibility = Data.Location.Visibility.Connected;
 
         public Dictionary<Faction.FactionID, float> factionCtrl = new Dictionary<Faction.FactionID, float>();
-        public Dictionary<Faction.IdeologyID, float> baseIdeology = new Dictionary<Faction.IdeologyID, float>();
+        public Dictionary<Simulation.LocationIdeology.IdeologyID, float> baseIdeology = new Dictionary<Simulation.LocationIdeology.IdeologyID, float>();
         public Dictionary<Faction.FactionID, string> ruler = new Dictionary<Faction.FactionID, string>();
 
         public Faction.FactionID? hq = null;
@@ -60,7 +60,7 @@ namespace Data
                 factionCtrl.Add(faction, 0.0f);
                 ruler.Add (faction, NameGenerator.getName(faction));
             }
-            foreach (Faction.IdeologyID ideology in System.Enum.GetValues(typeof(Faction.IdeologyID)))
+            foreach (Simulation.LocationIdeology.IdeologyID ideology in System.Enum.GetValues(typeof(Simulation.LocationIdeology.IdeologyID)))
             {
                 baseIdeology.Add(ideology, 0.0f);
             }

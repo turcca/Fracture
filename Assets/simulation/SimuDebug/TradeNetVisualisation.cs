@@ -24,10 +24,6 @@ public class TradeNetVisualisation : MonoBehaviour
         shipData.trackShip(ship);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     void OnDrawGizmos()
     {

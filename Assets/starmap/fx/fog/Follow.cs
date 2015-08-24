@@ -9,6 +9,7 @@ public class Follow : MonoBehaviour
     // Use this for initialization
     void Start()
     {        
+        if (target == null) Debug.LogWarning ("Follow @"+gameObject.name+" has no target");
     }
 
     // Update is called once per frame

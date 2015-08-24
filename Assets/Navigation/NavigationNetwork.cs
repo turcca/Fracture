@@ -15,12 +15,25 @@ namespace Navigation
     {
         public string id { get; private set; }
         public Vector3 position { get; set; }
+
         public List<NavNode> links = new List<NavNode>();
         public NavNode(string _id)
         {
             id = _id;
         }
+
+        // ------------------------------------------------------------------------------------------
+        public Vector3 directionPerpendicularNormalized { get; private set; }
+
+        public void recalculateNormalizedValues(Vector3 directionVector, Vector3 normalizedDirection)
+        {
+            directionPerpendicularNormalized = Quaternion.Euler(0, 90, 0) * normalizedDirection;
+        } 
+        // ------------------------------------------------------------------------------------------
     }
+
+
+
 
     public class NavNetwork
     {

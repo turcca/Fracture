@@ -8,7 +8,8 @@ namespace Simulation
         public static float playerResourceInfluenceNormalizationPerDay = 5.0f;
         public static float resourcePolicyStockpileDays = 5.0f;
         public static float resourceProducedDaily = 1.0f;
-        public static float shipMovementMultiplier = 400.0f;
+        public static float shipMovementMultiplier = 30.0f;
+        public static float tradeShipMul = 0.5f;
 
         public static float[] TierMultipliers = new float[] { 0.25f, 0.5f, 0.75f, 1.0f  };
         public static float tierScaleMultiplier(int tier)
@@ -30,7 +31,7 @@ namespace Simulation
         }
         public static float populationScaleMultiplier(float population)
         {
-            // pop in millions?
+            // pop in millions
             // esim jotain tällasta // x^1.7/x^1.1 /10 +0.2
             // 0 = 0.2, 1 = 0.3, 32 = 1, 100 = 1.8, 300 = 3.3, 1000 = 6.5
             return population > 0.0f ? Mathf.Pow(population, 1.7f) / Mathf.Pow(population, 1.1f) /10.0f +0.2f : 0.2f;
@@ -40,6 +41,21 @@ namespace Simulation
         public static bool isTradeScoreEnough(float score)
         {
             return score > 1.0f ? true : false; 
+        }
+        public static int getStartingTradeShips (Location location)
+        {
+            //Debug.Log (location.id+": "+tradeShipMul * (populationScaleMultiplier(location.features.population)+2) *location.ideology.resourceMultiplier[Data.Resource.Type.Economy]);
+
+            if (location.features.techLevel <= 0) return 0; // primitive world
+            else
+            {
+                return (int)Mathf.Round (Mathf.Max (
+                    tradeShipMul * 
+                    (populationScaleMultiplier(location.features.population)+2) *
+                    location.ideology.resourceMultiplier[Data.Resource.Type.Economy],
+
+                    1)); // min 1 trade ship
+            }
         }
     }
 }

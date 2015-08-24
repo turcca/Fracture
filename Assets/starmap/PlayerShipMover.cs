@@ -27,7 +27,12 @@ public class PlayerShipMover : MonoBehaviour
             transform.Translate(new Vector3(0, 0, Mathf.Min(speed, (target - transform.position).magnitude) * Time.deltaTime));
         }
         Root.game.player.warpMagnitude = ps.getWarpMagnitude(gameObject.transform.position);
-        Debug.Log("warpMagnitude: "+Mathf.Round (Root.game.player.warpMagnitude*60)/10+"    ("+Mathf.Round (Root.game.player.warpMagnitude*100)/100+")");
+        //Debug.Log("warpMagnitude: "+Mathf.Round (Root.game.player.warpMagnitude*60)/10+"    ("+Mathf.Round (Root.game.player.warpMagnitude*100)/100+")");
+    }
+    void OnGUI()
+    {
+
+        GUI.Label(new Rect(10, 10, 150, 24), "warpMag: "+Mathf.Round (Root.game.player.warpMagnitude*60)/10+"    ("+Mathf.Round (Root.game.player.warpMagnitude*100)/100+")");
     }
 
     public void setTarget(Vector3 pos)

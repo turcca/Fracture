@@ -72,19 +72,22 @@ public class Game
         ships = new List<Simulation.NPCShip>();
         foreach (Location location in locations.Values)
         {
-            ///@todo read amount of ships from data/location
-            for (int i = 0; i < 3; i++)
+            int tradeShips = Simulation.Parameters.getStartingTradeShips(location);
+            ///@todo read amount of ships from data/location?
+            for (int i = 0; i < tradeShips; i++)
             {
                 ships.Add(new Simulation.NPCShip(location));
             }
         }
+        Simulation.NPCShipVisualisation.initNPCShipVisuals();
     }
 
     internal void initPlayer()
     {
         player = new Player();
         player.init();
-        player.position = new Vector3(-280, 0, -180);
+        //@todo init player position based on faction choice
+        //player.position = new Vector3(-280, 0, -180);
     }
 
 
@@ -128,12 +131,12 @@ public class Game
                 }
                 else if (dataBlock)
                 {
-                    // first block contains id, rest is data
+                    // first block contains id, rest is data [TSV tab separated values]
                     rv.Add(line.Split('\t')[0], DataParser.parseLocationFeatures(line));
                 }
             }
 
-            Debug.Log("2v08: " + rv["2v08"].description2 + " --- " + "populiation: " + rv["2v08"].population);
+            //Debug.Log("2v08: " + rv["2v08"].description2 + " --- " + "populiation: " + rv["2v08"].population);
         }
         return rv;
     }
@@ -161,15 +164,16 @@ public class Game
             // economy, ideology
             foreach (Location location in locations.Values)
             {
-                //location.tick(days);
+                location.tick(days);
             }
-            //player.tick(days);
-            //events.tick(days);
+            player.tick(days);
+            events.tick(days);
+
             // ships, trade
             foreach (Simulation.NPCShip ship in ships)
             {
-                //ship.sendFreeShips();
-                //ship.tick(days);
+                ship.sendFreeShips(days);
+                ship.tick(days);
             }
         }
     }

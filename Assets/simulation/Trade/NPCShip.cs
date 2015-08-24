@@ -10,6 +10,7 @@ namespace Simulation
         public Location home { get; private set; }
         public Location destination { get; internal set; }
         public Vector3 position { get; private set; }
+        public Vector3 deviation { get; private set; }
         public string captain { get; private set; }
         public float cargoSpace { get; private set; }
 
@@ -20,8 +21,13 @@ namespace Simulation
         List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>();
 
         public bool free { get; private set; }
-        public bool tradeShip { get; private set; }
+        public bool isTradeShip { get; private set; }
         public bool isGoingToDestination { get; private set; }
+        public float downtime { get; set; }
+        private bool isVisible { get; set; }
+
+        public TradeShip tradeShip { get; set; }
+
 
         public NPCShip(Location home)
         {
@@ -29,56 +35,111 @@ namespace Simulation
             this.destination = home;
             this.position = home.position;
             this.captain = NameGenerator.getName("");
-            this.cargoSpace = 1.0f;
+            this.cargoSpace = 2.0f;
             this.free = true;
-            this.tradeShip = true; ///@todo military ships
+            this.isTradeShip = true; ///@todo military ships
+            this.downtime = UnityEngine.Random.value*5;
         }
 
         public void tick(float days)
         {
             /// - we probably do not need to track real positions, since trading
             ///   is done directly through location resources
-            /// - we need to add speed
-            if (navPoints.Count == 0) return;
-
-            Vector3 dir = navPoints[0].position - position;
-            if ((dir.normalized * days * Parameters.shipMovementMultiplier).magnitude > dir.magnitude)
+            if (navPoints.Count == 0) 
             {
-                navPoints.RemoveAt(0);
-                if (navPoints.Count == 0)
+                return;
+            }
+
+            if (downtime > 0)
+            {
+                setVisibilistyToStarmap(false);
+
+                if (downtime > days)
                 {
-                    arrived();
+                    downtime = downtime-days;
+                }
+                else
+                {
+                    downtime = 0;
                 }
             }
             else
             {
-                position += dir.normalized * days * Parameters.shipMovementMultiplier;
+                setVisibilistyToStarmap(true);
+
+                Vector3 dir = navPoints[0].position - position;
+                Vector3 dirNormalized = dir.normalized;
+                float endPoint = dir.magnitude;
+                float currentPoint = (dirNormalized * days * Parameters.shipMovementMultiplier).magnitude;
+
+                // navPoint reached
+                if (currentPoint > endPoint)
+                {
+                    navPoints.RemoveAt(0);
+                    if (navPoints.Count == 0)
+                    {
+                        arrived();
+                    }
+                    else 
+                    {
+                        // new navpoint - recalculate new direction and perpendicular direction
+                        navPoints[0].recalculateNormalizedValues((navPoints[0].position - position).normalized, dirNormalized);
+                    }
+                }
+                // between navPoints
+                else
+                {
+                    // over half-point, reducing deviation
+                    if (currentPoint > endPoint * 0.5f)  //mistä lasketaan puoliväli?
+                    {
+                        position += dirNormalized * days * Parameters.shipMovementMultiplier;
+                        //deviation = navPoints[0].directionPerpendicularNormalized * (endPoint-currentPoint);
+                        deviation = Quaternion.Euler(0, 90, 0) * dirNormalized *2;
+                    }
+                    // under half-point, increase deviation
+                    else
+                    {
+                        position += dirNormalized * days * Parameters.shipMovementMultiplier;
+                        //deviation = navPoints[0].directionPerpendicularNormalized * (endPoint-currentPoint);
+                        deviation = Quaternion.Euler(0, 90, 0) * dirNormalized;
+                    }
+                }
             }
         }
-        public void sendFreeShips()
+        public void sendFreeShips(float days)
         {
-            if (free)
+            if (free) 
             {
-                if (tradeShip)
-                {  
-                    // checks for trade mission scoring to meet the treshold, set destination (no partner, destination = home)
-                    LocationTrade.setTradePartnerForShip(this);
-                    if (destination != home)
-                    {
-                        Trade.tradeResources(this);
-                        isGoingToDestination = true;
-                        embarkTo();
+                if (downtime <= 0)
+                {
+                    if (isTradeShip)
+                    {  
+                        // checks for trade mission scoring to meet the treshold, set destination (no partner, destination = home)
+                        LocationTrade.setTradePartnerForShip(this);
+                        if (destination != home)
+                        {
+                            Trade.tradeResources(this);
+                            isGoingToDestination = true;
+                            embarkTo();
+                        }
                     }
+                    else
+                    {
+                        ///@todo send military ships
+                    } 
                 }
                 else
                 {
-                    ///@todo send military ships
-                } 
+                    downtime = downtime > days ? downtime-days : 0;
+                }
             }
         }
 
         private void arrived()
         {
+            setVisibilistyToStarmap(false);
+            downtime = UnityEngine.Random.Range(0.5f, 1.5f);
+
             // return home
             if (!isGoingToDestination)
             {
@@ -89,7 +150,7 @@ namespace Simulation
             // arrive at the destination
             else
             {
-                if (tradeShip)
+                if (isTradeShip)
                 {
                     // noop
                     ///@todo create a delay of couple of days before returning?
@@ -125,6 +186,20 @@ namespace Simulation
                 //else Debug.Log ("ship returning to "+home.id+" from "+destination.id+" distance (nodes): "+ path.nodes.Count);
             }
             navPoints = path.nodes;
+        }
+
+        void setVisibilistyToStarmap(bool visible)
+        {
+            if (isVisible && !visible) 
+            {
+                isVisible = false;
+                tradeShip.setVisibilistyToStarmap(false);
+            }
+            if (!isVisible && visible) 
+            {
+                isVisible = true;
+                tradeShip.setVisibilistyToStarmap(true);
+            }
         }
 
         internal string cargoToDebugString()

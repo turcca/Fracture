@@ -6,16 +6,10 @@ public class MapMouseCatcher : MonoBehaviour
 {
     public PlayerShipMover playerMover;
 
-    // Use this for initialization
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() )
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

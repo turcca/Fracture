@@ -405,11 +405,19 @@ namespace Simulation
         }
         public float getTotalEffectiveLocationResourceMultiplier()
         {
-            float mul = 1.0f;
+            //float mul = 1.0f;
+            float mul = 0;
+            float count = 0;
             foreach (var pair in resources)
             {
-                mul *= pair.Value.level > 0 ? getEffectiveMul(pair.Key) : 1.0f;
+               if (pair.Value.level > 0)
+                {
+                    mul += getEffectiveMul(pair.Key);
+                    count++;
+                }
+                //mul *= pair.Value.level > 0 ? getEffectiveMul(pair.Key) : 1.0f;
             }
+            mul /= count > 0 ? count : 1.0f;
             return mul;
         }
         internal float getEffectiveMul(Data.Resource.Type type)

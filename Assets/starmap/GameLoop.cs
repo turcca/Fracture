@@ -11,7 +11,7 @@ public class GameLoop : MonoBehaviour
     float time = 0;
     void Update()
     {
-        Root.game.tick(Time.deltaTime*30.0f);
+        Root.game.tick(Time.deltaTime/5.0f);
         //time += Time.deltaTime;
         //if (time > 1.0f)
         //{

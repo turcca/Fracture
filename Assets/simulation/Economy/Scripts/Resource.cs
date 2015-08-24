@@ -280,7 +280,7 @@ namespace Simulation
             float popScale = Parameters.populationScaleMultiplier(location.features.population);
             pool.setGrowLimit(Parameters.upgradeCostMultiplier(data.level) * popScale);
             // consumption:
-            // resource production multiplier * population multiplier * tier multiplier
+            // resource production rate * population multiplier * tier multiplier
             pool.setConsumption(Parameters.resourceProducedDaily *
                                 popScale *
                                 Parameters.tierScaleMultiplier(data.level));

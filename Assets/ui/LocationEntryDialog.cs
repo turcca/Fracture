@@ -34,5 +34,6 @@ public class LocationEntryDialog : MonoBehaviour
     public void enterLocation()
     {
         Application.LoadLevel("locationScene");
+        //Application.LoadLevelAdditive("locationScene");
     }
 }
