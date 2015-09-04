@@ -16,7 +16,7 @@ GameObject:
   - 96: {fileID: 9606722}
   - 198: {fileID: 19866828}
   - 199: {fileID: 19943252}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TradeShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 315e8fe2b688725498105d06da0316ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ui: {fileID: 0}
 --- !u!114 &11462478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -161,7 +162,7 @@ ParticleSystem:
   speed: 1
   randomSeed: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   moveWithTransform: 0
   InitialModule:

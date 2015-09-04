@@ -40,7 +40,7 @@ public class EventGenerator
     void readEvent(string data)
     {
         numEvents++;
-        string name = getNextString(data);
+        string name = getEventName(data);
         writeLine("//---------------------------------------------------------------------------------");
         writeLine("//------------------------------------------------------- EVENT " + numEvents);
         writeLine("//---------------------------------------------------------------------------------");
@@ -277,6 +277,15 @@ public class EventGenerator
         if (stringStartPos == -1) throw new System.Exception("Event generator throw");
         int length = data.Substring(stringStartPos + 1).IndexOf("\"");
         if (length == -1) throw new System.Exception("Event generator throw");
+        return data.Substring(stringStartPos + 1, length);
+    }
+    string getEventName(string data)
+    {
+        int stringStartPos = data.IndexOf("#");
+        if (stringStartPos == -1) throw new System.Exception("Event generator throw");
+        int length = data.Substring(stringStartPos + 1).IndexOf("\n")-1;
+        if (length == -1) throw new System.Exception("Event generator throw");
+        //Debug.Log ("event: "+data.Substring(stringStartPos + 1, length));
         return data.Substring(stringStartPos + 1, length);
     }
 

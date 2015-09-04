@@ -24,7 +24,7 @@ namespace Simulation
         public bool isTradeShip { get; private set; }
         public bool isGoingToDestination { get; private set; }
         public float downtime { get; set; }
-        private bool isVisible { get; set; }
+        public bool isVisible { get; private set; }
 
         public TradeShip tradeShip { get; set; }
 
@@ -35,10 +35,11 @@ namespace Simulation
             this.destination = home;
             this.position = home.position;
             this.captain = NameGenerator.getName("");
-            this.cargoSpace = 2.0f;
+            this.cargoSpace = Parameters.cargoHoldMul;
             this.free = true;
             this.isTradeShip = true; ///@todo military ships
-            this.downtime = UnityEngine.Random.value*5;
+            this.downtime = UnityEngine.Random.value*15;
+            this.isVisible = false;
         }
 
         public void tick(float days)
@@ -138,7 +139,7 @@ namespace Simulation
         private void arrived()
         {
             setVisibilistyToStarmap(false);
-            downtime = UnityEngine.Random.Range(0.5f, 1.5f);
+            downtime = UnityEngine.Random.Range(1.5f, 3.5f); // downtime range
 
             // return home
             if (!isGoingToDestination)
@@ -193,12 +194,12 @@ namespace Simulation
             if (isVisible && !visible) 
             {
                 isVisible = false;
-                tradeShip.setVisibilistyToStarmap(false);
+                tradeShip.setVisibilityToStarmap(false);
             }
             if (!isVisible && visible) 
             {
                 isVisible = true;
-                tradeShip.setVisibilistyToStarmap(true);
+                tradeShip.setVisibilityToStarmap(true);
             }
         }
 
@@ -219,8 +220,8 @@ namespace Simulation
                         if (isGoingToDestination) rv+= "(getting) ";
                         else rv+= "Importing ";
                     }
-
-                    rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ item.amount +"\n";
+                    if (item.amount < 0.1f) rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ Mathf.Round (item.amount*100.0f)/100.0f +"\n";
+                    else rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ Mathf.Round (item.amount*10.0f)/10.0f +"\n";
                 }
             }
             return rv;            

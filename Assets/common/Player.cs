@@ -34,7 +34,7 @@ public class Player
     private Dictionary<int, Character> characters = new Dictionary<int, Character>();
     private Dictionary<Character.Job, int> advisors = new Dictionary<Character.Job, int>();
 
-    public Vector3 position = new Vector3(0, 0, 0);
+    public Vector3 position;// = new Vector3(0, 0, 0);
     public float warpMagnitude = 0.0f;
     private string locationId = "";
 
@@ -114,6 +114,18 @@ public class Player
     public void setLocationId(string loc)
     {
         locationId = loc;
+    }
+    public Location getLocation()
+    {
+        if (Root.game.locations.ContainsKey(locationId))
+        {
+            return Root.game.locations[locationId];
+        }
+        else
+        {
+            Debug.LogWarning ("WARNING: player.locationId not valid: "+locationId);
+            return null;
+        }
     }
 
     public void tick(float days)

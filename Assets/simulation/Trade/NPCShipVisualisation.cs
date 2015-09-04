@@ -1,25 +1,37 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 namespace Simulation
 {
     public static class NPCShipVisualisation 
     {
-        static GameObject NPCShips = GameObject.Find("NPCShips");
+        static GameObject NPCShips;
         static GameObject tradeShipPrefab;
+
+        public static GameMenuSystem ui;
+
+        public static LaserScope lineUI; // line renderer effect for NPC ship info ui
+
 
         // Use this for initialization
         public static void initNPCShipVisuals()
         {
-            tradeShipPrefab = (GameObject)Resources.Load("starmap/prefabs/TradeShip");
+            if (!NPCShips) NPCShips = GameObject.Find("NPCShips");
+            if (!lineUI) lineUI = GameObject.Find("lineUI").GetComponent<LaserScope>();
+
             if (!tradeShipPrefab)
             {
-                Debug.LogError ("Ship error: couldn't find resource");
-                return;
+                tradeShipPrefab = (GameObject)Resources.Load("starmap/prefabs/TradeShip");
+                if (!tradeShipPrefab)
+                {
+                    Debug.LogError ("Ship error: couldn't find resource");
+                    return;
+                }
             }
             foreach (NPCShip ship in Root.game.ships)
             {
-                createShip(ship);
+                createShip(ship); 
             }
         }
 
@@ -31,6 +43,34 @@ namespace Simulation
             shipData.trackShip(ship);
             shipObj.transform.parent = NPCShips.transform;
             ship.tradeShip = shipData;
+
+            ship.tradeShip.setVisibilityToStarmap(ship.isVisible);
+        }
+
+
+        public static void mouseOverNPCShipForInfo(NPCShip ship, bool isOver)
+        {
+            if (infoReady())
+            {
+                ui.showNPCshipInfo(ship, isOver);
+            }
+        }
+
+
+        private static bool infoReady() // UI /mouse-over info box for NPC ships
+        {
+            if (ui == null)
+            {
+                try
+                {
+                    ui = GameObject.Find("GameCanvas").GetComponent<GameMenuSystem>();
+                }
+                catch (NullReferenceException)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

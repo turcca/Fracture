@@ -9,17 +9,34 @@ public class AdvisorManager : MonoBehaviour
 
     private Character.Job lastSelectedJob;
 
+    void Start()
+    {
+    }
+
     public void advisorSelected(GameObject advisorNode)
     {
         Character.Job job = advisorNode.GetComponent<EventAdvisor>().advisorJob;
 
         string advice = "";
+
         if (Root.state == Root.State.Event)
         {
-            advice = eventUI.setAdvisor(job);
+            if (eventUI == null) eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
+            if (eventUI != null)
+            {
+                advice = eventUI.setAdvisor(job);
+            }
+            else Debug.LogWarning ("event state couldn't locate EventUI -script in SideWindow");
+        }
+        else if (Root.state == Root.State.Location)
+        {
+            //advice = currentEvent.getAdvice(job).text
+            advice = GameObject.Find("MainContent").GetComponent<EventUI>().setAdvisor(job);
+            Debug.Log ("advice: "+advice);
         }
         else
         {
+            Debug.Log ("Root.state = "+Root.state.ToString() );
             ///@todo get some advice for different situations
             advice = "Some general advice.";
         }

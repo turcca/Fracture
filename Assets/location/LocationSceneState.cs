@@ -46,6 +46,8 @@ public class LocationSceneState : MonoBehaviour
         //Game.universe.eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
         //@note skip events
         eventQueryDone();
+
+        Root.game.events.loadLocationAdvice();
     }
 
     public void eventQueryDone()

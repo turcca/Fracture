@@ -35,6 +35,15 @@ public class EventUI : MonoBehaviour
         currentEvent = e;
         startEvent();
     }
+    public void loadLocationAdviceEvent(EventBase e)
+    {
+        if (Root.game.player.getLocation() != null)
+        {
+            currentEvent = e;
+            Debug.Log ("Loaded location event: '"+e.name+"'");
+        }
+        else currentEvent = null;
+    }
 
     public void eventChoicePicked(int i)
     {

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class EventManager
 {
+    EventUI eventUI;
+
     public delegate void AllDoneDelegate();
 
     private AllDoneDelegate allDoneCallback;
@@ -25,6 +27,7 @@ public class EventManager
 
     public void addEventToPool(EventBase e)
     {
+        Debug.Log ("Adding event: "+e.name);
         if (!e.locationEvent)
         {
             eventPool.Add(e);
@@ -40,6 +43,39 @@ public class EventManager
         daysSinceLastEvent += days;
     }
 
+    public void loadLocationAdvice()
+    {
+        eventUI = GameObject.Find("MainContent").GetComponent<EventUI>();
+        if (eventUI == null)
+        {
+            Debug.LogWarning ("location advice eventUI not found, it's supposed to be on 'MainContent', contrary to actual events"); 
+            return;
+        }
+
+        string eventName = "loc_advice_"+Root.game.player.getLocationId().ToUpper();
+        Debug.Log ("eventPool size: "+eventPool.Count+ "    triggerEventPool size: "+triggerEventPool.Count);
+
+        foreach (EventBase e in eventPool)
+        {
+            if (e.name == eventName)
+            {
+                eventUI.loadLocationAdviceEvent(e);
+                return;
+            }
+            else Debug.Log ("not matching event: '"+e.name+"'");
+        }
+
+        Debug.Log ("TODO: location has no advice-event: '"+eventName+"'");
+
+        foreach (EventBase e in eventPool)
+        {
+            if (e.name == "loc_advice")
+            {
+                eventUI.loadLocationAdviceEvent(e);
+            }
+        }
+    }
+
     public void queryStarmapEvents()
     {
         float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
@@ -53,10 +89,13 @@ public class EventManager
         }
     }
 
-    public void queryLocationEvents(AllDoneDelegate callback)
+    public void queryLocationEvents(string locationId, AllDoneDelegate callback)
     {
         allDoneCallback = callback;
+
         //@note test location events
+        Debug.Log ("todo: load location events");
+
         handleEvent(pickEvent());
         //handleEvent(null);
     }
@@ -109,15 +148,19 @@ public class EventManager
                 Debug.Log("zero events picked!");
             }
 
-            foreach (EventBase availableEvent in availableEvents)
+            else
             {
-                
+                foreach (EventBase availableEvent in availableEvents)
+                {
+                    // todo picking by probability
+                }
+                Debug.Log ("TODO: load event");
             }
-            // do stuff
         }
 
         // todo
-		return new Event_4();
+		//return new Event_4();
+        return null;
     }
 
     public void handleEvent(EventBase e)
@@ -127,7 +170,7 @@ public class EventManager
             eventDone();
         }
 
-        EventUI eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
+        if (eventUI == null) eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
         eventUI.setEvent(e, new EventUI.EventDoneDelegate(eventDone));
     }
 

@@ -10,6 +10,7 @@ public class SimulationTestSetup : MonoBehaviour
 
     void Update()
     {
-        Root.game.tick(Time.deltaTime / 10.0f);
+        //Root.game.tick(Time.deltaTime / 5.0f);
+        Root.game.tick(Time.deltaTime *1.5f);
     }
 }

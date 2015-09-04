@@ -34,7 +34,7 @@ public class EventBase
         name = _name;
         available = true;
         //initPre();
-
+        Debug.Log ("formatting EventBase: "+name+" / "+_name);
         Root.game.events.addEventToPool(this);
     }
     public void start()

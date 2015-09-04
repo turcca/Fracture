@@ -19,9 +19,18 @@ public class TradeNetVisualisation : MonoBehaviour
 
     private void createShip(Simulation.NPCShip ship)
     {
-        GameObject shipObj = (GameObject)GameObject.Instantiate(tradeShipPrefab, ship.position, Quaternion.identity);
+        GameObject shipObj = (GameObject)GameObject.Instantiate(tradeShipPrefab/*, ship.position, Quaternion.identity*/);
         TradeShip shipData = shipObj.GetComponent<TradeShip>();
         shipData.trackShip(ship);
+        ship.tradeShip = shipData;
+        //shipObj.GetComponent<MeshFilter>().mesh = MeshFilter.
+        ship.tradeShip.setVisibilityToStarmap(ship.isVisible);
+
+        GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        box.GetComponent<Renderer>().material.shader = Shader.Find ("Custom/brdf");
+        box.transform.parent = shipObj.transform;
+        box.transform.localPosition = new Vector3(0,-1,0);
+        box.transform.localScale = new Vector3(1,1,1);
     }
 
 
@@ -85,7 +94,7 @@ public class TradeNetVisualisation : MonoBehaviour
             if (location.economy.hasShortage())
             {
                 Vector3 pos = Camera.main.WorldToScreenPoint(location.position);
-                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 60),
+                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 80),
                           location.id +"\n" + location.economy.shortagesToDebugStringFloating());
             }
         }

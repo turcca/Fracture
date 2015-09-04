@@ -29,8 +29,5 @@ public class MarketPage : MonoBehaviour
         }
     }
 
-    void Update()
-    {
 
-    }
 }

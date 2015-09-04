@@ -13,6 +13,7 @@ public class MenuSystem : MonoBehaviour
     void Start()
     {
         //hideAllPages();
+        Root.state = Root.State.Location;
     }
 
     private void hideAllPages()
@@ -58,6 +59,7 @@ public class MenuSystem : MonoBehaviour
 
     public void exit()
     {
+        Root.state = Root.State.StarMap;
         Application.LoadLevel(0);
     }
 

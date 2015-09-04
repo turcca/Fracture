@@ -91,7 +91,7 @@ namespace Simulation
                     {
                         if (exportCapacity > 0.0f)
                         {
-                            if (item.amount <= exportCapacity)
+                            if (item.amount < exportCapacity)
                             {
                                 exportCapacity -= item.amount;
                                 score += (item.amount * item.weight);
@@ -108,7 +108,7 @@ namespace Simulation
                     {
                         if (importCapacity > 0.0f)
                             {
-                            if (item.amount <= importCapacity)
+                            if (item.amount < importCapacity)
                             {
                                 importCapacity -= item.amount;
                                 score += (item.amount * item.weight);

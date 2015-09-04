@@ -79,7 +79,6 @@ public class Game
                 ships.Add(new Simulation.NPCShip(location));
             }
         }
-        Simulation.NPCShipVisualisation.initNPCShipVisuals();
     }
 
     internal void initPlayer()
@@ -87,7 +86,7 @@ public class Game
         player = new Player();
         player.init();
         //@todo init player position based on faction choice
-        //player.position = new Vector3(-280, 0, -180);
+        player.position = new Vector3(256, 0, 0);
     }
 
 

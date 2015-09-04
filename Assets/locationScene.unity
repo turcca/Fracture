@@ -627,6 +627,7 @@ GameObject:
   - 224: {fileID: 120610997}
   - 222: {fileID: 120610998}
   - 114: {fileID: 120610999}
+  - 114: {fileID: 120611000}
   m_Layer: 5
   m_Name: MainContent
   m_TagString: Untagged
@@ -681,6 +682,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &120611000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 120610996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7684efd3a020bc848bcb124a6a1278de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventText: {fileID: 0}
+  choiceButtonGrid: {fileID: 0}
+  eventPage: {fileID: 0}
 --- !u!1001 &146207283
 Prefab:
   m_ObjectHideFlags: 0
@@ -1865,6 +1880,72 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 285026509}
+--- !u!1 &309876985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 309876986}
+  - 222: {fileID: 309876988}
+  - 114: {fileID: 309876987}
+  m_Layer: 5
+  m_Name: Description
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &309876986
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 309876985}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1794049249}
+  m_RootOrder: 2
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 20, y: -20}
+  m_SizeDelta: {x: -40, y: 120}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &309876987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 309876985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: .844290674, g: .875223756, b: .897058845, a: 1}
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 18
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: '[insert location description]'
+--- !u!222 &309876988
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 309876985}
 --- !u!1001 &310091764
 Prefab:
   m_ObjectHideFlags: 0
@@ -6420,8 +6501,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 1236835133}
   - 222: {fileID: 1236835134}
-  - 114: {fileID: 1236835135}
   - 114: {fileID: 1236835136}
+  - 114: {fileID: 1236835135}
   m_Layer: 5
   m_Name: TradePanel
   m_TagString: Untagged
@@ -7991,6 +8072,7 @@ GameObject:
   - 224: {fileID: 1794049249}
   - 222: {fileID: 1794049250}
   - 114: {fileID: 1794049251}
+  - 114: {fileID: 1794049252}
   m_Layer: 5
   m_Name: LocationPanel
   m_TagString: Untagged
@@ -8010,6 +8092,7 @@ RectTransform:
   m_Children:
   - {fileID: 660057590}
   - {fileID: 1781033128}
+  - {fileID: 309876986}
   m_Father: {fileID: 120610997}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
@@ -8035,6 +8118,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tab: {fileID: 1369779776}
+--- !u!114 &1794049252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1794049248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae61993cbba2cd844a88b4d899835aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  locationName: {fileID: 1698846072}
+  systemName: {fileID: 2119459810}
+  description1: {fileID: 309876987}
+  description2: {fileID: 0}
 --- !u!1001 &1797534618
 Prefab:
   m_ObjectHideFlags: 0

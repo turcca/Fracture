@@ -9,7 +9,9 @@ namespace Simulation
         public static float resourcePolicyStockpileDays = 5.0f;
         public static float resourceProducedDaily = 1.0f;
         public static float shipMovementMultiplier = 30.0f;
-        public static float tradeShipMul = 0.5f;
+        public static float tradeShipMul = 0.5f; // amount of trade ships
+        public static float cargoHoldMul = 10.0f; // basic cargoHold for trade ships
+        public static float tradeScoreTreshold = 150.0f; // default trade scoring treshold for ship to be sent
 
         public static float[] TierMultipliers = new float[] { 0.25f, 0.5f, 0.75f, 1.0f  };
         public static float tierScaleMultiplier(int tier)
@@ -40,7 +42,7 @@ namespace Simulation
         // succesful items that have shortages raise weighting scores to break through the treshold
         public static bool isTradeScoreEnough(float score)
         {
-            return score > 1.0f ? true : false; 
+            return score > tradeScoreTreshold ? true : false; 
         }
         public static int getStartingTradeShips (Location location)
         {

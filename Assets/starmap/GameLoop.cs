@@ -7,6 +7,11 @@ public class GameLoop : MonoBehaviour
     {
         Application.LoadLevelAdditive("generalUIScene");
     }
+    void Start()
+    {
+        Debug.Log ("GameLoop Start()");
+        Simulation.NPCShipVisualisation.initNPCShipVisuals();
+    }
 
     float time = 0;
     void Update()
