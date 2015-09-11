@@ -11,6 +11,7 @@ public class MarketCommodity : MonoBehaviour
 
     public Text commodityName;
     public Text price;
+    public Text priceMultiplier;
     public Text cargoAmount;
     public Text storeAmount;
 
@@ -22,6 +23,11 @@ public class MarketCommodity : MonoBehaviour
     private Image lineGraphHor;
     //private string trackedLocation = "not defined";
 
+    Data.TradeItem locationItem;
+    int itemTier;
+    public float calculatedValue {get; private set;}
+
+    MarketPage marketPage;
 
     // Use this for initialization
     void Start()
@@ -34,21 +40,45 @@ public class MarketCommodity : MonoBehaviour
     {
     }
 
-    internal void trackLocation(LocationSceneState state, Data.Resource.SubType commodity)
+    internal void trackLocation(LocationSceneState state, Data.Resource.SubType commodity, MarketPage mp)
     {
         this.state = state;
-        //trackedLocation = state.trackedLocation;
+        this.marketPage = mp;
         trackedCommodity = commodity;
+        locationItem = Root.game.locations[state.trackedLocation].economy.getTradeItem(trackedCommodity, marketPage.locationTradeList);
+        itemTier = Data.Resource.getSubTypeTier(locationItem.subType);
         updateCommodityInfo();
     }
 
     private void updateCommodityInfo()
     {
-        ///@todo set readable names
-        commodityName.text = Enum.GetName(typeof(Data.Resource.SubType), trackedCommodity);
-        price.text = "0";
-        storeAmount.text = state.tradeList.commodities[trackedCommodity].ToString();
-        cargoAmount.text = "0"; //Root.game.player.cargo.commodities[].ToString();
+        // name
+        commodityName.text = Simulation.Trade.getCommodityName(trackedCommodity); //Enum.GetName(typeof(Data.Resource.SubType), trackedCommodity);
+
+        // price
+        float priceMul = Simulation.Trade.calculateItemPriceMultiplier(locationItem);
+        float value = Simulation.Trade.getCommodityValue(locationItem.subType);
+        // rounded multiplier calculators
+        calculatedValue = Mathf.Round (priceMul * value);
+        priceMul = Mathf.Round (calculatedValue / value * 100.0f)/100.0f;
+
+        priceMultiplier.text = priceMul.ToString();
+
+        price.text = calculatedValue.ToString();
+        // location price color: red importing, green exporting
+        if (locationItem.isExported) price.color = new Color(0.8f, 1.0f, 0.9f);
+        else price.color = new Color(1.0f, 0.9f/priceMul, 0.8f/priceMul);
+
+        // store amount
+        storeAmount.text = locationItem.amount.ToString(); //state.tradeList.commodities[trackedCommodity].ToString();
+
+        // player amount
+        cargoAmount.text = Root.game.player.cargo.commodities[trackedCommodity].ToString(); // economy.playerTradeList obsolite?
+
+        // update credits
+        marketPage.updateCredits();
+        // update cargo space
+        marketPage.updateCargo();
     }
 
     public void msgMouseEnter()
@@ -63,118 +93,43 @@ public class MarketCommodity : MonoBehaviour
 
     public void buy()
     {
-        //Dictionary<string, int> store = Game.universe.locations[trackedLocation].stockpile.tradable;
-        //Dictionary<string, int> player = Game.universe.player.cargo.commodities;
+        bool debug = true;
 
-        //if (store[trackedCommodity] > 0 &&
-        //    Game.universe.player.cargo.credits >= Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity) &&
-        //    Game.universe.player.cargo.getUsedCargoSpace() < Game.universe.player.cargo.maxCargoSpace)
-        //{
-        //    --store[trackedCommodity];
-        //    ++player[trackedCommodity];
-        //    Game.universe.player.cargo.credits -= Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity);
-        //}
+        if (locationItem.amount >= 1.0f)
+        {
+            if (Root.game.player.cargo.credits >= calculatedValue)
+            {
+                if (Root.game.player.cargo.getUsedCargoSpace() < 10)
+                {
+                    Root.game.player.cargo.credits -= calculatedValue;
+                    --locationItem.amount;
+                    Root.game.locations[state.trackedLocation].economy.export(locationItem.type, 0.25f);
+                    Debug.Log (" todo: affect tier balancing");
+                    ++Root.game.player.cargo.commodities[trackedCommodity];
 
-        //updateCommodityInfo(trackedLocation, trackedCommodity);
+                    updateCommodityInfo();
+                }
+                else if (debug) Debug.Log ("cargo full (todo: crago space)");
+            }
+            else if (debug) Debug.Log ("not enough player credits");
+        }
+        else if (debug) Debug.Log ("not enough stock: "+locationItem.amount);
     }
 
     public void sell()
     {
-        //Dictionary<string, int> store = Game.universe.locations[trackedLocation].stockpile.tradable;
-        //Dictionary<string, int> player = Game.universe.player.cargo.commodities;
-
-        //if (Game.universe.player.cargo.commodities[trackedCommodity] > 0)
-        //{
-        //    ++store[trackedCommodity];
-        //    --player[trackedCommodity];
-        //    Game.universe.player.cargo.credits += Game.universe.locations[trackedLocation].getCommodityPrice(trackedCommodity);
-        //}
-
-        //updateCommodityInfo(trackedLocation, trackedCommodity);
-    }
-
-    string getCommodityName(Data.Resource.SubType resourceType)
-    {
-        switch (resourceType)
+        bool debug = true;
+        
+        if (Root.game.player.cargo.commodities[trackedCommodity] > 0)
         {
-        case Data.Resource.SubType.FoodT1:
-            return "Grain"; // Celphos grain, Fusarium venenatum, soy and other crops that can be stored for transportation.
-        case Data.Resource.SubType.FoodT2:
-            return "Canned Food"; // Airtight preserving of processed and fresh food ingredients: vegetables, meat, seafood and dairy.
-        case Data.Resource.SubType.FoodT3:
-            return "Frozen Food"; // More advanced methods of transporting food while preserving all its nutrients.
-        case Data.Resource.SubType.FoodT4:
-            return "Nutrigrafts"; // Food supplements, balanced meals and genetically modified food made to meet all nutritional requirements.
-
-
-        case Data.Resource.SubType.MineralT1:
-            return "Raw Materials"; // Common materials in minimally processed or unprocessed states: metal ores, raw minerals and extracted chemicals.
-        case Data.Resource.SubType.MineralT2:
-            return "Processed Materials"; // Processed metals, alloys and chemicals for industrial manufacturing: metals, alloys, plastics and refined chemicals.
-        case Data.Resource.SubType.MineralT3:
-            return "Advanced Materials"; //  Materials for Hi-tech industrial needs: liquid crystals, semiconductors, superconductors, optics, lasers, sensors, mesoporous materials, shape memory alloys, light-emitting materials, magnetic materials, thin films, and colloids.
-        case Data.Resource.SubType.MineralT4:
-            return "Nanomaterials"; // Microfabricated materials with structure matrix at the nanoscale are highly sought after due to their extraordinary properties.
-
-        case Data.Resource.SubType.IndustryT1:
-            return "Machinery"; // Machinery and tools for upkeeping and building basic low-scale infrastructure and manufacturing.
-        case Data.Resource.SubType.IndustryT2:
-            return "Industrial Assembly"; // Assembly lines and components for the needs of scalable heavy industry.
-        case Data.Resource.SubType.IndustryT3:
-            return "Advanced Assembly"; // Advanced manufacturing components for electronics and complex manufacturing industries.
-        case Data.Resource.SubType.IndustryT4:
-            return "Autofabs"; // Highly automated factory modules capable of autonomous deployment and sophisticated manufacturing.
-
-        case Data.Resource.SubType.InnovationT1:
-            return "Education Assets"; // Teachers, training programs, medical supplies, blueprints and other foundational colony assets.
-        case Data.Resource.SubType.InnovationT2:
-            return "Technical Assets"; // Medical instruments, comm systems and specialists like engineers doctors and lawmakers.
-        case Data.Resource.SubType.InnovationT3:
-            return "Advanced Assets"; // Computer systems, scientists,  satellites and other information infrastructure.
-        case Data.Resource.SubType.InnovationT4:
-            return "Hi-tech Assets"; // Robotics, neural cores, med vats, sophisticated software and other cutting edge technology.
-
-        case Data.Resource.SubType.EconomyT1:
-            return "Seed Economy"; // Economic instruments, seed investments, agents and prospectors.
-        case Data.Resource.SubType.EconomyT2:
-            return "Corporate Economy"; // Corporation assets, investors and private funding.
-        case Data.Resource.SubType.EconomyT3:
-            return "Banking Economy"; // Banking instruments, economists and securities.
-        case Data.Resource.SubType.EconomyT4:
-            return "Planetary Economy"; // Planetary assets, major investments and treasuries.
-
-        case Data.Resource.SubType.CultureT1:
-            return "Consumer Necessities"; // Clothing, furniture and other personal effects.
-        case Data.Resource.SubType.CultureT2:
-            return "Consumer Goods"; // Appliances, services and entertainment products.
-        case Data.Resource.SubType.CultureT3:
-            return "Consumer Electronics"; // Personal computers, consumer software, entertainment electronics and digital entertainment.
-        case Data.Resource.SubType.CultureT4:
-            return "Consumer Luxuries"; // Cybernetics, VR and Virtual Personal Assistants.
-
-        case Data.Resource.SubType.MilitaryT1:
-            return "Ordnance"; // Personal assault weapons and infantry armor.
-        case Data.Resource.SubType.MilitaryT2:
-            return "Heavy Weapons"; // Support weapons to take out larger targets.
-        case Data.Resource.SubType.MilitaryT3:
-            return "Weapon Systems"; // Rockets, las cannons and combat vehicles.
-        case Data.Resource.SubType.MilitaryT4:
-            return "Capital Weapons"; // Ship-mounted weapon systems used in space or fracture.
-
-        case Data.Resource.SubType.BlackMarketT1:
-            return "Grain"; // 
-        case Data.Resource.SubType.BlackMarketT2:
-            return "Grain"; // 
-        case Data.Resource.SubType.BlackMarketT3:
-            return "Grain"; // 
-        case Data.Resource.SubType.BlackMarketT4:
-            return "Grain"; // 
-
-        case Data.Resource.SubType.Unknown:
-            return "unknown";
-
-        default:
-            return "default";
+            Root.game.player.cargo.credits += calculatedValue;
+            ++locationItem.amount;
+            Root.game.locations[state.trackedLocation].economy.import(locationItem.type, 0.25f);
+            Debug.Log (" todo: affect tier balancing");
+            --Root.game.player.cargo.commodities[trackedCommodity];
+            
+            updateCommodityInfo();
         }
+        else if (debug) Debug.Log ("player is out of commodities");
     }
 }

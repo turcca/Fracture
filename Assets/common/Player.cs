@@ -5,15 +5,15 @@ using System;
 
 public class CommodityInventory
 {
-    public Dictionary<string, int> commodities = new Dictionary<string, int>();
+    public Dictionary<Data.Resource.SubType, int> commodities = new Dictionary<Data.Resource.SubType, int>();
     public int maxCargoSpace = 10;
-    public int credits = 128;
+    public float credits = 128.0f;
 
     public CommodityInventory()
     {
-        foreach (string key in Economy.getCommodityNames())
+        foreach (Data.Resource.SubType type in Enum.GetValues(typeof(Data.Resource.SubType)))
         {
-            commodities.Add(key, 0);
+            commodities.Add(type, 0);
         }
     }
 

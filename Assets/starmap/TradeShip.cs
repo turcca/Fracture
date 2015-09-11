@@ -48,13 +48,19 @@ public class TradeShip : MonoBehaviour
 
     public void OnMouseEnter()
     {
-        Simulation.NPCShipVisualisation.mouseOverNPCShipForInfo(trackedShip, true);
-        Simulation.NPCShipVisualisation.lineUI.setTargetObject(trackedShip.tradeShip.gameObject);
+        if (!visualisation)
+        {
+            Simulation.NPCShipVisualisation.mouseOverNPCShipForInfo(trackedShip, true);
+            Simulation.NPCShipVisualisation.lineUI.setTargetObject(trackedShip.tradeShip.gameObject);
+        }
     }
     public void OnMouseExit()
     {
-        Simulation.NPCShipVisualisation.mouseOverNPCShipForInfo(trackedShip, false);
-        Simulation.NPCShipVisualisation.lineUI.clearTargetObject();
+        if (!visualisation)
+        {
+            Simulation.NPCShipVisualisation.mouseOverNPCShipForInfo(trackedShip, false);
+            Simulation.NPCShipVisualisation.lineUI.clearTargetObject();
+        }
     }
 
     public void setVisibilityToStarmap (bool isVisible)

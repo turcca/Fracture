@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LocationSceneState : MonoBehaviour
 {
     public string trackedLocation = "not_set";
     public MenuSystem menu;
     public GameObject diplomacy;
-    public PlayerTradeList tradeList;
 
     void Awake()
     {
@@ -31,8 +31,6 @@ public class LocationSceneState : MonoBehaviour
             Application.LoadLevelAdditive("default");
         }
 
-        tradeList = Root.game.locations[trackedLocation].getPlayerTradeList();
-
         //Application.LoadLevelAdditive("uiScene");
     }
 
@@ -41,6 +39,9 @@ public class LocationSceneState : MonoBehaviour
         Application.LoadLevelAdditive("generalUIScene");
         // deactivate scene camera to use loaded levels main camera
         GameObject.Find("LocationCamera").GetComponent<Camera>().enabled = false;
+
+
+
         menu.hideAll();
         // check and trigger location events
         //Game.universe.eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));

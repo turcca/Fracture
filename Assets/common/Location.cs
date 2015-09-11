@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 
 public class Location
 {
-    private Data.Location data;
+    Data.Location data { get; set; } // features are loaded to Data.Location
 
     public string name
     {
@@ -37,9 +36,14 @@ public class Location
         this.data = data;
 
         this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
+            // load tech-level features to economy
+            this.economy.technologies[Data.Tech.Type.Technology].level = features.startingTechLevel;
+            this.economy.technologies[Data.Tech.Type.Infrastructure].level = features.startingInfrastructure;
+            this.economy.technologies[Data.Tech.Type.Military].level = features.startingMilitaryTechLevel;
+
         this.ideology = new Simulation.LocationIdeology(this);
     }
-
+    
     public void tick(float days)
     {
         economy.tick(days);
@@ -49,10 +53,10 @@ public class Location
     public string toDebugString()
     {
         return "Name: " + name + " (pop: "+features.population+")\n" +
-            "Features: " + data.features.toDebugString() + "\n" +
+            "Features: " + features.toDebugString() + "\n" +
             "Economy:\n" + economy.toDebugString() + "\n";
             //"---\n" + "Politics:\n" + ideology.toDebugString();
-            //"---\n" + "Economy:\n" + industry.toDebugString();
+            //"---\n" + "Assets:\n" + .toDebugString();
     }
 
     public float getImportance()
@@ -65,12 +69,6 @@ public class Location
         //float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
 
         //return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
-        return 0;
-    }
-
-    public int getCommodityPrice(string commodity)
-    {
-        //return industry.getCommodityPrice(commodity);
         return 0;
     }
 
@@ -88,14 +86,50 @@ public class Location
         return rv;
     }
 
-    public PlayerTradeList getPlayerTradeList()
+    public List<Data.TradeItem> getLocationTradeList()
     {
-        PlayerTradeList tradeList = new PlayerTradeList();
-        foreach (Data.Resource.Type resource in economy.resources.Keys)
+        List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
+        int tier = 1;
+        int i = 0;
+        int nthTier;
+        float poolAmount;
+        //foreach (Data.Resource.Type resource in Enum.GetValues(typeof(Data.Resource.Type)))
+
+        foreach (Data.TradeItem item in economy.tradeItems)
         {
-            // build list
-            //economy.resources[resource].getResourcesOverTargetLimit();
+            tier = Mathf.Max (economy.resources[item.type].level, 1);
+            poolAmount = (item.isExported && item.amount >= tier) ? Mathf.Floor (item.amount / tier) : 0.0f;
+            nthTier = 0;
+
+            foreach (Data.Resource.SubType subType in Data.Resource.getSubTypes(item.type))
+            {
+                tradeList.Add (new Data.TradeItem());
+                // only assign commodities up to location tier level
+                tradeList[i].amount = (nthTier < tier) ?  poolAmount : 0.0f;
+                tradeList[i].type = item.type;
+                tradeList[i].subType = subType;
+                tradeList[i].weight = item.weight;
+                tradeList[i].isExported = item.isExported;
+                nthTier++;
+                i++;
+            }
         }
         return tradeList;
     }
+
+    public List<Data.TradeItem> getPlayerTradeList()
+    {
+        List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
+        //tradeList.commodities = Root.game.player.cargo.commodities;
+        int i = 0;
+        foreach (var item in Root.game.player.cargo.commodities)
+        {
+            tradeList.Add (new Data.TradeItem());
+            tradeList[i].amount = item.Value;
+            tradeList[i].subType = item.Key;
+            i++;
+        }
+        return tradeList;
+    }
+
 }

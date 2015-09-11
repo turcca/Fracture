@@ -8,17 +8,18 @@ namespace Simulation
     public class Tech
     {
         private Data.Tech data;
-        public int level
-        {
-            get { return data.level; }
-            set { data.level = value; }
-        }
+        internal int level = 0;
 
         public Tech(Data.Tech data)
         {
             this.data = data;
         }
-
+        /*
+        internal int level()
+        {
+            return data.level;
+        }
+*/
         internal void upgrade()
         {
             data.level++;

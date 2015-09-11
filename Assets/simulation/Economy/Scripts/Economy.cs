@@ -336,6 +336,26 @@ namespace Simulation
             }
         }
 
+        public Data.TradeItem getTradeItem (Data.Resource.SubType subType, List<Data.TradeItem> tradeList = null)
+        {
+            if (tradeList == null)
+            {
+                foreach (Data.TradeItem item in tradeItems)
+                {
+                    if (item.subType == subType) return item;
+                }
+            }
+            else
+            {
+                foreach (Data.TradeItem item in tradeList)
+                {
+                    if (item.subType == subType) return item;
+                }
+            }
+            Debug.LogError ("input error");
+            return null;
+        }
+
         internal string toDebugString()
         {
             string rv = "";
@@ -405,7 +425,6 @@ namespace Simulation
         }
         public float getTotalEffectiveLocationResourceMultiplier()
         {
-            //float mul = 1.0f;
             float mul = 0;
             float count = 0;
             foreach (var pair in resources)
@@ -415,7 +434,6 @@ namespace Simulation
                     mul += getEffectiveMul(pair.Key);
                     count++;
                 }
-                //mul *= pair.Value.level > 0 ? getEffectiveMul(pair.Key) : 1.0f;
             }
             mul /= count > 0 ? count : 1.0f;
             return mul;

@@ -9,11 +9,11 @@ namespace Data
     public class LocationFeatures 
     {
         public string name = "NO_NAME";
-        //public string ruler = "NO_RULER";
+        //public string ruler = "NO_RULER"; // not read from data
         public string subsector = "NO_SUBSECTOR";
         public string description1 = "NO_DESCRIPTION1";
         public string description2 = "NO_DESCRIPTION2";
-        public Data.Location.Visibility visibility = Data.Location.Visibility.Connected;
+        public Location.Visibility visibility = Location.Visibility.Connected;
 
         public Dictionary<Faction.FactionID, float> factionCtrl = new Dictionary<Faction.FactionID, float>();
         public Dictionary<Simulation.LocationIdeology.IdeologyID, float> baseIdeology = new Dictionary<Simulation.LocationIdeology.IdeologyID, float>();
@@ -23,29 +23,10 @@ namespace Data
 
         public Dictionary<Resource.Type, float> resourceMultiplier = new Dictionary<Resource.Type, float>(); // location feature multiplier
 
-        // todo: change to baseIdeology stats
-        //public float frontier = 0.2f;
-        //public float liberalValues = 0.2f;
-        //public float independent = 0.0f;
-        //public float religious = 0.2f;
-        //public float psychic = 0.1f;
-        //public float psyStability = 0.9f;
 
-        //public float imperialist = 0;
-        //public float nationalist = 0;
-        //public float navigators = 0;
-        //public float brotherhood = 0;
-        //public float liberal = 0;
-        //public float bureaucracy = 0;
-        //public float technocrat = 0;
-        //public float transhumanist = 0;
-        //public float cult = 0;
-        //public float mercantile = 0;
-        //public float aristocrat = 0;
-
-        public int techLevel = 0;
-        public int infrastructure = 0;
-        public int militaryTechLevel = 0;
+        public int startingTechLevel = 0;
+        public int startingInfrastructure = 0;
+        public int startingMilitaryTechLevel = 0;
         public float population = 10.0f;
         public int assetStation = 0;
 
