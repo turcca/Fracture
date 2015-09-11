@@ -139,7 +139,7 @@ namespace Simulation
         public int level
         {
             get { return data.level; }
-            private set { data.level = value; }
+            internal set { data.level = value; }
         }
         public Data.Resource.State state
         {

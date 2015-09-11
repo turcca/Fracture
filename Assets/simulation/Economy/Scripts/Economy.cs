@@ -220,8 +220,8 @@ namespace Simulation
 
         public List<Data.TradeItem> tradeItems = new List<Data.TradeItem>();
 
-        public Data.Tech.Type? techGoal;
-        public Data.Resource.Type? resourceGoal;  
+        public Data.Tech.Type? techGoal { get; private set; }
+        public Data.Resource.Type? resourceGoal { get; private set; }  
 
         Location location;
 		LocationEconomyAI ai;
@@ -245,6 +245,8 @@ namespace Simulation
  
             this.techGoal = null;
             this.resourceGoal = null;
+
+            loadFeaturesToEconomy();
         }
 
         // ----------------------------------------------------------TICK
@@ -497,6 +499,57 @@ namespace Simulation
                     shortages.Add(resource.Key);
             }
             return shortages;
+        }
+
+        private void loadFeaturesToEconomy()
+        {
+            int startingLevel = 0;
+            // load tech-level & resource-level features to economy              
+            technologies[Data.Tech.Type.Technology].level = location.features.startingTechLevel;
+            technologies[Data.Tech.Type.Infrastructure].level = location.features.startingInfrastructure;
+            technologies[Data.Tech.Type.Military].level = location.features.startingMilitaryTechLevel;
+
+            // resolve resource starting levels from starting tech levels (parsed from location features)
+            foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)) )
+            {
+                // infra-dependent industry
+                if (type == Data.Resource.Type.Food || type == Data.Resource.Type.Mineral || type == Data.Resource.Type.Industry) 
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingInfrastructure > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if infra = 0, then 0
+                    else { startingLevel = (location.features.startingInfrastructure != 1) ? (Mathf.Max (location.features.startingInfrastructure-1, 0)) : 1; } // developped industry: infra0 = 0, infra1 = 1, infra2 = 1, infra3 = 2, infra4 = 3
+                }
+                // tech-dependent industry
+                else if (type == Data.Resource.Type.Economy || type == Data.Resource.Type.Innovation || type == Data.Resource.Type.Culture)  
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
+                    else { startingLevel = location.features.startingTechLevel; } // resource = tech
+                }
+                // military-dependent industry
+                else if (type == Data.Resource.Type.Military)  
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingMilitaryTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
+                    else { startingLevel = location.features.startingMilitaryTechLevel; } // resource = tech
+                }
+                else if (type == Data.Resource.Type.BlackMarket) 
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
+                    else { startingLevel = location.features.startingTechLevel; } // resource = tech
+                    if (location.features.visibility == Data.Location.Visibility.Hiding) startingLevel += 1; // +1 from hiding
+                    startingLevel += (int)(0.0f - ((location.ideology.effects.police *3.0f)+1.0f));         // -3 to +2 from ideology
+                    startingLevel = Mathf.Min (startingLevel, location.features.startingTechLevel);         // cap to max tech lvl
+
+                    // SETTING LEGALITY legality
+                    location.features.legality = Mathf.Clamp(startingLevel, 0, 4);
+                    //Debug.Log (location.name+" ("+location.id+") blackMarket starting lvl: "+startingLevel);
+                }
+                resources[type].level = Mathf.Clamp(startingLevel, 0, 4);
+            }
+
+            // resolve starting resource pools
+            foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)) )
+            {
+                resources[type].import (resources[type].level * 2);
+            }
         }
     }
 }

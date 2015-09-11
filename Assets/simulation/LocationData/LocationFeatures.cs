@@ -23,6 +23,7 @@ namespace Data
 
         public Dictionary<Resource.Type, float> resourceMultiplier = new Dictionary<Resource.Type, float>(); // location feature multiplier
 
+        public int legality = 0;
 
         public int startingTechLevel = 0;
         public int startingInfrastructure = 0;
@@ -47,53 +48,6 @@ namespace Data
             }
         }
 
-        //public LocationFeatures(string data)
-        //    : this()
-        //{
-        //    string[] dataChunk = data.Split(',');
-        //    resourceMultiplier[Resource.Type.Food] = float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.Mineral] = float.Parse(dataChunk[1], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.Industry] = float.Parse(dataChunk[2], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.Economy] = float.Parse(dataChunk[3], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.Innovation] = float.Parse(dataChunk[4], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.Culture] = float.Parse(dataChunk[5], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.Military] = float.Parse(dataChunk[6], CultureInfo.InvariantCulture.NumberFormat);
-        //    resourceMultiplier[Resource.Type.BlackMarket] = float.Parse(dataChunk[7], CultureInfo.InvariantCulture.NumberFormat);
-
-        //    // commented out until new data is made
-        //    //// todo: change to baseIdeology stats
-        //    //frontier = float.Parse(dataChunk[8], CultureInfo.InvariantCulture.NumberFormat);
-        //    //liberalValues = float.Parse(dataChunk[9], CultureInfo.InvariantCulture.NumberFormat);
-        //    //independent = float.Parse(dataChunk[10], CultureInfo.InvariantCulture.NumberFormat);
-        //    //religious = float.Parse(dataChunk[11], CultureInfo.InvariantCulture.NumberFormat);
-        //    //psychic = float.Parse(dataChunk[12], CultureInfo.InvariantCulture.NumberFormat);
-        //    //psyStability = float.Parse(dataChunk[13], CultureInfo.InvariantCulture.NumberFormat);
-
-        //    //// /\
-        //    ///*
-        //    //imperialist 	= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //nationalist 	= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //navigators 		= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //brotherhood 	= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //liberal 		= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //bureaucracy 	= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //technocrat 		= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //transhumanist 	= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //cult 			= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //mercantile 		= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //aristocrat 		= float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        //    //*/
-
-
-        //    // commented out until new data is made
-        //    //// todo: change technology levels to: Technology, Infrastructure, Military
-        //    /// todo: add assets: SpaceStation, TransportShips, groundTroops, MilitaryShips (needs amount and type, ships need tracking and cargo)
-        //    //population = float.Parse(dataChunk[14], CultureInfo.InvariantCulture.NumberFormat);
-        //    //techLevel = float.Parse(dataChunk[15], CultureInfo.InvariantCulture.NumberFormat);
-        //    //infrastructure = float.Parse(dataChunk[16], CultureInfo.InvariantCulture.NumberFormat);
-        //    //orbitalInfra = float.Parse(dataChunk[17], CultureInfo.InvariantCulture.NumberFormat);
-        //    //legalLevel = int.Parse(dataChunk[18], CultureInfo.InvariantCulture.NumberFormat);
-        //}
 
         public string toDebugString()
         {

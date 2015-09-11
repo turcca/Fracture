@@ -35,13 +35,8 @@ public class Location
         this.position = position;
         this.data = data;
 
-        this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
-            // load tech-level features to economy
-            this.economy.technologies[Data.Tech.Type.Technology].level = features.startingTechLevel;
-            this.economy.technologies[Data.Tech.Type.Infrastructure].level = features.startingInfrastructure;
-            this.economy.technologies[Data.Tech.Type.Military].level = features.startingMilitaryTechLevel;
-
         this.ideology = new Simulation.LocationIdeology(this);
+        this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
     }
     
     public void tick(float days)
