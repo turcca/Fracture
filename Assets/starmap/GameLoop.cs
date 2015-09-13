@@ -6,6 +6,7 @@ public class GameLoop : MonoBehaviour
     void Awake()
     {
         Application.LoadLevelAdditive("generalUIScene");
+        Application.LoadLevelAdditive("eventScene");
     }
     void Start()
     {

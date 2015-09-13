@@ -65,6 +65,7 @@ public class Game
     internal void initEvents()
     {
         events = new EventManager();
+        events.createAllEvents();
     }
 
     internal void initNPCShips()
@@ -168,6 +169,12 @@ public class Game
             player.tick(days);
             events.tick(days);
 
+            EventBase e = events.queryStarmapEvents();
+            if (e != null)
+            {
+                eventStart(e);
+            }
+
             // ships, trade
             foreach (Simulation.NPCShip ship in ships)
             {
@@ -198,5 +205,25 @@ public class Game
             return "";
         else
             return "Shortages: ["+n+"] \n"+rv;
+    }
+
+    public void eventStart(EventBase e)
+    {
+        Root.ui.showEventWindow();
+        GameState.requestState(GameState.State.Event);
+        events.handleEvent(e, eventDone);
+    }
+
+    public void eventDone()
+    {
+        Root.ui.hideEventWindow();
+        GameState.returnFromState(GameState.State.Event);
+    }
+
+    internal void startRandomStarmapEvent()
+    {
+        EventBase e = events.pickEvent();
+        if (e != null)
+            eventStart(e);
     }
 }

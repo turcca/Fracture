@@ -12,7 +12,7 @@ public class AnimateUVsheet : MonoBehaviour {
 
     public float framesPerSecond = 15.0f;
 
-    private Renderer renderer;
+    private Renderer myRenderer;
 
     public int i;
     private float updateDeltaTime;
@@ -23,9 +23,9 @@ public class AnimateUVsheet : MonoBehaviour {
 	void Start () 
     {
         updateDeltaTime = 1.0f/framesPerSecond;
-        renderer = GetComponent<Renderer>();
+        myRenderer = GetComponent<Renderer>();
         Vector2 size = new Vector2 (1.0f / (float)uvAnimationTileX, 1.0f / (float)uvAnimationTileY);
-        renderer.material.SetTextureScale ("_MainTex", size);
+        myRenderer.material.SetTextureScale ("_MainTex", size);
         list = new List<Vector2>();
 
         initList(size);
@@ -41,7 +41,7 @@ public class AnimateUVsheet : MonoBehaviour {
             i++;
             //i = i<cappedCount ? i++ : 0; // loop index
             if (i>=cappedCount) i=0;
-            renderer.material.SetTextureOffset ("_MainTex", list[i]);
+            myRenderer.material.SetTextureOffset ("_MainTex", list[i]);
         }
     }
 

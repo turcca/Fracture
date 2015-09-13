@@ -43,16 +43,4 @@ static public class Root
 
 //        EventAdder.addAllEvents();
     }
-
-    internal static void eventDone()
-    {
-        state = State.StarMap;
-        ui.hideEventWindow();
-    }
-    internal static void startRandomStarMapEvent()
-    {
-        game.events.startRandomStarMapEvent(new EventManager.AllDoneDelegate(eventDone));
-        ui.showEventWindow();
-        state = State.Event;
-    }
 }

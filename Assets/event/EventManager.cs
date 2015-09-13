@@ -25,15 +25,24 @@ public class EventManager
         //System.Activator.CreateInstance(System.Type.GetType("Event_1"));
     }
 
+    public void createAllEvents()
+    {
+        for (int i = 1; System.Type.GetType("Event_" + i) != null; ++i)
+        {
+            System.Activator.CreateInstance(System.Type.GetType("Event_" + i));
+        }
+    }
+
     public void addEventToPool(EventBase e)
     {
-        Debug.Log ("Adding event: "+e.name);
         if (!e.locationEvent)
         {
+            Debug.Log("Adding event (pool): " + e.name);
             eventPool.Add(e);
         }
         else
         {
+            Debug.Log("Adding event (trigger pool): " + e.name);
             triggerEventPool.Add(e);
         }
     }
@@ -76,27 +85,28 @@ public class EventManager
         }
     }
 
-    public void queryStarmapEvents()
+    public EventBase queryStarmapEvents()
     {
         float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
         float probability = d * 1.0f; // todo other mods
+        Debug.Log("event prob = " + probability);
 
         float roll = Random.value;
 
         if (roll < probability)
         {
-            handleEvent(pickEvent());
+            return pickEvent();
         }
+
+        return null;
     }
 
     public void queryLocationEvents(string locationId, AllDoneDelegate callback)
     {
-        allDoneCallback = callback;
-
         //@note test location events
         Debug.Log ("todo: load location events");
 
-        handleEvent(pickEvent());
+        handleEvent(pickEvent(), callback);
         //handleEvent(null);
     }
 
@@ -109,7 +119,7 @@ public class EventManager
         {
             if (e.name == eventName)
             {
-                handleEvent(e);
+                handleEvent(e, callback);
                 eventFound = true;
                 break;
             }
@@ -123,6 +133,9 @@ public class EventManager
 
     public EventBase pickEvent()
     {
+        ///@todo implement picking logic
+        Debug.Log("Events in pool " + eventPool.Count);
+        return eventPool[0];
 
         List<EventBase> availableEvents = new List<EventBase>();
         float combinedProbability = 0.0f;
@@ -163,8 +176,9 @@ public class EventManager
         return null;
     }
 
-    public void handleEvent(EventBase e)
+    public void handleEvent(EventBase e, AllDoneDelegate callback)
     {
+        allDoneCallback = callback;
         if (e == null)
         {
             eventDone();
@@ -182,11 +196,5 @@ public class EventManager
             allDoneCallback();
             allDoneCallback = null;
         }
-    }
-
-    internal void startRandomStarMapEvent(AllDoneDelegate callback)
-    {
-        allDoneCallback = callback;
-        handleEvent(pickEvent());
     }
 }

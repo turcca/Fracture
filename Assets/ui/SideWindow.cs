@@ -14,19 +14,22 @@ public class SideWindow : MonoBehaviour
 
     void Awake()
     {
-        animator = gameObject.GetComponent<Animator>();
+        //animator = gameObject.GetComponent<Animator>();
+		hide();
     }
     public void showEvent()
     {
-        animator.SetInteger("State", (int)State.Event);
-    }
+        //animator.SetInteger("State", (int)State.Event);
+		gameObject.transform.GetChild(0).gameObject.SetActive(true);
+	}
     public void showAdvisors()
     {
-        animator.SetInteger("State", (int)State.Advisor);
+        //animator.SetInteger("State", (int)State.Advisor);
     }
     public void hide()
     {
-        animator.SetInteger("State", (int)State.Hidden);
+		gameObject.transform.GetChild(0).gameObject.SetActive(false);
+		//animator.SetInteger("State", (int)State.Hidden);
         //AdvisorManager.get().hideAdvices();
     }
 
