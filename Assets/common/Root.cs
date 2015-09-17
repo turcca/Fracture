@@ -6,18 +6,10 @@ using System.Collections;
 
 static public class Root
 {
-    public enum State
-    {
-        MainMenu,
-        Location,
-        StarMap,
-        Event
-    }
 
     static public CharacterPortraitManager PortraitManager { get; private set; }
     static public Game game {get; private set;}
     static public GameUI ui { get; private set; }
-    static public State state;
 
     static Root()
     {

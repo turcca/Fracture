@@ -71,7 +71,6 @@ public class EventManager
                 eventUI.loadLocationAdviceEvent(e);
                 return;
             }
-            else Debug.Log ("not matching event: '"+e.name+"'");
         }
 
         Debug.Log ("TODO: location has no advice-event: '"+eventName+"'");
@@ -89,7 +88,7 @@ public class EventManager
     {
         float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
         float probability = d * 1.0f; // todo other mods
-        Debug.Log("event prob = " + probability);
+        //Debug.Log("event prob = " + probability);
 
         float roll = Random.value;
 
@@ -133,51 +132,95 @@ public class EventManager
 
     public EventBase pickEvent()
     {
-        ///@todo implement picking logic
-        Debug.Log("Events in pool " + eventPool.Count);
-        return eventPool[0];
-
         List<EventBase> availableEvents = new List<EventBase>();
         float combinedProbability = 0.0f;
 
         foreach (EventBase e in eventPool)
         {
-            if (e.available)
+            if (e.available &&
+                !e.hasFilter("LOC_advice") 
+                && !e.hasFilter("contact_factions") 
+                && !e.hasFilter("intro")
+                )
             {
                 Character character = e.getEventCharacter();
                 string location = e.getEventLocationID();
 
                 if ((character == null || character.isActive) &&
-                    ((e.locationRequired && location != null) || (!e.locationRequired)))
+                    ((e.locationRequired && location != null) || (!e.locationRequired)) &&
+                    (e.calculateProbability() > 0.0f)
+                    )
                 {
                     availableEvents.Add(e);
                     e.initPre();
-                    combinedProbability += e.calculateProbability();
+                    combinedProbability += e.lastProbability;
                 }
-            }
-
-            if (availableEvents.Count == 0)
-            {
-                Debug.Log("zero events picked!");
-            }
-
-            else
-            {
-                foreach (EventBase availableEvent in availableEvents)
-                {
-                    // todo picking by probability
-                }
-                Debug.Log ("TODO: load event");
             }
         }
+        if (availableEvents.Count == 0)
+        {
+            Debug.Log("zero events picked!");
+        }
 
-        // todo
-		//return new Event_4();
+        else
+        {
+            // Influence pool weights by event frequencies
+            // only if more than one event picked
+            int count = availableEvents.Count;
+            if (count > 1) {
+                float rareCap     = combinedProbability * 0.25f;
+                float elevatedMin = combinedProbability * 0.25f;
+                float probableMin = combinedProbability * 0.55f;
+                // go through available events
+                for (int i = 0; i < count; i++) {
+                    // see if special frequency
+                    if (availableEvents[i].getFrequency() != EventBase.freq.Default) {
+                        // if Rare
+                        if (availableEvents[i].getFrequency() == EventBase.freq.Rare) {
+                            // if adjustment is needed
+                            if (availableEvents[i].lastProbability > rareCap) {
+                                combinedProbability = combinedProbability - availableEvents[i].lastProbability + rareCap;
+                                availableEvents[i].lastProbability = rareCap;
+                            }
+                        }
+                        // if Elevated
+                        else if (availableEvents[i].getFrequency() == EventBase.freq.Elevated) {
+                            // if adjustment is needed
+                            if (availableEvents[i].lastProbability < elevatedMin) {
+                                combinedProbability = combinedProbability - availableEvents[i].lastProbability + elevatedMin;
+                                availableEvents[i].lastProbability = elevatedMin;
+                            }
+                        }
+                        // if Probable
+                        else if (availableEvents[i].getFrequency() == EventBase.freq.Probable) {
+                            // if adjustment is needed
+                            if (availableEvents[i].lastProbability < probableMin) {
+                                combinedProbability = combinedProbability - availableEvents[i].lastProbability + probableMin;
+                                availableEvents[i].lastProbability = probableMin;
+                            }
+                        }
+                    }
+                }
+            }
+            // random picking process
+            float roll = Random.value * combinedProbability;
+            combinedProbability = 0.0f;
+            foreach (EventBase availableEvent in availableEvents)
+            {
+                combinedProbability += availableEvent.lastProbability;
+                if (roll < combinedProbability)
+                {
+                    Debug.Log ("pickEvent: "+availableEvent.name+ "("+Mathf.Round (roll *100.0f)/100.0f+"/"+Mathf.Round (combinedProbability *100.0f)/100.0f+")");
+                    return availableEvent;
+                }
+            }
+        }
         return null;
     }
 
     public void handleEvent(EventBase e, AllDoneDelegate callback)
     {
+        Debug.Log ("handing event: "+ e.name+" (available "+e.available+")");
         allDoneCallback = callback;
         if (e == null)
         {
@@ -196,5 +239,15 @@ public class EventManager
             allDoneCallback();
             allDoneCallback = null;
         }
+    }
+
+    public EventBase getEventByName (string name)
+    {
+        foreach (EventBase e in eventPool)
+        {
+            if (e.name == name) return e;
+        }
+        Debug.LogError ("getEvent: event not found: '"+name+"'"); 
+        return null;
     }
 }

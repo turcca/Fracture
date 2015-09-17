@@ -35,6 +35,8 @@ public class SideWindow : MonoBehaviour
 
     public static SideWindow get()
     {
-        return GameObject.Find("SideWindow").GetComponent<SideWindow>();
+        SideWindow side = GameObject.Find("SideWindow").GetComponent<SideWindow>();
+        if (side == null) Debug.LogError ("ERROR: SideWindow was not found");
+        return side;
     }
 }

@@ -72,10 +72,14 @@ public class Player
 
     public double getWarpMagnitude()
     {
-        return 0.0;
+        return warpMagnitude*6.0f;
+    }
+    public double getRawWarpMagnitude()
+    {
+        return warpMagnitude;
     }
 
-    public Character getCharacter(Character.Job job)
+    public Character getAdvisor(Character.Job job)
     {
         if (advisors.ContainsKey(job) && characters.ContainsKey(advisors[job]))
         {

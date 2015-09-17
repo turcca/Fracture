@@ -19,7 +19,7 @@ public class AdvisorManager : MonoBehaviour
 
         string advice = "";
 
-        if (Root.state == Root.State.Event)
+        if (GameState.getState() == GameState.State.Event)
         {
             if (eventUI == null) eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
             if (eventUI != null)
@@ -28,15 +28,15 @@ public class AdvisorManager : MonoBehaviour
             }
             else Debug.LogWarning ("event state couldn't locate EventUI -script in SideWindow");
         }
-        else if (Root.state == Root.State.Location)
+        else if (GameState.getState() == GameState.State.Location)
         {
             //advice = currentEvent.getAdvice(job).text
             advice = GameObject.Find("MainContent").GetComponent<EventUI>().setAdvisor(job);
-            Debug.Log ("advice: "+advice);
+            //Debug.Log ("advice: "+advice);
         }
         else
         {
-            Debug.Log ("Root.state = "+Root.state.ToString() );
+            Debug.Log ("GameState.getState() = "+GameState.getState().ToString() );
             ///@todo get some advice for different situations
             advice = "Some general advice.";
         }

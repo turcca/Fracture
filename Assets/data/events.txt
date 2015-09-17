@@ -3,7 +3,8 @@
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
-@p { warpmag >= 2 } = 2
+@p { warpmag >= 1.1 } = 2
+@p { warpmag < 1 } = 0
 @c {o = 0} "Try to record the knocks and resolve if there is a code or pattern." = 740
 @o {c = 740} = 743
 @c {o = 743} "Continue" = 748
@@ -20,7 +21,8 @@
 @t {o = 745} "The crew enjoy their medication with blissful, calm faces. This is, after all, why some of these people serve on ships."
 @c {o = 745} "Continue" = 760
 @o {c = 760} = 761 $=available = false $=end
-@a navigator "The Flood Shields are more than energy projectors in the hull. It's also the way we open or close the portal we carry in us."
+@a navigator "The Flood Shields are more than energy projectors in the hull. 
+It's also the way we open or close the portal we carry in us."
 @a engineer { TheAdvisor.getStat("security") >= 2 } "When things get confused, it is best to have trusted people by key equipment." = 741
 @a engineer { TheAdvisor.getStat("holiness") >= 1 } "I have a bad feeling about this. Better be safe than sorry while in a Fracture Fall."
 @a engineer "If it's a code, we should be able to crack it." = 740
@@ -126,6 +128,15 @@
 @a priest { TheAdvisor.getStat("holiness") >= 2 } "We must stop the spread of these deviations from proper practices. At once." = 809
 @a priest "Perhaps a silent meditation will bring clarity to the issue." = 808
 
+#contact_nobleHouse4
+/* House Valeria */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "contact_factions"
+@p = 0
+@t {o = 0} "I am the representative of House Valeria."
+
 #core singers
 /* If engine room's 'core singers' are allowed to be */
 @frequency "Elevated"
@@ -212,6 +223,7 @@
 @situation "Default"
 @ambient "DefaultBridge"
 @f "intro_Valeria"
+@f "intro"
 @location = getLocation(1C07)
 @t {o = 0} "Consul Regulus Valeria asks Valerian captains in orbit to publicly pledge their protection of Valerian colonies, and to keep the Dacei from interloping in Valerian interests."
 @c {o = 0} "Join the pledge." = 708
@@ -231,6 +243,7 @@
 @situation "Default"
 @ambient "DefaultBridge"
 @f "intro_Valeria"
+@f "intro"
 @location = getLocation(1C07)
 @p { event["intro Valeria1t"].outcome = 0 OR event["intro Valeria1t"].outcome = 713 } = 0
 @t {o = 0} "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites you to an official dinner to discuss local matters."
@@ -251,9 +264,14 @@
 @situation "Default"
 @ambient "DefaultBridge"
 @f "intro_Valeria"
+@f "intro"
 @location = getLocation(1C07)
 @p { event["intro Valeria2t"].outcome = 0 OR event["intro Valeria2t"].outcome = 729 } = 0
-@t {o = 0} "Incoming private message: Artifacts of the grey past are being sought in the Sovereign Void. You might be the one who brings one for me. -Lord Calius Valeria"
+@t {o = 0} "Incoming private message:
+
+'Artifacts of the grey past are being transported in the Sovereign Void. You might be the one who brings one for me.'            
+
+-Lord Calius Valeria"
 @c {o = 0} "Continue." = 734
 @o {c = 734} = 735 $=available = false $=end
 @a captain "Lord Calius is one of the most powerful persons in the sector, but it may change soon."
@@ -402,11 +420,11 @@
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C09)
+@trigger = getLocation(1C09)
 @a captain "A world robbed of function. And yet, old routines are maintained generations after generations."
 @a navigator "The Mortuary is a lone world at the edge of the sector. The path here is little travelled, a mere thread running in the Fracture. Sicent oblivion, a fitting fate."
 @a security "Grave robbers can be resourceful and in possession of all kinds of old technology. We should keep an eye on who we pick up here."
 @a quartermaster "A solemn place."
 @a psycher "I wonder if the rumours are true. I can't feel anything below, it's all quiet."
 @a priest "It is a holy place, even if they are far off and alone. Perhaps that is why they have avoided temptation."
-
 

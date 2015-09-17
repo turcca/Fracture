@@ -8822,6 +8822,18 @@ Prefab:
       propertyPath: m_SizeDelta.y
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 11411414, guid: 550f8e0fd81f3d3489636085ef20748f, type: 2}
+      propertyPath: job
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11457144, guid: 550f8e0fd81f3d3489636085ef20748f, type: 2}
+      propertyPath: job
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465934, guid: 550f8e0fd81f3d3489636085ef20748f, type: 2}
+      propertyPath: job
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 550f8e0fd81f3d3489636085ef20748f, type: 2}
   m_IsPrefabParent: 0

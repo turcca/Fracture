@@ -69,6 +69,7 @@ public class EventUI : MonoBehaviour
         {
             return "";
         }
+        if (job == null) Debug.LogError ("NULL JOB");
 
         foreach (KeyValuePair<int, EventChoicesBtn> entry in choiceButtons)
         {
@@ -81,8 +82,21 @@ public class EventUI : MonoBehaviour
                 entry.Value.recommend(false);
             }
         }
+//if (currentEvent == null) Debug.Log("currentEvent = null");
+//if (currentEvent.advisor == null) Debug.Log ("advisor = null");
+//Debug.Log ("debug currenvEvent.advisor \n" + currentEvent.advisor.toDebugString());
+//if (currentEvent.getAdvice(job) == null) Debug.LogError ("ea = null");
 
-        return currentEvent.getAdvice(job).text;
+        string advice = currentEvent.getAdvice(job).text;
+
+//if (advice == null) Debug.LogError ("ERROR: null advice. job = "+job.ToString ());
+
+        if (advice == "NO ADVICE") 
+        {
+            Debug.Log ("todo: fall-though default advice");
+        }
+
+        return advice;
     }
 
     private void startEvent()
@@ -130,6 +144,6 @@ public class EventUI : MonoBehaviour
         buttonScript.callback = new EventChoicesBtn.ChoiceDelegate(eventChoicePicked);
         buttonScript.choice = num;
 
-        btn.transform.parent = choiceButtonGrid.transform;
+        btn.transform.SetParent(choiceButtonGrid.transform);
     }
 }

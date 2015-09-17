@@ -85,6 +85,7 @@ public class Game
     internal void initPlayer()
     {
         player = new Player();
+        //@todo init advisors from starting settings: faction choice & ideology
         player.init();
         //@todo init player position based on faction choice
         player.position = new Vector3(256, 0, 0);

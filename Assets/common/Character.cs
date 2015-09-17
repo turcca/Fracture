@@ -52,7 +52,7 @@ public class Character
         idealist,
         kind,
         leadership,
-        emissar,
+        //emissar,
         hr,
         engineering,
         precognition,
@@ -102,7 +102,7 @@ public class Character
     public  float   kind           = 50;
 
     public  float   leadership     = 0;
-    public  float   emissar        = 0;
+    //public  float   emissar        = 0;
     public  float   hr             = 0;
     public  float   engineering    = 0;
     public  float   precognition   = 0;
@@ -173,7 +173,7 @@ public class Character
         return new Stat[]
         {
             Stat.leadership,
-            Stat.emissar,
+            //Stat.emissar,
             Stat.hr,
             Stat.engineering,
             Stat.precognition,
@@ -210,7 +210,7 @@ public class Character
             Stat.idealist,
             Stat.kind,
             Stat.leadership,
-            Stat.emissar,
+            //Stat.emissar,
             Stat.hr,
             Stat.engineering,
             Stat.precognition,
@@ -245,6 +245,7 @@ public class Character
     }
 
     static private int ids = 0;
+
     public Character()
     {
         id = ids;
@@ -261,6 +262,8 @@ public class Character
         }
         stats[Stat.age] = 45;
         stats[Stat.health] = 100;
+
+        Debug.Log ("todo: [Character] generate real stats");
     }
 
     public float getStat (Stat skill) 
@@ -424,5 +427,16 @@ public class Character
         if (stats[Stat.corruption] >= 100.0f) { skillLevels.Add("Corrupted"); }
                                         
         return skillLevels;
+    }
+
+    public string toDebugString()
+    {
+        string rv = "";
+        rv += "Name: "+name+ "  Job: " +assignment.ToString()+ "\n";
+        foreach (string skill in getSkillLevels())
+        {
+            rv += skill + "\n";
+        }
+        return rv;
     }
 }
