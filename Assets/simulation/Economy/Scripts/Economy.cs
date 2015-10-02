@@ -179,7 +179,7 @@ namespace Simulation
                     current.isExported = false;
                     current.amount = -current.amount;
                     current.weight = resource.Value.effectiveMultiplier > 2.0f ? 0 : 2.0f-resource.Value.effectiveMultiplier;
-                    if (resource.Value.state == Data.Resource.State.Shortage) current.weight *= 3.0f;
+                    if (resource.Value.state == Data.Resource.State.Shortage) current.weight *= Parameters.resourceShortageMultiplier;
                     
                     // set weights
                     switch (resource.Value.policy)

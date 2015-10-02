@@ -9,7 +9,6 @@ public class ParticleStorm : MonoBehaviour
 
 
     public GameObject player;
-    ParticleFlowData data;
 
 
     // Use this for initialization
@@ -24,7 +23,7 @@ public class ParticleStorm : MonoBehaviour
         pSystem = gameObject.GetComponent<ParticleSystem>();
         particles = new ParticleSystem.Particle[pSystem.maxParticles];
 
-        data = new ParticleFlowData();
+        ParticleFlowData.buildFlowMap();
     }
 
     // Update is called once per frame
@@ -47,7 +46,7 @@ public class ParticleStorm : MonoBehaviour
     {
         x = mapX(particle.position.x);
         z = mapZ(particle.position.z);
-        vec.Set(data.flowMap[x,z].x, 0, data.flowMap[x,z].y);
+        vec.Set(ParticleFlowData.getFlowMap()[x,z].x, 0, ParticleFlowData.getFlowMap()[x,z].y);
         Vector3 flow = vec * 30.0f;
 
         particle.velocity = flow; // * 0.5f + particle.velocity * 0.5f;
@@ -57,21 +56,21 @@ public class ParticleStorm : MonoBehaviour
     private int mapZ(float p)
     {
         //return Mathf.Clamp(Mathf.FloorToInt((p+250.0f) / 500.0f * flowTexture.height), 0, flowTexture.height-1);
-        return Mathf.Clamp(Mathf.FloorToInt((p+287.5f) / 575.0f * data.flowTexture.height), 0, data.flowTexture.height-1);
+        return Mathf.Clamp(Mathf.FloorToInt((p+287.5f) / 575.0f * ParticleFlowData.flowTexture.height), 0, ParticleFlowData.flowTexture.height-1);
     }
 
     private int mapX(float p)
     {
         //return Mathf.Clamp(Mathf.FloorToInt((p+500.0f) / 1000.0f * flowTexture.width), 0, flowTexture.width-1);
-        return Mathf.Clamp(Mathf.FloorToInt((p+550.0f) / 1100.0f * data.flowTexture.width), 0, data.flowTexture.width-1);
+        return Mathf.Clamp(Mathf.FloorToInt((p+550.0f) / 1100.0f * ParticleFlowData.flowTexture.width), 0, ParticleFlowData.flowTexture.width-1);
     }
 
     public float getWarpMagnitude (Vector3 pos)
     {
         int xi = mapX(pos.x);
         int zi = mapZ(pos.z);
-        float xf = data.flowMap[xi,zi].x;
-        float yf = data.flowMap[xi,zi].y;
+        float xf = ParticleFlowData.getFlowMap()[xi,zi].x;
+        float yf = ParticleFlowData.getFlowMap()[xi,zi].y;
         return Mathf.Sqrt (xf*xf+yf*yf);
     }
 }

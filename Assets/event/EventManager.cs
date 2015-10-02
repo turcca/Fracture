@@ -37,12 +37,12 @@ public class EventManager
     {
         if (!e.locationEvent)
         {
-            Debug.Log("Adding event (pool): " + e.name);
+            //Debug.Log("Adding event (pool): " + e.name);
             eventPool.Add(e);
         }
         else
         {
-            Debug.Log("Adding event (trigger pool): " + e.name);
+            //Debug.Log("Adding event (trigger pool): " + e.name);
             triggerEventPool.Add(e);
         }
     }
@@ -81,22 +81,24 @@ public class EventManager
             {
                 eventUI.loadLocationAdviceEvent(e);
             }
-        }
+        } 
     }
 
     public EventBase queryStarmapEvents()
     {
-        float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
-        float probability = d * 1.0f; // todo other mods
-        //Debug.Log("event prob = " + probability);
-
-        float roll = Random.value;
-
-        if (roll < probability)
+        if (GameState.isState(GameState.State.Starmap))
         {
-            return pickEvent();
-        }
+            float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
+            float probability = d * 1.0f; // todo other mods
+                                          //Debug.Log("event prob = " + probability);
 
+            float roll = Random.value;
+
+            if (roll < probability)
+            {
+                return pickEvent();
+            }
+        }
         return null;
     }
 
@@ -211,6 +213,7 @@ public class EventManager
                 if (roll < combinedProbability)
                 {
                     Debug.Log ("pickEvent: "+availableEvent.name+ "("+Mathf.Round (roll *100.0f)/100.0f+"/"+Mathf.Round (combinedProbability *100.0f)/100.0f+")");
+                    daysSinceLastEvent = 0;
                     return availableEvent;
                 }
             }

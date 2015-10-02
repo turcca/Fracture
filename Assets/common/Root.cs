@@ -33,6 +33,5 @@ static public class Root
         game.initNPCShips();
 #endif
 
-//        EventAdder.addAllEvents();
     }
 }

@@ -13,7 +13,6 @@ public class UIAdvisor : MonoBehaviour
     void Start()
     {
         adviseFrame = transform.GetChild(0).gameObject;
-        //NGUITools.SetActive(adviseFrame, false);
     }
 
 
@@ -21,13 +20,14 @@ public class UIAdvisor : MonoBehaviour
     {
         advisorJob = job;
         character = Root.game.player.getAdvisor(advisorJob);
-        //gameObject.GetComponent<UITexture>().mainTexture =
-        //    Game.PortraitManager.getPortraitTexture(character.getPortrait().id);
+
         callback = d;
     }
-
+    /*
     void OnClick()
     {
+        //Debug.Log("EventAdvisor [delegate]: " + advisorJob.ToString());
         callback(advisorJob);
     }
+    */
 }

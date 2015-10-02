@@ -10,19 +10,14 @@ public class GameLoop : MonoBehaviour
     }
     void Start()
     {
-        Debug.Log ("GameLoop Start()");
+        Debug.Log ("*** GameLoop Start ***");
+        GameState.requestState(GameState.State.Starmap);
         Simulation.NPCShipVisualisation.initNPCShipVisuals();
     }
 
-    float time = 0;
     void Update()
     {
-        Root.game.tick(Time.deltaTime/5.0f);
-        //time += Time.deltaTime;
-        //if (time > 1.0f)
-        //{
-        //    Game.universe.tick(1.0f);
-        //    time -= 1.0f;
-        //}
+        Root.game.tick(Time.deltaTime * Simulation.Parameters.gameSpeed);
     }
+
 }

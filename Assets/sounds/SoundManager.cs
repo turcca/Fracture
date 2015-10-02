@@ -52,7 +52,7 @@ public class SoundManager : MonoBehaviour
 
     void updateFractureVolume()
     {
-        float mag = Root.game.player.warpMagnitude *6.0f;
+        float mag = Root.game.player.getWarpMagnitude();
 
         // Fracture: low
         if (mag < 0.4f) setVolume (fractureLow, 0.4f * lowMax);

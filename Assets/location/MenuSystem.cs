@@ -7,8 +7,8 @@ public class MenuSystem : MonoBehaviour
     public Background background;
     public GameObject orbit;
     public GameObject market;
+    public GameObject shipyard;
     public GameObject diplomacy;
-    public GameObject ship;
 
     void Start()
     {
@@ -20,8 +20,8 @@ public class MenuSystem : MonoBehaviour
     {
         orbit.SetActive(false);
         market.SetActive(false);
+        shipyard.SetActive(false);
         diplomacy.SetActive(false);
-        ship.SetActive(false);
     }
 
     void Update()
@@ -46,7 +46,7 @@ public class MenuSystem : MonoBehaviour
     public void showShipyard()
     {
         hideAllPages();
-        ship.SetActive(true);
+        shipyard.SetActive(true);
         background.showShipyard();
     }
 

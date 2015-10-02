@@ -32,13 +32,20 @@ public class MarketPage : MonoBehaviour
         grid.transform.DetachChildren();
         foreach(Data.TradeItem item in locationTradeList)
         {
-            // add commodity ui gameobjects
-            GameObject commodityPrefab = Resources.Load<GameObject>("location/ui/CommodityMarketItem");
-            GameObject commodity = (GameObject)GameObject.Instantiate(commodityPrefab);
-            commodity.GetComponent<MarketCommodity>().trackLocation(state, item.subType, this);
-            commodity.name = order.ToString() + "_commodity";
-            commodity.transform.SetParent(grid.transform);
-            ++order;
+            if (item.amount > 0f || Root.game.player.cargo.cargoAmount(item.subType) > 0)
+            {
+                // add commodity ui gameobjects
+                GameObject commodityPrefab = Resources.Load<GameObject>("location/ui/CommodityMarketItem");
+                GameObject commodity = (GameObject)GameObject.Instantiate(commodityPrefab);
+                commodity.GetComponent<MarketCommodity>().trackLocation(state, item.subType, this);
+                commodity.name = order.ToString() + "_commodity";
+                commodity.transform.SetParent(grid.transform);
+                ++order;
+            }
+        }
+        if (order == 0)
+        {
+            Debug.Log("todo: 0 trade items");
         }
     }
 

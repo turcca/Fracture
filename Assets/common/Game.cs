@@ -160,7 +160,7 @@ public class Game
     // ------------------------------------------------------------------
     public void tick(float days)
     {
-        if (GameState.getState() != GameState.State.Event)
+        if (!GameState.isState(GameState.State.Event))
         {
             // economy, ideology
             foreach (Location location in locations.Values)
@@ -179,9 +179,10 @@ public class Game
             // ships, trade
             foreach (Simulation.NPCShip ship in ships)
             {
-                ship.sendFreeShips(days);
+                ship.sendFreeShip();
                 ship.tick(days);
             }
+            
         }
     }
     // ------------------------------------------------------------------
@@ -226,5 +227,23 @@ public class Game
         EventBase e = events.pickEvent();
         if (e != null)
             eventStart(e);
+    }
+
+
+
+    // ----------------- debug tools
+    public string shipUsageToString()
+    {
+        string rv = "";
+
+        int shipCount = 0;
+        int free = 0;
+        foreach (Simulation.NPCShip ship in ships)
+        {
+            ++shipCount;
+            if (ship.free) free++;
+        }
+        rv += "Ships: "+ shipCount+ " (free: "+free+")";
+        return rv;
     }
 }

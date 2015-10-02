@@ -11,23 +11,23 @@ namespace Simulation
 
         private Location location;
 
-		static public string[] getIdeologyNames()
-		{
-			return new string[]
-			{
-                "cult",
-                "technocrat",
-                "mercantile",
-                "bureaucracy",
-                "liberal",
-                "nationalist",
-                "aristocrat",
-                "imperialist",
-				"navigators",
-				"brotherhood",
-				"transhumanist"
-			};
-		}
+
+        static public string getPartyName(IdeologyID id) // Governor of the [___]
+        {
+            if (id == IdeologyID.cult)              return "Order";
+            else if (id == IdeologyID.technocrat)   return "Technocrats";
+            else if (id == IdeologyID.mercantile)   return "Guild of Merchants";
+            else if (id == IdeologyID.bureaucracy)  return "Bureaucrats";
+            else if (id == IdeologyID.liberal)      return "Democrats";
+            else if (id == IdeologyID.nationalist)  return "Nationalists";
+            else if (id == IdeologyID.aristocrat)   return "Aristocrats";
+            else if (id == IdeologyID.imperialist)  return "Imperialists";
+            else if (id == IdeologyID.navigators)   return "Navigator's Guild";
+            else if (id == IdeologyID.brotherhood)  return "Brotherhood";
+            else if (id == IdeologyID.transhumanist)return "Radical Movement";
+            Debug.LogError ("ERROR");
+            return null;
+        }
 		
 		public struct Effects
 		{
@@ -50,31 +50,6 @@ namespace Simulation
 			public float aristocracy;
 			public float imperialism;
 		}
-		
-		//static public string[] getEffectNames()
-		//{
-		//    return new string[]
-		//    {
-		//        "pgrowth",
-		//        "industry",
-		//        "economy",
-		//        "diplomacy",
-		//        "happiness",
-		//        "affluence",
-		//        "innovation",
-		//        "morale",
-		//        "altruism",
-		//        "military",
-		//        "holy",
-		//        "psych",
-		//        "navigation",
-		//        "purity",
-		//        "police",
-		//        "violent",
-		//        "aristocracy",
-		//        "imperialism"
-		//    };
-		//}
 
         public Dictionary<Data.Resource.Type, float> resourceMultiplier = new Dictionary<Data.Resource.Type, float>(); // ideology-based multiplier
         public Dictionary<IdeologyID, float> support = new Dictionary<IdeologyID, float>();
@@ -92,11 +67,13 @@ namespace Simulation
             {
                 resourceMultiplier.Add(type, 0.0f);
             }
+            // todo calculate faction-influence on support
+
             //Debug.Log (toDebugString());
             calculateEffects();
 		}
 		
-		public void calculateEffects()
+		private void calculateEffects()
 		{
 			effects.pgrowth     = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.6f + support[IdeologyID.mercantile] * -1.0f + support[IdeologyID.bureaucracy] * 0.6f + support[IdeologyID.liberal] * -1.0f + support[IdeologyID.nationalist] * 0.8f    + support[IdeologyID.aristocrat] * 0.7f + support[IdeologyID.imperialist] * 0.2f  + support[IdeologyID.navigators] * -3.0f + support[IdeologyID.brotherhood] * -0.7f + support[IdeologyID.transhumanist] * 0.6f);
 			effects.industry    = (support[IdeologyID.cult] * 0.4f   + support[IdeologyID.technocrat] * 0.3f  + support[IdeologyID.mercantile] * -0.1f + support[IdeologyID.bureaucracy] * 0.8f + support[IdeologyID.liberal] * -0.4f + support[IdeologyID.nationalist] * 0.7f    + support[IdeologyID.aristocrat] * 0.3f + support[IdeologyID.imperialist] * 0.0f  + support[IdeologyID.navigators] * -0.5f + support[IdeologyID.brotherhood] * -1.0f + support[IdeologyID.transhumanist] * -0.2f);
@@ -128,6 +105,68 @@ namespace Simulation
             resourceMultiplier[Data.Resource.Type.Economy] = effects.economy + 1;
             resourceMultiplier[Data.Resource.Type.Military] = effects.military + 1;
 		}
+
+        public string getGovernmentController()
+        {
+            string rv = "";
+
+            KeyValuePair<Faction.FactionID, float> faction = getHighestFactionAndValue();
+            KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
+
+            bool controlled = (faction.Value >= ideology.Value) ? true : false;
+
+            return rv;
+        }
+        public string getRuler()
+        {
+            KeyValuePair<Faction.FactionID, float> faction = getHighestFactionAndValue();
+            KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
+            
+            bool controller = (faction.Value >= ideology.Value) ? true : false;
+
+            string rv = "";
+            // governer
+            rv += (controller) ? Faction.getTitle(faction.Key, Simulation.Parameters.getGovernmentStr(location)) :
+                Faction.getTitle(ideology.Key, Simulation.Parameters.getGovernmentStr(location));
+            rv += " of the ";
+            // House Valeria
+            rv += (controller) ? Faction.getFactionName(faction.Key) :
+                getPartyName(ideology.Key);
+
+            Debug.Log (location.id+" ruler: "+rv);
+            return rv;
+        }
+
+        public KeyValuePair<IdeologyID, float> getHighestIdeologyAndValue()
+        {
+            KeyValuePair<IdeologyID, float> highest = new KeyValuePair<IdeologyID, float>();
+            float highestValue = 0.0f;
+
+            foreach (var pair in support)
+            {
+                if (pair.Value > highestValue)
+                {
+                    highest = pair;
+                    highestValue = pair.Value;
+                }
+            }
+            return highest;
+        }
+        private KeyValuePair<Faction.FactionID, float> getHighestFactionAndValue()
+        {
+            KeyValuePair<Faction.FactionID, float> highest = new KeyValuePair<Faction.FactionID, float>();
+            float highestValue = 0.0f;
+            
+            foreach (var pair in location.features.factionCtrl)
+            {
+                if (pair.Value > highestValue)
+                {
+                    highest = pair;
+                    highestValue = pair.Value;
+                }
+            }
+            return highest;
+        }
 		
 		public string toDebugString()
 		{

@@ -86,23 +86,14 @@ namespace UnityTest
 
         private static int RegisterUndo()
         {
-#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
-            Undo.RegisterSceneUndo("UnitTestRunSceneSave");
-            return -1;
-#else
             return Undo.GetCurrentGroup();
-#endif
         }
 
         private static void PerformUndo(int undoGroup)
         {
             EditorUtility.DisplayProgressBar("Undo", "Reverting changes to the scene", 0);
             var undoStartTime = DateTime.Now;
-#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
-            Undo.PerformUndo();
-#else
             Undo.RevertAllDownToGroup(undoGroup);
-#endif
             if ((DateTime.Now - undoStartTime).Seconds > 1)
                 Debug.LogWarning("Undo after unit test run took " + (DateTime.Now - undoStartTime).Seconds + " seconds. Consider running unit tests on a new scene for better performance.");
             EditorUtility.ClearProgressBar();
@@ -111,6 +102,7 @@ namespace UnityTest
         public class TestRunnerEventListener : ITestRunnerCallback
         {
             private readonly Action<ITestResult> m_UpdateCallback;
+			private int m_TestCount;
 
             public TestRunnerEventListener(Action<ITestResult> updateCallback)
             {
@@ -119,7 +111,10 @@ namespace UnityTest
 
             public void TestStarted(string fullName)
             {
-                EditorUtility.DisplayProgressBar("Unit Tests Runner", fullName, 1);
+				if(m_TestCount < 100)
+                	EditorUtility.DisplayProgressBar("Unit Tests Runner", fullName, 1);
+				else
+					EditorUtility.DisplayProgressBar("Unit Tests Runner", "Running unit tests...", 1);
             }
 
             public void TestFinished(ITestResult result)
@@ -128,6 +123,11 @@ namespace UnityTest
             }
 
             public void RunStarted(string suiteName, int testCount)
+            {
+				m_TestCount = testCount;
+            }
+
+            public void AllScenesFinished()
             {
             }
 

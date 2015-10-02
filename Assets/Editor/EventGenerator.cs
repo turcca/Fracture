@@ -149,10 +149,10 @@ public class EventGenerator
         writeLine("if (job == Character.Job." + who + ") {");
         checkAndConsumeConditional(ref tag);
         writeLine("{");
-        writeLine("eventAdvice.text = \"" + getNextString(tag).Replace("\n", "\\n") + "\";");
+        writeLine("eventAdvice.text = \"" + getNextString(tag).Replace("\r\n", "\\n") + "\";");
         if (getNextValue(tag) != "")
         {
-            writeLine("eventAdvice.recommend = " + getNextValue(tag).Replace("\r", "").Replace("\n", "") + ";");
+            writeLine("eventAdvice.recommend = " + getNextValue(tag).Replace("\r\n", "") + ";");
         }
         writeLine("return eventAdvice;");
         writeLine("}");
@@ -166,7 +166,7 @@ public class EventGenerator
         {
             if (Regex.Match(tag, @"^\@t[\s\{]").Success)
             {
-                readText(tag.Substring(2).Replace("\n", "\\n")); // keep newlines in text strings
+                readText(tag.Substring(2).Replace("\r\n", "\\n")); // keep newlines in text strings
             }
         }
         writeLine("return \"INSERT TEXT HERE\";"); // possible fall-through

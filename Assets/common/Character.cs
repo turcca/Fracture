@@ -254,7 +254,7 @@ public class Character
         // get appropriate portrait
         portrait = Root.PortraitManager.getPortrait("");
         // get name
-        name = NameGenerator.getName("any");
+        name = NameGenerator.getName();
         // setup stats
         foreach (Stat s in (Stat[])Enum.GetValues(typeof(Stat)))
         {

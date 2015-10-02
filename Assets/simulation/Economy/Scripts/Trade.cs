@@ -124,7 +124,7 @@ namespace Simulation
                 }
             }
             // todo: factore in node-based distance-calculation x2 
-            // score /= (distance *2)
+            score /= (Location.getLocationDistance(fromLocation, toLocation) * 2f);
             return new KeyValuePair<float, List<Data.TradeItem>>(score, sortedItems);
         }
     

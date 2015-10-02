@@ -1,28 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ParticleFlowData
+public static class ParticleFlowData
 {
-    public Texture2D flowTexture;
-    public Vector2[,] flowMap;
+    public static Texture2D flowTexture { private set; get; }
+    private static Vector2[,] flowMap;
 
-	// Use this for initialization
-    public ParticleFlowData () 
+    // Use this for initialization
+    public static Vector2[,] getFlowMap()
     {
-        flowTexture = Resources.Load<Texture2D>("starmap/weather_flow_2x_a");
+        if (flowMap == null) buildFlowMap();
+        return flowMap;
+    }
 
-        if (flowTexture == null) Debug.LogError ("texture map not loaded");
-        else
+    public static void buildFlowMap()
+    {
+        if (flowMap == null)
         {
-            flowMap = new Vector2[flowTexture.width, flowTexture.height];
+            flowTexture = Resources.Load<Texture2D>("starmap/weather_flow_2x_a");
 
-            Debug.Log ("building flowMap");
-            for (int i=0; i<flowTexture.width;++i)
-                for (int j=0; j<flowTexture.height;++j)
+            if (flowTexture == null) Debug.LogError("texture map not loaded");
+            else
             {
-                //flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, j).r - 0.5f, flowTexture.GetPixel(i,j).g * (-1.0f) + 0.5f);
-                flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, flowTexture.height-j).r - 0.5f, flowTexture.GetPixel(i,flowTexture.height-j).g * (1.0f) - 0.5f);
-                flowMap[i, j] *= 1.8f;
+                flowMap = new Vector2[flowTexture.width, flowTexture.height];
+
+                Debug.Log("building flowMap");
+                for (int i = 0; i < flowTexture.width; ++i)
+                {
+                    for (int j = 0; j < flowTexture.height; ++j)
+                    {
+                        flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, flowTexture.height - j).r - 0.5f, flowTexture.GetPixel(i, flowTexture.height - j).g * (1.0f) - 0.5f);
+                        flowMap[i, j] *= 1.8f;
+                    }
+                }
             }
         }
 	}

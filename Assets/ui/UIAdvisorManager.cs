@@ -14,26 +14,10 @@ public class UIAdvisorManager : MonoBehaviour
     
     void Start()
     {
-        int i = 0;
-        foreach (Character.Job job in Character.getAdvisorAssignmentNames())
-        {
-            ++i;
-            //GameObject go = NGUITools.AddChild(gameObject, advisorPrefab);
-            //go.GetComponent<UIKeyBinding>().keyCode = Tools.getKeyFunction(i);
-            //go.GetComponent<UIAdvisor>().setup(job, new UIAdvisor.AdvisorSelectedDelegate(eventAdvisorSelected));
-        }
-        //gameObject.GetComponent<UIGrid>().Reposition();
     }
 
     public void eventAdvisorSelected(Character.Job job)
     {
         eventUI.setAdvisor(job);
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

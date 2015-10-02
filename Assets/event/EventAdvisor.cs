@@ -14,17 +14,21 @@ public class EventAdvisor : MonoBehaviour
     
     void Start()
     {
-        advicePanel.SetActive(false);
-    }
-    
-    public void setup(Character.Job job, AdvisorSelectedDelegate d)
-    {
-        character = Root.game.player.getAdvisor(advisorJob);
-        advicePanel.SetActive(false);
-        callback = d;
+        //setup();
     }
 
-    public void showAdvice(string advice)
+    public void setup()
+    {
+        // auto-select captain
+        if (advisorJob == Character.Job.captain)
+        {
+            this.gameObject.transform.parent.gameObject.GetComponent<AdvisorManager>().advisorSelected(this.gameObject);
+            advicePanel.SetActive(true);
+        }
+        else advicePanel.SetActive(false);
+    }
+
+public void showAdvice(string advice)
     {
         adviceText.text = advice;
         advicePanel.SetActive(true);
@@ -33,12 +37,6 @@ public class EventAdvisor : MonoBehaviour
     public void hideAdvice()
     {
         advicePanel.SetActive(false);
-    }
-    
-    void OnClick()
-    {
-        Tools.debug(advisorJob.ToString());
-        callback(advisorJob);
     }
 
 }

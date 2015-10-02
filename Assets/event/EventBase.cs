@@ -70,7 +70,7 @@ public class EventBase
     }
     public virtual string getText()
     {
-        return "INSERT GENERAL TEXT HERE";
+        return "INSERT EVENT DESCRIPTION TEXT HERE";
     }
     public virtual freq getFrequency()
     {

@@ -15,8 +15,6 @@ namespace Simulation
         public float cargoSpace { get; private set; }
 
         public List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
-        //public List<string> wantedCommodityList = new List<string>();
-        //public CommodityInventory inventory = new CommodityInventory();
 
         List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>();
 
@@ -34,7 +32,7 @@ namespace Simulation
             this.home = home;
             this.destination = home;
             this.position = home.position;
-            this.captain = NameGenerator.getName("");
+            this.captain = NameGenerator.getName(home.ideology.getHighestIdeologyAndValue().Key);
             this.cargoSpace = Parameters.cargoHoldMul;
             this.free = true;
             this.isTradeShip = true; ///@todo military ships
@@ -44,25 +42,15 @@ namespace Simulation
 
         public void tick(float days)
         {
-            /// - we probably do not need to track real positions, since trading
-            ///   is done directly through location resources
-            if (navPoints.Count == 0) 
-            {
-                return;
-            }
-
-            if (downtime > 0)
+            if (downtime > 0f)
             {
                 setVisibilistyToStarmap(false);
+                downtime = (downtime > days) ? downtime - days : 0f;
+            }
 
-                if (downtime > days)
-                {
-                    downtime = downtime-days;
-                }
-                else
-                {
-                    downtime = 0;
-                }
+            if (navPoints.Count == 0)
+            {
+                return;
             }
             else
             {
@@ -71,7 +59,7 @@ namespace Simulation
                 Vector3 dir = navPoints[0].position - position;
                 Vector3 dirNormalized = dir.normalized;
                 float endPoint = dir.magnitude;
-                float currentPoint = (dirNormalized * days * Parameters.shipMovementMultiplier).magnitude;
+                float currentPoint = (dirNormalized * days * Parameters.getNPCShipSpeed()).magnitude;
 
                 // navPoint reached
                 if (currentPoint > endPoint)
@@ -93,21 +81,21 @@ namespace Simulation
                     // over half-point, reducing deviation
                     if (currentPoint > endPoint * 0.5f)  //mistä lasketaan puoliväli?
                     {
-                        position += dirNormalized * days * Parameters.shipMovementMultiplier;
+                        position += dirNormalized * days * Parameters.getNPCShipSpeed();
                         //deviation = navPoints[0].directionPerpendicularNormalized * (endPoint-currentPoint);
                         deviation = Quaternion.Euler(0, 90, 0) * dirNormalized *2;
                     }
                     // under half-point, increase deviation
                     else
                     {
-                        position += dirNormalized * days * Parameters.shipMovementMultiplier;
+                        position += dirNormalized * days * Parameters.getNPCShipSpeed();
                         //deviation = navPoints[0].directionPerpendicularNormalized * (endPoint-currentPoint);
                         deviation = Quaternion.Euler(0, 90, 0) * dirNormalized;
                     }
                 }
             }
         }
-        public void sendFreeShips(float days)
+        public void sendFreeShip()
         {
             if (free) 
             {
@@ -128,10 +116,6 @@ namespace Simulation
                     {
                         ///@todo send military ships
                     } 
-                }
-                else
-                {
-                    downtime = downtime > days ? downtime-days : 0;
                 }
             }
         }

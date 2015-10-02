@@ -9,7 +9,6 @@ namespace Data
     public class LocationFeatures 
     {
         public string name = "NO_NAME";
-        //public string ruler = "NO_RULER"; // not read from data
         public string subsector = "NO_SUBSECTOR";
         public string description1 = "NO_DESCRIPTION1";
         public string description2 = "NO_DESCRIPTION2";

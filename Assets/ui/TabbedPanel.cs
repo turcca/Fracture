@@ -7,7 +7,7 @@ public class TabbedPanel : MonoBehaviour
 
     void Start()
     {
-        tab.deactivate();
+        //tab.deactivate();
     }
 
     void OnDisable()

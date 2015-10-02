@@ -20,7 +20,10 @@ public class SideWindow : MonoBehaviour
     public void showEvent()
     {
         //animator.SetInteger("State", (int)State.Event);
-		gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        if (gameObject != null)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        }
 	}
     public void showAdvisors()
     {
@@ -35,8 +38,13 @@ public class SideWindow : MonoBehaviour
 
     public static SideWindow get()
     {
-        SideWindow side = GameObject.Find("SideWindow").GetComponent<SideWindow>();
-        if (side == null) Debug.LogError ("ERROR: SideWindow was not found");
+        GameObject sideObj = GameObject.Find("SideWindow");
+        SideWindow side = null;
+        if (sideObj)
+        {
+            side = sideObj.GetComponent<SideWindow>();
+            if (side == null) Debug.LogError("ERROR: SideWindow was not found");
+        }
         return side;
     }
 }

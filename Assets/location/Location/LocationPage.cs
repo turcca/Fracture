@@ -31,7 +31,11 @@ public class LocationPage : MonoBehaviour
             if (systemName != null) systemName.text = location.features.subsector;
 
             if (description1 != null) description1.text = location.features.description1;
-            if (description2 != null) description2.text = location.features.description2;
+            if (description2 != null)
+            {
+                Debug.Log("todo: description2 prerequisits");
+                description2.text = location.features.description2;
+            }
         }
     }
 	

@@ -16,6 +16,10 @@ public class CommodityInventory
             commodities.Add(type, 0);
         }
     }
+    public int cargoAmount(Data.Resource.SubType type)
+    {
+        return commodities[type];
+    }
 
     public int getUsedCargoSpace()
     {
@@ -35,7 +39,7 @@ public class Player
     private Dictionary<Character.Job, int> advisors = new Dictionary<Character.Job, int>();
 
     public Vector3 position;// = new Vector3(0, 0, 0);
-    public float warpMagnitude = 0.0f;
+    private double warpMagnitude = 0.0d;
     private string locationId = "";
 
     private float elapsedDays = 0;
@@ -70,9 +74,13 @@ public class Player
         return (int)elapsedDays;
     }
 
-    public double getWarpMagnitude()
+    public float getWarpMagnitude()
     {
-        return warpMagnitude*6.0f;
+        return (float)warpMagnitude*6.0f;
+    }
+    public void setWarpMagnitude(double mag)
+    {
+        warpMagnitude = mag;
     }
     public double getRawWarpMagnitude()
     {
@@ -135,6 +143,7 @@ public class Player
     public void tick(float days)
     {
         elapsedDays += days;
+        //advisor exp
     }
 
     public void setAdvisor(Character.Job job, int id)

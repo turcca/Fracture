@@ -16,6 +16,8 @@ public class Location
     public string id { get; private set; }
     public Vector3 position { get; private set; }
 
+    public string ruler { get; private set; }
+
     public Simulation.LocationEconomy economy;
     public Simulation.LocationIdeology ideology;
     public Data.LocationFeatures features
@@ -37,6 +39,8 @@ public class Location
 
         this.ideology = new Simulation.LocationIdeology(this);
         this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
+
+        this.ruler = getRuler();
     }
     
     public void tick(float days)
@@ -54,19 +58,16 @@ public class Location
             //"---\n" + "Assets:\n" + .toDebugString();
     }
 
-    public float getImportance()
+    public string getRuler()
     {
-        //float populationFactor = (float)Math.Pow(info.population, 0.17);
-        //float orbitalFactor = info.orbitalInfra * 3;
-        //float infraFactor = info.infrastructure * (ideology.effects.pgrowth / 2 + ideology.effects.industry / 2 + 1) + 0.5f;
-        //float economyFactor = ideology.effects.economy + 1;
-        //float militaryFactor = ideology.effects.military + 1;
-        //float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
-
-        //return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
-        return 0;
+        return ideology.getRuler();
     }
 
+
+    public float getImportance()
+    {
+        return Simulation.Parameters.getImportance(this);
+    }
 
     public List<Simulation.NPCShip> getFreeShips()
     {
@@ -79,6 +80,17 @@ public class Location
             }
         }
         return rv;
+    }
+    public Simulation.NPCShip getFreeShip()
+    {
+        foreach (Simulation.NPCShip ship in Root.game.ships)
+        {
+            if (ship.home == this && ship.free)
+            {
+                return ship;
+            }
+        }
+        return null;
     }
 
     public List<Data.TradeItem> getLocationTradeList()
@@ -127,4 +139,12 @@ public class Location
         return tradeList;
     }
 
+
+
+    // ---- static functions
+
+    static public float getLocationDistance (Location location1, Location location2)
+    {
+        return Vector3.Distance(location1.position, location2.position);
+    }
 }
