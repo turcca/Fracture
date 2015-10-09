@@ -139,6 +139,38 @@ namespace Simulation
                 return "default";
             }
         }
+        public static string getCommodityTypeName(Data.Resource.Type resourceType)
+        {
+            switch (resourceType)
+            {
+                case Data.Resource.Type.Food:
+                    return "Food";
+                
+                case Data.Resource.Type.Mineral:
+                    return "Materials";
+
+                case Data.Resource.Type.Industry:
+                    return "Machinery";
+
+                case Data.Resource.Type.Innovation:
+                    return "Innovation";
+
+                case Data.Resource.Type.Economy:
+                    return "Investments";
+                
+                case Data.Resource.Type.Culture:
+                    return "Consumer Goods";
+              
+                case Data.Resource.Type.Military:
+                    return "Weapons";
+             
+                case Data.Resource.Type.BlackMarket:
+                    return "Black Market";
+              
+                default:
+                    return "default";
+            }
+        }
         public static string getCommodityDescription(Data.Resource.SubType resourceType)
         {
             switch (resourceType)

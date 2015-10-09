@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-public class Faction
+static public class Faction
 {
     public enum FactionID { noble1, noble2, noble3, noble4, guild1, guild2, guild3, church, heretic };
 
@@ -55,6 +55,41 @@ public class Faction
         default: return FactionID.noble1;
         }
     }
+    static public string getGovernmentType(FactionID id, bool hasFlipped = false)
+    {
+        switch (id)
+        {
+            case FactionID.noble1: return (!hasFlipped) ? "Imperial" : "Separatist"; // todo: return "Separatist" if House Furia flipped
+            case FactionID.noble2: return "Imperial";
+            case FactionID.noble3: return "Imperial";
+            case FactionID.noble4: return "Imperial";
+            case FactionID.guild1: return "Civilian";
+            case FactionID.guild2: return "Civilian";
+            case FactionID.guild3: return "Civilian";
+            case FactionID.church: return "Theocratic";
+            case FactionID.heretic: return (!hasFlipped) ? "Unknown" : "Theocratic"; // todo: has heretics come out of the closet
+            default: return "";
+        }
+    }
+    static public string getGovernmentType(Simulation.LocationIdeology.IdeologyID id) // government:
+    {
+        switch (id)
+        {
+            case Simulation.LocationIdeology.IdeologyID.cult:        return "Imperial"; 
+            case Simulation.LocationIdeology.IdeologyID.technocrat:  return "Civilian";
+            case Simulation.LocationIdeology.IdeologyID.mercantile:  return "Civilian";
+            case Simulation.LocationIdeology.IdeologyID.bureaucracy: return "Imperial";
+            case Simulation.LocationIdeology.IdeologyID.liberal:     return "Civilian";
+            case Simulation.LocationIdeology.IdeologyID.nationalist: return "Separatist";
+            case Simulation.LocationIdeology.IdeologyID.aristocrat:  return "Imperial";
+            case Simulation.LocationIdeology.IdeologyID.imperialist: return "Imperial";
+            case Simulation.LocationIdeology.IdeologyID.navigators:  return "Order";
+            case Simulation.LocationIdeology.IdeologyID.brotherhood: return "Order";
+            case Simulation.LocationIdeology.IdeologyID.transhumanist: return "Civilian";
+            default: return "";
+        }
+    }
+
     static public string getTitle(FactionID id, int lvl)
     {
         // 4th title comes easier for factions!
@@ -65,25 +100,25 @@ public class Faction
         else if (id == FactionID.noble4) return getTitle (Simulation.LocationIdeology.IdeologyID.cult, lvl);
         else if (id == FactionID.guild1)
         {
-            if (lvl == 1)       return "Councillor";
-            else if (lvl == 2)  return "Governor";
-            else if (lvl <= 3)  return "President";
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "President";
             else                return "Primus Transcended";
         }
         else if (id == FactionID.guild2) return getTitle (Simulation.LocationIdeology.IdeologyID.cult, lvl);
         else if (id == FactionID.guild3) return getTitle (Simulation.LocationIdeology.IdeologyID.cult, lvl);
         else if (id == FactionID.church)
         {
-            if (lvl == 1)       return "Bishop";
-            else if (lvl == 2)  return "Bishop";
-            else if (lvl <= 3)  return "Arch Bishop";
-            else                return "High Exarch";
+            if (lvl <= 2)       return "Bishop";
+            else if (lvl <= 3)  return "Bishop";
+            else if (lvl <= 4)  return "Archbishop";
+            else                return "Apostle";
         }
         else if (id == FactionID.heretic)
         {
-            if (lvl == 1)       return "Councillor";
-            else if (lvl == 2)  return "Protector";
-            else if (lvl <= 3)  return "Messiah";
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Protector";
+            else if (lvl <= 4)  return "Messiah";
             else                return "Antipope";
         }
         return "Governor";
@@ -92,99 +127,85 @@ public class Faction
     {
         if (id == Simulation.LocationIdeology.IdeologyID.cult) 
         {
-            if (lvl == 1)       return "Senator";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.technocrat)   
         {
-            if (lvl == 1)       return "Councillor";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.mercantile)   
         {
-            if (lvl == 1)       return "Councillor";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.bureaucracy)  
         {
-            if (lvl == 1)       return "Senator";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.liberal)      
         {
-            if (lvl == 1)       return "Minister";
-            else if (lvl == 2)  return "Prime Minister";
+            if (lvl <= 2)       return "Minister";
+            else if (lvl <= 3)  return "Prime Minister";
             else if (lvl <= 4)  return "President";
             else                return "Sector President";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.nationalist)  
         {
-            if (lvl == 1)       return "Councillor";
-            else if (lvl == 2)  return "Commissar";
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Commissar";
             else if (lvl <= 4)  return "People's Commissar";
             else                return "High Commander";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.aristocrat)   
         {
-            if (lvl == 1)       return "Senator";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.imperialist)  
         {
-            if (lvl == 1)       return "Senator";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.navigators)   
         {
-            if (lvl == 1)       return "Senior Advisor";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Senior Advisor";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.brotherhood)  
         {
-            if (lvl == 1)       return "Senior Advisor";
-            else if (lvl == 2)  return "Governor";
+            if (lvl <= 2)       return "Senior Advisor";
+            else if (lvl <= 3)  return "Governor";
             else if (lvl <= 4)  return "Exarch";
             else                return "High Exarch";
         }
         else if (id == Simulation.LocationIdeology.IdeologyID.transhumanist)
         {
-            if (lvl == 1)       return "Minister";
-            else if (lvl == 2)  return "Prime Minister";
+            if (lvl <= 2)       return "Minister";
+            else if (lvl <= 3)  return "Prime Minister";
             else if (lvl <= 4)  return "Transcended";
             else                return "Primus Transcended";
         }
         return "Governor";
     }
-    static public string getTitle() { return "Governor"; }
-    /*
-    static string getTitle(FactionID id, int lvl)
-    {
-        if (id == FactionID.noble1)      return getTitle (Simulation.LocationIdeology.IdeologyID.cult, lvl);
-        else if (id == FactionID.noble2) return "Senator";
-        else if (id == FactionID.noble3) return "Senator";
-        else if (id == FactionID.noble4) return "Senator";
-        else if (id == FactionID.guild1) return "Councillor";
-        else if (id == FactionID.guild2) return "Councillor";
-        else if (id == FactionID.guild3) return "Councillor";
-        else if (id == FactionID.church) return "Bishop";
-        else if (id == FactionID.heretic)return "Councillor";
-        return "Governor";
-    }
-    */
+    //static public string getTitle() { return "Governor"; }
+
 }
 
 

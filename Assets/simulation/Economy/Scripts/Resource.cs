@@ -199,6 +199,10 @@ namespace Simulation
                 data.state = Data.Resource.State.Sustain;
             }
         }
+        public Data.Resource.State getState()
+        {
+            return data.state;
+        }
 
         private void handlePolicyChanges()
         {

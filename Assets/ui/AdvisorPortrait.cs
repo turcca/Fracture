@@ -12,7 +12,7 @@ public class AdvisorPortrait : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        setImage();
+        //setImage(); // TODO: use setImage for dynamic portrait-assigning. Currently it just keeps the portraits assigned from the eventScene.unity & locationScene.unity
     }
 
     private void setImage()

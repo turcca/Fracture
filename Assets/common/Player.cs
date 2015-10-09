@@ -63,6 +63,7 @@ public class Player
         foreach (Character.Job job in tempChars)
         {
             Character c = new Character();
+            c.assignment = job;
 
             characters.Add(c.id, c);
             advisors.Add(job, c.id);

@@ -47,8 +47,9 @@ namespace Simulation
         public static int getGovernmentStr(Location location)
         {
             Debug.Log (location.name+" STR: "+(int)getImportance(location));
-            return (int)Mathf.Clamp (getImportance(location) / 4.0f, 
-                                1, getImportance(location) / 4.0f);
+            //return (int)Mathf.Clamp (getImportance(location) / 4.0f, 
+            //                    1, getImportance(location) / 4.0f);
+            return (int)getImportance(location);
         }
 
 

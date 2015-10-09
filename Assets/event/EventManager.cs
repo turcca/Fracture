@@ -84,6 +84,7 @@ public class EventManager
         } 
     }
 
+
     public EventBase queryStarmapEvents()
     {
         if (GameState.isState(GameState.State.Starmap))

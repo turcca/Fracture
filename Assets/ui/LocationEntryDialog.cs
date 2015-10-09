@@ -33,8 +33,10 @@ public class LocationEntryDialog : MonoBehaviour
 
     public void enterLocation()
     {
-        GameState.requestState(GameState.State.Location);
-        Application.LoadLevel("locationScene");
-        //Application.LoadLevelAdditive("locationScene");
+        if (GameState.isState(GameState.State.Starmap))
+        {
+            GameState.requestState(GameState.State.Location);
+            Application.LoadLevel("locationScene");
+        }
     }
 }

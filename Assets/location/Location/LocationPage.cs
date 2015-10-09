@@ -9,6 +9,9 @@ public class LocationPage : MonoBehaviour
     public Text locationName;
     public Text systemName;
 
+    public Text governmentType;
+    public Text ruler;
+
     public Text description1;
     public Text description2;
 
@@ -29,6 +32,9 @@ public class LocationPage : MonoBehaviour
         {
             if (locationName != null) locationName.text = location.features.name;
             if (systemName != null) systemName.text = location.features.subsector;
+
+            if (governmentType != null) governmentType.text = location.ideology.getGovernmentType();
+            if (ruler != null) ruler.text = location.ideology.getRuler();
 
             if (description1 != null) description1.text = location.features.description1;
             if (description2 != null)

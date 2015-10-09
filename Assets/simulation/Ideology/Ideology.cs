@@ -28,8 +28,9 @@ namespace Simulation
             Debug.LogError ("ERROR");
             return null;
         }
-		
-		public struct Effects
+
+
+        public struct Effects
 		{
 			public float pgrowth;
 			public float industry;
@@ -114,7 +115,7 @@ namespace Simulation
             KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
 
             bool controlled = (faction.Value >= ideology.Value) ? true : false;
-
+            Debug.Log("TODO");
             return rv;
         }
         public string getRuler()
@@ -125,16 +126,38 @@ namespace Simulation
             bool controller = (faction.Value >= ideology.Value) ? true : false;
 
             string rv = "";
-            // governer
-            rv += (controller) ? Faction.getTitle(faction.Key, Simulation.Parameters.getGovernmentStr(location)) :
-                Faction.getTitle(ideology.Key, Simulation.Parameters.getGovernmentStr(location));
-            rv += " of the ";
-            // House Valeria
-            rv += (controller) ? Faction.getFactionName(faction.Key) :
-                getPartyName(ideology.Key);
+            // faction controlled ruler
+            if (controller)
+            {
+                // House Valeria
+                rv += Faction.getFactionName(faction.Key);
+                rv += " ";
+                // Governer
+                rv += Faction.getTitle(faction.Key, Simulation.Parameters.getGovernmentStr(location));
+                }
+            // local government ruler
+            else
+            {
+                // Governer
+                rv += Faction.getTitle(ideology.Key, Simulation.Parameters.getGovernmentStr(location));
+                rv += " of the ";
+                // Guild of Merchants
+                rv += getPartyName(ideology.Key);
+            }
 
-            Debug.Log (location.id+" ruler: "+rv);
+            Debug.Log (location.id+" ruler: "+rv+ " ("+location.name+")");
             return rv;
+        }
+        public string getGovernmentType()
+        {
+            KeyValuePair<Faction.FactionID, float> faction = getHighestFactionAndValue();
+            KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
+
+            bool controlled = (faction.Value >= ideology.Value) ? true : false;
+
+            return (controlled) ? 
+                Faction.getGovernmentType(faction.Key) :
+                Faction.getGovernmentType(ideology.Key);
         }
 
         public KeyValuePair<IdeologyID, float> getHighestIdeologyAndValue()

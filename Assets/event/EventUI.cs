@@ -11,6 +11,7 @@ public class EventUI : MonoBehaviour
     public GameObject eventPage;
 
     EventBase currentEvent;
+    EventBase defaultAdvice;
     EventDoneDelegate eventDoneCallback;
     Dictionary<int, EventChoicesBtn> choiceButtons = new Dictionary<int, EventChoicesBtn>();
     GameObject choiceButtonPrefab;
@@ -27,6 +28,7 @@ public class EventUI : MonoBehaviour
 
     void Start()
     {
+        defaultAdvice = Root.game.events.getEventByName("default_advice");
     }
 
     public void setEvent(EventBase e, EventDoneDelegate callback)
@@ -87,7 +89,7 @@ public class EventUI : MonoBehaviour
 
         if (advice == "NO ADVICE") 
         {
-            Debug.Log ("todo: fall-though default advice");
+            advice = defaultAdvice.getAdvice(job).text;
         }
 
         return advice;
@@ -99,9 +101,6 @@ public class EventUI : MonoBehaviour
         currentEvent.start();
         continueEvent();
         setupAdvisorManager();
-        //aloita valitsemalla kapteeni jotenkin
-        //setAdvisor(Character.Job.captain); // todo: check that character exist?
-
     }
 
     private void endEvent()

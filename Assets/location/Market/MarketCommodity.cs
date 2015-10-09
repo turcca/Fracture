@@ -12,16 +12,16 @@ public class MarketCommodity : MonoBehaviour
     public Text commodityName;
     public Text price;
     public Text priceMultiplier;
+    private float priceMul;
+
     public Text cargoAmount;
     public Text storeAmount;
 
-    public Image hilight;
-    
     private Text playerCredits;
     private Text playerCargo;
     private Image lineGraph;
     private Image lineGraphHor;
-    //private string trackedLocation = "not defined";
+    public Image hilight;
 
     Data.TradeItem locationItem;
     int itemTier;
@@ -35,10 +35,6 @@ public class MarketCommodity : MonoBehaviour
         hilight.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     internal void trackLocation(LocationSceneState state, Data.Resource.SubType commodity, MarketPage mp)
     {
@@ -56,7 +52,7 @@ public class MarketCommodity : MonoBehaviour
         commodityName.text = Simulation.Trade.getCommodityName(trackedCommodity); //Enum.GetName(typeof(Data.Resource.SubType), trackedCommodity);
 
         // price
-        float priceMul = Simulation.Trade.calculateItemPriceMultiplier(locationItem);
+        priceMul = Simulation.Trade.calculateItemPriceMultiplier(locationItem);
         float value = Simulation.Trade.getCommodityValue(locationItem.subType);
         // rounded multiplier calculators
         calculatedValue = Mathf.Round (priceMul * value);
