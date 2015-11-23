@@ -151,6 +151,7 @@ namespace Simulation
                     switch (resource.Value.policy)
                     {
                         case Data.Resource.Policy.Grow:
+                            Debug.LogWarning("exporting 'Grow'");
                             current.weight *= 0.9f;
                             break;
                         case Data.Resource.Policy.GrowTech:
@@ -160,6 +161,7 @@ namespace Simulation
                             current.weight *= 0.5f;
                             break;
                         case Data.Resource.Policy.Stockpile:
+                            Debug.LogWarning("exporting 'Stockpile'");
                             current.weight *= 0.8f;
                             break;
                         case Data.Resource.Policy.BareMinimum:
@@ -197,6 +199,7 @@ namespace Simulation
                             current.weight *= 1.0f;
                             break;
                         case Data.Resource.Policy.BareMinimum:
+                            Debug.LogWarning("importing 'BareMinimum'");
                             current.weight *= 1.0f;
                             break;
                         case Data.Resource.Policy.Downsize:

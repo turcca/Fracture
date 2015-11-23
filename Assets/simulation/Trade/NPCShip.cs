@@ -16,7 +16,8 @@ namespace Simulation
 
         public List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
 
-        List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>();
+        List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>(); 
+        //public int getNavPointCount() { return navPoints.Count; }
 
         public bool free { get; private set; }
         public bool isTradeShip { get; private set; }
@@ -27,6 +28,8 @@ namespace Simulation
         public TradeShip tradeShip { get; set; }
 
 
+        private float simulationStepBuffer = 0;
+
         public NPCShip(Location home)
         {
             this.home = home;
@@ -36,12 +39,14 @@ namespace Simulation
             this.cargoSpace = Parameters.cargoHoldMul;
             this.free = true;
             this.isTradeShip = true; ///@todo military ships
-            this.downtime = UnityEngine.Random.value*15;
+            this.downtime = UnityEngine.Random.value*5;
             this.isVisible = false;
         }
 
         public void tick(float days)
         {
+            simulationStepBuffer += days;
+
             if (downtime > 0f)
             {
                 setVisibilistyToStarmap(false);
@@ -58,8 +63,8 @@ namespace Simulation
 
                 Vector3 dir = navPoints[0].position - position;
                 Vector3 dirNormalized = dir.normalized;
-                float endPoint = dir.magnitude;
-                float currentPoint = (dirNormalized * days * Parameters.getNPCShipSpeed()).magnitude;
+                float endPoint = dir.magnitude; // distance to the next navPoint
+                float currentPoint = (dirNormalized * days * Parameters.getNPCShipSpeed()).magnitude; // travel distance in this tick
 
                 // navPoint reached
                 if (currentPoint > endPoint)
@@ -97,25 +102,45 @@ namespace Simulation
         }
         public void sendFreeShip()
         {
-            if (free) 
+            if (simulationStepBuffer >= 0.3f)
             {
-                if (downtime <= 0)
+                simulationStepBuffer = 0;
+
+                if (free)
                 {
-                    if (isTradeShip)
-                    {  
-                        // checks for trade mission scoring to meet the treshold, set destination (no partner, destination = home)
-                        LocationTrade.setTradePartnerForShip(this);
-                        if (destination != home)
+                    if (downtime <= 0)
+                    {
+                        if (isTradeShip)
                         {
-                            Trade.tradeResources(this);
-                            isGoingToDestination = true;
-                            embarkTo();
+                            // checks for trade mission scoring to meet the treshold, set destination (if no partner: destination = home)
+                            LocationTrade.setTradePartnerForShip(this);
+                            if (destination != home)
+                            {
+                                Trade.tradeResources(this);
+                                isGoingToDestination = true;
+                                embarkTo();
+                            }
+                        }
+                        else
+                        {
+                            ///@todo send military ships
                         }
                     }
-                    else
+                }
+                // might be at destination and deeds to be sent back
+                else
+                {
+                    // unloading cargo on destination
+                    if (downtime <= 0 /*&& */)
                     {
-                        ///@todo send military ships
-                    } 
+                        if (!isGoingToDestination && navPoints.Count == 0)
+                        {
+                            if (isTradeShip)
+                            {
+                                embarkTo();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -140,7 +165,7 @@ namespace Simulation
                     // noop
                     ///@todo create a delay of couple of days before returning?
                     isGoingToDestination = false;
-                    embarkTo();
+                    // moved ---> embarkTo();
                 }
             }
         }

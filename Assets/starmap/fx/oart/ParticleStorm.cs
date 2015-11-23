@@ -49,7 +49,10 @@ public class ParticleStorm : MonoBehaviour
         vec.Set(ParticleFlowData.getFlowMap()[x,z].x, 0, ParticleFlowData.getFlowMap()[x,z].y);
         Vector3 flow = vec * 30.0f;
 
-        particle.velocity = flow; // * 0.5f + particle.velocity * 0.5f;
+        //particle.velocity = flow;  // quick and dirty, jitters turning
+        particle.velocity = Vector3.Slerp(particle.velocity, flow, Time.deltaTime*5f);
+        //if (particle.lifetime >= particle.startLifetime*0.99f) particle.velocity = flow; // set once
+        
         //particle.color = new Color(1.0f, 1.0f, 1.0f, flow.sqrMagnitude*10.0f);
     }
 

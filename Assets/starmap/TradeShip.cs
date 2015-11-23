@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class TradeShip : MonoBehaviour
+public class TradeShip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Simulation.NPCShip trackedShip;
 
@@ -11,6 +11,14 @@ public class TradeShip : MonoBehaviour
     Renderer renderer;
     Collider collider;
     ParticleSystem ps;
+
+    // debug
+    //public bool free;
+    //public bool isGoingToDestination;
+    //public float downTime;
+    //public int nodes;
+    //public string home;
+    //public string destination;
 
 
     // Use this for initialization / simulation
@@ -30,6 +38,16 @@ public class TradeShip : MonoBehaviour
         if (trackedShip != null)
         {
             gameObject.transform.position = new Vector3(trackedShip.position.x, 0.1f, trackedShip.position.z);//+ trackedShip.deviation;
+
+            //if (true) // debugging
+            //{
+            //    free = trackedShip.free;
+            //    isGoingToDestination = trackedShip.isGoingToDestination;
+            //    downTime = trackedShip.downtime;
+            //    nodes = trackedShip.getNavPointCount();
+            //    home = (trackedShip.home != null) ? trackedShip.home.id : "";
+            //    destination = (trackedShip.destination != null) ? trackedShip.destination.id : "";
+            //}
         }
     }
 
@@ -46,7 +64,7 @@ public class TradeShip : MonoBehaviour
         }
     }
 
-    public void OnMouseEnter()
+    public void OnPointerEnter(PointerEventData eventData)
     {
         if (!visualisation)
         {
@@ -54,7 +72,7 @@ public class TradeShip : MonoBehaviour
             Simulation.NPCShipVisualisation.lineUI.setTargetObject(trackedShip.tradeShip.gameObject);
         }
     }
-    public void OnMouseExit()
+    public void OnPointerExit(PointerEventData eventData)
     {
         if (!visualisation)
         {
@@ -62,6 +80,7 @@ public class TradeShip : MonoBehaviour
             Simulation.NPCShipVisualisation.lineUI.clearTargetObject();
         }
     }
+
 
     public void setVisibilityToStarmap (bool isVisible)
     {

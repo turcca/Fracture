@@ -16,6 +16,7 @@ public class EventManager
 
     private float daysSinceLastEvent = 0;
     private float eventInterval = 13.0f;
+    private float starmapEventBuffer = 0f;
     private float timePow = 2.0f;
 
     //List<KeyValuePair<int, EventBase>> eventQueue;
@@ -50,6 +51,7 @@ public class EventManager
     public void tick(float days)
     {
         daysSinceLastEvent += days;
+        starmapEventBuffer += days;
     }
 
     public void loadLocationAdvice()
@@ -62,7 +64,7 @@ public class EventManager
         }
 
         string eventName = "loc_advice_"+Root.game.player.getLocationId().ToUpper();
-        Debug.Log ("eventPool size: "+eventPool.Count+ "    triggerEventPool size: "+triggerEventPool.Count);
+        //Debug.Log ("eventPool size: "+eventPool.Count+ "    triggerEventPool size: "+triggerEventPool.Count);
 
         foreach (EventBase e in eventPool)
         {
@@ -87,17 +89,22 @@ public class EventManager
 
     public EventBase queryStarmapEvents()
     {
-        if (GameState.isState(GameState.State.Starmap))
+        if (starmapEventBuffer >= 0.25f)
         {
-            float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
-            float probability = d * 1.0f; // todo other mods
-                                          //Debug.Log("event prob = " + probability);
+            starmapEventBuffer -= 0.25f;
 
-            float roll = Random.value;
-
-            if (roll < probability)
+            if (GameState.isState(GameState.State.Starmap))
             {
-                return pickEvent();
+                float probability = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
+                //float probability = d * 1.0f; // todo other mods
+                                              //Debug.Log("event prob = " + probability);
+
+                float roll = Random.value;
+
+                if (roll < probability)
+                {
+                    return pickEvent();
+                }
             }
         }
         return null;
@@ -213,7 +220,6 @@ public class EventManager
                 combinedProbability += availableEvent.lastProbability;
                 if (roll < combinedProbability)
                 {
-                    Debug.Log ("pickEvent: "+availableEvent.name+ "("+Mathf.Round (roll *100.0f)/100.0f+"/"+Mathf.Round (combinedProbability *100.0f)/100.0f+")");
                     daysSinceLastEvent = 0;
                     return availableEvent;
                 }

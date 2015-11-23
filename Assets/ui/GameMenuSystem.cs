@@ -19,6 +19,8 @@ public class GameMenuSystem : MonoBehaviour
         locationEntryDialog.SetActive(false);
 
         shipInfo.gameObject.SetActive(false);
+
+        //ToolTipLibrary.format();
     }
 
     private void hideAllPages()

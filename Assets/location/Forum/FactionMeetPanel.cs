@@ -13,17 +13,6 @@ public class FactionMeetPanel : MonoBehaviour
 
     private FactionSelectedDelegate callback;
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void setup(string trackLocation, Faction.FactionID trackFaction, FactionSelectedDelegate cb)
     {
@@ -37,28 +26,28 @@ public class FactionMeetPanel : MonoBehaviour
 
     private void updateInfo()
     {
-        meetDesc.text = Faction.getFactionName(faction) + "\n" + 
-            getContactTitle() + " ";// + 
-            //Root.game.locations[location].features.ruler[Faction.factionToEnum(faction)];
+        float ctrl = Mathf.Floor(Root.game.locations[location].features.factionCtrl[faction] * 100f);
+        string txt = "";
+        // faction name
+        txt += Faction.getFactionName(faction) +"\n";
+        txt += "<color=#aaaaaa>";
+        // contact level (admin, contact...)
+        txt += getContactTitle() +" ";
+        // ruler name
+        txt += Root.game.locations[location].features.ruler[faction] +" </color>\n";
+        // % control
+        if (ctrl < 10f) txt += "<color=#666666>";
+        else if (ctrl < 50f) txt += "<color=888888>";
+        else txt += "<color=lightblue>";
+        txt += ctrl.ToString() + "% control </color>";
+
+        meetDesc.text = txt;
     }
 
     private void updateImage()
     {
-        Dictionary<Faction.FactionID, string> factionLogoMap = new Dictionary<Faction.FactionID,string>
-        {
-            {Faction.FactionID.noble1, "Logo_Faction_Furia"},
-            {Faction.FactionID.noble2, "Logo_Faction_Rathmund"},
-            {Faction.FactionID.noble3, "Logo_Faction_Tarquinia"},
-            {Faction.FactionID.noble4, "Logo_Faction_Valeria"},
-            {Faction.FactionID.guild1, "Logo_Faction_Union"},
-            {Faction.FactionID.guild2, "Logo_Faction_Dacei"},
-            {Faction.FactionID.guild3, "Logo_Faction_Coruna Cartel"},
-            {Faction.FactionID.church, "Logo_Faction_Church"},
-            {Faction.FactionID.heretic, "Logo_Faction_Heretics"}
-        };
-
-        factionImage.sprite = Resources.Load<Sprite>("ui/factions/" + factionLogoMap[faction]);
-        Tools.debug("faction set!");
+        factionImage.sprite = Faction.getFactionLogo(faction, true);
+        //Tools.debug("faction set!");
     }
 
     public void click()

@@ -50,8 +50,8 @@ Category {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				
 				// some shifting
-				o.vertex.x += sin(_Time.y/5.0f + o.texcoord.x*3.12f);
-				o.vertex.y += cos(_Time.y/5.0f + o.texcoord.y*3.12f);
+				o.vertex.x += sin(_Time.y/3.0f + o.texcoord.x*3.12f);
+				o.vertex.y += cos(_Time.y/3.0f + o.texcoord.y*3.12f);
 				
 				return o;
 			}

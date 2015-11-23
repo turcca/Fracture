@@ -7,27 +7,7 @@ namespace Simulation
 {
     public class LocationIdeology
     {
-        public enum IdeologyID { cult, technocrat, mercantile, bureaucracy, liberal, nationalist, aristocrat, imperialist, navigators, brotherhood, transhumanist }
-
         private Location location;
-
-
-        static public string getPartyName(IdeologyID id) // Governor of the [___]
-        {
-            if (id == IdeologyID.cult)              return "Order";
-            else if (id == IdeologyID.technocrat)   return "Technocrats";
-            else if (id == IdeologyID.mercantile)   return "Guild of Merchants";
-            else if (id == IdeologyID.bureaucracy)  return "Bureaucrats";
-            else if (id == IdeologyID.liberal)      return "Democrats";
-            else if (id == IdeologyID.nationalist)  return "Nationalists";
-            else if (id == IdeologyID.aristocrat)   return "Aristocrats";
-            else if (id == IdeologyID.imperialist)  return "Imperialists";
-            else if (id == IdeologyID.navigators)   return "Navigator's Guild";
-            else if (id == IdeologyID.brotherhood)  return "Brotherhood";
-            else if (id == IdeologyID.transhumanist)return "Radical Movement";
-            Debug.LogError ("ERROR");
-            return null;
-        }
 
 
         public struct Effects
@@ -53,22 +33,18 @@ namespace Simulation
 		}
 
         public Dictionary<Data.Resource.Type, float> resourceMultiplier = new Dictionary<Data.Resource.Type, float>(); // ideology-based multiplier
-        public Dictionary<IdeologyID, float> support = new Dictionary<IdeologyID, float>();
+        public Dictionary<Faction.IdeologyID, float> support = new Dictionary<Faction.IdeologyID, float>();
         public Effects effects = new Effects();
 
 		public LocationIdeology(Location location)
 		{
             this.location = location;
 
-            foreach (IdeologyID ideology in Enum.GetValues(typeof(IdeologyID)))
-			{
-				support[ideology] = location.features.baseIdeology[ideology];
-			}
             foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
             {
                 resourceMultiplier.Add(type, 0.0f);
             }
-            // todo calculate faction-influence on support
+            updateLocationIdeology(location);
 
             //Debug.Log (toDebugString());
             calculateEffects();
@@ -76,26 +52,26 @@ namespace Simulation
 		
 		private void calculateEffects()
 		{
-			effects.pgrowth     = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.6f + support[IdeologyID.mercantile] * -1.0f + support[IdeologyID.bureaucracy] * 0.6f + support[IdeologyID.liberal] * -1.0f + support[IdeologyID.nationalist] * 0.8f    + support[IdeologyID.aristocrat] * 0.7f + support[IdeologyID.imperialist] * 0.2f  + support[IdeologyID.navigators] * -3.0f + support[IdeologyID.brotherhood] * -0.7f + support[IdeologyID.transhumanist] * 0.6f);
-			effects.industry    = (support[IdeologyID.cult] * 0.4f   + support[IdeologyID.technocrat] * 0.3f  + support[IdeologyID.mercantile] * -0.1f + support[IdeologyID.bureaucracy] * 0.8f + support[IdeologyID.liberal] * -0.4f + support[IdeologyID.nationalist] * 0.7f    + support[IdeologyID.aristocrat] * 0.3f + support[IdeologyID.imperialist] * 0.0f  + support[IdeologyID.navigators] * -0.5f + support[IdeologyID.brotherhood] * -1.0f + support[IdeologyID.transhumanist] * -0.2f);
-			effects.economy     = (support[IdeologyID.cult] * -0.8f  + support[IdeologyID.technocrat] * 0.0f  + support[IdeologyID.mercantile] * 1.0f  + support[IdeologyID.bureaucracy] * 0.3f + support[IdeologyID.liberal] * 0.2f  + support[IdeologyID.nationalist] * -0.3f   + support[IdeologyID.aristocrat] * -0.3f + support[IdeologyID.imperialist] * -0.1f + support[IdeologyID.navigators] * 0.5f + support[IdeologyID.brotherhood] * 0.2f  + support[IdeologyID.transhumanist] * -0.3f);
-			effects.diplomacy   = (support[IdeologyID.cult] * -0.8f  + support[IdeologyID.technocrat] * 0.0f  + support[IdeologyID.mercantile] * 1.0f  + support[IdeologyID.bureaucracy] * 0.1f + support[IdeologyID.liberal] * 1.0f + support[IdeologyID.nationalist] * -1.0f    + support[IdeologyID.aristocrat] * 0.4f + support[IdeologyID.imperialist] * 0.3f  + support[IdeologyID.navigators] * 0.6f  + support[IdeologyID.brotherhood] * 0.5f  + support[IdeologyID.transhumanist] * 0.8f);
-			effects.happiness   = (support[IdeologyID.cult] * -0.1f  + support[IdeologyID.technocrat] * 0.0f  + support[IdeologyID.mercantile] * 0.5f  + support[IdeologyID.bureaucracy] * -0.2f + support[IdeologyID.liberal] * 0.9f + support[IdeologyID.nationalist] * 0.3f    + support[IdeologyID.aristocrat] * -0.3f + support[IdeologyID.imperialist] * 0.0f + support[IdeologyID.navigators] * 0.2f  + support[IdeologyID.brotherhood] * 0.3f  + support[IdeologyID.transhumanist] * 1.0f);
-			effects.affluence   = (support[IdeologyID.cult] * -0.7f  + support[IdeologyID.technocrat] * 0.3f  + support[IdeologyID.mercantile] * 1.0f  + support[IdeologyID.bureaucracy] * 0.1f  + support[IdeologyID.liberal] * 0.6f + support[IdeologyID.nationalist] * -0.3f   + support[IdeologyID.aristocrat] * 0.3f + support[IdeologyID.imperialist] * 0.0f  + support[IdeologyID.navigators] * 0.6f  + support[IdeologyID.brotherhood] * 0.0f  + support[IdeologyID.transhumanist] * -0.1f);
-			effects.innovation  = (support[IdeologyID.cult] * -0.4f  + support[IdeologyID.technocrat] * 0.5f  + support[IdeologyID.mercantile] * 0.4f  + support[IdeologyID.bureaucracy] * -0.3f + support[IdeologyID.liberal] * 1.0f + support[IdeologyID.nationalist] * -0.3f   + support[IdeologyID.aristocrat] * -0.1f + support[IdeologyID.imperialist] * -0.2f + support[IdeologyID.navigators] * 0.7f + support[IdeologyID.brotherhood] * 0.8f  + support[IdeologyID.transhumanist] * 0.8f);
-			effects.morale      = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.2f + support[IdeologyID.mercantile] * -0.9f + support[IdeologyID.bureaucracy] * -0.2f + support[IdeologyID.liberal] * -1.0f + support[IdeologyID.nationalist] * 0.8f   + support[IdeologyID.aristocrat] * 0.5f + support[IdeologyID.imperialist] * 0.4f  + support[IdeologyID.navigators] * -0.2f + support[IdeologyID.brotherhood] * -0.1f + support[IdeologyID.transhumanist] * -1.0f);
-			effects.altruism    = (support[IdeologyID.cult] * 0.8f   + support[IdeologyID.technocrat] * 0.0f  + support[IdeologyID.mercantile] * -1.0f + support[IdeologyID.bureaucracy] * -0.6f + support[IdeologyID.liberal] * 1.0f + support[IdeologyID.nationalist] * 0.2f    + support[IdeologyID.aristocrat] * -0.4f + support[IdeologyID.imperialist] * 0.1f + support[IdeologyID.navigators] * -0.3f + support[IdeologyID.brotherhood] * 0.0f  + support[IdeologyID.transhumanist] * 0.0f);
-			effects.military    = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * 0.2f  + support[IdeologyID.mercantile] * -0.6f + support[IdeologyID.bureaucracy] * 0.0f + support[IdeologyID.liberal] * -1.0f + support[IdeologyID.nationalist] * 0.9f    + support[IdeologyID.aristocrat] * 0.7f + support[IdeologyID.imperialist] * 0.9f  + support[IdeologyID.navigators] * 0.2f  + support[IdeologyID.brotherhood] * 0.0f  + support[IdeologyID.transhumanist] * -0.6f);
+			effects.pgrowth     = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * -0.6f + support[Faction.IdeologyID.mercantile] * -1.0f + support[Faction.IdeologyID.bureaucracy] * 0.6f + support[Faction.IdeologyID.liberal] * -1.0f + support[Faction.IdeologyID.nationalist] * 0.8f    + support[Faction.IdeologyID.aristocrat] * 0.7f + support[Faction.IdeologyID.imperialist] * 0.2f  + support[Faction.IdeologyID.navigators] * -3.0f + support[Faction.IdeologyID.brotherhood] * -0.7f + support[Faction.IdeologyID.transhumanist] * 0.6f);
+			effects.industry    = (support[Faction.IdeologyID.cult] * 0.4f   + support[Faction.IdeologyID.technocrat] * 0.3f  + support[Faction.IdeologyID.mercantile] * -0.1f + support[Faction.IdeologyID.bureaucracy] * 0.8f + support[Faction.IdeologyID.liberal] * -0.4f + support[Faction.IdeologyID.nationalist] * 0.7f    + support[Faction.IdeologyID.aristocrat] * 0.3f + support[Faction.IdeologyID.imperialist] * 0.0f  + support[Faction.IdeologyID.navigators] * -0.5f + support[Faction.IdeologyID.brotherhood] * -1.0f + support[Faction.IdeologyID.transhumanist] * -0.2f);
+			effects.economy     = (support[Faction.IdeologyID.cult] * -0.8f  + support[Faction.IdeologyID.technocrat] * 0.0f  + support[Faction.IdeologyID.mercantile] * 1.0f  + support[Faction.IdeologyID.bureaucracy] * 0.3f + support[Faction.IdeologyID.liberal] * 0.2f  + support[Faction.IdeologyID.nationalist] * -0.3f   + support[Faction.IdeologyID.aristocrat] * -0.3f + support[Faction.IdeologyID.imperialist] * -0.1f + support[Faction.IdeologyID.navigators] * 0.5f + support[Faction.IdeologyID.brotherhood] * 0.2f  + support[Faction.IdeologyID.transhumanist] * -0.3f);
+			effects.diplomacy   = (support[Faction.IdeologyID.cult] * -0.8f  + support[Faction.IdeologyID.technocrat] * 0.0f  + support[Faction.IdeologyID.mercantile] * 1.0f  + support[Faction.IdeologyID.bureaucracy] * 0.1f + support[Faction.IdeologyID.liberal] * 1.0f + support[Faction.IdeologyID.nationalist] * -1.0f    + support[Faction.IdeologyID.aristocrat] * 0.4f + support[Faction.IdeologyID.imperialist] * 0.3f  + support[Faction.IdeologyID.navigators] * 0.6f  + support[Faction.IdeologyID.brotherhood] * 0.5f  + support[Faction.IdeologyID.transhumanist] * 0.8f);
+			effects.happiness   = (support[Faction.IdeologyID.cult] * -0.1f  + support[Faction.IdeologyID.technocrat] * 0.0f  + support[Faction.IdeologyID.mercantile] * 0.5f  + support[Faction.IdeologyID.bureaucracy] * -0.2f + support[Faction.IdeologyID.liberal] * 0.9f + support[Faction.IdeologyID.nationalist] * 0.3f    + support[Faction.IdeologyID.aristocrat] * -0.3f + support[Faction.IdeologyID.imperialist] * 0.0f + support[Faction.IdeologyID.navigators] * 0.2f  + support[Faction.IdeologyID.brotherhood] * 0.3f  + support[Faction.IdeologyID.transhumanist] * 1.0f);
+			effects.affluence   = (support[Faction.IdeologyID.cult] * -0.7f  + support[Faction.IdeologyID.technocrat] * 0.3f  + support[Faction.IdeologyID.mercantile] * 1.0f  + support[Faction.IdeologyID.bureaucracy] * 0.1f  + support[Faction.IdeologyID.liberal] * 0.6f + support[Faction.IdeologyID.nationalist] * -0.3f   + support[Faction.IdeologyID.aristocrat] * 0.3f + support[Faction.IdeologyID.imperialist] * 0.0f  + support[Faction.IdeologyID.navigators] * 0.6f  + support[Faction.IdeologyID.brotherhood] * 0.0f  + support[Faction.IdeologyID.transhumanist] * -0.1f);
+			effects.innovation  = (support[Faction.IdeologyID.cult] * -0.4f  + support[Faction.IdeologyID.technocrat] * 0.5f  + support[Faction.IdeologyID.mercantile] * 0.4f  + support[Faction.IdeologyID.bureaucracy] * -0.3f + support[Faction.IdeologyID.liberal] * 1.0f + support[Faction.IdeologyID.nationalist] * -0.3f   + support[Faction.IdeologyID.aristocrat] * -0.1f + support[Faction.IdeologyID.imperialist] * -0.2f + support[Faction.IdeologyID.navigators] * 0.7f + support[Faction.IdeologyID.brotherhood] * 0.8f  + support[Faction.IdeologyID.transhumanist] * 0.8f);
+			effects.morale      = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * -0.2f + support[Faction.IdeologyID.mercantile] * -0.9f + support[Faction.IdeologyID.bureaucracy] * -0.2f + support[Faction.IdeologyID.liberal] * -1.0f + support[Faction.IdeologyID.nationalist] * 0.8f   + support[Faction.IdeologyID.aristocrat] * 0.5f + support[Faction.IdeologyID.imperialist] * 0.4f  + support[Faction.IdeologyID.navigators] * -0.2f + support[Faction.IdeologyID.brotherhood] * -0.1f + support[Faction.IdeologyID.transhumanist] * -1.0f);
+			effects.altruism    = (support[Faction.IdeologyID.cult] * 0.8f   + support[Faction.IdeologyID.technocrat] * 0.0f  + support[Faction.IdeologyID.mercantile] * -1.0f + support[Faction.IdeologyID.bureaucracy] * -0.6f + support[Faction.IdeologyID.liberal] * 1.0f + support[Faction.IdeologyID.nationalist] * 0.2f    + support[Faction.IdeologyID.aristocrat] * -0.4f + support[Faction.IdeologyID.imperialist] * 0.1f + support[Faction.IdeologyID.navigators] * -0.3f + support[Faction.IdeologyID.brotherhood] * 0.0f  + support[Faction.IdeologyID.transhumanist] * 0.0f);
+			effects.military    = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * 0.2f  + support[Faction.IdeologyID.mercantile] * -0.6f + support[Faction.IdeologyID.bureaucracy] * 0.0f + support[Faction.IdeologyID.liberal] * -1.0f + support[Faction.IdeologyID.nationalist] * 0.9f    + support[Faction.IdeologyID.aristocrat] * 0.7f + support[Faction.IdeologyID.imperialist] * 0.9f  + support[Faction.IdeologyID.navigators] * 0.2f  + support[Faction.IdeologyID.brotherhood] * 0.0f  + support[Faction.IdeologyID.transhumanist] * -0.6f);
 			
-			effects.holy        = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.2f + support[IdeologyID.mercantile] * -0.4f + support[IdeologyID.bureaucracy] * -0.1f + support[IdeologyID.liberal] * -0.6f + support[IdeologyID.nationalist] * 0.0f   + support[IdeologyID.aristocrat] * -0.3f + support[IdeologyID.imperialist] * 0.6f + support[IdeologyID.navigators] * 0.0f  + support[IdeologyID.brotherhood] * 0.1f  + support[IdeologyID.transhumanist] * -1.0f);
-			effects.psych       = (support[IdeologyID.cult] * -0.7f  + support[IdeologyID.technocrat] * -1.0f + support[IdeologyID.mercantile] * 0.2f  + support[IdeologyID.bureaucracy] * -0.2f + support[IdeologyID.liberal] * 0.4f + support[IdeologyID.nationalist] * -0.5f   + support[IdeologyID.aristocrat] * 0.3f + support[IdeologyID.imperialist] * 0.2f  + support[IdeologyID.navigators] * 1.0f  + support[IdeologyID.brotherhood] * 2.0f  + support[IdeologyID.transhumanist] * 0.6f);
-			effects.navigation  = (support[IdeologyID.cult] * -0.7f  + support[IdeologyID.technocrat] * 0.5f  + support[IdeologyID.mercantile] * 0.7f  + support[IdeologyID.bureaucracy] * -0.3f + support[IdeologyID.liberal] * 0.2f + support[IdeologyID.nationalist] * -1.0f   + support[IdeologyID.aristocrat] * 0.1f + support[IdeologyID.imperialist] * 0.1f  + support[IdeologyID.navigators] * 2.0f  + support[IdeologyID.brotherhood] * 1.0f  + support[IdeologyID.transhumanist] * 0.6f);
-			effects.purity      = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.5f + support[IdeologyID.mercantile] * -0.6f + support[IdeologyID.bureaucracy] * 0.1f + support[IdeologyID.liberal] * -0.6f + support[IdeologyID.nationalist] * 0.4f    + support[IdeologyID.aristocrat] * -0.3f + support[IdeologyID.imperialist] * 0.2f + support[IdeologyID.navigators] * -1.0f + support[IdeologyID.brotherhood] * -0.3f + support[IdeologyID.transhumanist] * -1.0f);
+			effects.holy        = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * -0.2f + support[Faction.IdeologyID.mercantile] * -0.4f + support[Faction.IdeologyID.bureaucracy] * -0.1f + support[Faction.IdeologyID.liberal] * -0.6f + support[Faction.IdeologyID.nationalist] * 0.0f   + support[Faction.IdeologyID.aristocrat] * -0.3f + support[Faction.IdeologyID.imperialist] * 0.6f + support[Faction.IdeologyID.navigators] * 0.0f  + support[Faction.IdeologyID.brotherhood] * 0.1f  + support[Faction.IdeologyID.transhumanist] * -1.0f);
+			effects.psych       = (support[Faction.IdeologyID.cult] * -0.7f  + support[Faction.IdeologyID.technocrat] * -1.0f + support[Faction.IdeologyID.mercantile] * 0.2f  + support[Faction.IdeologyID.bureaucracy] * -0.2f + support[Faction.IdeologyID.liberal] * 0.4f + support[Faction.IdeologyID.nationalist] * -0.5f   + support[Faction.IdeologyID.aristocrat] * 0.3f + support[Faction.IdeologyID.imperialist] * 0.2f  + support[Faction.IdeologyID.navigators] * 1.0f  + support[Faction.IdeologyID.brotherhood] * 2.0f  + support[Faction.IdeologyID.transhumanist] * 0.6f);
+			effects.navigation  = (support[Faction.IdeologyID.cult] * -0.7f  + support[Faction.IdeologyID.technocrat] * 0.5f  + support[Faction.IdeologyID.mercantile] * 0.7f  + support[Faction.IdeologyID.bureaucracy] * -0.3f + support[Faction.IdeologyID.liberal] * 0.2f + support[Faction.IdeologyID.nationalist] * -1.0f   + support[Faction.IdeologyID.aristocrat] * 0.1f + support[Faction.IdeologyID.imperialist] * 0.1f  + support[Faction.IdeologyID.navigators] * 2.0f  + support[Faction.IdeologyID.brotherhood] * 1.0f  + support[Faction.IdeologyID.transhumanist] * 0.6f);
+			effects.purity      = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * -0.5f + support[Faction.IdeologyID.mercantile] * -0.6f + support[Faction.IdeologyID.bureaucracy] * 0.1f + support[Faction.IdeologyID.liberal] * -0.6f + support[Faction.IdeologyID.nationalist] * 0.4f    + support[Faction.IdeologyID.aristocrat] * -0.3f + support[Faction.IdeologyID.imperialist] * 0.2f + support[Faction.IdeologyID.navigators] * -1.0f + support[Faction.IdeologyID.brotherhood] * -0.3f + support[Faction.IdeologyID.transhumanist] * -1.0f);
 			
-			effects.police      = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.2f + support[IdeologyID.mercantile] * -0.6f + support[IdeologyID.bureaucracy] * 0.4f + support[IdeologyID.liberal] * -1.0f + support[IdeologyID.nationalist] * 0.7f    + support[IdeologyID.aristocrat] * 0.8f + support[IdeologyID.imperialist] * 0.3f  + support[IdeologyID.navigators] * -0.2f + support[IdeologyID.brotherhood] * -0.4f + support[IdeologyID.transhumanist] * -2.0f);
-			effects.violent     = (support[IdeologyID.cult] * 1.0f   + support[IdeologyID.technocrat] * -0.2f + support[IdeologyID.mercantile] * -0.7f + support[IdeologyID.bureaucracy] * 0.0f + support[IdeologyID.liberal] * -1.0f + support[IdeologyID.nationalist] * 1.0f    + support[IdeologyID.aristocrat] * 0.6f + support[IdeologyID.imperialist] * 0.3f  + support[IdeologyID.navigators] * -0.5f + support[IdeologyID.brotherhood] * -0.6f + support[IdeologyID.transhumanist] * 0.2f);
-			effects.aristocracy = (support[IdeologyID.cult] * -0.3f  + support[IdeologyID.technocrat] * 0.1f  + support[IdeologyID.mercantile] * 1.0f  + support[IdeologyID.bureaucracy] * 0.3f + support[IdeologyID.liberal] * -0.7f + support[IdeologyID.nationalist] * -0.3f   + support[IdeologyID.aristocrat] * 1.0f + support[IdeologyID.imperialist] * 0.5f  + support[IdeologyID.navigators] * 1.0f  + support[IdeologyID.brotherhood] * 0.7f  + support[IdeologyID.transhumanist] * -1.0f);
-			effects.imperialism = (support[IdeologyID.cult] * 0.8f   + support[IdeologyID.technocrat] * -0.1f + support[IdeologyID.mercantile] * -0.2f + support[IdeologyID.bureaucracy] * 0.05f + support[IdeologyID.liberal] * -0.5f + support[IdeologyID.nationalist] * -1.0f + support[IdeologyID.aristocrat] * 0.5f + support[IdeologyID.imperialist] * 1.0f   + support[IdeologyID.navigators] * 0.1f  + support[IdeologyID.brotherhood] * 0.05f + support[IdeologyID.transhumanist] * -1.0f);
+			effects.police      = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * -0.2f + support[Faction.IdeologyID.mercantile] * -0.6f + support[Faction.IdeologyID.bureaucracy] * 0.4f + support[Faction.IdeologyID.liberal] * -1.0f + support[Faction.IdeologyID.nationalist] * 0.7f    + support[Faction.IdeologyID.aristocrat] * 0.8f + support[Faction.IdeologyID.imperialist] * 0.3f  + support[Faction.IdeologyID.navigators] * -0.2f + support[Faction.IdeologyID.brotherhood] * -0.4f + support[Faction.IdeologyID.transhumanist] * -2.0f);
+			effects.violent     = (support[Faction.IdeologyID.cult] * 1.0f   + support[Faction.IdeologyID.technocrat] * -0.2f + support[Faction.IdeologyID.mercantile] * -0.7f + support[Faction.IdeologyID.bureaucracy] * 0.0f + support[Faction.IdeologyID.liberal] * -1.0f + support[Faction.IdeologyID.nationalist] * 1.0f    + support[Faction.IdeologyID.aristocrat] * 0.6f + support[Faction.IdeologyID.imperialist] * 0.3f  + support[Faction.IdeologyID.navigators] * -0.5f + support[Faction.IdeologyID.brotherhood] * -0.6f + support[Faction.IdeologyID.transhumanist] * 0.2f);
+			effects.aristocracy = (support[Faction.IdeologyID.cult] * -0.3f  + support[Faction.IdeologyID.technocrat] * 0.1f  + support[Faction.IdeologyID.mercantile] * 1.0f  + support[Faction.IdeologyID.bureaucracy] * 0.3f + support[Faction.IdeologyID.liberal] * -0.7f + support[Faction.IdeologyID.nationalist] * -0.3f   + support[Faction.IdeologyID.aristocrat] * 1.0f + support[Faction.IdeologyID.imperialist] * 0.5f  + support[Faction.IdeologyID.navigators] * 1.0f  + support[Faction.IdeologyID.brotherhood] * 0.7f  + support[Faction.IdeologyID.transhumanist] * -1.0f);
+			effects.imperialism = (support[Faction.IdeologyID.cult] * 0.8f   + support[Faction.IdeologyID.technocrat] * -0.1f + support[Faction.IdeologyID.mercantile] * -0.2f + support[Faction.IdeologyID.bureaucracy] * 0.05f + support[Faction.IdeologyID.liberal] * -0.5f + support[Faction.IdeologyID.nationalist] * -1.0f + support[Faction.IdeologyID.aristocrat] * 0.5f + support[Faction.IdeologyID.imperialist] * 1.0f   + support[Faction.IdeologyID.navigators] * 0.1f  + support[Faction.IdeologyID.brotherhood] * 0.05f + support[Faction.IdeologyID.transhumanist] * -1.0f);
 			
             resourceMultiplier[Data.Resource.Type.Food] = effects.pgrowth + 1;
             resourceMultiplier[Data.Resource.Type.Mineral] = effects.industry + 1;
@@ -105,14 +81,121 @@ namespace Simulation
             resourceMultiplier[Data.Resource.Type.Industry] = effects.industry + 1;
             resourceMultiplier[Data.Resource.Type.Economy] = effects.economy + 1;
             resourceMultiplier[Data.Resource.Type.Military] = effects.military + 1;
-		}
+        }
+
+        public void updateLocationIdeology(Location location)
+        {
+            // load base ideology
+            foreach (Faction.IdeologyID ideology in Enum.GetValues(typeof(Faction.IdeologyID)))
+            {
+                support[ideology] = location.features.baseIdeology[ideology];
+            }
+
+            // load faction ideology
+            float totalCtrl = 0f;
+            Dictionary<Faction.IdeologyID, float> factionsIdeologies = getFactionsIdeologies();
+            foreach (KeyValuePair<Faction.IdeologyID, float> factionsIdeology in factionsIdeologies)
+            {
+                if (factionsIdeology.Value > 0f)
+                {
+                    totalCtrl += factionsIdeology.Value;
+                }
+            }
+            // split support into base support and faction support, then combine them
+            float totalIdeology = 0f;
+            if (totalCtrl > 0f)
+            {
+                foreach (Faction.IdeologyID ideology in Enum.GetValues(typeof(Faction.IdeologyID)))
+                {
+                    support[ideology] = support[ideology] * (1f - totalCtrl) + factionsIdeologies[ideology];
+                    totalIdeology += support[ideology];
+                }
+                if (totalIdeology <0.999f || totalIdeology > 1.001f) Debug.LogWarning("WARNING: base ideology total: " + totalIdeology + "@ "+location.id);
+            }
+        }
+
+        private Dictionary<Faction.IdeologyID, float> getFactionsIdeologies()
+        {
+            Dictionary<Faction.IdeologyID, float> factionsIdeology = new Dictionary<Faction.IdeologyID, float>();
+            foreach (Faction.IdeologyID ideology in Enum.GetValues(typeof(Faction.IdeologyID)))
+            {
+                factionsIdeology.Add(ideology, 0.0f); // = location.features.baseIdeology[ideology];
+            }
+            foreach (var faction in location.features.factionCtrl)
+            {
+                switch (faction.Key)
+                {
+                    case Faction.FactionID.noble1:
+                        {
+                            factionsIdeology[Faction.IdeologyID.aristocrat] += faction.Value * 0.5f;
+                            factionsIdeology[Faction.IdeologyID.nationalist] += faction.Value * 0.5f;
+                            break;
+                        }
+                    case Faction.FactionID.noble2:
+                        {
+                            factionsIdeology[Faction.IdeologyID.aristocrat] += faction.Value * 0.6f;
+                            factionsIdeology[Faction.IdeologyID.mercantile] += faction.Value * 0.4f;
+                            break;
+                        }
+                    case Faction.FactionID.noble3:
+                        {
+                            factionsIdeology[Faction.IdeologyID.imperialist] += faction.Value * 0.6f;
+                            factionsIdeology[Faction.IdeologyID.cult] += faction.Value * 0.2f;
+                            factionsIdeology[Faction.IdeologyID.aristocrat] += faction.Value * 0.2f;
+                            break;
+                        }
+                    case Faction.FactionID.noble4:
+                        {
+                            factionsIdeology[Faction.IdeologyID.aristocrat] += faction.Value * 0.5f;
+                            factionsIdeology[Faction.IdeologyID.liberal] += faction.Value * 0.3f;
+                            factionsIdeology[Faction.IdeologyID.navigators] += faction.Value * 0.1f;
+                            factionsIdeology[Faction.IdeologyID.brotherhood] += faction.Value * 0.1f;
+                            break;
+                        }
+                    case Faction.FactionID.guild1:
+                        {
+                            factionsIdeology[Faction.IdeologyID.transhumanist] += faction.Value * 0.5f;
+                            factionsIdeology[Faction.IdeologyID.mercantile] += faction.Value * 0.3f;
+                            factionsIdeology[Faction.IdeologyID.liberal] += faction.Value * 0.2f;
+                            break;
+                        }
+                    case Faction.FactionID.guild2:
+                        {
+                            factionsIdeology[Faction.IdeologyID.technocrat] += faction.Value * 0.4f;
+                            factionsIdeology[Faction.IdeologyID.bureaucracy] += faction.Value * 0.3f;
+                            factionsIdeology[Faction.IdeologyID.mercantile] += faction.Value * 0.2f;
+                            factionsIdeology[Faction.IdeologyID.aristocrat] += faction.Value * 0.1f;
+                            break;
+                        }
+                    case Faction.FactionID.guild3:
+                        {
+                            factionsIdeology[Faction.IdeologyID.mercantile] += faction.Value * 0.6f;
+                            factionsIdeology[Faction.IdeologyID.bureaucracy] += faction.Value * 0.3f;
+                            factionsIdeology[Faction.IdeologyID.navigators] += faction.Value * 0.1f;
+                            break;
+                        }
+                    case Faction.FactionID.church:
+                        {
+                            factionsIdeology[Faction.IdeologyID.cult] += faction.Value * 1.0f;
+                            break;
+                        }
+                    case Faction.FactionID.heretic:
+                        {
+                            factionsIdeology[Faction.IdeologyID.transhumanist] += faction.Value * 1.0f;
+                            break;
+                        }
+                }
+            }
+
+            return factionsIdeology;
+        }
 
         public string getGovernmentController()
         {
             string rv = "";
 
             KeyValuePair<Faction.FactionID, float> faction = getHighestFactionAndValue();
-            KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
+            KeyValuePair<Faction.IdeologyID, float> ideology = getHighestIdeologyAndValue();
 
             bool controlled = (faction.Value >= ideology.Value) ? true : false;
             Debug.Log("TODO");
@@ -121,7 +204,7 @@ namespace Simulation
         public string getRuler()
         {
             KeyValuePair<Faction.FactionID, float> faction = getHighestFactionAndValue();
-            KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
+            KeyValuePair<Faction.IdeologyID, float> ideology = getHighestIdeologyAndValue();
             
             bool controller = (faction.Value >= ideology.Value) ? true : false;
 
@@ -141,17 +224,17 @@ namespace Simulation
                 // Governer
                 rv += Faction.getTitle(ideology.Key, Simulation.Parameters.getGovernmentStr(location));
                 rv += " of the ";
-                // Guild of Merchants
-                rv += getPartyName(ideology.Key);
+                // eg. 'Guild of Merchants'
+                rv += Faction.getPartyName(ideology.Key);
             }
 
-            Debug.Log (location.id+" ruler: "+rv+ " ("+location.name+")");
+            //Debug.Log (location.id+" ruler: "+rv+ " ("+location.name+")");
             return rv;
         }
         public string getGovernmentType()
         {
             KeyValuePair<Faction.FactionID, float> faction = getHighestFactionAndValue();
-            KeyValuePair<IdeologyID, float> ideology = getHighestIdeologyAndValue();
+            KeyValuePair<Faction.IdeologyID, float> ideology = getHighestIdeologyAndValue();
 
             bool controlled = (faction.Value >= ideology.Value) ? true : false;
 
@@ -160,9 +243,9 @@ namespace Simulation
                 Faction.getGovernmentType(ideology.Key);
         }
 
-        public KeyValuePair<IdeologyID, float> getHighestIdeologyAndValue()
+        public KeyValuePair<Faction.IdeologyID, float> getHighestIdeologyAndValue()
         {
-            KeyValuePair<IdeologyID, float> highest = new KeyValuePair<IdeologyID, float>();
+            KeyValuePair<Faction.IdeologyID, float> highest = new KeyValuePair<Faction.IdeologyID, float>();
             float highestValue = 0.0f;
 
             foreach (var pair in support)
@@ -175,7 +258,7 @@ namespace Simulation
             }
             return highest;
         }
-        private KeyValuePair<Faction.FactionID, float> getHighestFactionAndValue()
+        public KeyValuePair<Faction.FactionID, float> getHighestFactionAndValue()
         {
             KeyValuePair<Faction.FactionID, float> highest = new KeyValuePair<Faction.FactionID, float>();
             float highestValue = 0.0f;
@@ -190,11 +273,25 @@ namespace Simulation
             }
             return highest;
         }
+        public Faction.IdeologyID getRandomIdeology()
+        {
+            float roll = UnityEngine.Random.value;
+            float accumulator = 0f;
+
+            foreach (var pair in support)
+            {
+                accumulator += pair.Value;
+                //Debug.Log(pair.Key.ToString() + ": " + pair.Value + " (total: " + accumulator + ")");
+                if (roll < accumulator) return pair.Key;
+            }
+            Debug.Log("ERROR: no ideology returned! (accumulated: "+accumulator+" roll: "+roll+")");
+            return Faction.IdeologyID.imperialist;
+        }
 		
 		public string toDebugString()
 		{
 			string rv = "";
-            foreach (IdeologyID ideology in Enum.GetValues(typeof(IdeologyID)))
+            foreach (Faction.IdeologyID ideology in Enum.GetValues(typeof(Faction.IdeologyID)))
 			{
 				rv = rv + ideology + ": " + support[ideology].ToString() + "\n";
 			}

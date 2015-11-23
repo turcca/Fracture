@@ -49,6 +49,7 @@ public class PlayerShipMover : MonoBehaviour
 
     public void setTarget(Vector3 pos)
     {
-        target = pos;
+        //target = pos;
+        target = new Vector3(pos.x, 0f, pos.z);
     }
 }

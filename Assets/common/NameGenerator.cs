@@ -39,54 +39,54 @@ static public class NameGenerator
     }
 
     // ideology naming breakdown
-    public static string getName(Simulation.LocationIdeology.IdeologyID ideologyId)
+    public static string getName(Faction.IdeologyID ideologyId)
     {
         if (latin.Length == 0) { Debug.LogWarning("not formatting NameGenerator lists"); initNameLists(); }
 
         string[] list;
         int i = Random.Range(0, 99);
 
-        if (ideologyId == Simulation.LocationIdeology.IdeologyID.cult)
+        if (ideologyId == Faction.IdeologyID.cult)
         {
             list = (i < 20) ? spanish : (i < 50) ? italian : (i < 55) ? oldenglish : (i < 70) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.technocrat)
+        else if (ideologyId == Faction.IdeologyID.technocrat)
         {
             list = (i < 50) ? spanish : (i < 80) ? italian : (i < 90) ? oldenglish : (i < 97) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.mercantile)
+        else if (ideologyId == Faction.IdeologyID.mercantile)
         {
             list = (i < 20) ? spanish : (i < 60) ? italian : (i < 75) ? oldenglish : (i < 90) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.bureaucracy)
+        else if (ideologyId == Faction.IdeologyID.bureaucracy)
         {
             list = (i < 30) ? spanish : (i < 60) ? italian : (i < 80) ? oldenglish : (i < 90) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.liberal)
+        else if (ideologyId == Faction.IdeologyID.liberal)
         {
             list = (i < 40) ? spanish : (i < 70) ? italian : (i < 90) ? oldenglish : (i < 95) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.nationalist)
+        else if (ideologyId == Faction.IdeologyID.nationalist)
         {
             list = (i < 60) ? spanish : (i < 86) ? italian : (i < 97) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.aristocrat)
+        else if (ideologyId == Faction.IdeologyID.aristocrat)
         {
             list = (i < 20) ? italian : (i < 25) ? oldenglish : (i < 50) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.imperialist)
+        else if (ideologyId == Faction.IdeologyID.imperialist)
         {
             list = (i < 10) ? spanish : (i < 70) ? italian : (i < 75) ? oldenglish : (i < 85) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.navigators)
+        else if (ideologyId == Faction.IdeologyID.navigators)
         {
             list = (i < 10) ? spanish : (i < 30) ? italian : (i < 40) ? oldenglish : (i < 80) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.brotherhood)
+        else if (ideologyId == Faction.IdeologyID.brotherhood)
         {
             list = (i < 20) ? spanish : (i < 40) ? italian : (i < 50) ? oldenglish : (i < 70) ? greek : latin;
         }
-        else if (ideologyId == Simulation.LocationIdeology.IdeologyID.transhumanist)
+        else if (ideologyId == Faction.IdeologyID.transhumanist)
         {
             list = (i < 50) ? spanish : (i < 90) ? italian : (i < 93) ? greek : latin;
         }

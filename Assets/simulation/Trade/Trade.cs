@@ -343,6 +343,71 @@ namespace Simulation
             return items[UnityEngine.Random.Range (0, items.Length-1)];
         }
 
+        public static string getCommodityDescription(KeyValuePair<Data.Resource.Type, float> item, bool lowerCase = true)
+        {
+            string rv = "";
+
+            if (item.Key == Data.Resource.Type.Food)
+            {
+                rv += "Food items";
+            }
+            else if (item.Key == Data.Resource.Type.Mineral)
+            {
+                rv += "Materials";
+            }
+            else if (item.Key == Data.Resource.Type.Industry)
+            {
+                rv += "Industrial machinery";
+            }
+            else if (item.Key == Data.Resource.Type.Economy)
+            {
+                rv += "Foreign ivestments";
+            }
+            else if (item.Key == Data.Resource.Type.Innovation)
+            {
+                rv += "Innovation assets";
+            }
+            else if (item.Key == Data.Resource.Type.Culture)
+            {
+                rv += "Consumer goods";
+            }
+            else if (item.Key == Data.Resource.Type.Military)
+            {
+                rv += "Weapons";
+            }
+            else if (item.Key == Data.Resource.Type.BlackMarket)
+            {
+                rv += "Black market goods";
+            }
+            if (!lowerCase) return rv;
+            else return rv.ToLower();
+        }
+        public static Color32 getTypeColor(Data.Resource.Type type)
+        {
+            switch (type)
+            {
+                case Data.Resource.Type.Food:
+                    return new Color32(28, 162, 50, 50); // green
+                case Data.Resource.Type.Mineral:
+                    return new Color32(133, 73, 0, 32); // brown
+                case Data.Resource.Type.Industry:
+                    return new Color32(146, 88, 141, 30); // cold grey, purplish
+                case Data.Resource.Type.Economy:
+                    return new Color32(255, 242, 0, 24); // yellow
+                case Data.Resource.Type.Innovation:
+                    return new Color32(0, 152, 255, 16); // blue
+                case Data.Resource.Type.Culture:
+                    return new Color32(255, 109, 0, 40); // orange
+                case Data.Resource.Type.Military:
+                    return new Color32(255, 0, 0, 30); // red
+                case Data.Resource.Type.BlackMarket:
+                    return new Color32(0, 0, 0, 20); // black
+
+                default:
+                    return new Color32(0, 0, 0, 0);
+            }
+        }
+
         public static float getCommodityValue(Data.Resource.SubType resourceType)
         {
             switch (resourceType)
@@ -434,15 +499,16 @@ namespace Simulation
 
             if (item.isExported)
             {
+                // export
                 mul = 1.0f - (item.weight/20.0f); //1.0f/ (item.weight+0.1f);
             }
             else
             {
-                if (item.weight == 0.0f) mul = 3.0f; 
-                else if (item.weight < 1.0f) mul = 1.1f;
+                // import
+                if (item.weight == 0.0f) mul = 1.0f; // probably upgrading resource - don't over-buy
+                else if (item.weight < 1.0f) mul = 1.1f; // less interest in importing
                 else mul = item.weight;
             }
-
             return Mathf.Round(mul *100.0f)/100.0f;
         }
     }

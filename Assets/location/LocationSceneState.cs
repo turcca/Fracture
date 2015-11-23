@@ -21,22 +21,22 @@ public class LocationSceneState : MonoBehaviour
             trackedLocation = "test";
         }
 
-        try
-        {
-            //Application.LoadLevelAdditive(trackedLocation);
-            Application.LoadLevelAdditive("default");
-        }
-        catch
-        {
-            Application.LoadLevelAdditive("default");
-        }
+        //try
+        //{
+        //    //Application.LoadLevelAdditive(trackedLocation);
+        //    Application.LoadLevelAdditive("default");
+        //}
+        //catch
+        //{
+        //    Application.LoadLevelAdditive("default");
+        //}
 
         //Application.LoadLevelAdditive("uiScene");
     }
 
     void Start()
     {
-        Application.LoadLevelAdditive("generalUIScene");
+        //Application.LoadLevelAdditive("generalUIScene");
         // deactivate scene camera to use loaded levels main camera
         GameObject.Find("LocationCamera").GetComponent<Camera>().enabled = false;
 

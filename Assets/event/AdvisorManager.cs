@@ -8,9 +8,24 @@ public class AdvisorManager : MonoBehaviour
     public List<EventAdvisor> advisors;
 
     private Character.Job lastSelectedJob;
+    private bool showStatsNext = false;
 
-    void Start()
+    public void setup()
     {
+        // link characters to event edvisors
+        foreach (Character character in Root.game.player.getCharacters())
+        {
+            foreach (EventAdvisor advisor in advisors)
+            {
+                if (advisor.advisorJob == character.assignment)
+                {
+                    advisor.setCharacter(character);
+                    advisor.setup();
+                    break;
+                }
+            }
+        }
+        // todo: remove non-assigned advisors? Or populate EventAdvisors through other means than prefab?
     }
 
     public void advisorSelected(GameObject advisorNode)
@@ -19,6 +34,7 @@ public class AdvisorManager : MonoBehaviour
 
         string advice = "";
 
+        // on Events
         if (GameState.isState(GameState.State.Event))
         {
             if (eventUI == null) eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
@@ -26,41 +42,59 @@ public class AdvisorManager : MonoBehaviour
             {
                 advice = eventUI.setAdvisor(job);
             }
-            else Debug.LogWarning ("event state couldn't locate EventUI -script in SideWindow");
+            else Debug.LogWarning ("event state couldn't locate EventUI -script in 'SideWindow'");
         }
+        // on Locations
         else if (GameState.isState(GameState.State.Location))
         {
-            //advice = currentEvent.getAdvice(job).text
-            advice = GameObject.Find("MainContent").GetComponent<EventUI>().setAdvisor(job);
-            //Debug.Log ("advice: "+advice);
+            if (eventUI == null) eventUI = GameObject.Find("MainContent").GetComponent<EventUI>();
+                        if (eventUI != null)
+            {
+                advice = eventUI.setAdvisor(job);
+            }
+            else Debug.LogWarning ("Location state couldn't locate EventUI -script in 'MainContent'");
         }
         else
         {
-            Debug.Log ("GameState.getState() = "+GameState.getState().ToString() );
-            ///@todo get some advice for different situations
+            Debug.Log ("GameState.getState() = "+GameState.getState().ToString() +"[TODO advice]");
+            ///@todo get some advice for different situations. Combat?
             advice = "Some general advice.";
         }
 
+        // show advice
         foreach (EventAdvisor advisor in advisors)
         {
-            if (advisor.advisorJob == job && job != lastSelectedJob)
+            // handle the clicked character
+            if (advisor.advisorJob == job)
             {
-                advisor.showAdvice(advice);
+                // new click, load advice
+                if (job != lastSelectedJob)
+                {
+                    advisor.showAdvice(advice);
+                    showStatsNext = true;
+                }
+                // click on same advisor, load stats/advice
+                else
+                {
+                    if (showStatsNext)
+                    {
+                        advisor.showStats();
+                        showStatsNext = false;
+                    }
+                    else
+                    {
+                        advisor.showAdvice(advice);
+                        showStatsNext = true;
+                    }
+                }
             }
+            // handle all not-clicked characters
             else
             {
                 advisor.hideAdvice();
             }
         }
-
-        if (lastSelectedJob == job)
-        {
-            lastSelectedJob = Character.Job.none;
-        }
-        else
-        {
-            lastSelectedJob = job;
-        }
+        lastSelectedJob = job;
     }
 
     internal void hideAdvices()

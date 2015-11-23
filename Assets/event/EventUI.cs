@@ -167,17 +167,17 @@ public class EventUI : MonoBehaviour
         // event
         else if (eventSideWindow && eventSideWindow.activeSelf)
         {
-            //Debug.Log("setupAdvisorManager / event");
+            //Debug.Log("setup AdvisorManager / event");
             am = eventSideWindow.GetComponentInChildren<AdvisorManager>();
-            if (am) am.refreshAdvisors();
+            if (am) am.setup();
             else Debug.LogError("ERROR: event AdvisorManager not found.");
         }
         // location
         else if (locationCanvas && locationCanvas.activeSelf)
         {
-            //Debug.Log("setupAdvisorManager / location");
+            //Debug.Log("setup AdvisorManager / location");
             am = locationCanvas.GetComponentInChildren<AdvisorManager>();
-            if (am) am.refreshAdvisors();
+            if (am) am.setup();
             else Debug.LogError("ERROR: location AdvisorManager not found.");
         }
         else

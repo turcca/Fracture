@@ -6,7 +6,7 @@ namespace Simulation
 {
     public static class Parameters
     {
-        public static float playerResourceInfluenceNormalizationPerDay = 5.0f;
+        public static float playerResourceInfluenceNormalizationPerDay = 5.0f; // how quickly player's purchases/sells are absorbed in resource pools
         public static float resourcePolicyStockpileDays = 5.0f;
         public static float resourceProducedDaily = 0.051f;
         public static float gameSpeed = 0.5f;
@@ -46,7 +46,7 @@ namespace Simulation
 
         public static int getGovernmentStr(Location location)
         {
-            Debug.Log (location.name+" STR: "+(int)getImportance(location));
+            //Debug.Log (location.name+" STR: "+(int)getImportance(location));
             //return (int)Mathf.Clamp (getImportance(location) / 4.0f, 
             //                    1, getImportance(location) / 4.0f);
             return (int)getImportance(location);
@@ -55,17 +55,7 @@ namespace Simulation
 
         public static float getImportance(Location location)
         {
-            //float populationFactor = (float)Math.Pow(info.population, 0.17);
-            //float orbitalFactor = info.orbitalInfra * 3;
-            //float infraFactor = info.infrastructure * (ideology.effects.pgrowth / 2 + ideology.effects.industry / 2 + 1) + 0.5f;
-            //float economyFactor = ideology.effects.economy + 1;
-            //float militaryFactor = ideology.effects.military + 1;
-            //float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
-            
-            //return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
-
             float importance = Mathf.Sqrt(populationScaleMultiplier(location.features.population))  /20.0f + 1.0f;
-
 
             importance *= 1.0f + (float)(location.economy.technologies[Data.Tech.Type.Infrastructure].level +
                                   location.economy.technologies[Data.Tech.Type.Military].level +

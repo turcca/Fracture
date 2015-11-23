@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class MarketPage : MonoBehaviour
 {
     public LocationSceneState state;
-    public GameObject grid;
+    public GridLayoutGroup grid;
 
     public Text marketDescription;
 
@@ -16,6 +16,7 @@ public class MarketPage : MonoBehaviour
     public List<Data.TradeItem> playerTradeList = new List<Data.TradeItem>();
     public List<Data.TradeItem> locationTradeList = new List<Data.TradeItem>();
 
+    private List<MarketCommodity> marketCommodities = new List<MarketCommodity>();
 
     void Start()
     {
@@ -31,25 +32,70 @@ public class MarketPage : MonoBehaviour
 
     private void populateCommodities()
     {
+        bool showAllItems = false;
         int order = 0;
         //foreach (KeyValuePair<string, CommodityInfo> entry in Economy.commodityInfo)
-        grid.transform.DetachChildren();
+        marketCommodities.Clear();
+        grid.gameObject.transform.DetachChildren();
         foreach(Data.TradeItem item in locationTradeList)
         {
-            if (item.amount > 0f || Root.game.player.cargo.cargoAmount(item.subType) > 0)
+            if (showAllItems || item.amount > 0f || Root.game.player.cargo.cargoAmount(item.subType) > 0f)
             {
                 // add commodity ui gameobjects
                 GameObject commodityPrefab = Resources.Load<GameObject>("location/ui/CommodityMarketItem");
                 GameObject commodity = (GameObject)GameObject.Instantiate(commodityPrefab);
-                commodity.GetComponent<MarketCommodity>().trackLocation(state, item.subType, this);
+                MarketCommodity marketCommodity = commodity.GetComponent<MarketCommodity>();
+                marketCommodity.trackLocation(state, item.subType, this);
+                // add marketCommodity to list
+                marketCommodities.Add(marketCommodity);
                 commodity.name = order.ToString() + "_commodity";
-                commodity.transform.SetParent(grid.transform);
+                commodity.transform.SetParent(grid.gameObject.transform);
                 ++order;
+
+                // base colour
+                marketCommodity.baseColor.color = (Color)Simulation.Trade.getTypeColor(Data.Resource.getTypeOfSubType(marketCommodity.trackedCommodity));
+
+                // name
+                marketCommodity.commodityName.text = Simulation.Trade.getCommodityName(marketCommodity.trackedCommodity); //Enum.GetName(typeof(Data.Resource.SubType), trackedCommodity);
+                marketCommodity.commodityName.gameObject.GetComponent<ToolTipScript>().toolTip = Simulation.Trade.getCommodityDescription(marketCommodity.trackedCommodity);
+
+                // price
+                marketCommodity.priceMul = Simulation.Trade.calculateItemPriceMultiplier(marketCommodity.locationItem);
+                float value = Simulation.Trade.getCommodityValue(marketCommodity.locationItem.subType);
+                // rounded multiplier calculators
+                marketCommodity.calculatedValue = Mathf.Round(marketCommodity.priceMul * value);
+                marketCommodity.priceMul = Mathf.Round(marketCommodity.calculatedValue / value * 100.0f) / 100.0f;
+                marketCommodity.price.gameObject.GetComponent<ToolTipScript>().toolTip = "Item price at " + (marketCommodity.priceMul * 100).ToString() + "%"; // price tooltip
+                // price percentage ('priceMultiplier')
+
+                // Price multiplier - text
+                //priceMultiplier.text = (priceMul != 1) ? "Item price at "+(priceMul * 100).ToString() + "%" : "";
+                marketCommodity.priceMultiplier.text = Simulation.Trade.getCommodityItem(item.subType);
+
+                marketCommodity.price.text = marketCommodity.calculatedValue.ToString();
+                if (marketCommodity.priceMul != 1f)  // if price deviates from the norm
+                {
+                    marketCommodity.price.text += (marketCommodity.priceMul > 1f) ? "<color=#776666> (+" : "<color=#667766>  (";
+                    marketCommodity.price.text += Mathf.Round(marketCommodity.calculatedValue - Simulation.Trade.getCommodityValue(marketCommodity.trackedCommodity)).ToString() + ")</color>";
+                }
+                // location price color: red importing, green exporting
+                if (marketCommodity.locationItem.isExported) marketCommodity.price.color = new Color(Mathf.Max(0, 0.8f - (marketCommodity.priceMul - 1f) / 3f), 1.0f, Mathf.Max(0, 0.9f - (marketCommodity.priceMul - 1f) / 3f));
+                else marketCommodity.price.color = new Color(0.9f, 0.9f / marketCommodity.priceMul, 0.8f / marketCommodity.priceMul);
             }
         }
         if (order == 0)
         {
             Debug.Log("todo: 0 trade items");
+        }
+        // adjust commodity item grid density
+        grid.spacing = (marketCommodities.Count <= 15) ? new Vector2(48, 2) : new Vector2(48, Mathf.Clamp((int)((16 - marketCommodities.Count)*1.5f), -4, 2));
+        grid.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (order * grid.cellSize.y + (order-1) * grid.spacing.y));
+    }
+    public void updateCommodityInfos()
+    {
+        foreach (var commodity in marketCommodities)
+        {
+            commodity.updateCommodityInfo();
         }
     }
 
@@ -57,7 +103,11 @@ public class MarketPage : MonoBehaviour
     {
         if (playerCargo != null)
         {
-            playerCargo.text = "Cargo: "+Root.game.player.cargo.getUsedCargoSpace()+" / "+Root.game.player.cargo.maxCargoSpace;
+            playerCargo.text = "Cargo: ";
+            playerCargo.text += Root.game.player.cargo.hasFreeCargoSpace() ? "" : "<color=#FF6070>"; // cargo full = red text
+            playerCargo.text += Root.game.player.cargo.getUsedCargoSpace();
+            playerCargo.text += Root.game.player.cargo.hasFreeCargoSpace() ? "" : "</color>"; // /cargo full
+            playerCargo.text += " / " +Root.game.player.cargo.maxCargoSpace;
         }
         else Debug.LogError ("ERROR: playerCargo not set in Editor");
     }
@@ -249,7 +299,7 @@ public class MarketPage : MonoBehaviour
             int n = 1;
             foreach (KeyValuePair<Data.Resource.Type, float> item in covetedItems)
             {
-                rv += getCommodityDescription(item, false);
+                rv += Simulation.Trade.getCommodityDescription(item, false);
                 if (count > 1)
                 {
                     if (n < count - 1) rv += ", ";
@@ -267,7 +317,7 @@ public class MarketPage : MonoBehaviour
             int n = 1;
             foreach (KeyValuePair<Data.Resource.Type, float> item in abundantItems)
             {
-                rv += getCommodityDescription(item, false);
+                rv += Simulation.Trade.getCommodityDescription(item, false);
                 if (count > 1)
                 {
                     if (n < count - 1) rv += ", ";
@@ -337,43 +387,5 @@ public class MarketPage : MonoBehaviour
         if (returnCaps) return rv;
         else return rv.ToLower();
     }
-    string getCommodityDescription(KeyValuePair<Data.Resource.Type, float> item, bool lowerCase = true)
-    {
-        string rv = "";
-
-        if (item.Key == Data.Resource.Type.Food)
-        {
-            rv += "Food items";
-        }
-        else if (item.Key == Data.Resource.Type.Mineral)
-        {
-            rv += "Materials";
-        }
-        else if (item.Key == Data.Resource.Type.Industry)
-        {
-            rv += "Industrial machinery";
-        }
-        else if (item.Key == Data.Resource.Type.Economy)
-        {
-            rv += "Foreign ivestments";
-        }
-        else if (item.Key == Data.Resource.Type.Innovation)
-        {
-            rv += "Innovation assets";
-        }
-        else if (item.Key == Data.Resource.Type.Culture)
-        {
-            rv += "Consumer goods";
-        }
-        else if (item.Key == Data.Resource.Type.Military)
-        {
-            rv += "Weapons";
-        }
-        else if (item.Key == Data.Resource.Type.BlackMarket)
-        {
-            rv += "Black market goods";
-        }
-        if (!lowerCase) return rv;
-        else return rv.ToLower();
-    }
+    
 }
