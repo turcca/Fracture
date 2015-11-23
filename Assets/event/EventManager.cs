@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class EventManager
 {
+    EventUI eventUI;
+
     public delegate void AllDoneDelegate();
 
     private AllDoneDelegate allDoneCallback;
@@ -14,6 +16,7 @@ public class EventManager
 
     private float daysSinceLastEvent = 0;
     private float eventInterval = 13.0f;
+    private float starmapEventBuffer = 0f;
     private float timePow = 2.0f;
 
     //List<KeyValuePair<int, EventBase>> eventQueue;
@@ -23,14 +26,24 @@ public class EventManager
         //System.Activator.CreateInstance(System.Type.GetType("Event_1"));
     }
 
+    public void createAllEvents()
+    {
+        for (int i = 1; System.Type.GetType("Event_" + i) != null; ++i)
+        {
+            System.Activator.CreateInstance(System.Type.GetType("Event_" + i));
+        }
+    }
+
     public void addEventToPool(EventBase e)
     {
         if (!e.locationEvent)
         {
+            //Debug.Log("Adding event (pool): " + e.name);
             eventPool.Add(e);
         }
         else
         {
+            //Debug.Log("Adding event (trigger pool): " + e.name);
             triggerEventPool.Add(e);
         }
     }
@@ -38,26 +51,71 @@ public class EventManager
     public void tick(float days)
     {
         daysSinceLastEvent += days;
+        starmapEventBuffer += days;
     }
 
-    public void queryStarmapEvents()
+    public void loadLocationAdvice()
     {
-        float d = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
-        float probability = d * 1.0f; // todo other mods
-
-        float roll = Random.value;
-
-        if (roll < probability)
+        eventUI = GameObject.Find("MainContent").GetComponent<EventUI>();
+        if (eventUI == null)
         {
-            handleEvent(pickEvent());
+            Debug.LogWarning ("location advice eventUI not found, it's supposed to be on 'MainContent', contrary to actual events"); 
+            return;
         }
+
+        string eventName = "loc_advice_"+Root.game.player.getLocationId().ToUpper();
+        //Debug.Log ("eventPool size: "+eventPool.Count+ "    triggerEventPool size: "+triggerEventPool.Count);
+
+        foreach (EventBase e in eventPool)
+        {
+            if (e.name == eventName)
+            {
+                eventUI.loadLocationAdviceEvent(e);
+                return;
+            }
+        }
+
+        Debug.Log ("TODO: location has no advice-event: '"+eventName+"'");
+
+        foreach (EventBase e in eventPool)
+        {
+            if (e.name == "loc_advice")
+            {
+                eventUI.loadLocationAdviceEvent(e);
+            }
+        } 
     }
 
-    public void queryLocationEvents(AllDoneDelegate callback)
+
+    public EventBase queryStarmapEvents()
     {
-        allDoneCallback = callback;
+        if (starmapEventBuffer >= 0.25f)
+        {
+            starmapEventBuffer -= 0.25f;
+
+            if (GameState.isState(GameState.State.Starmap))
+            {
+                float probability = Mathf.Pow(daysSinceLastEvent / (eventInterval*1.35f), timePow) / (eventInterval*1.35f);
+                //float probability = d * 1.0f; // todo other mods
+                                              //Debug.Log("event prob = " + probability);
+
+                float roll = Random.value;
+
+                if (roll < probability)
+                {
+                    return pickEvent();
+                }
+            }
+        }
+        return null;
+    }
+
+    public void queryLocationEvents(string locationId, AllDoneDelegate callback)
+    {
         //@note test location events
-        handleEvent(pickEvent());
+        Debug.Log ("todo: load location events");
+
+        handleEvent(pickEvent(), callback);
         //handleEvent(null);
     }
 
@@ -70,7 +128,7 @@ public class EventManager
         {
             if (e.name == eventName)
             {
-                handleEvent(e);
+                handleEvent(e, callback);
                 eventFound = true;
                 break;
             }
@@ -84,50 +142,102 @@ public class EventManager
 
     public EventBase pickEvent()
     {
-
         List<EventBase> availableEvents = new List<EventBase>();
         float combinedProbability = 0.0f;
 
         foreach (EventBase e in eventPool)
         {
-            if (e.available)
+            if (e.available &&
+                !e.hasFilter("LOC_advice") 
+                && !e.hasFilter("contact_factions") 
+                && !e.hasFilter("intro")
+                )
             {
                 Character character = e.getEventCharacter();
                 string location = e.getEventLocationID();
 
                 if ((character == null || character.isActive) &&
-                    ((e.locationRequired && location != null) || (!e.locationRequired)))
+                    ((e.locationRequired && location != null) || (!e.locationRequired)) &&
+                    (e.calculateProbability() > 0.0f)
+                    )
                 {
                     availableEvents.Add(e);
                     e.initPre();
-                    combinedProbability += e.calculateProbability();
+                    combinedProbability += e.lastProbability;
                 }
             }
-
-            if (availableEvents.Count == 0)
-            {
-                Debug.Log("zero events picked!");
-            }
-
-            foreach (EventBase availableEvent in availableEvents)
-            {
-                
-            }
-            // do stuff
+        }
+        if (availableEvents.Count == 0)
+        {
+            Debug.Log("zero events picked!");
         }
 
-        // todo
-		return new Event_4();
+        else
+        {
+            // Influence pool weights by event frequencies
+            // only if more than one event picked
+            int count = availableEvents.Count;
+            if (count > 1) {
+                float rareCap     = combinedProbability * 0.25f;
+                float elevatedMin = combinedProbability * 0.25f;
+                float probableMin = combinedProbability * 0.55f;
+                // go through available events
+                for (int i = 0; i < count; i++) {
+                    // see if special frequency
+                    if (availableEvents[i].getFrequency() != EventBase.freq.Default) {
+                        // if Rare
+                        if (availableEvents[i].getFrequency() == EventBase.freq.Rare) {
+                            // if adjustment is needed
+                            if (availableEvents[i].lastProbability > rareCap) {
+                                combinedProbability = combinedProbability - availableEvents[i].lastProbability + rareCap;
+                                availableEvents[i].lastProbability = rareCap;
+                            }
+                        }
+                        // if Elevated
+                        else if (availableEvents[i].getFrequency() == EventBase.freq.Elevated) {
+                            // if adjustment is needed
+                            if (availableEvents[i].lastProbability < elevatedMin) {
+                                combinedProbability = combinedProbability - availableEvents[i].lastProbability + elevatedMin;
+                                availableEvents[i].lastProbability = elevatedMin;
+                            }
+                        }
+                        // if Probable
+                        else if (availableEvents[i].getFrequency() == EventBase.freq.Probable) {
+                            // if adjustment is needed
+                            if (availableEvents[i].lastProbability < probableMin) {
+                                combinedProbability = combinedProbability - availableEvents[i].lastProbability + probableMin;
+                                availableEvents[i].lastProbability = probableMin;
+                            }
+                        }
+                    }
+                }
+            }
+            // random picking process
+            float roll = Random.value * combinedProbability;
+            combinedProbability = 0.0f;
+            foreach (EventBase availableEvent in availableEvents)
+            {
+                combinedProbability += availableEvent.lastProbability;
+                if (roll < combinedProbability)
+                {
+                    daysSinceLastEvent = 0;
+                    return availableEvent;
+                }
+            }
+        }
+        return null;
     }
 
-    public void handleEvent(EventBase e)
+    public void handleEvent(EventBase e, AllDoneDelegate callback)
     {
+        Debug.Log ("handing event: "+ e.name+" (available "+e.available+")");
+        allDoneCallback = callback;
         if (e == null)
         {
             eventDone();
         }
 
-        EventUI eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
+        if (eventUI == null) eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
         eventUI.setEvent(e, new EventUI.EventDoneDelegate(eventDone));
     }
 
@@ -141,9 +251,13 @@ public class EventManager
         }
     }
 
-    internal void startRandomStarMapEvent(AllDoneDelegate callback)
+    public EventBase getEventByName (string name)
     {
-        allDoneCallback = callback;
-        handleEvent(pickEvent());
+        foreach (EventBase e in eventPool)
+        {
+            if (e.name == name) return e;
+        }
+        Debug.LogError ("getEvent: event not found: '"+name+"'"); 
+        return null;
     }
 }

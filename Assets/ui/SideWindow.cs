@@ -14,24 +14,37 @@ public class SideWindow : MonoBehaviour
 
     void Awake()
     {
-        animator = gameObject.GetComponent<Animator>();
+        //animator = gameObject.GetComponent<Animator>();
+		hide();
     }
     public void showEvent()
     {
-        animator.SetInteger("State", (int)State.Event);
-    }
+        //animator.SetInteger("State", (int)State.Event);
+        if (gameObject != null)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        }
+	}
     public void showAdvisors()
     {
-        animator.SetInteger("State", (int)State.Advisor);
+        //animator.SetInteger("State", (int)State.Advisor);
     }
     public void hide()
     {
-        animator.SetInteger("State", (int)State.Hidden);
+		gameObject.transform.GetChild(0).gameObject.SetActive(false);
+		//animator.SetInteger("State", (int)State.Hidden);
         //AdvisorManager.get().hideAdvices();
     }
 
     public static SideWindow get()
     {
-        return GameObject.Find("SideWindow").GetComponent<SideWindow>();
+        GameObject sideObj = GameObject.Find("SideWindow");
+        SideWindow side = null;
+        if (sideObj)
+        {
+            side = sideObj.GetComponent<SideWindow>();
+            if (side == null) Debug.LogError("ERROR: SideWindow was not found");
+        }
+        return side;
     }
 }

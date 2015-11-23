@@ -88,11 +88,11 @@ public static class DataParser
                     break;
 
                     // tech levels
-                case 35: data.techLevel = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 35: data.startingTechLevel = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 36: data.infrastructure = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 36: data.startingInfrastructure = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
-                case 37: data.militaryTechLevel = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                case 37: data.startingMilitaryTechLevel = int.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                     break;
 
                 case 38: data.population =  float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);

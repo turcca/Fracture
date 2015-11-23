@@ -20,6 +20,7 @@ public class EventGenerator
         }
         sr.Close();
 
+        writeLine ("// Events.cs compiled: "+System.DateTime.Now.ToString("HH:mm:ss")+" "+System.DateTime.Now.ToString("dd/MM/yyyy"));
         writeLine("#pragma warning disable 0162, 1717");
         writeLine("using System;");
 
@@ -40,7 +41,7 @@ public class EventGenerator
     void readEvent(string data)
     {
         numEvents++;
-        string name = getNextString(data);
+        string name = getEventName(data);
         writeLine("//---------------------------------------------------------------------------------");
         writeLine("//------------------------------------------------------- EVENT " + numEvents);
         writeLine("//---------------------------------------------------------------------------------");
@@ -53,6 +54,8 @@ public class EventGenerator
         }
         writeLine("//------------------------------------------------------- PREINIT");
         readPreTags(tags);
+        writeLine("//------------------------------------------------------- FREQUENCY AND AMBIENT");
+        readFreqAndSound(tags);
         writeLine("//------------------------------------------------------- PROBABILITY");
         readProbabilities(tags);
         writeLine("//------------------------------------------------------- ADVICE");
@@ -63,7 +66,8 @@ public class EventGenerator
         readChoices(tags);
         writeLine("//------------------------------------------------------- OUTCOMES");
         readOutcomes(tags);
-        //readFilters(tags);
+        writeLine("//------------------------------------------------------- FILTERS");
+        readFilters(tags);
         writeLine("}");
     }
 
@@ -110,16 +114,16 @@ public class EventGenerator
                 readProbability(tag.Substring(2));
             }
         }
-        writeLine("return p;");
+        writeLine("base.lastProbability = p;"); // todo: add filter weight mul to p
+        writeLine("return base.lastProbability;");
         writeLine("}");
     }
     private void readProbability(string tag)
     {
         checkAndConsumeConditional(ref tag);
         writeLine("{");
-        writeLine("//p = p * " + getNextValue(tag) + ";");
+        writeLine("p *= " + getNextValue(tag).Replace("\r", "").Replace("\n", "") + ";");
         writeLine("}");
-
     }
 
     private void readAdvices(string[] tags)
@@ -130,7 +134,7 @@ public class EventGenerator
         {
             if (Regex.Match(tag, @"^\@a[\s\{]").Success)
             {
-                readAdvice(tag.Substring(2));
+                readAdvice(tag.Substring(2)/*.Replace("\n", "\\n")*/); // keep newlines in advice text strings
             }
         }
         writeLine("return eventAdvice;");
@@ -145,11 +149,12 @@ public class EventGenerator
         writeLine("if (job == Character.Job." + who + ") {");
         checkAndConsumeConditional(ref tag);
         writeLine("{");
-        writeLine("eventAdvice.text = \"" + getNextString(tag) + "\";");
+        writeLine("eventAdvice.text = \"" + getNextString(tag).Replace("\r\n", "\\n") + "\";");
         if (getNextValue(tag) != "")
         {
-            writeLine("eventAdvice.recommend = " + getNextValue(tag) + ";");
+            writeLine("eventAdvice.recommend = " + getNextValue(tag).Replace("\r\n", "") + ";");
         }
+        writeLine("return eventAdvice;");
         writeLine("}");
         writeLine("}");
     }
@@ -161,10 +166,10 @@ public class EventGenerator
         {
             if (Regex.Match(tag, @"^\@t[\s\{]").Success)
             {
-                readText(tag.Substring(2));
+                readText(tag.Substring(2).Replace("\r\n", "\\n")); // keep newlines in text strings
             }
         }
-        writeLine("return \"INSERT TEXT HERE\";");
+        writeLine("return \"INSERT TEXT HERE\";"); // possible fall-through
         writeLine("}");
     }
     private void readText(string tag)
@@ -251,10 +256,58 @@ public class EventGenerator
         writeLine(effect + ";");
         return true;
     }
-
+    private void readFilters(string[] filters)
+    {
+        writeLine("public override void initFilters() {");
+        foreach (string filter in filters)
+        {
+            if (filter.StartsWith("@f ", System.StringComparison.OrdinalIgnoreCase))
+            {
+                readFilter(filter.Substring(1));
+            }
+        }
+        writeLine("}");
+    }
     private void readFilter(string mod)
     {
-        writeLine("e.addFilter(\"" + getNextString(mod) + "\");");
+        writeLine("addFilter(\"" + getNextString(mod)+"\");");
+    }
+
+    private void readFreqAndSound(string[] tags)
+    {
+        foreach (string tag in tags)
+        {
+            if (Regex.Match(tag, @"^\@frequency[\s\{]").Success)
+            {
+                readFrequency(getNextString(tag));
+            }
+            else if (Regex.Match(tag, @"^\@situation[\s\{]").Success)
+            {
+                readStatus(getNextString(tag));
+            }
+            else if (Regex.Match(tag, @"^\@ambient[\s\{]").Success)
+            {
+                readNoise(getNextString(tag));
+            }
+        }
+    }
+    private void readFrequency(string tag)
+    {
+        writeLine("public override freq getFrequency() {");
+        writeLine("return freq."+System.Enum.Parse(typeof(EventBase.freq), tag) + ";");
+        writeLine("}");
+    }
+    private void readStatus(string tag)
+    {
+        writeLine("public override status getCrewStatus() {");
+        writeLine("return status."+System.Enum.Parse(typeof(EventBase.status), tag) + ";");
+        writeLine("}");
+    }
+    private void readNoise(string tag)
+    {
+        writeLine("public override noise getAmbientNoise() {");
+        writeLine("return noise."+System.Enum.Parse(typeof(EventBase.noise), tag) + ";");
+        writeLine("}");
     }
 
     // helpers
@@ -277,6 +330,15 @@ public class EventGenerator
         if (stringStartPos == -1) throw new System.Exception("Event generator throw");
         int length = data.Substring(stringStartPos + 1).IndexOf("\"");
         if (length == -1) throw new System.Exception("Event generator throw");
+        return data.Substring(stringStartPos + 1, length);
+    }
+    string getEventName(string data)
+    {
+        int stringStartPos = data.IndexOf("#");
+        if (stringStartPos == -1) throw new System.Exception("Event generator throw");
+        int length = data.Substring(stringStartPos + 1).IndexOf("\n")-1;
+        if (length == -1) throw new System.Exception("Event generator throw");
+        //Debug.Log ("event: "+data.Substring(stringStartPos + 1, length));
         return data.Substring(stringStartPos + 1, length);
     }
 
@@ -305,7 +367,7 @@ public class EventGenerator
         cond = Regex.Replace(cond, @"^c( |=)", "choice$1");
         cond = Regex.Replace(cond, @"shipStat\(([a-z]*)\)", "getShipStat(\"$1\")", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "character.([a-z]*)", "getCharacterStat(Character.Stat.$1)", RegexOptions.IgnoreCase);
-        cond = Regex.Replace(cond, "TheAdvisor", "getAdvisor()", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, "TheAdvisor", "getAdvisor(job)", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "locationObject", "locationObject", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "gameTime", "getElapsedDays()", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "warpmag", "getWarpMagnitude()", RegexOptions.IgnoreCase);
@@ -325,6 +387,6 @@ public class EventGenerator
 
     private void writeLine(string line)
     {
-        generatedScript += line + "\n";
+        generatedScript += line + System.Environment.NewLine;
     }
 }

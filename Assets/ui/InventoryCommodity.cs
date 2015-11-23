@@ -4,26 +4,15 @@ using System.Collections;
 
 public class InventoryCommodity : MonoBehaviour
 {
-    public string trackedCommodity;
+    public Data.Resource.SubType trackedCommodity;
     public Text name;
     public Text pcs;
 
-    public void setup(string commodity)
+    public void setup(Data.Resource.SubType type)
     {
-        trackedCommodity = commodity;
-        name.text = Economy.commodityInfo[trackedCommodity].name;
-        pcs.text = Root.game.player.cargo.commodities[trackedCommodity].ToString();
+        trackedCommodity = type;
+        name.text = Simulation.Trade.getCommodityName(type); //Economy.commodityInfo[trackedCommodity].name;
+        pcs.text = "Hook this 'pcs' up [InventoryCommodity.cs]"; // Root.game.player.cargo.commodities[trackedCommodity].ToString();
     }
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

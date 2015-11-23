@@ -53,21 +53,6 @@ namespace Simulation
             }
             //Debug.Log("from count: "+fromLocation.economy.tradeItems.Count+" / to count: "+toLocation.economy.tradeItems.Count);
 
-            /*
-            foreach (Data.TradeItem fromItem in fromLocation.economy.tradeItems)
-            {
-                //kaikki tradeItems on militarya
-                //Debug.Log("fromItem: " + Enum.GetName(typeof(Data.Resource.Type), fromItem.type));
-                foreach (Data.TradeItem toItem in toLocation.economy.tradeItems)
-                {
-                    if (fromItem.type == toItem.type)
-                    {
-                        //Debug.Log("found pair: "+ Enum.GetName(typeof(Data.Resource.Type), toItem.type));
-                        sortedItems.Add(getResolvedItem(fromItem, toItem));
-                        break;
-                    }
-                }
-            }*/
 
             // Sort list by weights (trade value to both locations)
             sortedItems.Sort(
@@ -91,7 +76,7 @@ namespace Simulation
                     {
                         if (exportCapacity > 0.0f)
                         {
-                            if (item.amount <= exportCapacity)
+                            if (item.amount < exportCapacity)
                             {
                                 exportCapacity -= item.amount;
                                 score += (item.amount * item.weight);
@@ -108,7 +93,7 @@ namespace Simulation
                     {
                         if (importCapacity > 0.0f)
                             {
-                            if (item.amount <= importCapacity)
+                            if (item.amount < importCapacity)
                             {
                                 importCapacity -= item.amount;
                                 score += (item.amount * item.weight);
@@ -124,7 +109,7 @@ namespace Simulation
                 }
             }
             // todo: factore in node-based distance-calculation x2 
-            // score /= (distance *2)
+            score /= (Location.getLocationDistance(fromLocation, toLocation) * 2f);
             return new KeyValuePair<float, List<Data.TradeItem>>(score, sortedItems);
         }
     
@@ -157,5 +142,6 @@ namespace Simulation
             return resolvedItem;
         }
     }
+
 }
 

@@ -2,45 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
-public class Stockpile
-{
-    //public Stockpile()
-    //{
-    //    foreach (string name in Economy.getCommodityNames())
-    //    {
-    //        // use random until real values are inserted to exel
-    //        commodities.Add(name, UnityEngine.Random.Range(0,99));
-    //        lacking.Add(name, UnityEngine.Random.Range(0, 99));
-    //        tradable.Add(name, UnityEngine.Random.Range(0, 99));
-    //    }
-    //}
-
-    //public Dictionary<string, int> commodities = new Dictionary<string, int>();
-    //public Dictionary<string, int> lacking = new Dictionary<string, int>();
-    //public Dictionary<string, int> tradable = new Dictionary<string, int>();
-
-    //public List<string> getImportList()
-    //{
-    //    var rv = from pair in lacking
-    //             orderby pair.Value descending
-    //             select pair.Key;
-    //    return rv.ToList<string>();
-    //}
-
-    //public List<string> getExportList()
-    //{
-    //    var rv = from pair in tradable
-    //             orderby pair.Value descending
-    //             select pair.Key;
-    //    return rv.ToList<string>();
-    //}
-}
 
 public class Location
 {
-    private Data.Location data;
+    Data.Location data { get; set; } // features are loaded to Data.Location
 
     public string name
     {
@@ -50,15 +16,7 @@ public class Location
     public string id { get; private set; }
     public Vector3 position { get; private set; }
 
-    //public int numShips = 1;
-
-    //public IdeologyData ideology;
-    //public FactionData faction;
-
-    //public Stockpile stockpile = new Stockpile();
-
-    //LocationIndustry industry;
-    //Inventory Stockpile;
+    public string ruler { get; private set; }
 
     public Simulation.LocationEconomy economy;
     public Simulation.LocationIdeology ideology;
@@ -79,134 +37,37 @@ public class Location
         this.position = position;
         this.data = data;
 
-        this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
         this.ideology = new Simulation.LocationIdeology(this);
-    }
+        this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
 
+        this.ruler = getRuler();
+    }
+    
     public void tick(float days)
     {
         economy.tick(days);
     }
 
-    //void initIdeologies()
-    //{
-    //    Dictionary<string, float> populationIdeology = new Dictionary<string, float>();
-    //    Dictionary<string, float> factionIdeology = new Dictionary<string, float>();
-
-    //    foreach (string i in IdeologyData.getIdeologyNames())
-    //    {
-    //        populationIdeology[i] = 0.0f;
-    //        factionIdeology[i] = 0.0f;
-    //    }
-
-    //    // derived from location base stats
-    //    populationIdeology["imperialist"] += (1 - info.frontier) * 18;
-    //    populationIdeology["navigators"] += (1 - info.frontier) * 1;
-    //    populationIdeology["brotherhood"] += (1 - info.frontier) * 1;
-    //    populationIdeology["nationalist"] += info.frontier * 20;
-
-    //    populationIdeology["imperialist"] += (1 - info.liberalValues) * 20;
-    //    populationIdeology["liberal"] += info.liberalValues * 20;
-
-    //    populationIdeology["imperialist"] += (1 - info.independent) * 18;
-    //    populationIdeology["bureaucracy"] += (1 - info.independent) * 2;
-    //    populationIdeology["nationalist"] += info.independent * 20;
-
-    //    populationIdeology["liberal"] += (1 - info.religious) * 8;
-    //    if (info.techLevel > 0.3f)
-    //    {
-    //        populationIdeology["technocrat"] += (1 - info.religious) * 12;
-    //    }
-    //    else
-    //    {
-    //        populationIdeology["transhumanist"] += (1 - info.religious) * 12;
-    //    }
-    //    populationIdeology["cult"] += info.religious * 20;
-
-    //    populationIdeology["technocrat"] += (1 - info.psychic) * 20;
-    //    populationIdeology["transhumanist"] += info.psychic * 20 * (1 - info.psyStability);
-    //    populationIdeology["brotherhood"] += info.psychic * 16 * info.psyStability;
-    //    populationIdeology["navigators"] += info.psychic * 4 * info.psyStability;
-
-
-    //    // derived from nobles and guilds
-    //    factionIdeology["cult"] += faction.control["noble3"] * 20;
-    //    factionIdeology["mercantile"] += faction.control["noble2"] * 40;
-    //    factionIdeology["liberal"] += faction.control["noble4"] * 30;
-    //    factionIdeology["nationalist"] += faction.control["noble1"] * 40;
-
-    //    factionIdeology["aristocrat"] += faction.control["noble1"] * 60;
-    //    factionIdeology["aristocrat"] += faction.control["noble2"] * 60;
-    //    factionIdeology["aristocrat"] += faction.control["noble3"] * 20;
-    //    factionIdeology["aristocrat"] += faction.control["noble4"] * 50;
-
-    //    factionIdeology["imperialist"] += faction.control["noble3"] * 60;
-    //    factionIdeology["navigators"] += faction.control["noble4"] * 10;
-    //    factionIdeology["brotherhood"] += faction.control["noble4"] * 10;
-
-    //    factionIdeology["technocrat"] += faction.control["guild2"] * 40;
-    //    factionIdeology["mercantile"] += faction.control["guild1"] * 50;
-    //    factionIdeology["mercantile"] += faction.control["guild2"] * 20;
-    //    factionIdeology["mercantile"] += faction.control["guild3"] * 60;
-    //    factionIdeology["bureaucracy"] += faction.control["guild2"] * 30;
-    //    factionIdeology["bureaucracy"] += faction.control["guild3"] * 30;
-    //    factionIdeology["aristocrat"] += faction.control["guild2"] * 10;
-    //    factionIdeology["navigators"] += faction.control["guild3"] * 10;
-    //    factionIdeology["transhumanist"] += faction.control["guild1"] * 50;
-
-    //    factionIdeology["cult"] += faction.control["church"] * 100;
-    //    factionIdeology["transhumanist"] += faction.control["heretic"] * 100;
-
-
-    //    // calculate support for ideologies in location
-    //    // and precalculate effects from ideologies
-    //    foreach (string i in IdeologyData.getIdeologyNames())
-    //    {
-    //        if (faction.getTotalControl() > 0)
-    //        {
-    //            ideology.support[i] += factionIdeology[i];
-    //        }
-    //        if (faction.getTotalControl() < 1)
-    //        {
-    //            ideology.support[i] += populationIdeology[i] * (1 - faction.getTotalControl());
-    //        }
-    //    }
-    //    ideology.calculateEffects();
-    //}
-
-    //public void determineControl()
-    //{
-
-    //}
 
     public string toDebugString()
     {
         return "Name: " + name + " (pop: "+features.population+")\n" +
-            "Features: " + data.features.toDebugString() + "\n" +
+            "Features: " + features.toDebugString() + "\n" +
             "Economy:\n" + economy.toDebugString() + "\n";
             //"---\n" + "Politics:\n" + ideology.toDebugString();
-            //"---\n" + "Economy:\n" + industry.toDebugString();
+            //"---\n" + "Assets:\n" + .toDebugString();
     }
+
+    public string getRuler()
+    {
+        return ideology.getRuler();
+    }
+
 
     public float getImportance()
     {
-        //float populationFactor = (float)Math.Pow(info.population, 0.17);
-        //float orbitalFactor = info.orbitalInfra * 3;
-        //float infraFactor = info.infrastructure * (ideology.effects.pgrowth / 2 + ideology.effects.industry / 2 + 1) + 0.5f;
-        //float economyFactor = ideology.effects.economy + 1;
-        //float militaryFactor = ideology.effects.military + 1;
-        //float techFactor = (ideology.effects.innovation + 1 + info.techLevel + 0.5f) / 2;
-
-        //return populationFactor * (economyFactor + techFactor + infraFactor + militaryFactor) / 4;
-        return 0;
+        return Simulation.Parameters.getImportance(this);
     }
-
-    public int getCommodityPrice(string commodity)
-    {
-        //return industry.getCommodityPrice(commodity);
-        return 0;
-    }
-
 
     public List<Simulation.NPCShip> getFreeShips()
     {
@@ -220,15 +81,70 @@ public class Location
         }
         return rv;
     }
-
-    public PlayerTradeList getPlayerTradeList()
+    public Simulation.NPCShip getFreeShip()
     {
-        PlayerTradeList tradeList = new PlayerTradeList();
-        foreach (Data.Resource.Type resource in economy.resources.Keys)
+        foreach (Simulation.NPCShip ship in Root.game.ships)
         {
-            // build list
-            //economy.resources[resource].getResourcesOverTargetLimit();
+            if (ship.home == this && ship.free)
+            {
+                return ship;
+            }
+        }
+        return null;
+    }
+
+    public List<Data.TradeItem> getLocationTradeList()
+    {
+        List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
+        int tier = 1;
+        int i = 0;
+        int nthTier;
+        float poolAmount;
+        //foreach (Data.Resource.Type resource in Enum.GetValues(typeof(Data.Resource.Type)))
+
+        foreach (Data.TradeItem item in economy.tradeItems)
+        {
+            tier = Mathf.Max (economy.resources[item.type].level, 1);
+            poolAmount = (item.isExported && item.amount >= tier) ? Mathf.Floor (item.amount / tier) : 0.0f;
+            nthTier = 0;
+
+            foreach (Data.Resource.SubType subType in Data.Resource.getSubTypes(item.type))
+            {
+                tradeList.Add (new Data.TradeItem());
+                // only assign commodities up to location tier level
+                tradeList[i].amount = (nthTier < tier) ?  poolAmount : 0.0f;
+                tradeList[i].type = item.type;
+                tradeList[i].subType = subType;
+                tradeList[i].weight = item.weight;
+                tradeList[i].isExported = item.isExported;
+                nthTier++;
+                i++;
+            }
         }
         return tradeList;
+    }
+
+    public List<Data.TradeItem> getPlayerTradeList()
+    {
+        List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
+        //tradeList.commodities = Root.game.player.cargo.commodities;
+        int i = 0;
+        foreach (var item in Root.game.player.cargo.commodities)
+        {
+            tradeList.Add (new Data.TradeItem());
+            tradeList[i].amount = item.Value;
+            tradeList[i].subType = item.Key;
+            i++;
+        }
+        return tradeList;
+    }
+
+
+
+    // ---- static functions
+
+    static public float getLocationDistance (Location location1, Location location2)
+    {
+        return Vector3.Distance(location1.position, location2.position);
     }
 }

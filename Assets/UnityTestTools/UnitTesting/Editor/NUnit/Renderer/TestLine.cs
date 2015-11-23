@@ -5,6 +5,7 @@ using NUnit.Core;
 using UnityEditor;
 using UnityEngine;
 using Event = UnityEngine.Event;
+using System.Text;
 
 namespace UnityTest
 {
@@ -15,12 +16,19 @@ namespace UnityTest
         protected static GUIContent s_GUIOpenInEditor = new GUIContent("Open in editor");
         private readonly string m_ResultId;
         private readonly IList<string> m_Categories;
+		private readonly int m_maxLineLenght = 15000;
+		private UnitTestResult resultCache = null;
         
         private GUIContent m_Content;
 
         public TestLine(TestMethod test, string resultId) : base(test)
         {
             m_RenderedName = test.Parent is ParameterizedMethodSuite ? test.TestName.Name : test.MethodName;
+
+			if(m_RenderedName.Length > 100)
+				m_RenderedName = m_RenderedName.Substring(0, 100);
+			m_RenderedName = m_RenderedName.Replace("\n", "");
+
             m_ResultId = resultId;
             var c = new List<string>();
             foreach (string category in test.Categories)
@@ -36,7 +44,12 @@ namespace UnityTest
 
         public UnitTestResult result
         {
-            get { return GetUnitTestResult(m_ResultId); }
+            get 
+			{ 
+				if(resultCache == null)
+					resultCache = GetUnitTestResult(m_ResultId);
+				return resultCache; 
+			}
         }
 
         public int CompareTo(TestLine other)
@@ -95,26 +108,30 @@ namespace UnityTest
         public override string GetResultText()
         {
             var tempTest = result;
-            var text = tempTest.Name;
+            var sb = new StringBuilder(tempTest.Name);
             if (tempTest.Executed)
-                text += " (" + tempTest.Duration.ToString("##0.###") + "s)";
-            text += "\n";
+				sb.AppendFormat(" ({0}s)", tempTest.Duration.ToString("##0.###"));
+			sb.AppendLine();
+
             if (!string.IsNullOrEmpty(tempTest.Message))
             {
-                text += "---\n";
-                text += tempTest.Message.Trim();
+				sb.AppendFormat("---\n{0}\n", tempTest.Message.Trim());
             }
             if (!string.IsNullOrEmpty(tempTest.Logs))
             {
-                text += "---Logs---\n";
-                text += tempTest.Logs.Trim();
+				sb.AppendFormat("---\n{0}\n", tempTest.Logs.Trim());
             }
             if (!tempTest.IsSuccess && !string.IsNullOrEmpty(tempTest.StackTrace))
             {
                 var stackTrace = StackTraceFilter.Filter(tempTest.StackTrace).Trim();
-                text += "\n---EXCEPTION---\n" + stackTrace;
+				sb.AppendFormat("---\n{0}\n", stackTrace);
             }
-            return text.Trim();
+			if(sb.Length>m_maxLineLenght)
+			{
+				sb.Length = m_maxLineLenght;
+				sb.AppendFormat("...\n\n---MESSAGE TRUNCATED AT {0} CHARACTERS---", m_maxLineLenght);
+			}
+            return sb.ToString().Trim();
         }
 
         private void OnContextClick(Rect rect)

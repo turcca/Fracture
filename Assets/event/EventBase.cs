@@ -11,6 +11,10 @@ public class EventAdvice
 
 public class EventBase
 {
+    public enum freq { Rare, Default, Elevated, Probable }
+    public enum status { Quiet, Default, Alert, Panic }
+    public enum noise { QuietHum, QuietEerie, DefaultBridge, EchoRoom, EngineRoom, ActionBase, Fracture }
+
     public string name = "";
     public bool available = false;
     public Player player = Root.game.player;
@@ -29,12 +33,14 @@ public class EventBase
 
     public bool locationEvent = false;
 
+
     public EventBase(string _name)
     {
         name = _name;
         available = true;
         //initPre();
-
+        initFilters();
+        //Debug.Log ("formatting EventBase: "+name+" / "+_name);
         Root.game.events.addEventToPool(this);
     }
     public void start()
@@ -64,7 +70,19 @@ public class EventBase
     }
     public virtual string getText()
     {
-        return "INSERT GENERAL TEXT HERE";
+        return "INSERT EVENT DESCRIPTION TEXT HERE";
+    }
+    public virtual freq getFrequency()
+    {
+        return freq.Default;
+    }
+    public virtual status getCrewStatus()
+    {
+        return status.Default;
+    }
+    public virtual noise getAmbientNoise()
+    {
+        return noise.DefaultBridge;
     }
     public virtual void doOutcome()
     {
@@ -83,9 +101,20 @@ public class EventBase
     {
         choices.Add("CONTINUE", 1);
     }
+    public virtual void initFilters()
+    {
+        addFilter("Filter");
+    }
     protected void addFilter(string str)
     {
         filters.Add(str, 1.0f);
+    }
+    public bool hasFilter(string filter)
+    {
+        foreach (var f in filters) {
+            if (filter == f.Key) return (f.Value > 0.0f) ? true : false;
+        }
+        return false;
     }
     protected int getElapsedDays()
     {
@@ -97,7 +126,7 @@ public class EventBase
     }
     protected EventBase getEvent(string name)
     {
-        return EventDataBase.events[name];
+        return Root.game.events.getEventByName(name); //EventDataBase.events[name];
     }
     protected string getPlayerLocationID()
     {
@@ -120,10 +149,11 @@ public class EventBase
     {
         return character;
     }
+    /*
     protected Character getCharacter(Character.Job job)
     {
-        return Root.game.player.getCharacter(job);
-    }
+        return Root.game.player.getAdvisor(job);
+    }*/
     protected Character getBestCharacter(Character.Stat s)
     {
         return Character.getBest(Root.game.player.getCharacters(), s);
@@ -134,16 +164,16 @@ public class EventBase
     }
     protected double getCharacterStat(Character.Job job, Character.Stat s)
     {
-        return Root.game.player.getCharacter(job).getStat(s);
+        return Root.game.player.getAdvisor(job).getStat(s);
     }
     protected double getShipStat(string s)
     {
         //todo
         return 0.0;
     }
-    protected Character getAdvisor()
+    protected Character getAdvisor(Character.Job job)
     {
-        return advisor;
+        return Root.game.player.getAdvisor(job);
     }
     protected void addCharacterStat(Character.Stat stat, double amount)
     {
@@ -167,4 +197,24 @@ public class EventBase
 static public class EventDataBase
 {
     static public Dictionary<string, EventBase> events = new Dictionary<string, EventBase>();
+
+    static public string toDebugString(EventBase e = null)
+    {
+        string rv = "";
+
+        if (e == null)
+        {
+            rv = "Debug all events: \n";
+            foreach (EventBase listedEvent in events.Values)
+            {
+                rv += e.name+"\n";
+            }
+        }
+        else
+        {
+            rv = "Debug event: "+e.name+"\n";
+            rv += "probability: "+e.calculateProbability() +"\n";
+        }
+        return rv;
+    }
 }

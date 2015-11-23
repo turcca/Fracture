@@ -10,75 +10,146 @@ namespace Simulation
         public Location home { get; private set; }
         public Location destination { get; internal set; }
         public Vector3 position { get; private set; }
+        public Vector3 deviation { get; private set; }
         public string captain { get; private set; }
         public float cargoSpace { get; private set; }
 
         public List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
-        //public List<string> wantedCommodityList = new List<string>();
-        //public CommodityInventory inventory = new CommodityInventory();
 
-        List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>();
+        List<Navigation.NavNode> navPoints = new List<Navigation.NavNode>(); 
+        //public int getNavPointCount() { return navPoints.Count; }
 
         public bool free { get; private set; }
-        public bool tradeShip { get; private set; }
+        public bool isTradeShip { get; private set; }
         public bool isGoingToDestination { get; private set; }
+        public float downtime { get; set; }
+        public bool isVisible { get; private set; }
+
+        public TradeShip tradeShip { get; set; }
+
+
+        private float simulationStepBuffer = 0;
 
         public NPCShip(Location home)
         {
             this.home = home;
             this.destination = home;
             this.position = home.position;
-            this.captain = NameGenerator.getName("");
-            this.cargoSpace = 1.0f;
+            this.captain = NameGenerator.getName(home.ideology.getHighestIdeologyAndValue().Key);
+            this.cargoSpace = Parameters.cargoHoldMul;
             this.free = true;
-            this.tradeShip = true; ///@todo military ships
+            this.isTradeShip = true; ///@todo military ships
+            this.downtime = UnityEngine.Random.value*5;
+            this.isVisible = false;
         }
 
         public void tick(float days)
         {
-            /// - we probably do not need to track real positions, since trading
-            ///   is done directly through location resources
-            /// - we need to add speed
-            if (navPoints.Count == 0) return;
+            simulationStepBuffer += days;
 
-            Vector3 dir = navPoints[0].position - position;
-            if ((dir.normalized * days * Parameters.shipMovementMultiplier).magnitude > dir.magnitude)
+            if (downtime > 0f)
             {
-                navPoints.RemoveAt(0);
-                if (navPoints.Count == 0)
-                {
-                    arrived();
-                }
+                setVisibilistyToStarmap(false);
+                downtime = (downtime > days) ? downtime - days : 0f;
+            }
+
+            if (navPoints.Count == 0)
+            {
+                return;
             }
             else
             {
-                position += dir.normalized * days * Parameters.shipMovementMultiplier;
-            }
-        }
-        public void sendFreeShips()
-        {
-            if (free)
-            {
-                if (tradeShip)
-                {  
-                    // checks for trade mission scoring to meet the treshold, set destination (no partner, destination = home)
-                    LocationTrade.setTradePartnerForShip(this);
-                    if (destination != home)
+                setVisibilistyToStarmap(true);
+
+                Vector3 dir = navPoints[0].position - position;
+                Vector3 dirNormalized = dir.normalized;
+                float endPoint = dir.magnitude; // distance to the next navPoint
+                float currentPoint = (dirNormalized * days * Parameters.getNPCShipSpeed()).magnitude; // travel distance in this tick
+
+                // navPoint reached
+                if (currentPoint > endPoint)
+                {
+                    navPoints.RemoveAt(0);
+                    if (navPoints.Count == 0)
                     {
-                        Trade.tradeResources(this);
-                        isGoingToDestination = true;
-                        embarkTo();
+                        arrived();
+                    }
+                    else 
+                    {
+                        // new navpoint - recalculate new direction and perpendicular direction
+                        navPoints[0].recalculateNormalizedValues((navPoints[0].position - position).normalized, dirNormalized);
                     }
                 }
+                // between navPoints
                 else
                 {
-                    ///@todo send military ships
-                } 
+                    // over half-point, reducing deviation
+                    if (currentPoint > endPoint * 0.5f)  //mistä lasketaan puoliväli?
+                    {
+                        position += dirNormalized * days * Parameters.getNPCShipSpeed();
+                        //deviation = navPoints[0].directionPerpendicularNormalized * (endPoint-currentPoint);
+                        deviation = Quaternion.Euler(0, 90, 0) * dirNormalized *2;
+                    }
+                    // under half-point, increase deviation
+                    else
+                    {
+                        position += dirNormalized * days * Parameters.getNPCShipSpeed();
+                        //deviation = navPoints[0].directionPerpendicularNormalized * (endPoint-currentPoint);
+                        deviation = Quaternion.Euler(0, 90, 0) * dirNormalized;
+                    }
+                }
+            }
+        }
+        public void sendFreeShip()
+        {
+            if (simulationStepBuffer >= 0.3f)
+            {
+                simulationStepBuffer = 0;
+
+                if (free)
+                {
+                    if (downtime <= 0)
+                    {
+                        if (isTradeShip)
+                        {
+                            // checks for trade mission scoring to meet the treshold, set destination (if no partner: destination = home)
+                            LocationTrade.setTradePartnerForShip(this);
+                            if (destination != home)
+                            {
+                                Trade.tradeResources(this);
+                                isGoingToDestination = true;
+                                embarkTo();
+                            }
+                        }
+                        else
+                        {
+                            ///@todo send military ships
+                        }
+                    }
+                }
+                // might be at destination and deeds to be sent back
+                else
+                {
+                    // unloading cargo on destination
+                    if (downtime <= 0 /*&& */)
+                    {
+                        if (!isGoingToDestination && navPoints.Count == 0)
+                        {
+                            if (isTradeShip)
+                            {
+                                embarkTo();
+                            }
+                        }
+                    }
+                }
             }
         }
 
         private void arrived()
         {
+            setVisibilistyToStarmap(false);
+            downtime = UnityEngine.Random.Range(1.5f, 3.5f); // downtime range
+
             // return home
             if (!isGoingToDestination)
             {
@@ -89,12 +160,12 @@ namespace Simulation
             // arrive at the destination
             else
             {
-                if (tradeShip)
+                if (isTradeShip)
                 {
                     // noop
                     ///@todo create a delay of couple of days before returning?
                     isGoingToDestination = false;
-                    embarkTo();
+                    // moved ---> embarkTo();
                 }
             }
         }
@@ -127,6 +198,20 @@ namespace Simulation
             navPoints = path.nodes;
         }
 
+        void setVisibilistyToStarmap(bool visible)
+        {
+            if (isVisible && !visible) 
+            {
+                isVisible = false;
+                tradeShip.setVisibilityToStarmap(false);
+            }
+            if (!isVisible && visible) 
+            {
+                isVisible = true;
+                tradeShip.setVisibilityToStarmap(true);
+            }
+        }
+
         internal string cargoToDebugString()
         {
             string rv = "";
@@ -144,8 +229,8 @@ namespace Simulation
                         if (isGoingToDestination) rv+= "(getting) ";
                         else rv+= "Importing ";
                     }
-
-                    rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ item.amount +"\n";
+                    if (item.amount < 0.1f) rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ Mathf.Round (item.amount*100.0f)/100.0f +"\n";
+                    else rv += Enum.GetName(typeof(Data.Resource.Type), item.type) + ": "+ Mathf.Round (item.amount*10.0f)/10.0f +"\n";
                 }
             }
             return rv;            

@@ -7,13 +7,12 @@ public class ParticleStorm : MonoBehaviour
     ParticleSystem.Particle[] particles;
     int numParticles;
 
-    public Texture2D flowTexture;
+
     public GameObject player;
 
-    Vector2[,] flowMap;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         //int x = Mathf.FloorToInt(transform.position.x / size.x * heightmap.width);
         //int z = Mathf.FloorToInt(transform.position.z / size.z * heightmap.height);
@@ -24,17 +23,12 @@ public class ParticleStorm : MonoBehaviour
         pSystem = gameObject.GetComponent<ParticleSystem>();
         particles = new ParticleSystem.Particle[pSystem.maxParticles];
 
-        flowMap = new Vector2[flowTexture.width, flowTexture.height];
-        for (int i=0; i<flowTexture.width;++i)
-            for (int j=0; j<flowTexture.height;++j)
-            {
-                flowMap[i, j] = new Vector2(flowTexture.GetPixel(i, j).r - 0.5f, flowTexture.GetPixel(i,j).g * (-1.0f) + 0.5f);
-            }
-
+        ParticleFlowData.buildFlowMap();
     }
 
     // Update is called once per frame
     void LateUpdate()
+    //void Update()
     {
         transform.position = player.transform.position;
         numParticles = pSystem.GetParticles(particles);
@@ -52,20 +46,34 @@ public class ParticleStorm : MonoBehaviour
     {
         x = mapX(particle.position.x);
         z = mapZ(particle.position.z);
-        vec.Set(flowMap[x,z].x, 0, flowMap[x,z].y);
-        Vector3 flow = vec * 100.0f;
+        vec.Set(ParticleFlowData.getFlowMap()[x,z].x, 0, ParticleFlowData.getFlowMap()[x,z].y);
+        Vector3 flow = vec * 30.0f;
 
-        particle.velocity = flow * 0.5f + particle.velocity * 0.5f;
-        particle.color = new Color(1.0f, 1.0f, 1.0f, flow.sqrMagnitude*10.0f);
+        //particle.velocity = flow;  // quick and dirty, jitters turning
+        particle.velocity = Vector3.Slerp(particle.velocity, flow, Time.deltaTime*5f);
+        //if (particle.lifetime >= particle.startLifetime*0.99f) particle.velocity = flow; // set once
+        
+        //particle.color = new Color(1.0f, 1.0f, 1.0f, flow.sqrMagnitude*10.0f);
     }
 
     private int mapZ(float p)
     {
-        return Mathf.Clamp(Mathf.FloorToInt((p+250.0f) / 500.0f * flowTexture.height), 0, flowTexture.height-1);
+        //return Mathf.Clamp(Mathf.FloorToInt((p+250.0f) / 500.0f * flowTexture.height), 0, flowTexture.height-1);
+        return Mathf.Clamp(Mathf.FloorToInt((p+287.5f) / 575.0f * ParticleFlowData.flowTexture.height), 0, ParticleFlowData.flowTexture.height-1);
     }
 
     private int mapX(float p)
     {
-        return Mathf.Clamp(Mathf.FloorToInt((p+500.0f) / 1000.0f * flowTexture.width), 0, flowTexture.width-1);
+        //return Mathf.Clamp(Mathf.FloorToInt((p+500.0f) / 1000.0f * flowTexture.width), 0, flowTexture.width-1);
+        return Mathf.Clamp(Mathf.FloorToInt((p+550.0f) / 1100.0f * ParticleFlowData.flowTexture.width), 0, ParticleFlowData.flowTexture.width-1);
+    }
+
+    public float getWarpMagnitude (Vector3 pos)
+    {
+        int xi = mapX(pos.x);
+        int zi = mapZ(pos.z);
+        float xf = ParticleFlowData.getFlowMap()[xi,zi].x;
+        float yf = ParticleFlowData.getFlowMap()[xi,zi].y;
+        return Mathf.Sqrt (xf*xf+yf*yf);
     }
 }

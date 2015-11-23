@@ -8,6 +8,7 @@ public class EventChoicesBtn : MonoBehaviour
 
     public int choice = 0;
     public ChoiceDelegate callback;
+    public Text choiceNumber;
     public Text choiceTxt;
 
     public void click()
@@ -19,11 +20,11 @@ public class EventChoicesBtn : MonoBehaviour
     {
         if (on)
         {
-            choiceTxt.color = new Color(0.0F, 0.4F, 0.7F, 1F);
+            choiceTxt.color = new Color32(120, 150, 255, 230);
         }
         else
         {
-            choiceTxt.color = new Color(0.0F, 0.0F, 0.0F, 1F);
+            choiceTxt.color = new Color32(255, 255, 255, 128);
         }
     }
 }

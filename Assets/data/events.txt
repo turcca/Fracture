@@ -2,14 +2,15 @@
 /* Fracture / things happen */
 @frequency "Default"
 @situation "Default"
-@ambient "DefaultBridge"
-@p { warpmag >= 2 } = 2
-@c {o = 0} "Try to record the knocks and resolve if there is a code or pattern." = 740
+@ambient "QuietEerie"
+@p { warpmag >= 1.9 } = 2
+@p { warpmag < 1 } = 0
+@c {o = 0} "Try to record the knocks and resolve if there is a pattern to it." = 740
 @o {c = 740} = 743
 @c {o = 743} "Continue" = 748
 @o {c = 748} = 749 $=available = false $=end
 @t {o = 743} "Series of data was collected around the ship, and data analysis start running on the ship computer. Wild and anxious speculation about the messages start to revolve around in the ship."
-@t {o = 0} "People report knocking coming from the outside of the hull all over the ship. Series of knocks are repeated, and some people insists it's a code. Outside sensors are not showing anything."
+@t {o = 0} "There are reports coming from all over the ship. Apparently the crew is hearing knocking coming outside of the hull. Series of knocks are repeated over and over again. Some people insists it's a code. Outside sensors are not showing anything."
 @c {o = 0} "Send out security to defend high priority targets. Broadcast a warning against listening to the knocking." = 741
 @o {c = 741} = 744
 @c {o = 744} "Continue" = 755
@@ -20,12 +21,19 @@
 @t {o = 745} "The crew enjoy their medication with blissful, calm faces. This is, after all, why some of these people serve on ships."
 @c {o = 745} "Continue" = 760
 @o {c = 760} = 761 $=available = false $=end
-@a navigator "The Flood Shields are more than energy projectors in the hull. It's also the way we open or close the portal we carry in us."
+@a captain { TheAdvisor.isIdeology("mercantile") } "Well that's weird. Aren't we supposed to find out what this is about?" = 740
+@a captain { TheAdvisor.isIdeology("transhumanist") } "It's a contact. Someone is trying to contact us. Any ideas what this is about?" = 740
+@a captain { TheAdvisor.isIdeology("liberal") } "If there is a pattern to this knocking, it's a signal. By who? We should look into it." = 740
+@a captain { TheAdvisor.isIdeology("technocrat") } "If there is a pattern to this knocking, it's a signal. Signals we can decode."
+@a captain { TheAdvisor.isIdeology("cult") } "Fill the ears with prayer and call their minds." = 742
+@a captain "This can't be good. Are the sensors operating? What is our security status? Our Flood Shields are up, right?"
+@a navigator "The Flood Shields are more than energy projectors in the hull. 
+It's also the way we open or close the portal we carry in us."
 @a engineer { TheAdvisor.getStat("security") >= 2 } "When things get confused, it is best to have trusted people by key equipment." = 741
 @a engineer { TheAdvisor.getStat("holiness") >= 1 } "I have a bad feeling about this. Better be safe than sorry while in a Fracture Fall."
 @a engineer "If it's a code, we should be able to crack it." = 740
 @a security { TheAdvisor.getStat("security") <= -1 } "Armed security will only escalate things, and there are lots of tension already. Let's find out if this is a threat before jumping the gun."
-@a security "Always secure the Core, bridge, navigation equipment, life support and weapons." = 741
+@a security "Always secure the Core, bridge, navigation equipment, life support and arsenal." = 741
 @a quartermaster { shipStat(Happiness) < 0 } "The crew is already &shipStatHappiness&, we might be better off giving them something else to chew on." = 742
 @a quartermaster { TheAdvisor.getStat("security") >= 1 } "Is everyone going to act strange again? Are they going to do something stupid again?" = 741
 @a quartermaster { TheAdvisor.getStat("holiness") >= 1 } "It's the Daemons outside. Testing our resolve, trying to claw in. We should prepare for the worst." = 741
@@ -47,18 +55,20 @@
 @o {c = 766} = 769
 @c {o = 769} "Continue" = 773
 @o {c = 773} = 778 $=available = false $=end
-@t {o = 769} "An underground culture forms deep within the ship."
-@t {o = 0} "Distorted, Fractured broadcasts from real space start streaming in. They are recorded and listened around the ship. It's even said people are raving to them on the lower levels."
+@t {o = 769} "There is an underground culture forming deep within the ship."
+@t {o = 0} "Distorted, fractured broadcasts from real space start streaming in through ship comms. People are tapping onto the streams, listening and recording them around the ship. It's even said people are raving to them on the lower levels in illegal parties."
 @c {o = 0} "Break the illegal parties up and restrict the records." = 767
 @o {c = 767} = 770
-@t {o = 770} "The raid turns violent and it takes awhile before it is clear what happened. In the end, some of the crew was shot, others detained. An enforced quiet settles over the ship."
+@t {o = 770} "The raid turns violent and it takes awhile before it is clear what happened. In the end, some of the crew was shot, others detained. Enforced calm settles over the ship."
 @c {o = 770} "Continue" = 775
 @o {c = 775} = 780 $=available = false $=end
 @c {o = 0} "Put a team to study the phenomenom." = 768
 @o {c = 768} = 771
-@t {o = 771} "Data on abnormal behaviour starts to trickle in. The observers seem to be really immersed in this project."
+@t {o = 771} "Data on abnormal behaviour starts to trickle in. The observers are interviewing people and closely listening to the records, really immersing themselves into this project."
 @c {o = 771} "Continue" = 777
 @o {c = 777} = 779 $=available = false $=end
+@a captain { TheAdvisor.getStat("leadership") >= 4 } "Let's take a clear stand on the issue. Any thoughts?"
+@a captain "Some of these records are downright creepy. Who listens to this stuff?"
 @a navigator { TheAdvisor.isIdeology("navigators") } "I've heard things you people wouldn't believe."
 @a navigator "I hear this a lot. You shouldn't be listening to it."
 @a engineer { TheAdvisor.getStat("holiness") >= 1 } "There is something creepy going on." = 767
@@ -80,7 +90,7 @@
 @a psycher { TheAdvisor.getStat("psy") = 2 AND TheAdvisor.getStat("corruption") >= 2 } "This is... beautiful. We must hear more." = 768
 @a psycher { TheAdvisor.getStat("psy") >= 3 AND TheAdvisor.getStat("corruption") >= 3 } "Beautifully orchestrated. For our benefit. We shouldn't miss it." = 768
 @a psycher { TheAdvisor.getStat("psy") < 2 AND TheAdvisor.getStat("corruption") >= 2 } "Interesting. We have to know more, how does it affect people." = 768
-@a psycher "We can send a few people to observe. I have a few people in mind." = 768
+@a psycher "I have a few people in mind." = 768
 @a priest { TheAdvisor.getStat("holiness") >= 1 } "These sounds are troubling, and shouldn't be listened to." = 767
 @a priest { TheAdvisor.getStat("holiness") >= 2 } "Put an end to the sounds of madness, or there will be dire consequences." = 767
 @a priest "We must help those who can not help themselves."
@@ -91,7 +101,7 @@
 @ambient "DefaultBridge"
 @p { warpmag < 1 } = 0
 @p { warpmag >= 2 } = 2
-@t {o = 0} "There are increase in reports of odd behaviour among the crew. The crew are holding meetings and coming up with new practices and procedures."
+@t {o = 0} "There are increase in reports of odd behaviour among the crew. The crew are holding meetings on their own and changing the practices and procedures."
 @c {o = 0} "Partake in new practices to understand them better." = 807
 @o {c = 807} = 810
 @t {o = 810} "A strange new hierarchy is emerging within core engineers. It seems like there are ringleaders emerging within the group called 'core singers'. The core stability seems to benefit from this, yet it remains unclear where these new practices emerge from."
@@ -115,16 +125,25 @@
 @a engineer { TheAdvisor.getStat("holiness") >= 4 } "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact." = 809
 @a engineer "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact." = 808
 @a security { TheAdvisor.getStat("corruption") >= 80 } "We have established cooperation with the group in question. I believe we can further this understanding." = 807
-@a security { TheAdvisor.getStat("holiness") >= 4 } "Herecy! We must end this now, before it gets out of hand." = 809
+@a security { TheAdvisor.getStat("holiness") >= 4 } "Heresy! We must end this now, before it gets out of hand. You can't just go and change the Approved Procedures!" = 809
 @a security "The core is high security area, and there should be very little tolerance towards unregulated activities." = 809
 @a quartermaster { TheAdvisor.getStat("corruption") >= 60 } "Such efficiency and dedication." = 807
 @a quartermaster { TheAdvisor.getStat("hr") >= 6 } "Interfering with this can demoralize the crew. Any radical reaction could unbalance things." = 808
 @a quartermaster "I'm not entirely sure how we should handle this. Perhaps we need to see how this develops before weigh in." = 808
 @a psycher { TheAdvisor.getStat("corruption") >= 40 } "Interesting. We must participate in this to truly understand it." = 807
-@a psycher { TheAdvisor.getStat("psy") >= 6 } "There is a real possibility of exposure here. I feel the influence of Fracture at work."
+@a psycher { TheAdvisor.getStat("psy") >= 6 } "There is a possibility of exposure here. I feel we're being influenced."
 @a psycher "I am curious." = 808
-@a priest { TheAdvisor.getStat("holiness") >= 2 } "We must stop the spread of these deviations from proper practices. At once." = 809
+@a priest { TheAdvisor.getStat("holiness") >= 2 } "We must stop the spread of these deviations from Approved Procedures. At once." = 809
 @a priest "Perhaps a silent meditation will bring clarity to the issue." = 808
+
+#contact_nobleHouse4
+/* House Valeria */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "contact_factions"
+@p = 0
+@t {o = 0} "I am the representative of House Valeria."
 
 #core singers
 /* If engine room's 'core singers' are allowed to be */
@@ -136,56 +155,56 @@
 @c {o = 0} "Do not interfere." = 838
 @o {c = 838} = 843
 @t {o = 843} "The 'core singers' are established as a group with some autonomy in the core. They continue to serve the ship well while having an impact on practices and beliefs of the crew."
-@c {o = 843} "Continue peaceful group" = 857
+@c {o = 843} "Continue" = 857
 @o {c = 857} = 893 $=available = false $=end
-@t {o = 0} "The group of engine crew living near the core continue to operate in numbers. Most recently they have restricted the access to the core from nonmembers."
+@t {o = 0} "Newly formed group of engine crew living near the core continue to operate by their own practices. Most recently they have restricted the access to the core from nonmembers."
 @c {o = 0} "Demand access to the core for key personnel." = 839
 @o {c = 839 AND shipStat(Happiness) < 1} = 844
 @t {o = 844} "After quick negations, it became clear that the boundaries set by the group are strict, and their leaders the 'core singers' assume a position of autonomy in the core."
 @c {o = 844} "Send in the security to reclaim the core." = 858
 @o {c = 858 AND shipStat(Morale) >= 2} = 859
-@c {o = 859} "Continue group ended" = 864
+@c {o = 859} "Continue" = 864
 @o {c = 864} = 865 $=available = false $=end
 @t {o = 859} "The security encountered resistance at the core that escalated into a fight in the narrow corridors leading to the core. The defenders were prepared, but the dedicated security forces routed the resistance. In a fierce final stand, the 'core singers' were killed. After that, the involved crew quickly submitted to disciplinary actions and the crew rotated to restore security to the core."
 @o {c = 858 AND shipStat(Morale) < 2} = 884
-@c {o = 884} "Continue hostile group" = 888
+@c {o = 884} "Continue" = 888
 @o {c = 888} = 890 $=available = false $=end
 @t {o = 884} "The security encountered resistance at the core that escalated into fighting in the narrow corridors leading to the core. The defenders were prepared, and the ship's security forces were unable to reach the core. As the stalemate and high tensions aboard continued, the group declared themselves the 'core singers' and responsible for the core operations."
 @c {o = 844} "Appoint the 'core singers' an official position on the core." = 851
 @o {c = 851} = 860
 @t {o = 860} "The 'core singers' are established as a group with some autonomy in the core. They continue to serve the ship well while having an impact on practices and beliefs of the crew."
-@c {o = 860} "Continue peaceful group" = 862
+@c {o = 860} "Continue" = 862
 @o {c = 862} = 866 $=available = false $=end
 @o {c = 839 AND shipStat(Happiness) >= 1 OR shipStat(Holiness) >= 3} = 842
-@c {o = 842} "Continue peaceful group" = 850
+@c {o = 842} "Continue" = 850
 @o {c = 850} = 852 $=available = false $=end
 @t {o = 842} "After quick negotiations it is agreed that key security and engineering personnel are allowed access to the core. It will otherwise remain under the tutelage of the 'core singers', the leaders of the group."
 @c {o = 0} "Send in the security to reclaim the core." = 840
 @o {c = 840} = 889
 @o {c = 840 AND shipStat(Holiness) >= 3} = 841
-@c {o = 841} "Praise the Church!  group ended" = 870
+@c {o = 841} "Praise the Church!" = 870
 @o {c = 870} = 871 $=available = false $=end
 @t {o = 841} "The security encountered resistance at the core. But soon after, a devout of the Cult started singing from the Holy Scriptures of the Church and it picked up until the entire engine section was singing it. 'Core singers' disappeared soon after and the core resumed its proper state."
 @o {c = 840 AND shipStat(Morale) < 1} = 867
 @t {o = 867} "The security encountered resistance at the core that escalated into fighting in the narrow corridors leading to the core. The ship's security forces were unable to reach the core. As the stalemate and high tensions aboard continued, the group declared themselves the 'core singers' and responsible for the core operations."
-@c {o = 867} "Continue hostile group" = 880
+@c {o = 867} "Continue" = 880
 @o {c = 880} = 881 $=available = false $=end
 @o {c = 840 AND shipStat(Morale) >= 1} = 845
-@c {o = 845} "Continue group ended" = 875
+@c {o = 845} "Continue" = 875
 @o {c = 875} = 876 $=available = false $=end
 @t {o = 845} "The security encountered resistance at the core that escalated into a fight in the narrow corridors leading to the core. The ship's security forces were motivated and routed the resistance. In a fierce final stand, the 'core singers' were killed. After that, the involved crew quickly submitted to disciplinary actions and the crew rotated to restore security to the core."
 @a captain "The core is functioning well it seems. But is it possible to run a ship with independent departments?"
 @a navigator { TheAdvisor.getStat("corruption") >= 50 } "As long as the core is in tune." = 838
-@a navigator "As long as the core is in tune."
+@a navigator "The core is in tune."
 @a engineer { TheAdvisor.getStat("corruption") >= 30 } "I have things under control. We are actually on to something very interesting." = 838
-@a engineer { TheAdvisor.getStat("corruption") >= 70 } "There must be a misunderstanding here. We do have access, I am a member after all." = 838
+@a engineer { TheAdvisor.getStat("corruption") >= 70 } "There must be a misunderstanding here. We do have access! I am a member after all." = 838
 @a engineer "This is absurd. I'm going to need access to my core." = 839
 @a security { TheAdvisor.getStat("corruption") >= 80 } "I have infiltrated the group. There is no reason to interfere yet, we can control the situation if need arises." = 838
 @a security { TheAdvisor.getStat("corruption") >= 50 } "I am not convinced this is a threat to the ship security. It's a matter of preference, really." = 838
-@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("leadership") >= 4 } "I have good men. You can count on us." = 840
+@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("leadership") >= 4 } "I trust my men. You can count on us." = 840
 @a security { shipStat(Morale) >= 1 } "It may be difficult to take the core, if the defenders are determined." = 839
 @a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("combat") >= 5 } "I can take them." = 840
-@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("security") >= 3 } "The core can be easily defended, but our security hand handle this." = 840
+@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("security") >= 3 } "The core can be easily defended, but our security can handle this." = 840
 @a security { shipStat(Morale) < 1 AND TheAdvisor.getStat("leadership") >= 4 } "If the resistance is determined at the core, our security forces may not be able to handle it. I need more men!" = 839
 @a security { shipStat(Morale) < 1 AND TheAdvisor.getStat("security") >= 3 } "The core can be easily defended. Our security forces may have a hard time enforcing this. This is why we need better security on the ship!" = 839
 @a security { shipStat(Morale) < 1 } "It may be difficult to take the core, if the defenders are determined." = 839
@@ -194,8 +213,8 @@
 @a quartermaster { shipStat(Happiness) >= 1 AND TheAdvisor.getStat("hr") < 4 AND TheAdvisor.isIdeology("cult") } "Who knows what is going on in there? This isn't right, we have to get in there." = 840
 @a quartermaster { TheAdvisor.getStat("hr") >= 5 } "The chain of command is breaking up. These so called 'core singers' are not taking orders from our leadership anymore." = 839
 @a quartermaster { TheAdvisor.getStat("corruption") >= 40 } "As long as the group keeps operating the core this well, there is no need to interfere." = 838
-@a quartermaster { shipStat(Happiness) < 1 AND TheAdvisor.getStat("hr") >= 5 } "Things are tense in the core. We may not have the leverage to make demands."
-@a quartermaster { shipStat(Happiness) < 1 AND TheAdvisor.getStat("hr") < 5 } "Things are tense in the core."
+@a quartermaster { shipStat(Happiness) < 1 AND TheAdvisor.getStat("hr") >= 5 } "Things are tense in the core. We may not have the leverage to make demands, the group has grown in numbers."
+@a quartermaster { shipStat(Happiness) < 1 AND TheAdvisor.getStat("hr") < 5 } "Things are tense in the core, and more people are now joining the group."
 @a psycher { TheAdvisor.getStat("psy") >= 7 } "The core has given birth to these so called 'core singers'. Giving birth to a mind, but not from nothingness. From the other side. Do you understand what I'm saying?"
 @a psycher { TheAdvisor.getStat("corruption") >= 40 } "I have been in contact to these 'core singers' and I am intrigued. They may have something to contribute." = 838
 @a psycher { TheAdvisor.getStat("corruption") >= 80 } "I have met these 'core singers' myself. I believe they have a role to play in the future." = 838
@@ -206,12 +225,28 @@
 @a priest { shipStat(Holiness) >= 3 } "No heretics can take our holy ship! I will lead our people to the path of righteousness." = 840
 @a priest "The core is a sacred place, and must be under our direct control!" = 840
 
+#default_advice
+/* default fall-through advice */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@p { gameTime >= 0 } = 0
+@a captain "Any suggestions?"
+@a navigator "This doesn't concern me."
+@a engineer "I can't fix this."
+@a security "Nothing to report."
+@a quartermaster "We need to know more."
+@a psycher "Hmm."
+@a priest "I sahould pray for guidance."
+
 #intro Valeria1t
 /* trigger (1C07) INTRO 1 - Regulus and aristocrat's pledge */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
 @f "intro_Valeria"
+@f "intro"
 @location = getLocation(1C07)
 @t {o = 0} "Consul Regulus Valeria asks Valerian captains in orbit to publicly pledge their protection of Valerian colonies, and to keep the Dacei from interloping in Valerian interests."
 @c {o = 0} "Join the pledge." = 708
@@ -231,6 +266,7 @@
 @situation "Default"
 @ambient "DefaultBridge"
 @f "intro_Valeria"
+@f "intro"
 @location = getLocation(1C07)
 @p { event["intro Valeria1t"].outcome = 0 OR event["intro Valeria1t"].outcome = 713 } = 0
 @t {o = 0} "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites you to an official dinner to discuss local matters."
@@ -251,9 +287,14 @@
 @situation "Default"
 @ambient "DefaultBridge"
 @f "intro_Valeria"
+@f "intro"
 @location = getLocation(1C07)
 @p { event["intro Valeria2t"].outcome = 0 OR event["intro Valeria2t"].outcome = 729 } = 0
-@t {o = 0} "Incoming private message: Artifacts of the grey past are being sought in the Sovereign Void. You might be the one who brings one for me. -Lord Calius Valeria"
+@t {o = 0} "Incoming private message:
+
+'Artifacts of the grey past are being transported in the Sovereign Void. You might be the one who brings one for me.'            
+
+-Lord Calius Valeria"
 @c {o = 0} "Continue." = 734
 @o {c = 734} = 735 $=available = false $=end
 @a captain "Lord Calius is one of the most powerful persons in the sector, but it may change soon."
@@ -281,11 +322,11 @@
 @f "LOC_advice"
 @location = getLocation(1C01)
 @a captain "New Dirae is the capital of this subsector. There are many embassies housed in the Old Furian palaces."
-@a navigator "A long time ago, this world seeded the whole sector. The Navigators Spire is the tallest building in the Old Capital. There is also a web of paths around this ancient planet... and something beneath it."
-@a engineer "It's said this world has a hollow core, but the ship instruments show sprawling underground structures on planetary scale. A lot of old tech is dug up around here."
+@a navigator "A long time ago, this world seeded the whole sector. The Navigators Spire is the tallest building in the Old Capital. And below, there is something else..."
+@a engineer "It's said this world has a hollow core, but the ship instruments show sprawling underground structures of planetary-scale. A lot of old tech is dug up around here."
 @a security "There is a sizable fleet at the station. But even with large shipyards, there are nothing really fancy here."
 @a quartermaster "This is one of the big worlds, the Old Capital itself is 300 million people. We can probably find specialists here."
-@a psycher { TheAdvisor.getStat("psy") >= 4 } "We're being watched by several groups down at the planet. Buildings on top of buildings. Societies behind societies. For a long, long time."
+@a psycher { TheAdvisor.getStat("psy") >= 4 } "We're being watched by several groups down at the planet. Buildings on top of buildings, societies behind societies. All this going back a long, long time."
 @a psycher { TheAdvisor.getStat("psy") < 4 } "Someone down at the planet is watching us. Or someones."
 @a priest "Down there is a tomb of old technology. Tombs should not be disturbed."
 
@@ -296,13 +337,13 @@
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C02)
-@a captain "The Arch. The greatest achievement of mankind. Built in the Age of Fracture back at New Earth, it's been here for over 400 years. How many Archs were built?"
-@a navigator "Orion Bridge, Perseus Transit. Most Fracture Cores originally come from here."
+@a captain "The Arch. The greatest achievement of mankind. Built in the Age of Fracture back at Second Earth, it's been here for over 400 years. How many Archs were built?"
+@a navigator "Orion Bridge, Perseus Transit. Most Fracture Cores originally come from here. Even ours."
 @a engineer "Nobody understands the Arch anymore, but there are the Caretakers who maintain it, and are responsible for the Beacon. When it broke a 100 years ago, we lost contact to the Imperium and were left here to our own devices."
-@a security "You can find no better technology in the sector. If you have the money, you can fit anything to your ships in the Arch. It can dock even a Ship of the Line."
-@a quartermaster "There are 300.000 people living in The Arch, which is more than any other space station can handle. Some of the best minds are here. There is a pull to it, can you feel it?"
-@a psycher "You can't see the Caretakers on the station, they live in separated sections on the Arch. But I think I can feel them. Or someone, deep inside."
-@a priest "The blessed Arch. After the Caretakers failed at their task with the Beacon, the Church has been negotiating to share in the responsibility."
+@a security "You can find no better technology in the sector. If you have the money, you can fit anything to your ships in the Arch. The shipyards are huge and can even dock a Ship of the Line."
+@a quartermaster "There are 300.000 people living on The Arch, which is more than any other space station can handle. Some of the best minds of the sector are here. There is a pull to it, gravitas. Can you feel it?"
+@a psycher "You can't see the Caretakers on the station, they live in separated sections on the Arch. But I think I can feel them. I can feel someone, deep inside the Arch."
+@a priest "The Blessed Arch. After the Caretakers failed at their task with the Beacon, the Church has been negotiating to share in the responsibility. It feels wrong to have these... these technicians handling this sacred task."
 
 #loc_advice_1C03
 /* Megaera */
@@ -311,13 +352,13 @@
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C03)
-@a captain "This world that is doing pretty well. One of the places to keep an eye for misfortune."
+@a captain "This world is doing pretty well. A good supply world."
 @a navigator "Great Navigators come from Magaera. Lots of trade ships and skilled crew."
 @a engineer "Magaera is a volcanic world pushing up minerals and energy for the factories. You can get pretty good trades in here, importing food and exporting industrial goods."
 @a security "Small industrial world that doesn't build ships and arms. It needs to rely on the protection of a powerful faction. Maybe that was the intention?"
 @a quartermaster "Smart money is on Magaera. You can find all kinds of talents around here."
-@a psycher { TheAdvisor.getStat("corruption") >= 50 } "Free minds at work. So industrious. So innovative. My brothers, so many of them."
-@a psycher { TheAdvisor.getStat("corruption") < 50 } "Living at the edges of High Fracture leaves its mark. It's a good thing there is a strong order of the Brotherhood here."
+@a psycher { TheAdvisor.isIdeology("transhumanist") } "Free minds at work. So industrious. So innovative. My brothers, so many of them."
+@a psycher "Living at the edges of High Fracture leaves its mark. It's a good thing there is a strong order of the Brotherhood here."
 @a priest "Corruption. The kind that spoils both body and mind. We should aid the Cult and the Imperialists here."
 
 #loc_advice_1C04
@@ -326,13 +367,13 @@
 @situation "Default"
 @ambient "DefaultBridge"
 @f "LOC_advice"
-@a captain "Primitive worlds are abandoned to their own devices. In this case, by orbital bombardment. They can still produce food in the Southern continent, and it is traded out through the orbiting station."
-@a navigator "Insignificant. Rubble."
-@a engineer "What they really need is education. However, many of these primitive worlds have descended from reason into superstition and it would take a real effort to make it happen."
-@a security "Some of these primitive worlds have societies with true warrior culture. Utterly fearless, quick to learn."
-@a quartermaster "You can find fierce warriors in these feral worlds. Hard conditions breed hard men."
-@a psycher "The scars run deep here, and not all have forgotten what was done to them. But few look up at the stars anymore. Not like they used to."
-@a priest "The Church has monasteries in many of these planets, teaching people the right way to live. But it is hard sometimes, and many of them live in the darkness, like beasts."
+@a captain "Primitive worlds are abandoned to their own devices. In this case, it all started with an orbital bombardment. They can still produce food in the Southern continent and it is traded out through the orbiting station."
+@a navigator "Insignificant rubble. If not for the food, why are we here?"
+@a engineer "What they really need is education. However, many of these primitive worlds have descended from reason into superstition and it would take a real effort to make that happen."
+@a security "Some of these primitive worlds have societies with true warrior culture. Utterly fearless, quick to learn. I could beef up my security."
+@a quartermaster "You can find fierce warriors in these feral worlds. Hard conditions breed hard men. Should we get some?"
+@a psycher "The scars run deep here, and not all have forgotten what was done to them. Few of them look up at the stars anymore. Not like they used to."
+@a priest "The Church has monasteries in many of these planets, teaching people the right way to live. But it is hard sometimes and many of them live in the darkness."
 
 #loc_advice_1C05
 /* Tisiphone */
@@ -341,6 +382,7 @@
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C05)
+@p = 0
 @a captain "You can still see the scars from the orbit. And the carcasses of huge ships, now rusting skeletons half buried in the sand."
 @a navigator "The upper orbit still glitters like tears from the weeping eyes gone blind."
 @a engineer "A graveyard of ships. Let's have a look what they've dug up."
@@ -402,11 +444,11 @@
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C09)
+@trigger = getLocation(1C09)
 @a captain "A world robbed of function. And yet, old routines are maintained generations after generations."
 @a navigator "The Mortuary is a lone world at the edge of the sector. The path here is little travelled, a mere thread running in the Fracture. Sicent oblivion, a fitting fate."
 @a security "Grave robbers can be resourceful and in possession of all kinds of old technology. We should keep an eye on who we pick up here."
 @a quartermaster "A solemn place."
 @a psycher "I wonder if the rumours are true. I can't feel anything below, it's all quiet."
 @a priest "It is a holy place, even if they are far off and alone. Perhaps that is why they have avoided temptation."
-
 

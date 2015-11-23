@@ -20,7 +20,7 @@ public static class EventAdviceTagsParsed
     static public string getEventAdviceTag(string tagRecord, Character advisor)
     {
         // change first to lowercase for matching. return string will be checked where called
-        if (char.IsUpper(tagRecord[0])) tagRecord = EventAdviceTags.lowercaseFirst(tagRecord);
+        if (char.IsUpper(tagRecord[0])) tagRecord = EventAdviceTags.lowercaseFirst(tagRecord); // TODO todo
 
 
         // looking for tag match

@@ -139,7 +139,7 @@ namespace Simulation
         public int level
         {
             get { return data.level; }
-            private set { data.level = value; }
+            internal set { data.level = value; }
         }
         public Data.Resource.State state
         {
@@ -198,6 +198,10 @@ namespace Simulation
             {
                 data.state = Data.Resource.State.Sustain;
             }
+        }
+        public Data.Resource.State getState()
+        {
+            return data.state;
         }
 
         private void handlePolicyChanges()
@@ -280,7 +284,7 @@ namespace Simulation
             float popScale = Parameters.populationScaleMultiplier(location.features.population);
             pool.setGrowLimit(Parameters.upgradeCostMultiplier(data.level) * popScale);
             // consumption:
-            // resource production multiplier * population multiplier * tier multiplier
+            // resource production rate * population multiplier * tier multiplier
             pool.setConsumption(Parameters.resourceProducedDaily *
                                 popScale *
                                 Parameters.tierScaleMultiplier(data.level));

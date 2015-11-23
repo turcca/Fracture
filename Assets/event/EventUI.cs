@@ -11,6 +11,7 @@ public class EventUI : MonoBehaviour
     public GameObject eventPage;
 
     EventBase currentEvent;
+    EventBase defaultAdvice;
     EventDoneDelegate eventDoneCallback;
     Dictionary<int, EventChoicesBtn> choiceButtons = new Dictionary<int, EventChoicesBtn>();
     GameObject choiceButtonPrefab;
@@ -27,6 +28,7 @@ public class EventUI : MonoBehaviour
 
     void Start()
     {
+        defaultAdvice = Root.game.events.getEventByName("default_advice");
     }
 
     public void setEvent(EventBase e, EventDoneDelegate callback)
@@ -34,6 +36,17 @@ public class EventUI : MonoBehaviour
         eventDoneCallback = callback;
         currentEvent = e;
         startEvent();
+    }
+    public void loadLocationAdviceEvent(EventBase e)
+    {
+        if (Root.game.player.getLocation() != null)
+        {
+            currentEvent = e;
+            Debug.Log ("Loaded location event: '"+e.name+"'");
+        }
+        else currentEvent = null;
+
+        setupAdvisorManager();
     }
 
     public void eventChoicePicked(int i)
@@ -60,7 +73,6 @@ public class EventUI : MonoBehaviour
         {
             return "";
         }
-
         foreach (KeyValuePair<int, EventChoicesBtn> entry in choiceButtons)
         {
             if (currentEvent.getAdvice(job).recommend == entry.Key)
@@ -73,7 +85,14 @@ public class EventUI : MonoBehaviour
             }
         }
 
-        return currentEvent.getAdvice(job).text;
+        string advice = currentEvent.getAdvice(job).text;
+
+        if (advice == "NO ADVICE") 
+        {
+            advice = defaultAdvice.getAdvice(job).text;
+        }
+
+        return advice;
     }
 
     private void startEvent()
@@ -81,6 +100,7 @@ public class EventUI : MonoBehaviour
         currentEvent.initPre();
         currentEvent.start();
         continueEvent();
+        setupAdvisorManager();
     }
 
     private void endEvent()
@@ -107,20 +127,63 @@ public class EventUI : MonoBehaviour
         foreach (KeyValuePair<string, int> choice in currentEvent.getChoices())
         {
             choiceNum++;
-            drawChoice(choice.Value, choiceNum.ToString() + ". " + choice.Key);
+            drawChoice(choice.Value, choiceNum, choice.Key);
         }
     }
 
-    private void drawChoice(int num, string text)
+    private void drawChoice(int choiceInternal, int choiceNum, string text)
     {
         GameObject btn = (GameObject)GameObject.Instantiate(choiceButtonPrefab);
-        btn.GetComponent<Text>().text = text;
 
         // set relevant choice
         EventChoicesBtn buttonScript = btn.GetComponent<EventChoicesBtn>();
+        choiceButtons.Add (choiceInternal, buttonScript);
         buttonScript.callback = new EventChoicesBtn.ChoiceDelegate(eventChoicePicked);
-        buttonScript.choice = num;
+        buttonScript.choice = choiceInternal;
+        buttonScript.choiceTxt.text = text;
+        buttonScript.choiceNumber.text = choiceNum.ToString() +".";
 
-        btn.transform.parent = choiceButtonGrid.transform;
+        btn.transform.SetParent(choiceButtonGrid.transform);
+    }
+
+
+
+
+
+    internal void setupAdvisorManager()
+    {
+        // figure out if in event or location
+        GameObject eventSideWindow = GameObject.Find("SideWindow");
+        GameObject locationCanvas = GameObject.Find("LocationCanvas");
+
+        AdvisorManager am = null;
+
+        //if (eventSideWindow.activeSelf && locationCanvas.activeSelf)
+        if (eventSideWindow == null && locationCanvas == null)
+        {
+            Debug.LogError("ERROR: both AdvisorManagers are active: 'SideWindow/' AND 'LocationCanvas/'");
+            return;
+        }
+        // event
+        else if (eventSideWindow && eventSideWindow.activeSelf)
+        {
+            //Debug.Log("setup AdvisorManager / event");
+            am = eventSideWindow.GetComponentInChildren<AdvisorManager>();
+            if (am) am.setup();
+            else Debug.LogError("ERROR: event AdvisorManager not found.");
+        }
+        // location
+        else if (locationCanvas && locationCanvas.activeSelf)
+        {
+            //Debug.Log("setup AdvisorManager / location");
+            am = locationCanvas.GetComponentInChildren<AdvisorManager>();
+            if (am) am.setup();
+            else Debug.LogError("ERROR: location AdvisorManager not found.");
+        }
+        else
+        {
+            Debug.LogError("ERROR: no AdvisorManager are active: 'SideWindow/' AND 'LocationCanvas/'");
+            return;
+        }
     }
 }

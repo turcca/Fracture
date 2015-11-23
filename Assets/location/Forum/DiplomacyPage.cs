@@ -24,7 +24,7 @@ public class DiplomacyPage : MonoBehaviour
 
         foreach (var entry in location.features.factionCtrl)
         {
-            if (entry.Value > 0.01)
+            if (entry.Value > 0.008f)
             {
                 sortedControl.Add(new KeyValuePair<Faction.FactionID, float>(entry.Key, entry.Value));
             }

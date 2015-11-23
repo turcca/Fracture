@@ -1,0 +1,31 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# Sprite sheet: ping2.jpg (4096 x 1536)
+# $TexturePacker:SmartUpdate:b6f36c89bfa00e067833c25ee92fc66d:d10769cdaf80d8215eddfbf5f34f17d0:89d5fb23637c365930babf9caa8786b8$
+#
+
+singlePing_00000;0;1024;512;512;0.5;0.5
+singlePing_00001;512;1024;512;512;0.5;0.5
+singlePing_00002;1024;1024;512;512;0.5;0.5
+singlePing_00003;1536;1024;512;512;0.5;0.5
+singlePing_00004;2048;1024;512;512;0.5;0.5
+singlePing_00005;2560;1024;512;512;0.5;0.5
+singlePing_00006;3072;1024;512;512;0.5;0.5
+singlePing_00007;3584;1024;512;512;0.5;0.5
+singlePing_00008;0;512;512;512;0.5;0.5
+singlePing_00009;512;512;512;512;0.5;0.5
+singlePing_00010;1024;512;512;512;0.5;0.5
+singlePing_00011;1536;512;512;512;0.5;0.5
+singlePing_00012;2048;512;512;512;0.5;0.5
+singlePing_00013;2560;512;512;512;0.5;0.5
+singlePing_00014;3072;512;512;512;0.5;0.5
+singlePing_00015;3584;512;512;512;0.5;0.5
+singlePing_00016;0;0;512;512;0.5;0.5
+singlePing_00017;512;0;512;512;0.5;0.5
+singlePing_00018;1024;0;512;512;0.5;0.5
+singlePing_00019;1536;0;512;512;0.5;0.5
+singlePing_00020;2048;0;512;512;0.5;0.5

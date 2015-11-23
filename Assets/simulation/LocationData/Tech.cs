@@ -9,7 +9,7 @@ namespace Data
         public enum Type { Technology, Infrastructure, Military };
 
         public Tech.Type type;
-        public int level = 1;
+        public int level;
 
         public Tech(Type type)
         {
@@ -19,7 +19,7 @@ namespace Data
         public static Tech generateDebugData(Type type)
         {
             Tech rv = new Tech(type);
-            rv.level = 1;
+            //rv.level = 1;
             return rv;
         }
     }

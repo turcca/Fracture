@@ -5,19 +5,29 @@ using System;
 
 public class CommodityInventory
 {
-    public Dictionary<string, int> commodities = new Dictionary<string, int>();
-    public int maxCargoSpace = 10;
-    public int credits = 1000;
+    internal Dictionary<Data.Resource.SubType, int> commodities = new Dictionary<Data.Resource.SubType, int>();
+    public int maxCargoSpace { get; private set; }
+    public float credits = 128.0f;
 
     public CommodityInventory()
     {
-        foreach (string key in Economy.getCommodityNames())
+        foreach (Data.Resource.SubType type in Enum.GetValues(typeof(Data.Resource.SubType)))
         {
-            commodities.Add(key, 0);
+            commodities.Add(type, 0);
         }
+        maxCargoSpace = 10; // todo: load from ship data
+    }
+    public void addCargo(Data.Resource.SubType type, int amount = 1)
+    {
+        commodities[type] += amount;
     }
 
-    public int getUsedCargoSpace()
+    public int cargoAmount(Data.Resource.SubType type)
+    {
+        return commodities[type];
+    }
+
+    internal int getUsedCargoSpace()
     {
         int rv = 0;
         foreach (int value in commodities.Values)
@@ -25,6 +35,10 @@ public class CommodityInventory
             rv += value;
         }
         return rv;
+    }
+    public bool hasFreeCargoSpace()
+    {
+        return (getUsedCargoSpace() < maxCargoSpace) ? true : false;
     }
 }
 
@@ -34,7 +48,8 @@ public class Player
     private Dictionary<int, Character> characters = new Dictionary<int, Character>();
     private Dictionary<Character.Job, int> advisors = new Dictionary<Character.Job, int>();
 
-    public Vector3 position = new Vector3(0, 0, 0);
+    public Vector3 position;
+    private double warpMagnitude = 0.0d;
     private string locationId = "";
 
     private float elapsedDays = 0;
@@ -45,22 +60,29 @@ public class Player
 
     public void init()
     {
-        Character.Job[] tempChars =
-        {
-            Character.Job.captain,
-            Character.Job.navigator,
-            Character.Job.engineer,
-            Character.Job.security,
-            Character.Job.quartermaster,
-            Character.Job.psycher
-        };
+        // starting characters initialized (todo: move to game init with game setup menus)
+        createCharacter(Character.Job.captain, "starting captain");
+        createCharacter(Character.Job.navigator, "starting navigator");
+        createCharacter(Character.Job.engineer/*, "engineer"*/);
+        createCharacter(Character.Job.security/*, "security"*/);
+        createCharacter(Character.Job.quartermaster/*, "quartermaster"*/);
+        createCharacter(Character.Job.psycher, "brotherhood");
 
-        foreach (Character.Job job in tempChars)
-        {
-            Character c = new Character();
+    }
+    public void createCharacter(Character.Job? assignment = null, string templateName = null) // job parameter will try to assign character to the job
+    {
+        Character c = CharacterTemplates.getCharacter(templateName);
 
+        if (assignment == null)
+        {
             characters.Add(c.id, c);
-            advisors.Add(job, c.id);
+        }
+        else
+        {
+            Character.Job job = (Character.Job)assignment;
+            characters.Add(c.id, c);
+            if (!advisors.ContainsKey(job)) advisors.Add(job, c.id);
+            c.assignment = job;
         }
     }
 
@@ -69,12 +91,20 @@ public class Player
         return (int)elapsedDays;
     }
 
-    public double getWarpMagnitude()
+    public float getWarpMagnitude()
     {
-        return 0.0;
+        return (float)warpMagnitude*6.0f;
+    }
+    public void setWarpMagnitude(double mag)
+    {
+        warpMagnitude = mag;
+    }
+    public double getRawWarpMagnitude()
+    {
+        return warpMagnitude;
     }
 
-    public Character getCharacter(Character.Job job)
+    public Character getAdvisor(Character.Job job)
     {
         if (advisors.ContainsKey(job) && characters.ContainsKey(advisors[job]))
         {
@@ -114,10 +144,27 @@ public class Player
     {
         locationId = loc;
     }
+    public Location getLocation()
+    {
+        if (Root.game.locations.ContainsKey(locationId))
+        {
+            return Root.game.locations[locationId];
+        }
+        else
+        {
+            Debug.LogWarning ("WARNING: player.locationId not valid: "+locationId);
+            return null;
+        }
+    }
+    public Location getClosestHabitat()
+    {
+        return Root.game.getClosestHabitat(new Vector2(position.x, position.z));
+    }
 
     public void tick(float days)
     {
         elapsedDays += days;
+        //advisor exp - character tick?
     }
 
     public void setAdvisor(Character.Job job, int id)

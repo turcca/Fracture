@@ -151,6 +151,7 @@ namespace Simulation
                     switch (resource.Value.policy)
                     {
                         case Data.Resource.Policy.Grow:
+                            Debug.LogWarning("exporting 'Grow'");
                             current.weight *= 0.9f;
                             break;
                         case Data.Resource.Policy.GrowTech:
@@ -160,6 +161,7 @@ namespace Simulation
                             current.weight *= 0.5f;
                             break;
                         case Data.Resource.Policy.Stockpile:
+                            Debug.LogWarning("exporting 'Stockpile'");
                             current.weight *= 0.8f;
                             break;
                         case Data.Resource.Policy.BareMinimum:
@@ -179,7 +181,7 @@ namespace Simulation
                     current.isExported = false;
                     current.amount = -current.amount;
                     current.weight = resource.Value.effectiveMultiplier > 2.0f ? 0 : 2.0f-resource.Value.effectiveMultiplier;
-                    if (resource.Value.state == Data.Resource.State.Shortage) current.weight *= 3.0f;
+                    if (resource.Value.state == Data.Resource.State.Shortage) current.weight *= Parameters.resourceShortageMultiplier;
                     
                     // set weights
                     switch (resource.Value.policy)
@@ -197,6 +199,7 @@ namespace Simulation
                             current.weight *= 1.0f;
                             break;
                         case Data.Resource.Policy.BareMinimum:
+                            Debug.LogWarning("importing 'BareMinimum'");
                             current.weight *= 1.0f;
                             break;
                         case Data.Resource.Policy.Downsize:
@@ -220,8 +223,8 @@ namespace Simulation
 
         public List<Data.TradeItem> tradeItems = new List<Data.TradeItem>();
 
-        public Data.Tech.Type? techGoal;
-        public Data.Resource.Type? resourceGoal;  
+        public Data.Tech.Type? techGoal { get; private set; }
+        public Data.Resource.Type? resourceGoal { get; private set; }  
 
         Location location;
 		LocationEconomyAI ai;
@@ -245,6 +248,8 @@ namespace Simulation
  
             this.techGoal = null;
             this.resourceGoal = null;
+
+            loadFeaturesToEconomy();
         }
 
         // ----------------------------------------------------------TICK
@@ -336,6 +341,26 @@ namespace Simulation
             }
         }
 
+        public Data.TradeItem getTradeItem (Data.Resource.SubType subType, List<Data.TradeItem> tradeList = null)
+        {
+            if (tradeList == null)
+            {
+                foreach (Data.TradeItem item in tradeItems)
+                {
+                    if (item.subType == subType) return item;
+                }
+            }
+            else
+            {
+                foreach (Data.TradeItem item in tradeList)
+                {
+                    if (item.subType == subType) return item;
+                }
+            }
+            Debug.LogError ("input error");
+            return null;
+        }
+
         internal string toDebugString()
         {
             string rv = "";
@@ -405,11 +430,17 @@ namespace Simulation
         }
         public float getTotalEffectiveLocationResourceMultiplier()
         {
-            float mul = 1.0f;
+            float mul = 0;
+            float count = 0;
             foreach (var pair in resources)
             {
-                mul *= pair.Value.level > 0 ? getEffectiveMul(pair.Key) : 1.0f;
+               if (pair.Value.level > 0)
+                {
+                    mul += getEffectiveMul(pair.Key);
+                    count++;
+                }
             }
+            mul /= count > 0 ? count : 1.0f;
             return mul;
         }
         internal float getEffectiveMul(Data.Resource.Type type)
@@ -471,6 +502,57 @@ namespace Simulation
                     shortages.Add(resource.Key);
             }
             return shortages;
+        }
+
+        private void loadFeaturesToEconomy()
+        {
+            int startingLevel = 0;
+            // load tech-level & resource-level features to economy              
+            technologies[Data.Tech.Type.Technology].level = location.features.startingTechLevel;
+            technologies[Data.Tech.Type.Infrastructure].level = location.features.startingInfrastructure;
+            technologies[Data.Tech.Type.Military].level = location.features.startingMilitaryTechLevel;
+
+            // resolve resource starting levels from starting tech levels (parsed from location features)
+            foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)) )
+            {
+                // infra-dependent industry
+                if (type == Data.Resource.Type.Food || type == Data.Resource.Type.Mineral || type == Data.Resource.Type.Industry) 
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingInfrastructure > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if infra = 0, then 0
+                    else { startingLevel = (location.features.startingInfrastructure != 1) ? (Mathf.Max (location.features.startingInfrastructure-1, 0)) : 1; } // developped industry: infra0 = 0, infra1 = 1, infra2 = 1, infra3 = 2, infra4 = 3
+                }
+                // tech-dependent industry
+                else if (type == Data.Resource.Type.Economy || type == Data.Resource.Type.Innovation || type == Data.Resource.Type.Culture)  
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
+                    else { startingLevel = location.features.startingTechLevel; } // resource = tech
+                }
+                // military-dependent industry
+                else if (type == Data.Resource.Type.Military)  
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingMilitaryTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
+                    else { startingLevel = location.features.startingMilitaryTechLevel; } // resource = tech
+                }
+                else if (type == Data.Resource.Type.BlackMarket) 
+                {
+                    if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
+                    else { startingLevel = location.features.startingTechLevel; } // resource = tech
+                    if (location.features.visibility == Data.Location.Visibility.Hiding) startingLevel += 1; // +1 from hiding
+                    startingLevel += (int)(0.0f - ((location.ideology.effects.police *3.0f)+1.0f));         // -3 to +2 from ideology
+                    startingLevel = Mathf.Min (startingLevel, location.features.startingTechLevel);         // cap to max tech lvl
+
+                    // SETTING LEGALITY legality
+                    location.features.legality = Mathf.Clamp(startingLevel, 0, 4);
+                    //Debug.Log (location.name+" ("+location.id+") blackMarket starting lvl: "+startingLevel);
+                }
+                resources[type].level = Mathf.Clamp(startingLevel, 0, 4);
+            }
+
+            // resolve starting resource pools
+            foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)) )
+            {
+                resources[type].import (resources[type].level * 2);
+            }
         }
     }
 }

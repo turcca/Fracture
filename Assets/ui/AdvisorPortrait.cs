@@ -12,12 +12,12 @@ public class AdvisorPortrait : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        setImage();
+        //setImage(); // TODO: use setImage for dynamic portrait-assigning. Currently it just keeps the portraits assigned from the eventScene.unity & locationScene.unity
     }
 
     private void setImage()
     {
-        character = Root.game.player.getCharacter(job);
+        character = Root.game.player.getAdvisor(job);
         if (character != Character.Empty)
         {
             characterImage.sprite = Root.PortraitManager.getPortraitSprite(character.portrait.id);
@@ -27,12 +27,6 @@ public class AdvisorPortrait : MonoBehaviour
         {
             characterImage.enabled = false;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void updateView()

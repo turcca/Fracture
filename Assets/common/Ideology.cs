@@ -1,10 +1,14 @@
-﻿using System;
+﻿//using System;
 using System.Collections.Generic;
-using System.Globalization;
+using UnityEngine;
+//using System.IO;
+//using UnityEngine.UI;
+//using System.Globalization;
 
-public class Faction
+static public class Faction
 {
     public enum FactionID { noble1, noble2, noble3, noble4, guild1, guild2, guild3, church, heretic };
+    public enum Agenda { loyalist, idealist, faithful, reformist, transhumanist, separatist, nationalist, heretic, individualist } // todo agendas
     public enum IdeologyID { cult, technocrat, mercantile, bureaucracy, liberal, nationalist, aristocrat, imperialist, navigators, brotherhood, transhumanist }
 
     static public string getFactionName(Faction.FactionID id)
@@ -13,32 +17,51 @@ public class Faction
         {
             case FactionID.noble1: return "House Furia";
             case FactionID.noble2: return "House Rathmund";
-            case FactionID.noble3: return "House Valeria";
-            case FactionID.noble4: return "House Tarquinia";
+            case FactionID.noble3: return "House Tarquinia";
+            case FactionID.noble4: return "House Valeria";
             case FactionID.guild1: return "Everlasting Union";
             case FactionID.guild2: return "Dacei Family";
             case FactionID.guild3: return "Coruna Cartel";
             case FactionID.church: return "Church";
-            case FactionID.heretic: return "Heretics";
+            case FactionID.heretic: return "Radical Movement";
             default: return "";
         }
     }
-    static public string getFactionName(string id)
+
+    static public string getPartyName(IdeologyID id) // Governor of the [___]
     {
-        Dictionary<string, string> names = new Dictionary<string, string>()
-        {
-            {"noble1", "House Furia"},
-            {"noble2", "House Rathmund"},
-            {"noble3", "House Valeria"},
-            {"noble4", "House Tarquinia"},
-            {"guild1", "Everlasting Union"},
-            {"guild2", "Dacei Family"},
-            {"guild3", "Coruna Cartel"},
-            {"church", "Church"},
-            {"cult", "Heretics"}
-        };
-        return names[id];
+        if (id == IdeologyID.cult) return "Order";
+        else if (id == IdeologyID.technocrat) return "Technocrats";
+        else if (id == IdeologyID.mercantile) return "Guild of Merchants";
+        else if (id == IdeologyID.bureaucracy) return "Bureaucrats";
+        else if (id == IdeologyID.liberal) return "Liberals";
+        else if (id == IdeologyID.nationalist) return "Nationalists";
+        else if (id == IdeologyID.aristocrat) return "Aristocrats";
+        else if (id == IdeologyID.imperialist) return "Imperialists";
+        else if (id == IdeologyID.navigators) return "Navigator's Guild";
+        else if (id == IdeologyID.brotherhood) return "Brotherhood";
+        else if (id == IdeologyID.transhumanist) return "Radical Movement";
+        Debug.LogError("ERROR");
+        return "";
     }
+    static public string getPartyDescription(IdeologyID id)
+    {
+        if (id == IdeologyID.cult) return "Believers are fanatic defenders of the Faith and the Empire. They live modest lives of worship when they're not on some crusade or another.";
+        else if (id == IdeologyID.technocrat) return "Technologists are often seen running old and complex machinery, dedicating their lives to understand all that was built to serve mankind.";
+        else if (id == IdeologyID.mercantile) return "Merchants are often members of powerful conglomerates who benefit from the fragmented production across the interstellar space. While motivated by self interest, they play an important role in the survival of the sector.";
+        else if (id == IdeologyID.bureaucracy) return "Administrators are the pencil pushers and bureaucrats. They excel in running organizations from behind desks.";
+        else if (id == IdeologyID.liberal) return "Liberals are diplomats and brilliant minds, often quite theoretical and proponents of radical ideals.";
+        else if (id == IdeologyID.nationalist) return "Separatists are fiercely independent and hold little love for the Imperial rule. Industrious, militant and mostly practical, they can be found at the frontiers of the Empire.";
+        else if (id == IdeologyID.aristocrat) return "Nobles and aristocrats, the favored few and some say the backbone of the Empire. They are raised to lead the masses, and provided with opportunities to dabble with anything interesting coming their way. ";
+        else if (id == IdeologyID.imperialist) return "Loyalists live by the laws and ideals of the Empire. They may appear moderate, but from the masses arise formidable individuals that shape the galaxy.";
+        else if (id == IdeologyID.navigators) return "Navigators are an ancient guild. There are many rumors and stories told about them in hushed voices. It is said that their devotion to fracture makes them quite detached.";
+        else if (id == IdeologyID.brotherhood) return "The Brotherhood is a secretive order. It is said they're all frackers of great power, and work for some hidden agenda of the Empire. While psychers can create many problems for humanity, there is a measure of stability within the Brotherhood.";
+        else if (id == IdeologyID.transhumanist) return "Radicals follow a different vision for the future of mankind, and it's not under the oppressive rule of the Empire. They are unhinged individualists that are said to harbor mutants and heretics among them.";
+        Debug.LogError("ERROR");
+        return "";
+    }
+
+
     static public string factionToString (FactionID faction)
     {
         switch(faction)
@@ -71,223 +94,291 @@ public class Faction
         default: return FactionID.noble1;
         }
     }
-    static public string getTitle(string id)
+    static public string getGovernmentType(FactionID id, bool hasFlipped = false)
     {
-        Dictionary<string, string> names = new Dictionary<string, string>()
+        switch (id)
         {
-            {"noble1", "Governor"},
-            {"noble2", "Governor"},
-            {"noble3", "Governor"},
-            {"noble4", "Governor"},
-            {"guild1", "Governor"},
-            {"guild2", "Governor"},
-            {"guild3", "Governor"},
-            {"church", "Bishop"},
-            {"cult", "Protector"}
-        };
-        return names[id];
+            case FactionID.noble1: return (!hasFlipped) ? "Imperial" : "Separatist"; // todo: return "Separatist" if House Furia flipped
+            case FactionID.noble2: return "Imperial";
+            case FactionID.noble3: return "Imperial";
+            case FactionID.noble4: return "Imperial";
+            case FactionID.guild1: return "Civilian";
+            case FactionID.guild2: return "Civilian";
+            case FactionID.guild3: return "Civilian";
+            case FactionID.church: return "Theocratic";
+            case FactionID.heretic: return (!hasFlipped) ? "Unknown" : "Theocratic"; // todo: has heretics come out of the closet
+            default: return "";
+        }
     }
-}
-
-public class FactionData
-{
-    //public Dictionary<string, float> control = new Dictionary<string, float>();
-    public Dictionary<string, string> ruler = new Dictionary<string, string>();
-
-    static public string[] getFactionIds()
+    static public string getGovernmentType(Faction.IdeologyID id) // government:
     {
-        string[] rv = new string[]
+        switch (id)
         {
-            "noble1",
-            "noble2",
-            "noble3",
-            "noble4",
-            "guild1",
-            "guild2",
-            "guild3",
-            "church",
-            "heretic"
-        };
+            case Faction.IdeologyID.cult:        return "Imperial"; 
+            case Faction.IdeologyID.technocrat:  return "Civilian";
+            case Faction.IdeologyID.mercantile:  return "Civilian";
+            case Faction.IdeologyID.bureaucracy: return "Imperial";
+            case Faction.IdeologyID.liberal:     return "Civilian";
+            case Faction.IdeologyID.nationalist: return "Separatist";
+            case Faction.IdeologyID.aristocrat:  return "Imperial";
+            case Faction.IdeologyID.imperialist: return "Imperial";
+            case Faction.IdeologyID.navigators:  return "Order";
+            case Faction.IdeologyID.brotherhood: return "Order";
+            case Faction.IdeologyID.transhumanist: return "Civilian";
+            default: return "";
+        }
+    }
+
+    static public string getTitle(FactionID id, int lvl)
+    {
+        // 4th title comes easier for factions!
+
+        if (id == FactionID.noble1)      return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.noble2) return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.noble3) return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.noble4) return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.guild1)
+        {
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "President";
+            else                return "Primus Transcended";
+        }
+        else if (id == FactionID.guild2) return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.guild3) return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.church)
+        {
+            if (lvl <= 2)       return "Bishop";
+            else if (lvl <= 3)  return "Bishop";
+            else if (lvl <= 4)  return "Archbishop";
+            else                return "Apostle";
+        }
+        else if (id == FactionID.heretic)
+        {
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Protector";
+            else if (lvl <= 4)  return "Messiah";
+            else                return "Antipope";
+        }
+        return "Governor";
+    }
+    static public string getTitle(Faction.IdeologyID id, int lvl)
+    {
+        if (id == Faction.IdeologyID.cult) 
+        {
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.technocrat)   
+        {
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.mercantile)   
+        {
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.bureaucracy)  
+        {
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.liberal)      
+        {
+            if (lvl <= 2)       return "Minister";
+            else if (lvl <= 3)  return "Prime Minister";
+            else if (lvl <= 4)  return "President";
+            else                return "Sector President";
+        }
+        else if (id == Faction.IdeologyID.nationalist)  
+        {
+            if (lvl <= 2)       return "Councillor";
+            else if (lvl <= 3)  return "Commissar";
+            else if (lvl <= 4)  return "People's Commissar";
+            else                return "High Commander";
+        }
+        else if (id == Faction.IdeologyID.aristocrat)   
+        {
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.imperialist)  
+        {
+            if (lvl <= 2)       return "Senator";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.navigators)   
+        {
+            if (lvl <= 2)       return "Senior Advisor";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.brotherhood)  
+        {
+            if (lvl <= 2)       return "Senior Advisor";
+            else if (lvl <= 3)  return "Governor";
+            else if (lvl <= 4)  return "Exarch";
+            else                return "High Exarch";
+        }
+        else if (id == Faction.IdeologyID.transhumanist)
+        {
+            if (lvl <= 2)       return "Minister";
+            else if (lvl <= 3)  return "Prime Minister";
+            else if (lvl <= 4)  return "Transcended";
+            else                return "Primus Transcended";
+        }
+        return "Governor";
+    }
+    //static public string getTitle() { return "Governor"; }
+
+    static public string getImportanceDescription(Location location)
+    {
+        string rv = "";
+        float importance = Simulation.Parameters.getImportance(location);
+
+        // primitive world
+        if (location.economy.technologies[Data.Tech.Type.Technology].level == 0) rv += "Primitive";
+
+        // station
+        else if (location.features.isStation())
+        {
+            if (importance < 1f) rv += "Border";
+            else if (importance < 2f) rv += "Minor";
+            else if (importance < 3f) rv += "Midway";
+            else if (importance < 4f) rv += "Major";
+            else if (importance < 5f) rv += "Central";
+            else rv += "Capital";
+            rv += " Station";
+        }
+
+        // standard planetary world
+        else if (importance < 1f) rv += "Border";
+        else if (importance < 2f) rv += "Minor";
+        else if (importance < 3f) rv += "Major";
+        else if (importance < 4f) rv += "Central";
+        else if (importance < 5f) rv += "Core";
+        else rv += "Capital";
+
+        if (importance < 5f)
+        {
+            float industry = location.economy.getEffectiveMul(Data.Resource.Type.Industry);
+            float food = location.economy.getEffectiveMul(Data.Resource.Type.Food);
+            if (industry > 1.2f && industry > food) rv += " Industrial";
+            else if (food > 1.2f && food > industry) rv += " Agri";
+            else
+            {
+                if (location.economy.getEffectiveMul(Data.Resource.Type.Innovation) > 1.2f) rv += " Tech";
+                else if (location.economy.getEffectiveMul(Data.Resource.Type.Mineral) > 1.2f) rv += " Mining";
+                else if (location.economy.getEffectiveMul(Data.Resource.Type.Economy) > 1.2f) rv += " Financial";
+                else if (location.economy.getEffectiveMul(Data.Resource.Type.Culture) > 1.2f) rv += " Manufacturing";
+                else if (location.economy.getEffectiveMul(Data.Resource.Type.Military) > 1.2f) rv += " Contractor";
+                else if (location.economy.getEffectiveMul(Data.Resource.Type.BlackMarket) > 1.3f) rv += " Black Market";
+            }
+        }
+        rv += " World";
+
         return rv;
     }
-    public FactionData(string data)
+    static public string getTechDescription(Location location, Data.Tech.Type techType, bool getOnlyDescription = false)
     {
-        /*
-        string[] dataChunk = data.Split(',');
-        control["noble1"] = float.Parse(dataChunk[0], CultureInfo.InvariantCulture.NumberFormat);
-        control["noble2"] = float.Parse(dataChunk[1], CultureInfo.InvariantCulture.NumberFormat);
-        control["noble3"] = float.Parse(dataChunk[2], CultureInfo.InvariantCulture.NumberFormat);
-        control["noble4"] = float.Parse(dataChunk[3], CultureInfo.InvariantCulture.NumberFormat);
-        control["guild1"] = float.Parse(dataChunk[4], CultureInfo.InvariantCulture.NumberFormat);
-        control["guild2"] = float.Parse(dataChunk[5], CultureInfo.InvariantCulture.NumberFormat);
-        control["guild3"] = float.Parse(dataChunk[6], CultureInfo.InvariantCulture.NumberFormat);
-        control["church"] = float.Parse(dataChunk[7], CultureInfo.InvariantCulture.NumberFormat);
-        control["heretic"] = float.Parse(dataChunk[8], CultureInfo.InvariantCulture.NumberFormat);
-*/
-        // randomize rulers
-        ruler["noble1"] = NameGenerator.getName("noble1");
-        ruler["noble2"] = NameGenerator.getName("noble2");
-        ruler["noble3"] = NameGenerator.getName("noble3");
-        ruler["noble4"] = NameGenerator.getName("noble4");
-        ruler["guild1"] = NameGenerator.getName("guild1");
-        ruler["guild2"] = NameGenerator.getName("guild2");
-        ruler["guild3"] = NameGenerator.getName("guild3");
-        ruler["church"] = NameGenerator.getName("church");
-        ruler["cult"] = NameGenerator.getName("cult");
-    }
-    /*
-    public float getTotalControl()
-    {
-        float rv = 0.0f;
-        foreach (float value in control.Values)
+        string rv = "";
+
+        if (techType == Data.Tech.Type.Infrastructure)
         {
-            rv += value;
+            if (!getOnlyDescription) rv += "Infrastructure:  ";
+            if (location.economy.technologies[Data.Tech.Type.Infrastructure].level == 0) rv += "None";
+            else if (location.economy.technologies[Data.Tech.Type.Infrastructure].level == 1) rv += "Poor";
+            else if (location.economy.technologies[Data.Tech.Type.Infrastructure].level == 2) rv += "Standard";
+            else if (location.economy.technologies[Data.Tech.Type.Infrastructure].level == 3) rv += "Developed";
+            else if (location.economy.technologies[Data.Tech.Type.Infrastructure].level == 4) rv += "Planetary";
+        }
+        else if (techType == Data.Tech.Type.Technology)
+        {
+            if (!getOnlyDescription) rv += "Tech Level:  ";
+            if (location.economy.technologies[Data.Tech.Type.Technology].level == 0) rv += "Primitive";
+            else if (location.economy.technologies[Data.Tech.Type.Technology].level == 1) rv += "Industrial";
+            else if (location.economy.technologies[Data.Tech.Type.Technology].level == 2) rv += "Standard";
+            else if (location.economy.technologies[Data.Tech.Type.Technology].level == 3) rv += "High";
+            else if (location.economy.technologies[Data.Tech.Type.Technology].level == 4) rv += "Core Tech";
+        }
+        else if (techType == Data.Tech.Type.Military)
+        {
+            if (!getOnlyDescription) rv += "Military Tech:  ";
+            if (location.economy.technologies[Data.Tech.Type.Military].level == 0) rv += "Primitive";
+            else if (location.economy.technologies[Data.Tech.Type.Military].level == 1) rv += "Simple";
+            else if (location.economy.technologies[Data.Tech.Type.Military].level == 2) rv += "Standard";
+            else if (location.economy.technologies[Data.Tech.Type.Military].level == 3) rv += "Advanced";
+            else if (location.economy.technologies[Data.Tech.Type.Military].level == 4) rv += "Core Tech";
         }
         return rv;
     }
-    public string getStrongest()
+
+
+    static public Sprite getFactionLogo(Faction.FactionID faction, bool isSmall = false)
+    {
+        string iconName =
+            (faction == Faction.FactionID.noble1) ? "Logo_Faction_Furia" :
+            (faction == Faction.FactionID.noble2) ? "Logo_Faction_Rathmund" :
+            (faction == Faction.FactionID.noble3) ? "Logo_Faction_Tarquinia" :
+            (faction == Faction.FactionID.noble4) ? "Logo_Faction_Valeria" :
+            (faction == Faction.FactionID.guild1) ? "Logo_Faction_Union" :
+            (faction == Faction.FactionID.guild2) ? "Logo_Faction_Dacei" :
+            (faction == Faction.FactionID.guild3) ? "Logo_Faction_Coruna Cartel" :
+            (faction == Faction.FactionID.church) ? "Logo_Faction_Church" :
+            (faction == Faction.FactionID.heretic) ? "Logo_Faction_Heretics" :
+            "";
+        if (isSmall) iconName += "_s";
+        //Debug.Log(String.Format("ui{0}factions{0}{1}", Path.DirectorySeparatorChar, iconName));
+        //return Resources.Load<Sprite>(String.Format("ui{0}factions{0}{1}", Path.DirectorySeparatorChar, iconName));
+        return Resources.Load<Sprite>("ui/factions/" + iconName);
+    }
+    static public string getIdeologyList(Location location)
     {
         string rv = "";
-        float currentPick = 0.0f;
-        foreach(KeyValuePair<string, float> pair in control)
+        foreach (var ideology in location.ideology.support)
         {
-            if (pair.Value > currentPick)
+            if (ideology.Value > 0.0f)
             {
-                rv = pair.Key;
-                currentPick = pair.Value;
+                rv += ideology.Key.ToString() +": "+ Mathf.Round(ideology.Value*100f) +"%\n";
             }
         }
         return rv;
     }
-    */
 }
 
-public class IdeologyData
+
+public class FactionData
 {
-    static public string[] getIdeologyNames()
+    // faction rulers
+    public Dictionary<Faction.FactionID, string> ruler = new Dictionary<Faction.FactionID, string>();
+
+
+    public FactionData(string data)
     {
-        return new string[]
-        {
-            "imperialist",
-            "nationalist",
-            "navigators",
-            "brotherhood",
-            "liberal",
-            "bureaucracy",
-            "technocrat",
-            "transhumanist",
-            "cult",
-            "mercantile",
-            "aristocrat"
-        };
+        // randomize rulers -- get the HQ -location ruler?
+        ruler[Faction.FactionID.noble1] = NameGenerator.getName(Faction.FactionID.noble1);
+        ruler[Faction.FactionID.noble2] = NameGenerator.getName(Faction.FactionID.noble2);
+        ruler[Faction.FactionID.noble3] = NameGenerator.getName(Faction.FactionID.noble3);
+        ruler[Faction.FactionID.noble4] = "Calius Valeria"; //NameGenerator.getName(Faction.FactionID.noble4);
+        ruler[Faction.FactionID.guild1] = NameGenerator.getName(Faction.FactionID.guild1);
+        ruler[Faction.FactionID.guild2] = NameGenerator.getName(Faction.FactionID.guild2);
+        ruler[Faction.FactionID.guild3] = NameGenerator.getName(Faction.FactionID.guild3);
+        ruler[Faction.FactionID.church] = NameGenerator.getName(Faction.FactionID.church);
+        ruler[Faction.FactionID.heretic]= NameGenerator.getName(Faction.FactionID.heretic);
     }
 
-    public struct Effects
-    {
-        public float pgrowth;
-        public float industry;
-        public float economy;
-        public float diplomacy;
-        public float happiness;
-        public float affluence;
-        public float innovation;
-        public float morale;
-        public float altruism;
-        public float military;
-        public float holy;
-        public float psych;
-        public float navigation;
-        public float purity;
-        public float police;
-        public float violent;
-        public float aristocracy;
-        public float imperialism;
-    }
-
-    //static public string[] getEffectNames()
-    //{
-    //    return new string[]
-    //    {
-    //        "pgrowth",
-    //        "industry",
-    //        "economy",
-    //        "diplomacy",
-    //        "happiness",
-    //        "affluence",
-    //        "innovation",
-    //        "morale",
-    //        "altruism",
-    //        "military",
-    //        "holy",
-    //        "psych",
-    //        "navigation",
-    //        "purity",
-    //        "police",
-    //        "violent",
-    //        "aristocracy",
-    //        "imperialism"
-    //    };
-    //}
-
-
-    public Dictionary<Data.Resource.Type, float> resourceMultiplier =
-        new Dictionary<Data.Resource.Type, float>(); 
-    public Dictionary<string, float> support = new Dictionary<string, float>();
-    public Effects effects = new Effects();
-
-    public IdeologyData()
-    {
-        foreach (string ideology in getIdeologyNames())
-        {
-            support[ideology] = 0.0f;
-        }
-        foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
-        {
-            resourceMultiplier.Add(type, 0.0f);
-        }
-        calculateEffects();
-    }
-
-    public void calculateEffects()
-    {
-        effects.pgrowth     = (support["cult"] * 1.0f   + support["technocrat"] * -0.6f + support["mercantile"] * -1.0f + support["bureaucracy"] * 0.6f + support["liberal"] * -1.0f + support["nationalist"] * 0.8f    + support["aristocrat"] * 0.7f + support["imperialist"] * 0.2f  + support["navigators"] * -3.0f + support["brotherhood"] * -0.7f + support["transhumanist"] * 0.6f);
-        effects.industry    = (support["cult"] * 0.4f   + support["technocrat"] * 0.3f  + support["mercantile"] * -0.1f + support["bureaucracy"] * 0.8f + support["liberal"] * -0.4f + support["nationalist"] * 0.7f    + support["aristocrat"] * 0.3f + support["imperialist"] * 0.0f  + support["navigators"] * -0.5f + support["brotherhood"] * -1.0f + support["transhumanist"] * -0.2f);
-        effects.economy     = (support["cult"] * -0.8f  + support["technocrat"] * 0.0f  + support["mercantile"] * 1.0f  + support["bureaucracy"] * 0.3f + support["liberal"] * 0.2f  + support["nationalist"] * -0.3f   + support["aristocrat"] * -0.3f + support["imperialist"] * -0.1f + support["navigators"] * 0.5f + support["brotherhood"] * 0.2f  + support["transhumanist"] * -0.3f);
-        effects.diplomacy   = (support["cult"] * -0.8f  + support["technocrat"] * 0.0f  + support["mercantile"] * 1.0f  + support["bureaucracy"] * 0.1f + support["liberal"] * 1.0f + support["nationalist"] * -1.0f    + support["aristocrat"] * 0.4f + support["imperialist"] * 0.3f  + support["navigators"] * 0.6f  + support["brotherhood"] * 0.5f  + support["transhumanist"] * 0.8f);
-        effects.happiness   = (support["cult"] * -0.1f  + support["technocrat"] * 0.0f  + support["mercantile"] * 0.5f  + support["bureaucracy"] * -0.2f + support["liberal"] * 0.9f + support["nationalist"] * 0.3f    + support["aristocrat"] * -0.3f + support["imperialist"] * 0.0f + support["navigators"] * 0.2f  + support["brotherhood"] * 0.3f  + support["transhumanist"] * 1.0f);
-        effects.affluence   = (support["cult"] * -0.7f  + support["technocrat"] * 0.3f  + support["mercantile"] * 1.0f  + support["bureaucracy"] * 0.1f  + support["liberal"] * 0.6f + support["nationalist"] * -0.3f   + support["aristocrat"] * 0.3f + support["imperialist"] * 0.0f  + support["navigators"] * 0.6f  + support["brotherhood"] * 0.0f  + support["transhumanist"] * -0.1f);
-        effects.innovation  = (support["cult"] * -0.4f  + support["technocrat"] * 0.5f  + support["mercantile"] * 0.4f  + support["bureaucracy"] * -0.3f + support["liberal"] * 1.0f + support["nationalist"] * -0.3f   + support["aristocrat"] * -0.1f + support["imperialist"] * -0.2f + support["navigators"] * 0.7f + support["brotherhood"] * 0.8f  + support["transhumanist"] * 0.8f);
-        effects.morale      = (support["cult"] * 1.0f   + support["technocrat"] * -0.2f + support["mercantile"] * -0.9f + support["bureaucracy"] * -0.2f + support["liberal"] * -1.0f + support["nationalist"] * 0.8f   + support["aristocrat"] * 0.5f + support["imperialist"] * 0.4f  + support["navigators"] * -0.2f + support["brotherhood"] * -0.1f + support["transhumanist"] * -1.0f);
-        effects.altruism    = (support["cult"] * 0.8f   + support["technocrat"] * 0.0f  + support["mercantile"] * -1.0f + support["bureaucracy"] * -0.6f + support["liberal"] * 1.0f + support["nationalist"] * 0.2f    + support["aristocrat"] * -0.4f + support["imperialist"] * 0.1f + support["navigators"] * -0.3f + support["brotherhood"] * 0.0f  + support["transhumanist"] * 0.0f);
-        effects.military    = (support["cult"] * 1.0f   + support["technocrat"] * 0.2f  + support["mercantile"] * -0.6f + support["bureaucracy"] * 0.0f + support["liberal"] * -1.0f + support["nationalist"] * 0.9f    + support["aristocrat"] * 0.7f + support["imperialist"] * 0.9f  + support["navigators"] * 0.2f  + support["brotherhood"] * 0.0f  + support["transhumanist"] * -0.6f);
-
-        effects.holy        = (support["cult"] * 1.0f   + support["technocrat"] * -0.2f + support["mercantile"] * -0.4f + support["bureaucracy"] * -0.1f + support["liberal"] * -0.6f + support["nationalist"] * 0.0f   + support["aristocrat"] * -0.3f + support["imperialist"] * 0.6f + support["navigators"] * 0.0f  + support["brotherhood"] * 0.1f  + support["transhumanist"] * -1.0f);
-        effects.psych       = (support["cult"] * -0.7f  + support["technocrat"] * -1.0f + support["mercantile"] * 0.2f  + support["bureaucracy"] * -0.2f + support["liberal"] * 0.4f + support["nationalist"] * -0.5f   + support["aristocrat"] * 0.3f + support["imperialist"] * 0.2f  + support["navigators"] * 1.0f  + support["brotherhood"] * 2.0f  + support["transhumanist"] * 0.6f);
-        effects.navigation  = (support["cult"] * -0.7f  + support["technocrat"] * 0.5f  + support["mercantile"] * 0.7f  + support["bureaucracy"] * -0.3f + support["liberal"] * 0.2f + support["nationalist"] * -1.0f   + support["aristocrat"] * 0.1f + support["imperialist"] * 0.1f  + support["navigators"] * 2.0f  + support["brotherhood"] * 1.0f  + support["transhumanist"] * 0.6f);
-        effects.purity      = (support["cult"] * 1.0f   + support["technocrat"] * -0.5f + support["mercantile"] * -0.6f + support["bureaucracy"] * 0.1f + support["liberal"] * -0.6f + support["nationalist"] * 0.4f    + support["aristocrat"] * -0.3f + support["imperialist"] * 0.2f + support["navigators"] * -1.0f + support["brotherhood"] * -0.3f + support["transhumanist"] * -1.0f);
-
-        effects.police      = (support["cult"] * 1.0f   + support["technocrat"] * -0.2f + support["mercantile"] * -0.6f + support["bureaucracy"] * 0.4f + support["liberal"] * -1.0f + support["nationalist"] * 0.7f    + support["aristocrat"] * 0.8f + support["imperialist"] * 0.3f  + support["navigators"] * -0.2f + support["brotherhood"] * -0.4f + support["transhumanist"] * -2.0f);
-        effects.violent     = (support["cult"] * 1.0f   + support["technocrat"] * -0.2f + support["mercantile"] * -0.7f + support["bureaucracy"] * 0.0f + support["liberal"] * -1.0f + support["nationalist"] * 1.0f    + support["aristocrat"] * 0.6f + support["imperialist"] * 0.3f  + support["navigators"] * -0.5f + support["brotherhood"] * -0.6f + support["transhumanist"] * 0.2f);
-        effects.aristocracy = (support["cult"] * -0.3f  + support["technocrat"] * 0.1f  + support["mercantile"] * 1.0f  + support["bureaucracy"] * 0.3f + support["liberal"] * -0.7f + support["nationalist"] * -0.3f   + support["aristocrat"] * 1.0f + support["imperialist"] * 0.5f  + support["navigators"] * 1.0f  + support["brotherhood"] * 0.7f  + support["transhumanist"] * -1.0f);
-        effects.imperialism = (support["cult"] * 0.8f   + support["technocrat"] * -0.1f + support["mercantile"] * -0.2f + support["bureaucracy"] * 0.05f + support["liberal"] * -0.5f + support["nationalist"] * -1.0f + support["aristocrat"] * 0.5f + support["imperialist"] * 1.0f   + support["navigators"] * 0.1f  + support["brotherhood"] * 0.05f + support["transhumanist"] * -1.0f);
-
-        resourceMultiplier[Data.Resource.Type.Food]        = effects.pgrowth +1;
-        resourceMultiplier[Data.Resource.Type.Mineral]     = effects.industry +1;
-        resourceMultiplier[Data.Resource.Type.BlackMarket] = 1-effects.altruism;
-        resourceMultiplier[Data.Resource.Type.Innovation]  = effects.innovation +1;
-        resourceMultiplier[Data.Resource.Type.Culture]     = (effects.diplomacy+effects.happiness+effects.altruism)/3 +1;
-        resourceMultiplier[Data.Resource.Type.Industry]    = effects.industry +1;
-        resourceMultiplier[Data.Resource.Type.Economy]     = effects.economy +1;
-        resourceMultiplier[Data.Resource.Type.Military]    = effects.military +1;
-    }
-
-    public string toDebugString()
-    {
-        string rv = "";
-        foreach (string ideology in getIdeologyNames())
-        {
-            rv = rv + ideology + ": " + support[ideology].ToString() + "\n";
-        }
-        return rv;
-    }
 }

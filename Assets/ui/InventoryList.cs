@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,13 +38,13 @@ public class InventoryList : MonoBehaviour
         }
 
         int numItems = 0;
-        foreach (KeyValuePair<string, CommodityInfo> entry in Economy.commodityInfo)
+        foreach (Data.Resource.SubType type in Enum.GetValues(typeof(Data.Resource.SubType)))
         {
-            if (Root.game.player.cargo.commodities[entry.Key] > 0)
+            if (Root.game.player.cargo.commodities[type] > 0)
             {
                 GameObject commodityPrefab = Resources.Load<GameObject>("ui/prefabs/InventoryCommodity");
                 GameObject commodity = (GameObject)GameObject.Instantiate(commodityPrefab);
-                commodity.GetComponent<InventoryCommodity>().setup(entry.Key);
+                commodity.GetComponent<InventoryCommodity>().setup(type);
                 commodity.transform.parent = grid.transform;
                 ++numItems;
             }
