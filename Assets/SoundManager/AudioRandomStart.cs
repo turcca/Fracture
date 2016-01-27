@@ -9,7 +9,6 @@ public class AudioRandomStart : MonoBehaviour
 
     void OnEnable()
     {
-        //begin();
         if (source == null) begin();
         else if (source != null && !source.isPlaying) begin();
     }

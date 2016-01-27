@@ -12,8 +12,12 @@ public class LocationId : MonoBehaviour
 
     void OnMouseDown()
     {
-        SimulationUI.selectedPlanet = gameObject.name;
+        if (GameState.isState(GameState.State.Simulation))
+        {
+            SimulationUI.selectedPlanet = gameObject.name;
+        }
     }
+
 
     public string getId()
     {

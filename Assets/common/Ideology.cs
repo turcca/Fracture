@@ -60,7 +60,21 @@ static public class Faction
         Debug.LogError("ERROR");
         return "";
     }
-
+    static public string getFactionDescription(FactionID id, bool hasFlipped = false)
+    {
+        if (id == FactionID.noble1 && !hasFlipped) return "Furia is an old noble family, older than the colonies on the sector, older even than the Imperium itself. Or that's what they tell you. They are warriors and weapon-makers and masters of clones. Sporting heavily militarized autonome planets, they are always under the scrutiny from the Capital, as well as the Imperial enforcers Church and House Tarquinia.";
+        else if (id == FactionID.noble1 && hasFlipped) return "Furia is an old noble family, older than the Imperium. Or that's what they tell you. They are warriors and weapon-makers and masters of clones. As the heirs to Old Furia, they are working to secede from the Empire and for a new nation on the sector. Looking for allies, their support is entrenched in the sector backwaters.";
+        else if (id == FactionID.noble2) return "Even the farthest reaches of the Imperium are not exempt from schism and intrigue. It has traditionally been the role of House Rathmund to remain above such conflicts, and offer the services of a neutral mediator to reach just and peaceful solutions. They are clever, and their ships run well and wealthy. They have franchised most deep space stations on the sector and conduct their business with everyone.";
+        else if (id == FactionID.noble3) return "Tarquinia is one of the noble families who built the Imperium. They have been given Imperial power to protect the sector and humankind. According to old Tarquinia custom, the good of the Imperium and the good of the family are one and the same. They have close ties to the Church and are considered pious, stern but fair.";
+        else if (id == FactionID.noble4) return "House Valeria claim to be originally refugees from the Old Earth, before the Imperium. Despite their nominal military, they are political heavyweight and are said to know things they shouldn't. Their home world houses the Academy, where most talented navigators come from. Church and Tarquinia often oppose Valerian initiative for being too radical. ";
+        else if (id == FactionID.guild1) return "Union is a collective of worlds and ideologies. Drawing the eye of the Inquisitors, they are known for their radical policies as well as their brilliant, unorthodox researchers and navigators. Attracting little support from the establishment, they have somehow survived through their popularity among the workers of the sector. With no license for warships, they have to rely on other methods to survive.";
+        else if (id == FactionID.guild2) return "The Dacei Family is not a true noble house, but a closed organization that is all about power from the shadows, the politics of the kingmaker and not the king. They are competent determined industrialists and quick to hit the mark. There is some exclusion from noble houses of the sector, as Dacei Family are not nobility.";
+        else if (id == FactionID.guild3) return "Many of the players on the sector cloak their business under high ideals, but in the Cartel, trade comes first. There's money to be made, running an interstellar network of exchange. The Cartel works together, because a game that's rigged is a game where all the right people win.";
+        else if (id == FactionID.church) return "The Church is the guardian of the Imperial Will. Their ongoing social project is to teach the children of men the correct way of life. It is a life of solemn worship and ascesis, discipline of mind and body. The teachings of the Church once saved mankind from annhilation, and they prepare for the day when we are all tested again.";
+        else if (id == FactionID.heretic) return "Outcasts are seclusionists living in the inaccessable pockets of the sector. They are declared enemies of the Imperium, and heretics to the teachings of the Church. Some insist they are the descendants of the original colonists on the sector, before Imperium and even Old Furia. Others say they are Imperial defectors, fallen houses or even Imperial agents conducting sinister projects deep in the Fracture.";
+        Debug.LogError("ERROR");
+        return "";
+    }
 
     static public string factionToString (FactionID faction)
     {

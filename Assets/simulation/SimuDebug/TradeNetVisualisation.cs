@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -74,30 +75,51 @@ public class TradeNetVisualisation : MonoBehaviour
 
                 GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y + 15, 300, 20* trackedShip.tradeList.Count),
                       trackedShip.cargoToDebugString());
-                      //"Wants: " + trackedShip.wantedCommodityList[0] + ", " + trackedShip.wantedCommodityList[1]);
-
-            int cursor = 30;
-            /*
-            foreach (KeyValuePair<string, int> pair in trackedShip.inventory.commodities)
-            {
-                if (pair.Value > 0)
-                {
-                    GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y + cursor, 300, 50),
-                        pair.Key + ": " + pair.Value.ToString());
-                    cursor += 15;
-                }
-            }
-            */
         }
+
+        // global resource balance // todo - make this global economy tool
+        System.Collections.Generic.Dictionary<Data.Resource.Type, float> globalResources = new System.Collections.Generic.Dictionary<Data.Resource.Type, float>();
+        System.Collections.Generic.Dictionary<Data.Resource.Type, float> globalResourceGrowth = new System.Collections.Generic.Dictionary<Data.Resource.Type, float>();
+        foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type))) { globalResources.Add(type, 0f); globalResourceGrowth.Add(type, 0f); }
+
+        foreach (Location loc in Root.game.locations.Values)
+        {
+            foreach (var resource in loc.economy.resources)
+            {
+                globalResources[resource.Key] += resource.Value.getResources();
+                globalResourceGrowth[resource.Key] += resource.Value.getNetResourceProduction();
+            }
+        } // draw guis
+        string rv = "    Global Resource Tracker \n";
+        foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
+        {
+            rv += type.ToString() + " [rate: " + Mathf.Round(globalResourceGrowth[type] * 100f) / 100f + "] [stock: " + Mathf.Round(globalResources[type]) + "]\n";
+        }
+        GUI.Label(new Rect(Screen.width / 2.6f, Screen.height - 150, 500, 150), rv);
+
+        // location tags and shortages
         foreach (Location location in Root.game.locations.Values)
         {
-            if (location.economy.hasShortage())
+            //if (location.economy.hasShortage())
             {
+                float netMul = Mathf.Round(location.economy.getTotalEffectiveLocationResourceMultiplier() * 100f) / 100f;
+                GUIStyle style = new GUIStyle();
+
+                if (netMul < 0f) style.normal.textColor = new Color(-netMul +0.3f, 0.1f, 0.1f);
+                else style.normal.textColor = new Color(0.1f, 0.1f+netMul, 0.1f);
+
                 Vector3 pos = Camera.main.WorldToScreenPoint(location.position);
-                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 80),
-                          location.id +"\n" + location.economy.shortagesToDebugStringFloating());
+                GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 16),
+                          location.id + " (net: " + netMul + ")", style);
+                // shortages
+                if (location.economy.hasShortage())
+                {
+                    GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y +16, 300, 80), location.economy.shortagesToDebugStringFloating());
+                }
             }
         }
+
+
     }
 
 

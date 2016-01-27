@@ -32,9 +32,9 @@ public class MarketPage : MonoBehaviour
 
     private void populateCommodities()
     {
-        bool showAllItems = false;
+        bool showAllItems = false; // ui toggle so even items with storeAmount=0 AND playerAmount=0 are shown
         int order = 0;
-        //foreach (KeyValuePair<string, CommodityInfo> entry in Economy.commodityInfo)
+
         marketCommodities.Clear();
         grid.gameObject.transform.DetachChildren();
         foreach(Data.TradeItem item in locationTradeList)
@@ -129,6 +129,7 @@ public class MarketPage : MonoBehaviour
 
 
 
+    // -----------------------DESCRIPTIONS-------------------------------------
 
     string getMarketDescription()
     {

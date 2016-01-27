@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class TradeShip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class TradeShip : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler
 {
     public Simulation.NPCShip trackedShip;
 
-    TradeNetVisualisation visualisation;
-
-    Renderer renderer;
-    Collider collider;
+    Renderer rend;
+    Collider coll;
     ParticleSystem ps;
 
     // debug
@@ -20,18 +18,7 @@ public class TradeShip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     //public string home;
     //public string destination;
 
-
-    // Use this for initialization / simulation
-    void Start()
-    {
-        // check for simulation scene setup
-        GameObject obj = GameObject.Find("Debug");
-        if (obj)
-        {
-            visualisation = obj.GetComponent<TradeNetVisualisation>();
-        }
-    }
-
+   
     // Update is called once per frame
     void Update()
     {
@@ -55,7 +42,7 @@ public class TradeShip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         trackedShip = ship;
     }
-
+    /*
     public void OnMouseDown()
     {
         if (visualisation)
@@ -63,48 +50,37 @@ public class TradeShip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             visualisation.trackShip(trackedShip);
         }
     }
+    */
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void eventPointerOver(bool entering) // false = exiting
     {
-        if (!visualisation)
+        if (GameState.isState(GameState.State.Simulation) == false)
         {
-            Simulation.NPCShipVisualisation.mouseOverNPCShipForInfo(trackedShip, true);
-            Simulation.NPCShipVisualisation.lineUI.setTargetObject(trackedShip.tradeShip.gameObject);
+            Simulation.StarmapVisualization.mouseOverNPCShipForInfo(trackedShip, entering);
+            if (entering) Simulation.StarmapVisualization.lineUI.setTargetObject(trackedShip.tradeShip.gameObject);
+            else Simulation.StarmapVisualization.lineUI.clearTargetObject();
         }
     }
-    public void OnPointerExit(PointerEventData eventData)
+    public void eventPointerClick()
     {
-        if (!visualisation)
-        {
-            Simulation.NPCShipVisualisation.mouseOverNPCShipForInfo(trackedShip, false);
-            Simulation.NPCShipVisualisation.lineUI.clearTargetObject();
-        }
+        MapMoveTarget.setChaseTarget(trackedShip);
     }
 
 
-    public void setVisibilityToStarmap (bool isVisible)
+    public void setVisibilityToStarmap(bool isVisible)
     {
         // manage all visual triggers
-        if (!renderer)
+        if (!rend)
         {
-            renderer = GetComponent<Renderer>();
-            collider = GetComponent<Collider>();
+            rend = GetComponent<Renderer>();
+            coll = GetComponent<Collider>();
             ps = GetComponent<ParticleSystem>();
         }
-        renderer.enabled = isVisible;
-        collider.enabled = isVisible;
+        rend.enabled = isVisible;
+        coll.enabled = isVisible;
 
-        if (isVisible) ps.Play ();
-        else ps.Stop ();
+        if (isVisible) ps.Play();
+        else ps.Stop();
     }
 
-
-
-    public Vector3 getLineUIHalfwayPoint()
-    {
-        Vector3 distance = this.gameObject.transform.position - Root.game.player.position;
-        //Debug.Log ("x: "+distance.x+" z: "+distance.z);
-        if (distance.x > 0 && distance.z < -2 /*&& distance.z > -30*/) return Root.game.player.position + distance /1.4f + new Vector3(0,0,5.0f);
-        return Root.game.player.position + distance /1.3f;
-    }
 }

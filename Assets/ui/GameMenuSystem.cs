@@ -9,7 +9,7 @@ public class GameMenuSystem : MonoBehaviour
     public GameObject locationEntryDialog;
 
     // floating panel
-    public NPCshipInfo shipInfo;
+    public StarmapInfo shipInfo;
 
     // Use this for initialization
     void Start()
@@ -57,9 +57,18 @@ public class GameMenuSystem : MonoBehaviour
         locationEntryDialog.SetActive(false);
     }
 
+
+    // toolTip -style starmap popups
+    // NPC ships, locations
+
     public void showNPCshipInfo(Simulation.NPCShip ship, bool makeVisible)
     {
         shipInfo.gameObject.SetActive(makeVisible);
         if (makeVisible) shipInfo.setVisibility(ship, makeVisible);
+    }
+    public void showLocationInfo(LocationStarmapVisibility location, bool makeVisible)
+    {
+        shipInfo.gameObject.SetActive(makeVisible);
+        if (makeVisible) shipInfo.setVisibility(location, makeVisible);
     }
 }

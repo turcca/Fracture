@@ -6,6 +6,16 @@ namespace Simulation
 {
     public static class Parameters
     {
+        // Global market adjuster           // fine-tunes ideology / resourceMultipliers to adjust global yields
+        private static float food;
+        private static float mineral;
+        private static float blackMarket;
+        private static float innovation;
+        private static float culture;
+        private static float industry;
+        private static float economy;
+        private static float military;
+
         public static float playerResourceInfluenceNormalizationPerDay = 5.0f; // how quickly player's purchases/sells are absorbed in resource pools
         public static float resourcePolicyStockpileDays = 5.0f;
         public static float resourceProducedDaily = 0.051f;
@@ -13,12 +23,12 @@ namespace Simulation
         private static float shipMovementMultiplier = 20.0f;
         public static float tradeShipMul = 0.5f; // amount of trade ships
         public static float cargoHoldMul = 10.0f; // basic cargoHold for trade ships
-        public static float tradeScoreTreshold = 0.10f; //50.0f; // default trade scoring treshold for ship to be sent
-        public static float resourceShortageMultiplier = 3.0f; // value of a shortaged resource
+        public static float tradeScoreTreshold = 0.10f; // default trade scoring treshold for ship to be sent / the higher the treshold, only high-cargo ships are sent
+        public static float resourceShortageMultiplier = 3.0f; // value multiplier of a shortaged resource
 
         public static float getPlayerShipSpeed()
         {
-            return gameSpeed * shipMovementMultiplier * 0.8f;  // for some math reasons, playerShip speed is faster than NPC constant ship speed - so <1 multiplier
+            return gameSpeed * shipMovementMultiplier * 0.8f;  // for some math reasons(?), playerShip speed is faster than NPC constant ship speed - so <1 multiplier
         }
         public static float getNPCShipSpeed()
         {
@@ -101,6 +111,63 @@ namespace Simulation
                     1)); // min 1 trade ship
             }
             return 0; // primitive world
+        }
+
+        public static float getGlobatMarketAdjuster(Data.Resource.Type type)
+        {
+            switch (type)
+            {
+                case Data.Resource.Type.Food:
+                    return food;
+                case Data.Resource.Type.Mineral:
+                    return mineral;
+                case Data.Resource.Type.Industry:
+                    return industry;
+                case Data.Resource.Type.Economy:
+                    return economy;
+                case Data.Resource.Type.Innovation:
+                    return innovation;
+                case Data.Resource.Type.Culture:
+                    return culture;
+                case Data.Resource.Type.Military:
+                    return military;
+                case Data.Resource.Type.BlackMarket:
+                    return blackMarket;
+                default:
+                    return 0f;
+            }
+        }
+        public static void setGlobatMarketAdjuster(Data.Resource.Type type, float val)
+        {
+            switch (type)
+            {
+                case Data.Resource.Type.Food:
+                    Simulation.Parameters.food = val;
+                    break;
+                case Data.Resource.Type.Mineral:
+                    Simulation.Parameters.mineral = val;
+                    break;
+                case Data.Resource.Type.Industry:
+                    Simulation.Parameters.industry = val;
+                    break;
+                case Data.Resource.Type.Economy:
+                    Simulation.Parameters.economy = val;
+                    break;
+                case Data.Resource.Type.Innovation:
+                    Simulation.Parameters.innovation = val;
+                    break;
+                case Data.Resource.Type.Culture:
+                    Simulation.Parameters.culture = val;
+                    break;
+                case Data.Resource.Type.Military:
+                    Simulation.Parameters.military = val;
+                    break;
+                case Data.Resource.Type.BlackMarket:
+                    Simulation.Parameters.blackMarket = val;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

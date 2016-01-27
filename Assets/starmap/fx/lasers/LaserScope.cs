@@ -19,13 +19,13 @@ public class LaserScope : MonoBehaviour
     float aniDir = 1.0f;
 
 
-    Renderer renderer;
+    Renderer renderer_;
     PerFrameRaycast raycast;
     
     void Start() 
     {
         lRenderer = (LineRenderer) gameObject.GetComponent<LineRenderer> ();
-        renderer = GetComponent<Renderer>();
+        renderer_ = GetComponent<Renderer>();
         aniTime = 0.0f;
         
         // Change some animation values here and there
@@ -37,8 +37,8 @@ public class LaserScope : MonoBehaviour
     {
         if (targetObject)
         {
-            renderer.material.mainTextureOffset += new Vector2(Time.deltaTime * aniDir * scrollSpeed, 0);
-            renderer.material.SetTextureOffset ("_NoiseTex", new Vector2 (-Time.time * aniDir * scrollSpeed, 0.0f));
+            renderer_.material.mainTextureOffset += new Vector2(Time.deltaTime * aniDir * scrollSpeed, 0);
+            renderer_.material.SetTextureOffset ("_NoiseTex", new Vector2 (-Time.time * aniDir * scrollSpeed, 0.0f));
             
             float aniFactor = Mathf.PingPong (Time.time * pulseSpeed, 1.0f);
             aniFactor = Mathf.Max (minWidth, aniFactor) * maxWidth;
@@ -52,8 +52,12 @@ public class LaserScope : MonoBehaviour
 
     public void setTargetObject (GameObject targetObjectToFollow)
     {
-        targetObject = targetObjectToFollow;
-        lRenderer.enabled = true;
+        if (targetObjectToFollow == null) clearTargetObject();
+        else
+        {
+            targetObject = targetObjectToFollow;
+            lRenderer.enabled = true;
+        }
     }
     public void clearTargetObject()
     {

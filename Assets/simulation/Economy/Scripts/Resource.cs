@@ -73,7 +73,6 @@ namespace Simulation
 
             // spoilage
             //Mathf.Clamp(data.resources, 0.0f, overflowLimit);
-
         }
         internal void spend(float amount)
         {
@@ -141,11 +140,17 @@ namespace Simulation
             get { return data.level; }
             internal set { data.level = value; }
         }
+        /// <summary>
+        /// state of the resource-pool
+        /// </summary>
         public Data.Resource.State state
         {
             get { return data.state; }
             private set { data.state = value; }
         }
+        /// <summary>
+        /// policy on how to distribute and value the resource
+        /// </summary>
         public Data.Resource.Policy policy
         {
             get { return data.policy; }
@@ -162,11 +167,15 @@ namespace Simulation
         {
             return pool.get();
         }
+        public float getNetResourceProduction()
+        {
+            return pool.productionRate - pool.consumptionRate;
+        }
 
 		// ------------------------------------------------------------------------------
         public void tick(float delta)
         {
-            updateFeatures();
+            updateFeatures();       // room for optimization
             handlePolicyChanges();
 
             // produce and consume
@@ -188,26 +197,26 @@ namespace Simulation
         {
             if (pool.getDeficit() > 0.0f)
             {
-                data.state = Data.Resource.State.Shortage;
+                state = Data.Resource.State.Shortage;
             }
             else if (pool.atGrowLimit())
             {
-                data.state = Data.Resource.State.AtGrowLimit;
+                state = Data.Resource.State.AtGrowLimit;
             }
             else
             {
-                data.state = Data.Resource.State.Sustain;
+                state = Data.Resource.State.Sustain;
             }
         }
         public Data.Resource.State getState()
         {
-            return data.state;
+            return state;
         }
 
         private void handlePolicyChanges()
         {
             // set limits
-            switch (data.policy)
+            switch (policy)
             {
                 case Data.Resource.Policy.Grow:
                     pool.setTargetLimit(pool.growLimit);
@@ -225,7 +234,8 @@ namespace Simulation
                     pool.setTargetLimit(pool.consumptionRate);
                     break;
                 case Data.Resource.Policy.Downsize:
-                    pool.setTargetLimit(0.0f);
+                    pool.setTargetLimit(10.0f);
+                    downgrade();
                     break;
                 default:
                     //noop
@@ -237,36 +247,38 @@ namespace Simulation
         internal string toDebugString()
         {
             string rv = Enum.GetName(typeof(Data.Resource.Type), data.type) + " " + pool.get().ToString("F") +
-                " (lvl " + data.level.ToString() + ") " +
+                " (lvl " + level.ToString() + ") " +
                 "+" + pool.productionRate.ToString("F") + " -" + pool.consumptionRate.ToString("F") + "  " +
-                "[" + Enum.GetName(typeof(Data.Resource.State), data.state) + "] " +
+                "[" + Enum.GetName(typeof(Data.Resource.State), state) + "] " +
                 "<" + Enum.GetName(typeof(Data.Resource.Policy), data.policy) + ">";
             return rv;            
         }
 
         internal void upgrade()
         {
-            if (data.level < 4) 
+            if (level < 4) 
             {
                 pool.spend(pool.growLimit);
-                data.level++;
+                level++;
                 data.policy = Data.Resource.Policy.Sustain;
                 updateFeatures();
                 handlePolicyChanges();
                 setState();
-                //Debug.Log ("upgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + data.level);
+                Debug.Log ("["+Root.game.player.getElapsedDays ()+ "]"+location.id + " UPgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + level);
             }
             else Debug.LogWarning ("Attempting to upgrade level 4 resource");
         }
         internal void downgrade()
         {
-            if (data.level > 0) 
+            if (level > 0) 
             {
-                data.level--;
+                level--;
+                pool.add(Parameters.upgradeCostMultiplier(level));
+                data.policy = Data.Resource.Policy.Sustain;
                 updateFeatures();
                 handlePolicyChanges();
                 setState();
-                //Debug.Log ("downgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + data.level);
+                Debug.Log ("[" + Root.game.player.getElapsedDays() + "]" + location.id+ " DOWNgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + level);
             }
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
         }
@@ -282,12 +294,12 @@ namespace Simulation
         internal void updateFeatures()
         {
             float popScale = Parameters.populationScaleMultiplier(location.features.population);
-            pool.setGrowLimit(Parameters.upgradeCostMultiplier(data.level) * popScale);
+            pool.setGrowLimit(Parameters.upgradeCostMultiplier(level) * popScale);
             // consumption:
             // resource production rate * population multiplier * tier multiplier
             pool.setConsumption(Parameters.resourceProducedDaily *
                                 popScale *
-                                Parameters.tierScaleMultiplier(data.level));
+                                Parameters.tierScaleMultiplier(level));
             // production:
             // consumption rate * effective multiplier (features * ideology)
             pool.setProduction(pool.consumptionRate *

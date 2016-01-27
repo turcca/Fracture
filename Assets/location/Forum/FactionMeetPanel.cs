@@ -10,6 +10,7 @@ public class FactionMeetPanel : MonoBehaviour
     public string location;
     public Image factionImage;
     public Text meetDesc;
+    public Image controllerBorders;
 
     private FactionSelectedDelegate callback;
 
@@ -42,6 +43,9 @@ public class FactionMeetPanel : MonoBehaviour
         txt += ctrl.ToString() + "% control </color>";
 
         meetDesc.text = txt;
+        controllerBorders.enabled = ctrl > 50f;
+
+        GetComponent<ToolTipScript>().toolTip = Faction.getFactionDescription(faction);
     }
 
     private void updateImage()

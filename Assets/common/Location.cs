@@ -51,7 +51,7 @@ public class Location
 
     public string toDebugString()
     {
-        return "Name: " + name + " (pop: "+features.population+")\n" +
+        return "Name: ["+id+"] "+ name + " (pop: "+features.population+")\n" +
             "Features: " + features.toDebugString() + "\n" +
             "Economy:\n" + economy.toDebugString() + "\n";
             //"---\n" + "Politics:\n" + ideology.toDebugString();
@@ -93,25 +93,26 @@ public class Location
         return null;
     }
 
-    public List<Data.TradeItem> getLocationTradeList()
+    public List<Data.TradeItem> getLocationTradeList() // CHECK CHECK CHECK CHECK CHECK CHECK 
     {
         List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
         int tier = 1;
         int i = 0;
-        int nthTier;
+        int nthTier; // list item index
         float poolAmount;
-        //foreach (Data.Resource.Type resource in Enum.GetValues(typeof(Data.Resource.Type)))
 
+        // go through resource types
         foreach (Data.TradeItem item in economy.tradeItems)
         {
-            tier = Mathf.Max (economy.resources[item.type].level, 1);
-            poolAmount = (item.isExported && item.amount >= tier) ? Mathf.Floor (item.amount / tier) : 0.0f;
+            tier = Mathf.Max (economy.resources[item.type].level, 1); // does it try to sell lvl0 resources?
+            poolAmount = (item.isExported && item.amount >= tier) ? Mathf.Floor (item.amount / tier) : 0.0f; // ? pool system scales between resources & player invetory correctly?
             nthTier = 0;
 
+            // go through type's subtypes
             foreach (Data.Resource.SubType subType in Data.Resource.getSubTypes(item.type))
             {
                 tradeList.Add (new Data.TradeItem());
-                // only assign commodities up to location tier level
+                // only assign commodities for sale up to location tier level
                 tradeList[i].amount = (nthTier < tier) ?  poolAmount : 0.0f;
                 tradeList[i].type = item.type;
                 tradeList[i].subType = subType;

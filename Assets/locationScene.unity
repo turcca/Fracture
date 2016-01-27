@@ -526,7 +526,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .400000006
+  m_Volume: .100000001
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -988,7 +988,6 @@ RectTransform:
   - {fileID: 1236835133}
   - {fileID: 1059896580}
   - {fileID: 579813996}
-  - {fileID: 2074386612}
   m_Father: {fileID: 2118419441}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -2944,7 +2943,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .300000012
+  m_Volume: .25
   m_Pitch: .899999976
   Loop: 1
   Mute: 0
@@ -3412,8 +3411,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_AnchoredPosition: {x: 0, y: -27}
+  m_SizeDelta: {x: 20, y: -27}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &396794812
 MonoBehaviour:
@@ -3454,7 +3453,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1693918874}
   m_Direction: 2
   m_Value: 1
-  m_Size: .620000005
+  m_Size: .77125001
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4770,8 +4769,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: -10, y: -13.5}
+  m_SizeDelta: {x: -20, y: -27}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &580859610
 MonoBehaviour:
@@ -5115,7 +5114,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 1}
-  m_SizeDelta: {x: 455.938995, y: 26}
+  m_SizeDelta: {x: 0, y: 26}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &598307395
 MonoBehaviour:
@@ -6013,9 +6012,9 @@ RectTransform:
   - {fileID: 375633610}
   m_Father: {fileID: 1236835133}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 20, y: -676}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 20, y: .400000006}
   m_SizeDelta: {x: -40, y: 30}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &781644575
@@ -6153,7 +6152,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 380, y: 0}
-  m_SizeDelta: {x: -410.799988, y: 26}
+  m_SizeDelta: {x: -400, y: 26}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &834464265
 MonoBehaviour:
@@ -6743,7 +6742,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .75
+  m_Volume: .600000024
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -7564,92 +7563,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1041800806}
---- !u!1001 &1047401776
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 120610997}
-    m_Modifications:
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 80.3000031
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 595.299988
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 380
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 100012, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 5faaa2d93d833494893742f5dbb2c966, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1056153894
 GameObject:
   m_ObjectHideFlags: 0
@@ -8642,7 +8555,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .400000006
+  m_Volume: .150000006
   m_Pitch: .800000012
   Loop: 1
   Mute: 0
@@ -9657,7 +9570,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 80, y: 40}
-  m_SizeDelta: {x: -160, y: -179.999969}
+  m_SizeDelta: {x: -140, y: -152}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &1363940554
 CanvasRenderer:
@@ -10499,11 +10412,11 @@ RectTransform:
   - {fileID: 166911816}
   m_Father: {fileID: 1363940553}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 496}
-  m_SizeDelta: {x: -455, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 27}
+  m_Pivot: {x: 0, y: 1}
 --- !u!1 &1629005248
 GameObject:
   m_ObjectHideFlags: 0
@@ -10546,7 +10459,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .400000006
+  m_Volume: .300000012
   m_Pitch: 1.04999995
   Loop: 1
   Mute: 0
@@ -12405,7 +12318,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .915000021
+  m_Volume: .699999988
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -13222,11 +13135,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2052359420}
---- !u!224 &2074386612 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22400000, guid: 5faaa2d93d833494893742f5dbb2c966,
-    type: 2}
-  m_PrefabInternal: {fileID: 1047401776}
 --- !u!1 &2095017012
 GameObject:
   m_ObjectHideFlags: 0

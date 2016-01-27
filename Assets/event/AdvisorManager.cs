@@ -7,11 +7,14 @@ public class AdvisorManager : MonoBehaviour
     public EventUI eventUI;
     public List<EventAdvisor> advisors;
 
-    private Character.Job lastSelectedJob;
-    private bool showStatsNext = false;
+    private Character.Job? lastSelectedJob;
+    private bool showStatsNext = true;
 
     public void setup()
     {
+        showStatsNext = false;
+        lastSelectedJob = null;
+
         // link characters to event edvisors
         foreach (Character character in Root.game.player.getCharacters())
         {
@@ -26,6 +29,7 @@ public class AdvisorManager : MonoBehaviour
             }
         }
         // todo: remove non-assigned advisors? Or populate EventAdvisors through other means than prefab?
+
     }
 
     public void advisorSelected(GameObject advisorNode)
@@ -68,7 +72,7 @@ public class AdvisorManager : MonoBehaviour
             if (advisor.advisorJob == job)
             {
                 // new click, load advice
-                if (job != lastSelectedJob)
+                if (lastSelectedJob == null || job != lastSelectedJob)
                 {
                     advisor.showAdvice(advice);
                     showStatsNext = true;

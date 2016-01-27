@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LightningEmitter : MonoBehaviour {
+public class LightningEmitter : MonoBehaviour
+{
+    public bool createShake = true;
 
     public float brightness = 1.0f;
     public float frequency = 1.0f;
@@ -58,6 +60,16 @@ public class LightningEmitter : MonoBehaviour {
                                                  (Random.value+1.0f)/2.0f); // random: 0.5 - 1.0;
 
             ps.Emit(particle);
+            if (createShake)
+            {
+                float d = (pos - Root.game.player.position).magnitude;
+                if (d < 20f)
+                {
+                    //Debug.Log("shake/ d:"+ Mathf.Round(d) +" (warp: "+Mathf.Round(warpMag*100f)/100f+")");
+                    d = Mathf.Max(d/2, 5f);
+                    ScreenShake.Instance.shake(warpMag / d);
+                }
+            }
             
             //Debug.Log ("EMIT "+gameObject.name+" ("+ps.particleCount+") pos: "+pos.ToString()+" @warp "+Mathf.Round (warpMag*10)/10+" [acc: "+Mathf.Round (accumulator*100)/100+"], rot: "+Mathf.Round (particle.rotation)+", vel: 0, size: "+Mathf.Round (particle.size*10)/10+", life: "+Mathf.Round (particle.lifetime*100)/100+"/"+particle.startLifetime+", alpha: "+particle.color.a);
         }

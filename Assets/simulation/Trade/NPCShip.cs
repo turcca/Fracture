@@ -51,6 +51,7 @@ namespace Simulation
             {
                 setVisibilistyToStarmap(false);
                 downtime = (downtime > days) ? downtime - days : 0f;
+                return;
             }
 
             if (navPoints.Count == 0)
@@ -59,7 +60,7 @@ namespace Simulation
             }
             else
             {
-                setVisibilistyToStarmap(true);
+                setVisibilistyToStarmap(isInRange());
 
                 Vector3 dir = navPoints[0].position - position;
                 Vector3 dirNormalized = dir.normalized;
@@ -198,18 +199,22 @@ namespace Simulation
             navPoints = path.nodes;
         }
 
-        void setVisibilistyToStarmap(bool visible)
+        void setVisibilistyToStarmap(bool makeVisible)
         {
-            if (isVisible && !visible) 
+            if (isVisible && !makeVisible) 
             {
                 isVisible = false;
                 tradeShip.setVisibilityToStarmap(false);
             }
-            if (!isVisible && visible) 
+            if (!isVisible && makeVisible) 
             {
                 isVisible = true;
                 tradeShip.setVisibilityToStarmap(true);
             }
+        }
+        public bool isInRange()
+        {
+            return Vector3.Distance(position, Root.game.player.position) < 40f ? true : false; // TODO add radio-silence penalty
         }
 
         internal string cargoToDebugString()

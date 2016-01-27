@@ -11,37 +11,47 @@ namespace Simulation
         {
             List<KeyValuePair<Data.Resource.Type, float>> sortedResourceTypes = location.getSortedResourceTypes();
 
-            // set effective value
+            // set effective value /redundant? not used. Then again, this on is called first, if need to cache -->
             foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
             {
                 location.resources[sorted.Key].setEffectiveMultiplier(sorted.Value);
-            }
+            } // <---
 
             // if negative total growth
-            if (location.getTotalEffectiveLocationResourceMultiplier() < 1.0f)
+            if (location.getTotalEffectiveLocationResourceMultiplier() < 0.0f)
             {
                 // POLICY: find out the worse resource to downgrade
                 int lastIndex = sortedResourceTypes.Count - 1;
 
                 if (sortedResourceTypes[lastIndex].Value < 1.0f)
                 {
+                    bool foundDowngradable = false;
+
                     for (int i = lastIndex; i >= 0; i--)
                     {
-                        // set last & bad resources to 'Downsize'
-                        if (i == lastIndex || sortedResourceTypes[i].Value < 0.3f)
-                            location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Downsize);
+                        // set (sorted) last & bad resources to 'Downsize'
+                        if (/*i == lastIndex ||*/ !foundDowngradable/*sortedResourceTypes[i].Value < 0.3f*/)
+                        {
+                            if (location.resources[sortedResourceTypes[i].Key].level > 0)
+                            {
+                                location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Downsize);
+                                foundDowngradable = true;
+                            }
+                        }
                         // set negative ones to 'Import'
-                        else if (sortedResourceTypes[i].Value < 1.0f)
+                        else if (sortedResourceTypes[i].Value < .999f)
                             location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.Sustain);
                         // set positive ones to 'export'
-                        else if (sortedResourceTypes[i].Value > 1.0f)
+                        else if (sortedResourceTypes[i].Value > 1.001f)
                             location.setPolicy(sortedResourceTypes[i].Key, Data.Resource.Policy.BareMinimum);
                         // else sustain
-                        else location.setPolicy(sortedResourceTypes[i].Key,
-                            Data.Resource.Policy.Sustain);
+                        else
+                            location.setPolicy(sortedResourceTypes[i].Key,
+                           Data.Resource.Policy.Sustain);
                     }
+                    if (!foundDowngradable) Debug.LogError(location.location.id + " needs to 'downgrade', but no resource was downgradable");
                 }
-                else Debug.LogWarning("WARNING: lowest sorted value >=1, even if 'totalEffectiveMul was <1");
+                else Debug.LogWarning("WARNING: lowest sorted value >=1, even if 'totalEffectiveMul was <0");
             }
             // Positive growth! Find out best resources to upgrade (total effective multiplier >=1)
             else
@@ -54,9 +64,10 @@ namespace Simulation
                 // see in order which resource goal is achiavable
                 foreach (KeyValuePair<Data.Resource.Type, float> sorted in sortedResourceTypes)
                 {
+                    // see if resource can be 'grown' (resourceGoal)
                     if (!foundGrowth &&
-                        //location.resourceGoal == null &&
                         location.resources[sorted.Key].level < 4 &&
+                        sorted.Value > 1f &&
                         location.hasEnoughTechToUpgrade(sorted.Key))
                     {
                         // >resource goal
@@ -68,8 +79,6 @@ namespace Simulation
                     }
                     else 
                     {
-                        if (!location.resourceGoal.HasValue)
-                            location.setResourceGoal(sorted.Key);
                         // if producing, export
                         if (sorted.Value > 1.0f)
                             location.setPolicy(sorted.Key, Data.Resource.Policy.BareMinimum);
@@ -107,7 +116,6 @@ namespace Simulation
                         }
                     }
                 }
-                ///todo check after resource state allocation if total import mul > export mul. Can policies can be afforded?
             }
         }
 
@@ -116,11 +124,11 @@ namespace Simulation
         {
             if (location.resourceGoal.HasValue)
             {
-                location.upgradeResource((Data.Resource.Type)location.resourceGoal);
+                location.upgradeResource( (Data.Resource.Type) location.resourceGoal);
             }
             else if (location.techGoal.HasValue)
             {
-                location.upgradeTech((Data.Tech.Type)location.techGoal);
+                location.upgradeTech( (Data.Tech.Type) location.techGoal);
             }
         }
 
@@ -131,6 +139,7 @@ namespace Simulation
 
         // gathers a list of articles, each with import/export status, quotas and weights 
         // to be compared against tradeList of other locations for best match
+        // and also to show location inventory of commodities to player [Location.getLocationTradeList()]
         internal List<Data.TradeItem> getTradeList(LocationEconomy location)
         {
             List<Data.TradeItem> list = new List<Data.TradeItem>();
@@ -142,7 +151,7 @@ namespace Simulation
                 current.amount = resource.Value.getResourcesOverTargetLimit();
                 
                 // export
-                if (current.amount > 0.0f)
+                if (current.amount > 0.001f)
                 {
                     current.isExported = true;
                     current.weight = resource.Value.effectiveMultiplier;
@@ -168,6 +177,7 @@ namespace Simulation
                             current.weight *= 2.0f;
                             break;
                         case Data.Resource.Policy.Downsize:
+                            //LogWarning("exporting 'Downsize' @"+location.location.id + " / resource: " + current.type.ToString() + ": " + -current.amount);
                             current.weight *= 0.0f;
                             break;
                         default:
@@ -176,7 +186,7 @@ namespace Simulation
                     }
                 }  
                 // import
-                else 
+                else if (current.amount < -0.001f)
                 {
                     current.isExported = false;
                     current.amount = -current.amount;
@@ -187,7 +197,7 @@ namespace Simulation
                     switch (resource.Value.policy)
                     {
                         case Data.Resource.Policy.Grow:
-                            current.weight *= 1.1f;
+                            current.weight *= 0.8f;
                             break;
                         case Data.Resource.Policy.GrowTech:
                             current.weight *= 1.1f;
@@ -199,11 +209,46 @@ namespace Simulation
                             current.weight *= 1.0f;
                             break;
                         case Data.Resource.Policy.BareMinimum:
-                            Debug.LogWarning("importing 'BareMinimum'");
+                            //Debug.LogWarning("importing 'BareMinimum' @"+location.location.id+" / resource: "+current.type.ToString()+": "+ -current.amount); // may return values beyond float-tolerance values if delta between simulation ticks grow too large
                             current.weight *= 1.0f;
                             break;
                         case Data.Resource.Policy.Downsize:
+                            current.weight *= 1.5f;
+                            break;
+                        default:
                             current.weight *= 1.0f;
+                            break;
+                    }
+                }
+                // at target limit
+                else
+                {
+                    current.isExported = false;
+                    current.amount = 0;
+                    current.weight = resource.Value.effectiveMultiplier > 2.0f ? 0 : 2.0f - resource.Value.effectiveMultiplier;
+                    if (resource.Value.state == Data.Resource.State.Shortage) current.weight *= Parameters.resourceShortageMultiplier;
+
+                    // set weights
+                    switch (resource.Value.policy)
+                    {
+                        case Data.Resource.Policy.Grow:
+                            current.weight *= 1.1f;
+                            break;
+                        case Data.Resource.Policy.GrowTech:
+                            current.weight *= 1.1f;
+                            break;
+                        case Data.Resource.Policy.Sustain:
+                            current.weight *= 1f;
+                            break;
+                        case Data.Resource.Policy.Stockpile:
+                            current.weight *= 1f;
+                            break;
+                        case Data.Resource.Policy.BareMinimum:
+                            current.isExported = true;
+                            current.weight *= 1.0f;
+                            break;
+                        case Data.Resource.Policy.Downsize:
+                            current.weight *= 1.5f;
                             break;
                         default:
                             current.weight *= 1.0f;
@@ -226,7 +271,7 @@ namespace Simulation
         public Data.Tech.Type? techGoal { get; private set; }
         public Data.Resource.Type? resourceGoal { get; private set; }  
 
-        Location location;
+        internal Location location { get; private set; }
 		LocationEconomyAI ai;
 
         public LocationEconomy(Location location, LocationEconomyAI ai)
@@ -234,10 +279,14 @@ namespace Simulation
             this.location = location;
             this.ai = ai;
 
+            // starting resource init
+            float popScale = Parameters.populationScaleMultiplier(location.features.population);
+
             foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
             {
                 Data.Resource resourceData = Data.Resource.generateDebugData(type);
                 resources[type] = new Resource(resourceData, new ResourcePool(resourceData), location);
+                resources[type].import( (location.features.resourceMultiplier[type] -1f) * popScale); // give initial resources
             }
 
             foreach (Data.Tech.Type type in Enum.GetValues(typeof(Data.Tech.Type)))
@@ -364,7 +413,7 @@ namespace Simulation
         internal string toDebugString()
         {
             string rv = "";
-            rv += "Total effective multiplier: "+Mathf.Round (getTotalEffectiveLocationResourceMultiplier()*100)/100 + "\n";
+            rv += "Total resource net value: "+Mathf.Round (getTotalEffectiveLocationResourceMultiplier()*100)/100 + " ["+Mathf.Round(getTotalLocationResourceMultiplier()*100f)/100f+"] \n";
             if (resourceGoal.HasValue) rv += "Resource Goal: " + Enum.GetName(typeof(Data.Resource.Type), resourceGoal) + "\n";
             if (techGoal.HasValue) rv += "Tech Goal: "+ Enum.GetName(typeof(Data.Tech.Type), techGoal) + "\n";
             rv += "Tech: "+technologies[Data.Tech.Type.Technology].level+", Infra: "+technologies[Data.Tech.Type.Infrastructure].level+", Milit: "+technologies[Data.Tech.Type.Military].level +"\n";
@@ -416,37 +465,61 @@ namespace Simulation
             }
             return rv;
         }
+        internal string shortagesToStringItems()
+        {
+            string rv = "";
+            foreach (KeyValuePair<Data.Resource.Type, Resource> resource in resources)
+            {
+                if (resource.Value.state == Data.Resource.State.Shortage)
+                {
+                    rv += "Shortage: " + Enum.GetName(typeof(Data.Resource.Type), resource.Key) +"\n";
+                }
+            }
+            return rv;
+        }
 
         //// location economy variables
-
+        /// <summary>
+        /// ResourceMultiplier (stagnant is 1.0) This is pure location feature value
+        /// </summary>
+        /// <returns></returns>
         public float getTotalLocationResourceMultiplier()
         {
             float mul = 1;
             foreach (var pair in resources)
             {
-                mul *= pair.Value.level > 0 ? location.features.resourceMultiplier[pair.Key] : 1.0f;
+                mul *= /*pair.Value.level > 0 ?*/ location.features.resourceMultiplier[pair.Key] /*: 1.0f*/;
             }
             return mul;
         }
-        public float getTotalEffectiveLocationResourceMultiplier()
+        /// <summary>
+        /// what is the net gain between all the resources (0f is stagnant)
+        /// </summary>
+        /// <returns></returns>
+        public float getTotalEffectiveLocationResourceMultiplier() 
         {
-            float mul = 0;
-            float count = 0;
+            float acc = 0;
+            //float count = 0;
             foreach (var pair in resources)
             {
                if (pair.Value.level > 0)
                 {
-                    mul += getEffectiveMul(pair.Key);
-                    count++;
+                    acc += location.economy.resources[pair.Key].getNetResourceProduction(); //getEffectiveMul(pair.Key);
+                    //count++;
                 }
             }
-            mul /= count > 0 ? count : 1.0f;
-            return mul;
+            //acc = count > 0 ? acc/count : 0f; 
+            
+            return acc;
         }
+        /// <summary>
+        /// Feature-multiplier * ideology-multiplier + adjuster value
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         internal float getEffectiveMul(Data.Resource.Type type)
         {
-            // should probably get all the multipliers at once for getSortedResourceTypes
-            return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type];
+            return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type] +Parameters.getGlobatMarketAdjuster(type);
         }
 
         internal List<KeyValuePair<Data.Resource.Type, float>> getSortedResourceTypes()
@@ -469,9 +542,9 @@ namespace Simulation
             return sortedList;
         }
 
-        internal void updateTradeItems()
+        public void updateTradeItems()
         {
-            this.tradeItems = ai.getTradeList(this);
+            ai.setupTrades(this);
         }
 
         internal void export(Data.Resource.Type type, float amount)

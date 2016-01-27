@@ -5,11 +5,10 @@ using UnityEngine.Audio;
 
 public class SoundManager : MonoBehaviour 
 {
-    //public AudioMixerSnapshot starmap;
+    //public AudioMixerSnapshot starmap; // snapshots?
     public static AudioMixer mixer;
 
-    // snapshots?
-
+ 
     
     // fracture
     Dictionary<string, AudioSource> sources = new Dictionary<string, AudioSource>();
@@ -18,7 +17,7 @@ public class SoundManager : MonoBehaviour
     AudioSource fractureHi;
     AudioSource fractureMax;
 
-    // sound settings access
+    // sound settings access - fracture settings
     float lowMax = 1.0f;
     float mediumMax = 1.0f;
     float highMax = 1.0f;

@@ -46,7 +46,7 @@ namespace Data
         public Type type;
         public int level = 1;
 
-        public float resources = 2.0f;
+        public float resources = 0.0f;
 
         public Resource(Type type)
         {
