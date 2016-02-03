@@ -10,8 +10,8 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Character.Stat stat { get; private set; }
     public string toolTip = null;
 
-    public bool isOnDelay = true;
-    public float toolTipDelay = 0.5f; // todo: universal tooltip timer and on/off
+    //public bool isOnDelay = true;
+    //public float toolTipDelay = 0.5f; // todo: universal tooltip timer and on/off
     bool isHovering = false;
     float toolTipTimer = 0f; 
     Vector3 oldMouseScreenPos = new Vector3(0,0,0);
@@ -24,9 +24,9 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     void Update()
     {
-        if (isOnDelay && isHovering)
+        if (Root.game.gameSettings.toolTipsOn && isHovering)
         {
-            if (Vector3.Distance (oldMouseScreenPos, Input.mousePosition) < 0.1f)
+            if (Vector3.Distance (oldMouseScreenPos, Input.mousePosition) < 1f)
             {
                 if (toolTipTimer <= 0f)
                 {
@@ -36,7 +36,7 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
             else
             {
-                toolTipTimer = toolTipDelay;
+                toolTipTimer = Root.game.gameSettings.toolTipDelay;
                 oldMouseScreenPos = Input.mousePosition;
                 ToolTipLibrary.hide(this.gameObject);
             }
@@ -45,16 +45,16 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isOnDelay)
+        if (Root.game.gameSettings.toolTipsOn)
         {
             isHovering = true;
-            toolTipTimer = toolTipDelay;
+            toolTipTimer = Root.game.gameSettings.toolTipDelay;
         }
         else ToolTipLibrary.show(this.gameObject);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (isOnDelay)
+        if (Root.game.gameSettings.toolTipsOn)
         {
             isHovering = false;
         }

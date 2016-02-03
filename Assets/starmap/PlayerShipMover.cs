@@ -43,7 +43,7 @@ public class PlayerShipMover : MonoBehaviour
     void OnGUI()
     {
 
-        GUI.Label(new Rect(10, 10, 150, 24), "warpMag: "+Mathf.Round (Root.game.player.getWarpMagnitude()*10)/10);
+        GUI.Label(new Rect(10, 10, 150, 24), "fracMag: "+Mathf.Round (Root.game.player.getWarpMagnitude()*10)/10);
         GUI.Label(new Rect(10, 30, 150, 24), "day: " + Root.game.player.getElapsedDays());
     }
 

@@ -16,6 +16,7 @@ namespace Simulation
         private static float economy;
         private static float military;
 
+        // parameters
         public static float playerResourceInfluenceNormalizationPerDay = 5.0f; // how quickly player's purchases/sells are absorbed in resource pools
         public static float resourcePolicyStockpileDays = 5.0f;
         public static float resourceProducedDaily = 0.051f;

@@ -39,6 +39,12 @@ public class SideWindow : MonoBehaviour
     public static SideWindow get()
     {
         GameObject sideObj = GameObject.Find("SideWindow");
+        if (sideObj == null)
+        {
+            Debug.LogError("ERROR: no 'SideWindow' in the scene");
+            return null;
+        }
+
         SideWindow side = null;
         if (sideObj)
         {

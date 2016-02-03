@@ -36,7 +36,13 @@ public class LocationEntryDialog : MonoBehaviour
         if (GameState.isState(GameState.State.Starmap))
         {
             GameState.requestState(GameState.State.Location);
-            Application.LoadLevel("locationScene");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("locationScene");
+
+            //UnityEngine.SceneManagement.SceneManager.LoadScene("generalUIScene", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            UnityEngine.SceneManagement.SceneManager.LoadScene("eventScene", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+
+            //Application.LoadLevel("locationScene");
+            //Application.LoadLevelAdditive("generalUIScene");
         }
     }
 }

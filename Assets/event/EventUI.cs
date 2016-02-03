@@ -42,7 +42,8 @@ public class EventUI : MonoBehaviour
         if (Root.game.player.getLocation() != null)
         {
             currentEvent = e;
-            Debug.Log ("Loaded location event: '"+e.name+"'");
+            if (e == null) Debug.LogError("current event == null");
+            else Debug.Log ("Loaded location event: '"+e.name+"'");
         }
         else currentEvent = null;
 
@@ -99,8 +100,8 @@ public class EventUI : MonoBehaviour
     {
         currentEvent.initPre();
         currentEvent.start();
-        continueEvent();
         setupAdvisorManager();
+        continueEvent();
     }
 
     private void endEvent()
@@ -113,7 +114,8 @@ public class EventUI : MonoBehaviour
     private void continueEvent()
     {
         // set description
-        eventText.text = currentEvent.getText();
+        if (eventText == null) { Debug.LogError("eventText == null"); /*eventText = GameObject.Find("EventText").GetComponentInChildren<Text>();*/ }
+        else eventText.text = currentEvent.getText();
 
         // destroy old entries
         for (int i = choiceButtonGrid.transform.childCount - 1; i >= 0; --i)
@@ -164,21 +166,36 @@ public class EventUI : MonoBehaviour
             Debug.LogError("ERROR: both AdvisorManagers are active: 'SideWindow/' AND 'LocationCanvas/'");
             return;
         }
-        // event
-        else if (eventSideWindow && eventSideWindow.activeSelf)
+        // event (or diplomacy event)
+        //else if (eventSideWindow && eventSideWindow.activeSelf)
+        else if (GameState.isState(GameState.State.Event) || currentEvent.name.StartsWith("contact_"))
         {
-            //Debug.Log("setup AdvisorManager / event");
-            am = eventSideWindow.GetComponentInChildren<AdvisorManager>();
-            if (am) am.setup();
-            else Debug.LogError("ERROR: event AdvisorManager not found.");
+            Debug.Log("setup AdvisorManager / event");
+            if (eventSideWindow) 
+            {
+                am = eventSideWindow.GetComponentInChildren<AdvisorManager>();
+                if (am) am.setup();
+                else Debug.LogError("ERROR: event AdvisorManager not found.");
+            }
+            else Debug.LogError("No 'SideWindow' found");
         }
         // location
-        else if (locationCanvas && locationCanvas.activeSelf)
+        //else if (locationCanvas && locationCanvas.activeSelf)
+        else if (GameState.isState(GameState.State.Location))
         {
-            //Debug.Log("setup AdvisorManager / location");
-            am = locationCanvas.GetComponentInChildren<AdvisorManager>();
-            if (am) am.setup();
-            else Debug.LogError("ERROR: location AdvisorManager not found.");
+            // diplomacy
+            if (currentEvent.name.StartsWith("contact_"))
+            {
+
+            }
+
+            else
+            {
+                Debug.Log("setup AdvisorManager / location");
+                am = locationCanvas.GetComponentInChildren<AdvisorManager>();
+                if (am) am.setup();
+                else Debug.LogError("ERROR: location AdvisorManager not found.");
+            }
         }
         else
         {

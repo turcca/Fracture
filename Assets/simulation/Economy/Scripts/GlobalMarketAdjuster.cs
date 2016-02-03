@@ -7,7 +7,7 @@ public class GlobalMarketAdjuster : MonoBehaviour
 
     // pre-adjustments
     public float food = -0.06f;
-    public float mineral = -0.13f;
+    public float mineral = -0.17f;
     public float industry = -0.13f;
     public float economy = 0.004f;
     public float innovation = -0.35f;

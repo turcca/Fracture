@@ -101,6 +101,8 @@ namespace Simulation
                 }
             }
         }
+
+
         public void sendFreeShip()
         {
             if (simulationStepBuffer >= 0.3f)
@@ -240,5 +242,27 @@ namespace Simulation
             }
             return rv;            
         }
+        internal string getCargoManifest()
+        {
+            string rv = "";
+
+            if (isTradeShip)
+            {
+                foreach (Data.TradeItem item in tradeList)
+                {
+                    if ((item.isExported && isGoingToDestination) || (item.isExported == false && isGoingToDestination == false))
+                    {
+                        if (item.amount > 0.01f)
+                        {
+                            // list trade items onboard
+                            rv += Simulation.Trade.getCommodityDescription(item.type, false) +"\n";
+                        }
+                    }
+                }
+            }
+            return rv;
+        }
+
+
     }
 }

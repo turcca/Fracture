@@ -16,7 +16,7 @@ public class StartMenu : MonoBehaviour
     public void msgButtonStart()
     {
         // do loading stuff
-        Application.LoadLevel("starmapScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("starmapScene");
     }
     public void msgButtonExit()
     {

@@ -472,7 +472,8 @@ namespace Simulation
             {
                 if (resource.Value.state == Data.Resource.State.Shortage)
                 {
-                    rv += "Shortage: " + Enum.GetName(typeof(Data.Resource.Type), resource.Key) +"\n";
+                    //rv += "Shortage: " + Enum.GetName(typeof(Data.Resource.Type), resource.Key) +"\n";
+                    rv += "Shortage: " + Simulation.Trade.getCommodityDescription(resource.Key, false) +"\n";
                 }
             }
             return rv;

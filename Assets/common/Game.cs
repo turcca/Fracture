@@ -12,6 +12,16 @@ public class Game
     public Navigation.NavNetwork navNetwork { get; private set; }
     public List<Simulation.NPCShip> ships { get; private set; }
 
+    public GameSettings gameSettings { get; private set; }
+
+
+
+
+    internal void initGameSettings()
+    {
+        gameSettings = new GameSettings();
+    }
+
     internal void initLocations()
     {
         locations = new Dictionary<string, Location>();

@@ -60,7 +60,7 @@ public class MenuSystem : MonoBehaviour
     {
         //Debug.Log("Leaving location");
         GameState.requestState(GameState.State.Starmap);
-        Application.LoadLevel(0); // switch to async loading! Somehow using this, it doesn't mess up with UI elements and still loads fast.
+        UnityEngine.SceneManagement.SceneManager.LoadScene("starmapScene"); // switch to async loading! Somehow using this, it doesn't mess up with UI elements and still loads fast.
         //op.allowSceneActivation = true;
     }
 

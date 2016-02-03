@@ -342,40 +342,43 @@ namespace Simulation
             }
             return items[UnityEngine.Random.Range (0, items.Length-1)];
         }
-
         public static string getCommodityDescription(KeyValuePair<Data.Resource.Type, float> item, bool lowerCase = true)
+        {
+            return getCommodityDescription(item.Key, lowerCase);
+        }
+        public static string getCommodityDescription(Data.Resource.Type type, bool lowerCase = true)
         {
             string rv = "";
 
-            if (item.Key == Data.Resource.Type.Food)
+            if (type == Data.Resource.Type.Food)
             {
                 rv += "Food items";
             }
-            else if (item.Key == Data.Resource.Type.Mineral)
+            else if (type == Data.Resource.Type.Mineral)
             {
                 rv += "Materials";
             }
-            else if (item.Key == Data.Resource.Type.Industry)
+            else if (type == Data.Resource.Type.Industry)
             {
                 rv += "Industrial machinery";
             }
-            else if (item.Key == Data.Resource.Type.Economy)
+            else if (type == Data.Resource.Type.Economy)
             {
                 rv += "Foreign ivestments";
             }
-            else if (item.Key == Data.Resource.Type.Innovation)
+            else if (type == Data.Resource.Type.Innovation)
             {
                 rv += "Innovation assets";
             }
-            else if (item.Key == Data.Resource.Type.Culture)
+            else if (type == Data.Resource.Type.Culture)
             {
                 rv += "Consumer goods";
             }
-            else if (item.Key == Data.Resource.Type.Military)
+            else if (type == Data.Resource.Type.Military)
             {
                 rv += "Weapons";
             }
-            else if (item.Key == Data.Resource.Type.BlackMarket)
+            else if (type == Data.Resource.Type.BlackMarket)
             {
                 rv += "Black market goods";
             }

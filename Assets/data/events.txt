@@ -136,7 +136,7 @@ It's also the way we open or close the portal we carry in us."
 @a priest { TheAdvisor.getStat("holiness") >= 2 } "We must stop the spread of these deviations from Approved Procedures. At once." = 809
 @a priest "Perhaps a silent meditation will bring clarity to the issue." = 808
 
-#contact_nobleHouse4
+#contact_noble4
 /* House Valeria */
 @frequency "Default"
 @situation "Default"

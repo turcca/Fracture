@@ -115,19 +115,20 @@ public class EventManager
         //@note test location events
         Debug.Log ("todo: load location events");
 
+        //Root.ui.showEventWindow();
         handleEvent(pickEvent(), callback);
-        //handleEvent(null);
     }
 
     public void queryDiplomacyEvents(string faction, AllDoneDelegate callback)
     {
         allDoneCallback = callback;
         bool eventFound = false;
-        string eventName = "appointment_" + faction;
+        string eventName = "contact_" + faction;
         foreach (EventBase e in eventPool)
         {
             if (e.name == eventName)
             {
+                Root.ui.showEventWindow();
                 handleEvent(e, callback);
                 eventFound = true;
                 break;

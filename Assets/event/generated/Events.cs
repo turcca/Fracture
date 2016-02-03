@@ -1,4 +1,4 @@
-// Events.cs compiled: 17:10:27 07/10/2015
+// Events.cs compiled: 15:12:47 28/01/2016
 #pragma warning disable 0162, 1717
 using System;
 //---------------------------------------------------------------------------------
@@ -500,7 +500,7 @@ return eventAdvice;
 }
 if (job == Character.Job.psycher) {
 {
-eventAdvice.text = "We can send a few people to observe. I have a few people in mind.";
+eventAdvice.text = "I have a few people in mind.";
 eventAdvice.recommend =  768;
 return eventAdvice;
 }
@@ -873,7 +873,7 @@ public override void initFilters() {
 //------------------------------------------------------- EVENT 4
 //---------------------------------------------------------------------------------
 public class Event_4 : EventBase {
-public Event_4() : base("contact_nobleHouse4") {}
+public Event_4() : base("contact_noble4") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }

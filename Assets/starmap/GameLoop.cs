@@ -8,8 +8,8 @@ public class GameLoop : MonoBehaviour
 
     void Awake()
     {
-        Application.LoadLevelAdditive("generalUIScene");
-        Application.LoadLevelAdditive("eventScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("generalUIScene", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("eventScene", UnityEngine.SceneManagement.LoadSceneMode.Additive);
 
         // check for simulation scene setup (if running simulation scene in editor)s
         GameObject obj = GameObject.Find("Debug");

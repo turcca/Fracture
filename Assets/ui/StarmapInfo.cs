@@ -81,14 +81,34 @@ public class StarmapInfo : MonoBehaviour
     string getShipInfo()
     {
         string rv = "";
-        rv += "Captain "+ship.captain;
+        string cm = "";
+        rv += "<b>Captain " + ship.captain + "</b>";
         rv += "\n";
-        rv += ship.home.name +"\n";
-        rv += ship.isTradeShip ? "Trade Ship" : "Warship";
-        //rv += "\n";
-        //rv += "Cargo: \n";
-        //rv += ship.cargoToDebugString();
-        return rv;
+        if (ship.home.features.visibility == Data.Location.Visibility.Connected)
+        {
+            //rv += ship.home.name + "\n";
+            
+            cm += ship.getCargoManifest(); // TODO: if player is trusted
+            if (cm != "")
+            {
+                cm = cm.Insert(0, "<i><size=11><color=#FFFFFF80>");
+                cm += "</color></size></i>";
+            }
+
+            if (cm != "")
+            {
+                // Pre-
+                if (ship.isGoingToDestination) cm = cm.Insert(0, "Cargo ship exporting \n"); //isGoingToDestination ? "Exporting" : "Importing";
+                else cm = cm.Insert(0, "Cargo ship importing \n");
+            }
+            else
+            {
+                // (empty) No trade items going this way
+                if (ship.isGoingToDestination) cm += "Cargo ship in transit to" + "\n" + ship.destination.name;
+                else cm += "Cargo ship in transit to" + "\n" + ship.home.name;
+            }
+        }
+        return rv + cm;
     }
     string getLocationInfo()
     {
