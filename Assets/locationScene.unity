@@ -444,7 +444,7 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 35, y: -71.1}
+  m_AnchoredPosition: {x: 35, y: -71.1001}
   m_SizeDelta: {x: 585, y: 20}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &28826055
@@ -1197,7 +1197,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 436.3, y: 23.6}
+  m_AnchoredPosition: {x: 436.3, y: 23.600098}
   m_SizeDelta: {x: 207.8, y: 86.02}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &103870154
@@ -9855,11 +9855,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1937853389}
   m_RootOrder: 0
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -393.1, y: -166.2}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -166}
   m_SizeDelta: {x: 256, y: 256}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &682216335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10115,6 +10115,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 695597384}
   - 114: {fileID: 695597385}
+  - 114: {fileID: 695597386}
   m_Layer: 5
   m_Name: RTO grid
   m_TagString: Untagged
@@ -10140,7 +10141,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 35, y: -91.33}
-  m_SizeDelta: {x: 450, y: 128}
+  m_SizeDelta: {x: 450, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &695597385
 MonoBehaviour:
@@ -10165,6 +10166,19 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 9}
   m_Constraint: 1
   m_ConstraintCount: 1
+--- !u!114 &695597386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 695597383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 1
 --- !u!1 &697652056
 GameObject:
   m_ObjectHideFlags: 0
@@ -18148,6 +18162,7 @@ GameObject:
   - 224: {fileID: 1190987616}
   - 222: {fileID: 1190987618}
   - 114: {fileID: 1190987617}
+  - 114: {fileID: 1190987619}
   m_Layer: 5
   m_Name: Panel RTO
   m_TagString: Untagged
@@ -18172,10 +18187,10 @@ RectTransform:
   m_Father: {fileID: 1059896580}
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -600}
-  m_SizeDelta: {x: 0, y: -600}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 200}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1190987617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18209,6 +18224,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1190987615}
+--- !u!114 &1190987619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1190987615}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 1
 --- !u!224 &1200570247 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22400002, guid: 49dafbdc7158bd24a989c81a79929019,

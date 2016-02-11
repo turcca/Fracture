@@ -129,6 +129,7 @@ public class EventManager
             if (e.name == eventName)
             {
                 Root.ui.showEventWindow();
+                eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
                 handleEvent(e, callback);
                 eventFound = true;
                 break;

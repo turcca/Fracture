@@ -134,7 +134,17 @@ public class EventBase
     }
     protected Location getLocation()
     {
-        return Root.game.locations[location];
+        if (location != null && Root.game.locations.ContainsKey(location))
+            return Root.game.locations[location];
+        else return getCurrentLocation();
+    }
+    /// <summary>
+    /// Access the current location data directly. From event strings, use +getCurrentLocation().name+ for example
+    /// </summary>
+    /// <returns></returns>
+    protected Location getCurrentLocation()
+    {
+        return Root.game.player.getLocation();
     }
     protected void factionChange(string f, int a)
     {

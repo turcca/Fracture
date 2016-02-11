@@ -166,11 +166,35 @@ public class EventGenerator
         {
             if (Regex.Match(tag, @"^\@t[\s\{]").Success)
             {
-                readText(tag.Substring(2).Replace("\r\n", "\\n")); // keep newlines in text strings
+                readText( tag.Substring(2).Replace("\r\n", "\\n")) ; // keep newlines in text strings
             }
         }
         writeLine("return \"INSERT TEXT HERE\";"); // possible fall-through
         writeLine("}");
+    }
+    private string convertPlusesToParsed(string inputStr)
+    {
+        // convert +'s into enclosing "+, +"
+        string input = inputStr;
+        int n = 0;
+        char plus = char.Parse("+");
+        char quote = char.Parse("\"");
+
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (input[i] == plus)
+            {
+                n++;
+                // if first of pair
+                if (n % 2 != 0) { input = input.Insert(i, "\""); i += 3; }
+                // second of pair
+                else input = input.Insert(i + 1, "\"");
+                //Debug.Log("parse string: found '+' (" + n + ") @i: " + i + " (str length: " + input.Length + ")");
+            }
+        }
+        if (n % 2 != 0) Debug.LogError("EventGenerator parse error on '+'. Odd number of +'s\n" + input);
+        //Debug.Log("--> " + input);
+        return input;
     }
     private void readText(string tag)
     {
@@ -248,6 +272,7 @@ public class EventGenerator
         }
 
         effect = Regex.Replace(effect, @"end", "end()");
+        effect = Regex.Replace(effect, @"resetOutcome", "outcome = 0");
         effect = Regex.Replace(effect, @"character.addStat\(.([a-z]*).*([0-9\.]{1,})\)", @"addCharacterStat(Character.Stat.$1, $2)");
         effect = Regex.Replace(effect, @"character.([a-z]*).*=([0-9\.]*)", @"setCharacterStat(Character.Stat.$1, $2)");
         effect = Regex.Replace(effect, @"\r", @"");
@@ -327,10 +352,10 @@ public class EventGenerator
     string getNextString(string data)
     {
         int stringStartPos = data.IndexOf("\"");
-        if (stringStartPos == -1) throw new System.Exception("Event generator throw");
+        if (stringStartPos == -1) throw new System.Exception("Event generator throw (data:"+data+")");
         int length = data.Substring(stringStartPos + 1).IndexOf("\"");
         if (length == -1) throw new System.Exception("Event generator throw");
-        return data.Substring(stringStartPos + 1, length);
+        return convertPlusesToParsed(data.Substring(stringStartPos + 1, length));
     }
     string getEventName(string data)
     {

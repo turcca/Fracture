@@ -55,7 +55,7 @@ public class Player
 
     private float elapsedDays = 0;  // SAVE
 
-    PlayerShip playerShip = new PlayerShip();
+    PlayerShip playerShip = new PlayerShip("cruiser");
 
     public Player()
     {
