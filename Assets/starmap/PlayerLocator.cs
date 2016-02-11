@@ -59,6 +59,7 @@ public class PlayerLocator : MonoBehaviour
             {
                 ui.hideLocationEntryDialog();
             }
+            Root.game.player.setLocationId("");
         }
     }
 }

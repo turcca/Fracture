@@ -5,7 +5,7 @@ using System;
 
 public class CommodityInventory
 {
-    internal Dictionary<Data.Resource.SubType, int> commodities = new Dictionary<Data.Resource.SubType, int>();
+    internal Dictionary<Data.Resource.SubType, int> commodities = new Dictionary<Data.Resource.SubType, int>(); // SAVE
     public int maxCargoSpace { get; private set; }
     public float credits = 128.0f;
 
@@ -44,15 +44,18 @@ public class CommodityInventory
 
 public class Player
 {
+    // SAVE data
     public CommodityInventory cargo = new CommodityInventory();
     private Dictionary<int, Character> characters = new Dictionary<int, Character>();
     private Dictionary<Character.Job, int> advisors = new Dictionary<Character.Job, int>();
 
-    public Vector3 position;
+    public Vector3 position;    // SAVE
     private double warpMagnitude = 0.0d;
-    private string locationId = "";
+    private string locationId = "";     // SAVE (if "", in space)
 
-    private float elapsedDays = 0;
+    private float elapsedDays = 0;  // SAVE
+
+    PlayerShip playerShip = new PlayerShip();
 
     public Player()
     {

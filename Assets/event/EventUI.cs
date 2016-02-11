@@ -167,11 +167,11 @@ public class EventUI : MonoBehaviour
             return;
         }
         // event (or diplomacy event)
-        //else if (eventSideWindow && eventSideWindow.activeSelf)
-        else if (GameState.isState(GameState.State.Event) || currentEvent.name.StartsWith("contact_"))
+        else if (currentEvent == null) Debug.LogError("locationAdvice == null");
+        else if (GameState.isState(GameState.State.Event) || (currentEvent != null && currentEvent.name.StartsWith("contact_")))
         {
             Debug.Log("setup AdvisorManager / event");
-            if (eventSideWindow) 
+            if (eventSideWindow)
             {
                 am = eventSideWindow.GetComponentInChildren<AdvisorManager>();
                 if (am) am.setup();
