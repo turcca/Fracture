@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -39,6 +40,12 @@ static public class EventSkillValueConvert
         // NOTE: parseString is trimmed
         // separate condition and the rest
 
+        // override!
+        if (parseString.StartsWith("if") || parseString.StartsWith("return"))
+        {
+            return parseString;
+        }
+
         if (parseString.StartsWith("if") && Regex.IsMatch(parseString, "[0-9]"))
         {
             string preCondition = "";
@@ -75,10 +82,13 @@ static public class EventSkillValueConvert
         else return parseString;
     }
 
-
     static private int convertValue(string skill, int value)
     {
-        // check bounds
+        return convertValue((Character.Stat)Enum.Parse(typeof(Character.Stat), skill), value);
+    }
+    static private int convertValue(Character.Stat skill, int value)
+    {
+        // check bounds, if outside return raw number
         if (value < -6 || value > 6)
         {
             //Debug.LogWarning("WARNING: '"+skill+"' value out of bounds: "+value);
@@ -86,7 +96,7 @@ static public class EventSkillValueConvert
         }
         int newValue = 0;
 
-        if (skill == "leadership")
+        if (skill == Character.Stat.leadership)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 50;
@@ -97,7 +107,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "hr")
+        else if (skill == Character.Stat.hr)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 50;
@@ -108,7 +118,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "engineering")
+        else if (skill == Character.Stat.engineering)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 50;
@@ -119,7 +129,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "precognition")
+        else if (skill == Character.Stat.precognition)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 150;
@@ -130,7 +140,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "psy")
+        else if (skill == Character.Stat.psy)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 150;
@@ -141,7 +151,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "navigation")
+        else if (skill == Character.Stat.navigation)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 150;
@@ -152,7 +162,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "spaceBattle")
+        else if (skill == Character.Stat.spaceBattle)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 100;
@@ -163,7 +173,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "combat")
+        else if (skill == Character.Stat.combat)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 100;
@@ -174,7 +184,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "trading")
+        else if (skill == Character.Stat.trading)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 100;
@@ -185,7 +195,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "diplomat")
+        else if (skill == Character.Stat.diplomat)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 150;
@@ -196,7 +206,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "scientist")
+        else if (skill == Character.Stat.scientist)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 50;
@@ -207,7 +217,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "integrity")
+        else if (skill == Character.Stat.integrity)
         {
             if (value == -3) newValue = -300;
             else if (value == -2) newValue = -200;
@@ -218,7 +228,7 @@ static public class EventSkillValueConvert
             else if (value == 3) newValue = 300;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "holiness")
+        else if (skill == Character.Stat.holiness)
         {
             if (value == -3) newValue = -300;
             else if (value == -2) newValue = -200;
@@ -229,7 +239,7 @@ static public class EventSkillValueConvert
             else if (value == 3) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "purity")
+        else if (skill == Character.Stat.purity)
         {
             if (value == -3) newValue = -200;
             else if (value == -2) newValue = -100;
@@ -240,7 +250,7 @@ static public class EventSkillValueConvert
             else if (value == 3) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "security")
+        else if (skill == Character.Stat.security)
         {
             if (value == -3) newValue = -300;
             else if (value == -2) newValue = -150;
@@ -251,7 +261,7 @@ static public class EventSkillValueConvert
             else if (value == 3) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "violent")
+        else if (skill == Character.Stat.violent)
         {
             if (value == -3) newValue = -300;
             else if (value == -2) newValue = -100;
@@ -262,7 +272,7 @@ static public class EventSkillValueConvert
             else if (value == 3) newValue = 400;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "aristocrat")
+        else if (skill == Character.Stat.aristocrat)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 100;
@@ -273,7 +283,7 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "imperialist")
+        else if (skill == Character.Stat.imperialist)
         {
             if (value == -3) newValue = -300;
             else if (value == -2) newValue = -200;
@@ -284,7 +294,7 @@ static public class EventSkillValueConvert
             else if (value == 3) newValue = 500;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else if (skill == "corruption")
+        else if (skill == Character.Stat.corruption)
         {
             if (value == 0) newValue = 0;
             else if (value == 1) newValue = 10;
@@ -295,8 +305,11 @@ static public class EventSkillValueConvert
             else if (value == 6) newValue = 100;
             else Debug.LogError("ERROR: value = " + value);
         }
-        else Debug.LogError("ERROR: unregistered skill encountered: " + skill);
-
+        else
+        {
+            Debug.LogError("ERROR: unregistered skill encountered: " + skill.ToString()+ " : returning original value: "+value);
+            return value;
+        }
         return newValue;
     }
 

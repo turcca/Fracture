@@ -22,7 +22,7 @@ public class GameLoop : MonoBehaviour
     void Start()
     {
         Debug.Log ("*** GameLoop Start ***");
-        GameState.requestState(GameState.State.Starmap);
+        //GameState.requestState(GameState.State.Starmap); // TODO from menu when ready. Starmap is already default state
         Simulation.StarmapVisualization.initNPCShipVisuals();
     }
 

@@ -144,7 +144,7 @@ public class LocationStarmapVisibility : MonoBehaviour//, IPointerEnterHandler, 
             // 0 = 4, 1 = 4.1, 10 = 4.4, 100 = 5.3, 300 = 6.3, 1000 = 8.5
             (Mathf.Pow(location.features.population, 1.7f) / Mathf.Pow(location.features.population, 1.15f) /10.0f +4.0f) *
             // psy rating
-            (location.ideology.effects.psych/2.0f +1.0f)
+            (location.ideology.effects[Simulation.Effect.psych] /2.0f +1.0f)
             // navigator?
             ;
         // alpha
@@ -163,7 +163,7 @@ public class LocationStarmapVisibility : MonoBehaviour//, IPointerEnterHandler, 
         // 10/255: 0.04, 20/255: 0.0784, 24/255 = 0.094, 30/255: 0.12 (int value from colour picker in editor 0-255)
         return (Mathf.Pow(location.features.population, 1.5f) / Mathf.Pow(location.features.population, 1.25f) /100.0f +0.04f) *
             // psy rating
-            (location.ideology.effects.psych/1.0f +1.0f);
+            (location.ideology.effects[Simulation.Effect.psych] /1.0f +1.0f);
 
         // location values vary ~ between 0.03 - 0.13
     }

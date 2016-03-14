@@ -9,7 +9,10 @@ public class EventAdviceTagParser : MonoBehaviour
     public bool parse = true;
     public bool write = true;
     public bool debugging = false;
-    public string fileName = "EventAdviceTags.txt";
+    
+
+    public string fileName = "/data/EventAdviceTags.txt";
+    public string outputFolder = "/event/generated/";
 
     static public string tagKey = "&";
 
@@ -32,7 +35,7 @@ public class EventAdviceTagParser : MonoBehaviour
     {
         // parseEventAdviceTags.txt
         // StreamReader
-        fileName = Application.dataPath + "/" + fileName;
+        fileName = Application.dataPath + fileName;
         sr = File.OpenText(fileName);
         if (File.Exists(fileName))
         {
@@ -197,13 +200,15 @@ public class EventAdviceTagParser : MonoBehaviour
 
     void writeEventAdviceTags(string file)
     {
+        string path = Application.dataPath + outputFolder;
         // overwrite
         if (File.Exists(file))
         {
             Debug.Log("Overwriting " + file);
         }
+        else Debug.Log("Creating new file to: " + path + file);
 
-        System.IO.StreamWriter sr = File.CreateText(Application.dataPath + "/scripts/" + file);
+        System.IO.StreamWriter sr = File.CreateText(path + file);
 
         if (debugging) { Debug.Log("Writing " + file + " ..."); }
 

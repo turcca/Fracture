@@ -1,4 +1,4 @@
-// Events.cs compiled: 16:39:30 11/02/2016
+// Events.cs compiled: 22:16:57 14/03/2016
 #pragma warning disable 0162, 1717
 using System;
 //---------------------------------------------------------------------------------
@@ -40,8 +40,7 @@ if (job == Character.Job.captain) {
 if ( getAdvisor(job).isIdeology("mercantile") )
 {
 eventAdvice.text = "Well that's weird. Aren't we supposed to find out what this is about?";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -49,8 +48,7 @@ if (job == Character.Job.captain) {
 if ( getAdvisor(job).isIdeology("transhumanist") )
 {
 eventAdvice.text = "It's a contact. Someone is trying to contact us. Any ideas what this is about?";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -58,8 +56,7 @@ if (job == Character.Job.captain) {
 if ( getAdvisor(job).isIdeology("liberal") )
 {
 eventAdvice.text = "If there is a pattern to this knocking, it's a signal. By who? We should look into it.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -74,8 +71,7 @@ if (job == Character.Job.captain) {
 if ( getAdvisor(job).isIdeology("cult") )
 {
 eventAdvice.text = "Fill the ears with prayer and call their minds.";
-eventAdvice.recommend =  742
-;
+eventAdvice.recommend =  742;
 return eventAdvice;
 }
 }
@@ -95,8 +91,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("security") >= 2 )
 {
 eventAdvice.text = "When things get confused, it is best to have trusted people by key equipment.";
-eventAdvice.recommend =  741
-;
+eventAdvice.recommend =  741;
 return eventAdvice;
 }
 }
@@ -110,8 +105,7 @@ return eventAdvice;
 if (job == Character.Job.engineer) {
 {
 eventAdvice.text = "If it's a code, we should be able to crack it.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -125,8 +119,7 @@ return eventAdvice;
 if (job == Character.Job.security) {
 {
 eventAdvice.text = "Always secure the Core, bridge, navigation equipment, life support and arsenal.";
-eventAdvice.recommend =  741
-;
+eventAdvice.recommend =  741;
 return eventAdvice;
 }
 }
@@ -134,8 +127,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") < 0 )
 {
 eventAdvice.text = "The crew is already &shipStatHappiness&, we might be better off giving them something else to chew on.";
-eventAdvice.recommend =  742
-;
+eventAdvice.recommend =  742;
 return eventAdvice;
 }
 }
@@ -143,8 +135,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("security") >= 1 )
 {
 eventAdvice.text = "Is everyone going to act strange again? Are they going to do something stupid again?";
-eventAdvice.recommend =  741
-;
+eventAdvice.recommend =  741;
 return eventAdvice;
 }
 }
@@ -152,16 +143,14 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("holiness") >= 1 )
 {
 eventAdvice.text = "It's the Daemons outside. Testing our resolve, trying to claw in. We should prepare for the worst.";
-eventAdvice.recommend =  741
-;
+eventAdvice.recommend =  741;
 return eventAdvice;
 }
 }
 if (job == Character.Job.quartermaster) {
 {
 eventAdvice.text = "I wonder what this is about.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -169,8 +158,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") <= 3 )
 {
 eventAdvice.text = "If we don't have a long way to go still, we may want to see what this is about.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -178,8 +166,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("psy") >= 1 && getAdvisor(job).getStat("hr") <= 3 )
 {
 eventAdvice.text = "I can hear the knocking too. I wonder what it means.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -187,8 +174,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("psy") >= 2 && getAdvisor(job).getStat("corruption") >= 3 )
 {
 eventAdvice.text = "Something is out there. We should find more about it, this information can be extremely valuable.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -196,8 +182,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("psy") >= 4 && getAdvisor(job).getStat("corruption") >= 4 )
 {
 eventAdvice.text = "Let's see who is knocking on our door this time.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -205,16 +190,14 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("psy") < 2 && getAdvisor(job).getStat("corruption") >= 3 )
 {
 eventAdvice.text = "We must quickly interrogate people to find everything we can about what they have heard.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
 if (job == Character.Job.psycher) {
 {
 eventAdvice.text = "Careful examination may be in order. &No&, this doesn't seem to be an immediate threat.";
-eventAdvice.recommend =  740
-;
+eventAdvice.recommend =  740;
 return eventAdvice;
 }
 }
@@ -250,41 +233,34 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Try to record the knocks and resolve if there is a pattern to it.",  740
-);
+choices.Add("Try to record the knocks and resolve if there is a pattern to it.",  740);
 }
 if (outcome== 743)
 {
-choices.Add("Continue",  748
-);
+choices.Add("Continue",  748);
 }
 if (outcome== 0)
 {
-choices.Add("Send out security to defend high priority targets. Broadcast a warning against listening to the knocking.",  741
-);
+choices.Add("Send out security to defend high priority targets. Broadcast a warning against listening to the knocking.",  741);
 }
 if (outcome== 744)
 {
-choices.Add("Continue",  755
-);
+choices.Add("Continue",  755);
 }
 if (outcome== 0)
 {
-choices.Add("Deal out extra dozes of Angel Meld to the crew.",  742
-);
+choices.Add("Deal out extra dozes of Angel Meld to the crew.",  742);
 }
 if (outcome== 745)
 {
-choices.Add("Continue",  760
-);
+choices.Add("Continue",  760);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
 if (choice== 740)
 {
-outcome= 743
-;
+outcome= 743;
 }
 if (choice== 748)
 {
@@ -294,8 +270,7 @@ end();
 }
 if (choice== 741)
 {
-outcome= 744
-;
+outcome= 744;
 }
 if (choice== 755)
 {
@@ -305,8 +280,7 @@ end();
 }
 if (choice== 742)
 {
-outcome= 745
-;
+outcome= 745;
 }
 if (choice== 760)
 {
@@ -380,8 +354,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("holiness") >= 1 )
 {
 eventAdvice.text = "There is something creepy going on.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
@@ -389,8 +362,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("psy") >= 1 )
 {
 eventAdvice.text = "There is something creepy going on.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -398,8 +370,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("psy") >= 3 )
 {
 eventAdvice.text = "Something is going on.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -407,8 +378,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("security") <= 0 )
 {
 eventAdvice.text = "It's okay, some of the people down there are my maintainance crews. They are good people and work hard for this ship.";
-eventAdvice.recommend =  766
-;
+eventAdvice.recommend =  766;
 return eventAdvice;
 }
 }
@@ -416,8 +386,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("security") >= 1 )
 {
 eventAdvice.text = "Lower decks have no crucial components in them. But alot of rudimentary maintainance is done below, so I want to know my teams are doing ok.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
@@ -431,16 +400,14 @@ if (job == Character.Job.security) {
 if ( getAdvisor(job).getStat("security") >= 0 )
 {
 eventAdvice.text = "They bathe their minds in chemicals as they whip themselves into some kind of a trance. This needs to stop.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
 if (job == Character.Job.security) {
 {
 eventAdvice.text = "As long as we don't get any complains, I'm okay with it.";
-eventAdvice.recommend =  766
-;
+eventAdvice.recommend =  766;
 return eventAdvice;
 }
 }
@@ -448,8 +415,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("security") >= 2 )
 {
 eventAdvice.text = "There's always some fractured shit. Just make them stop before they do something stupid again.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
@@ -457,8 +423,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("holiness") >= 1 )
 {
 eventAdvice.text = "Unholy music. No-one should be listening to this.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
@@ -466,8 +431,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("psy") >= 1 )
 {
 eventAdvice.text = "This... music. There is something to it.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -475,8 +439,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("corruption") >= 4 )
 {
 eventAdvice.text = "Let them enjoy themselves. Don't take away the rare piece of happiness they can find.";
-eventAdvice.recommend =  766
-;
+eventAdvice.recommend =  766;
 return eventAdvice;
 }
 }
@@ -484,8 +447,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Holiness") <= -1 )
 {
 eventAdvice.text = "The crew... they are not doing so well. We may want to control this.";
-eventAdvice.recommend =  766
-;
+eventAdvice.recommend =  766;
 return eventAdvice;
 }
 }
@@ -493,8 +455,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") <= 0 )
 {
 eventAdvice.text = "The crew needs this to take their mind of the Fall.";
-eventAdvice.recommend =  766
-;
+eventAdvice.recommend =  766;
 return eventAdvice;
 }
 }
@@ -502,16 +463,14 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") <= 3 )
 {
 eventAdvice.text = "We can carefully monitor the situation.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
 if (job == Character.Job.quartermaster) {
 {
 eventAdvice.text = "We can watch how things develop. No need to overreact.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -519,8 +478,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("psy")== 2 && getAdvisor(job).getStat("corruption") >= 2 )
 {
 eventAdvice.text = "This is... beautiful. We must hear more.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -528,8 +486,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("psy") >= 3 && getAdvisor(job).getStat("corruption") >= 3 )
 {
 eventAdvice.text = "Beautifully orchestrated. For our benefit. We shouldn't miss it.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -537,16 +494,14 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("psy") < 2 && getAdvisor(job).getStat("corruption") >= 2 )
 {
 eventAdvice.text = "Interesting. We have to know more, how does it affect people.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
 if (job == Character.Job.psycher) {
 {
 eventAdvice.text = "I have a few people in mind.";
-eventAdvice.recommend =  768
-;
+eventAdvice.recommend =  768;
 return eventAdvice;
 }
 }
@@ -554,8 +509,7 @@ if (job == Character.Job.priest) {
 if ( getAdvisor(job).getStat("holiness") >= 1 )
 {
 eventAdvice.text = "These sounds are troubling, and shouldn't be listened to.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
@@ -563,8 +517,7 @@ if (job == Character.Job.priest) {
 if ( getAdvisor(job).getStat("holiness") >= 2 )
 {
 eventAdvice.text = "Put an end to the sounds of madness, or there will be dire consequences.";
-eventAdvice.recommend =  767
-;
+eventAdvice.recommend =  767;
 return eventAdvice;
 }
 }
@@ -600,41 +553,34 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Allow it.",  766
-);
+choices.Add("Allow it.",  766);
 }
 if (outcome== 769)
 {
-choices.Add("Continue",  773
-);
+choices.Add("Continue",  773);
 }
 if (outcome== 0)
 {
-choices.Add("Break the illegal parties up and restrict the records.",  767
-);
+choices.Add("Break the illegal parties up and restrict the records.",  767);
 }
 if (outcome== 770)
 {
-choices.Add("Continue",  775
-);
+choices.Add("Continue",  775);
 }
 if (outcome== 0)
 {
-choices.Add("Put a team to study the phenomenom.",  768
-);
+choices.Add("Put a team to study the phenomenom.",  768);
 }
 if (outcome== 771)
 {
-choices.Add("Continue",  777
-);
+choices.Add("Continue",  777);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
 if (choice== 766)
 {
-outcome= 769
-;
+outcome= 769;
 }
 if (choice== 773)
 {
@@ -644,8 +590,7 @@ end();
 }
 if (choice== 767)
 {
-outcome= 770
-;
+outcome= 770;
 }
 if (choice== 775)
 {
@@ -655,8 +600,7 @@ end();
 }
 if (choice== 768)
 {
-outcome= 771
-;
+outcome= 771;
 }
 if (choice== 777)
 {
@@ -714,8 +658,7 @@ if (job == Character.Job.navigator) {
 if ( getAdvisor(job).getStat("corruption") >= 40 )
 {
 eventAdvice.text = "To hear is to listen. Meanwhile, we must go on.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
@@ -723,16 +666,14 @@ if (job == Character.Job.navigator) {
 if ( getAdvisor(job).getStat("corruption") >= 70 )
 {
 eventAdvice.text = "A good crew is attuned to its function. I encourage this.";
-eventAdvice.recommend =  807
-;
+eventAdvice.recommend =  807;
 return eventAdvice;
 }
 }
 if (job == Character.Job.navigator) {
 {
 eventAdvice.text = "A distraction.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
@@ -740,8 +681,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("corruption") >= 20 )
 {
 eventAdvice.text = "These are my people, and I have full control over the matter. In fact, I have some suggestions.";
-eventAdvice.recommend =  807
-;
+eventAdvice.recommend =  807;
 return eventAdvice;
 }
 }
@@ -749,16 +689,14 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("holiness") >= 4 )
 {
 eventAdvice.text = "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact.";
-eventAdvice.recommend =  809
-;
+eventAdvice.recommend =  809;
 return eventAdvice;
 }
 }
 if (job == Character.Job.engineer) {
 {
 eventAdvice.text = "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
@@ -766,8 +704,7 @@ if (job == Character.Job.security) {
 if ( getAdvisor(job).getStat("corruption") >= 80 )
 {
 eventAdvice.text = "We have established cooperation with the group in question. I believe we can further this understanding.";
-eventAdvice.recommend =  807
-;
+eventAdvice.recommend =  807;
 return eventAdvice;
 }
 }
@@ -775,16 +712,14 @@ if (job == Character.Job.security) {
 if ( getAdvisor(job).getStat("holiness") >= 4 )
 {
 eventAdvice.text = "Heresy! We must end this now, before it gets out of hand. You can't just go and change the Approved Procedures!";
-eventAdvice.recommend =  809
-;
+eventAdvice.recommend =  809;
 return eventAdvice;
 }
 }
 if (job == Character.Job.security) {
 {
 eventAdvice.text = "The core is high security area, and there should be very little tolerance towards unregulated activities.";
-eventAdvice.recommend =  809
-;
+eventAdvice.recommend =  809;
 return eventAdvice;
 }
 }
@@ -792,8 +727,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("corruption") >= 60 )
 {
 eventAdvice.text = "Such efficiency and dedication.";
-eventAdvice.recommend =  807
-;
+eventAdvice.recommend =  807;
 return eventAdvice;
 }
 }
@@ -801,16 +735,14 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("hr") >= 6 )
 {
 eventAdvice.text = "Interfering with this can demoralize the crew. Any radical reaction could unbalance things.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
 if (job == Character.Job.quartermaster) {
 {
 eventAdvice.text = "I'm not entirely sure how we should handle this. Perhaps we need to see how this develops before weigh in.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
@@ -818,8 +750,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("corruption") >= 40 )
 {
 eventAdvice.text = "Interesting. We must participate in this to truly understand it.";
-eventAdvice.recommend =  807
-;
+eventAdvice.recommend =  807;
 return eventAdvice;
 }
 }
@@ -833,8 +764,7 @@ return eventAdvice;
 if (job == Character.Job.psycher) {
 {
 eventAdvice.text = "I am curious.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
@@ -842,16 +772,14 @@ if (job == Character.Job.priest) {
 if ( getAdvisor(job).getStat("holiness") >= 2 )
 {
 eventAdvice.text = "We must stop the spread of these deviations from Approved Procedures. At once.";
-eventAdvice.recommend =  809
-;
+eventAdvice.recommend =  809;
 return eventAdvice;
 }
 }
 if (job == Character.Job.priest) {
 {
 eventAdvice.text = "Perhaps a silent meditation will bring clarity to the issue.";
-eventAdvice.recommend =  808
-;
+eventAdvice.recommend =  808;
 return eventAdvice;
 }
 }
@@ -881,41 +809,34 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Partake in new practices to understand them better.",  807
-);
+choices.Add("Partake in new practices to understand them better.",  807);
 }
 if (outcome== 810)
 {
-choices.Add("Continue",  823
-);
+choices.Add("Continue",  823);
 }
 if (outcome== 0)
 {
-choices.Add("Send in the security. Contain and question everyone involved.",  809
-);
+choices.Add("Send in the security. Contain and question everyone involved.",  809);
 }
 if (outcome== 812)
 {
-choices.Add("Continue",  825
-);
+choices.Add("Continue",  825);
 }
 if (outcome== 0)
 {
-choices.Add("Do not interfere, but keep an eye on any developments.",  808
-);
+choices.Add("Do not interfere, but keep an eye on any developments.",  808);
 }
 if (outcome== 811)
 {
-choices.Add("Continue",  824
-);
+choices.Add("Continue",  824);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
 if (choice== 807)
 {
-outcome= 810
-;
+outcome= 810;
 }
 if (choice== 823)
 {
@@ -925,8 +846,7 @@ end();
 }
 if (choice== 809)
 {
-outcome= 812
-;
+outcome= 812;
 }
 if (choice== 825)
 {
@@ -936,8 +856,7 @@ end();
 }
 if (choice== 808)
 {
-outcome= 811
-;
+outcome= 811;
 }
 if (choice== 824)
 {
@@ -954,7 +873,250 @@ public override void initFilters() {
 //------------------------------------------------------- EVENT 4
 //---------------------------------------------------------------------------------
 public class Event_4 : EventBase {
-public Event_4() : base("contact_noble4") {}
+public Event_4() : base("at 1c02 arch beacon") {}
+//------------------------------------------------------- PREINIT
+public override void initPre() {
+location= "1c02";
+triggerEvent=trigger.atLocation;
+locationRequired=true;
+}
+//------------------------------------------------------- FREQUENCY AND AMBIENT
+public override freq getFrequency() {
+return freq.Default;
+}
+public override status getCrewStatus() {
+return status.Default;
+}
+public override noise getAmbientNoise() {
+return noise.DefaultBridge;
+}
+//------------------------------------------------------- PROBABILITY
+public override float calculateProbability() {
+float p = 1.0f;
+if ( getEvent("loc_advice_1C02").outcome== 0 )
+{
+p *=  0;
+}
+base.lastProbability = p;
+return base.lastProbability;
+}
+//------------------------------------------------------- ADVICE
+public override EventAdvice getAdvice(Character.Job job) {
+EventAdvice eventAdvice = new EventAdvice();
+if (job == Character.Job.captain) {
+if ( getAdvisor(job).getStat("navigation") >= 1 )
+{
+eventAdvice.text = "The Arch.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.captain) {
+{
+eventAdvice.text = "We are by the Arch now, aren't we?";
+return eventAdvice;
+}
+}
+if (job == Character.Job.navigator) {
+if ( getAdvisor(job).getStat("navigation") >= 3 )
+{
+eventAdvice.text = "The Arch beacon, it is our lifeline on this sector. It used to connect this sector to Orion sectors, but no longer.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.navigator) {
+{
+eventAdvice.text = "The Arch beacon can be located most of the time everywhere in the sector.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).getStat("engineering") >= 2 )
+{
+eventAdvice.text = "It is a wonder, how we used to build these technological marvels that can penetrate even the heart of the fracture.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+{
+eventAdvice.text = "I can't imagine what goes into building a fracture beacon like this.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+{
+eventAdvice.text = "Are we stopping here? I'll have to draw crew recreation rotation.";
+return eventAdvice;
+}
+}
+return eventAdvice;
+}
+//------------------------------------------------------- TEXT
+public override string getText() {
+if (outcome== 0)
+{
+return "There is an extremely strong beacon here, at the other side of the fracture.";
+}
+return "INSERT TEXT HERE";
+}
+//------------------------------------------------------- CHOICES
+public override void initChoices() {
+if (outcome== 0)
+{
+choices.Add("Continue.",  981);
+}
+ }
+//------------------------------------------------------- OUTCOMES
+public override void doOutcome() {
+if (choice== 981)
+{
+outcome= 982 ;
+available=false;
+end();
+}
+}
+//------------------------------------------------------- FILTERS
+public override void initFilters() {
+}
+}
+//---------------------------------------------------------------------------------
+//------------------------------------------------------- EVENT 5
+//---------------------------------------------------------------------------------
+public class Event_5 : EventBase {
+public Event_5() : base("at 1c08 first found") {}
+//------------------------------------------------------- PREINIT
+public override void initPre() {
+location= "1c08";
+triggerEvent=trigger.atLocation;
+locationRequired=true;
+}
+//------------------------------------------------------- FREQUENCY AND AMBIENT
+public override freq getFrequency() {
+return freq.Default;
+}
+public override status getCrewStatus() {
+return status.Default;
+}
+public override noise getAmbientNoise() {
+return noise.DefaultBridge;
+}
+//------------------------------------------------------- PROBABILITY
+public override float calculateProbability() {
+float p = 1.0f;
+if ( getEvent("loc_advice_1C08").outcome== 0 )
+{
+p *=  0;
+}
+base.lastProbability = p;
+return base.lastProbability;
+}
+//------------------------------------------------------- ADVICE
+public override EventAdvice getAdvice(Character.Job job) {
+EventAdvice eventAdvice = new EventAdvice();
+if (job == Character.Job.captain) {
+{
+eventAdvice.text = "If they have turned their beacon off by purpose, they do not want to be found. Will they let us leave, once we have entered?";
+return eventAdvice;
+}
+}
+if (job == Character.Job.navigator) {
+if ( getAdvisor(job).getStat("navigation") >= 3 )
+{
+eventAdvice.text = "This colony is not on any Imperial navigation charts, but I have acquired records of the Old Furia. I believe there are matching references to a small resort called Gardens of Augustus.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.navigator) {
+{
+eventAdvice.text = "This colony is not on any Imperial navigation charts. I had no idea there was something so far out here.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+{
+eventAdvice.text = "Fracture beacons are lighthouses and landmarks for ships in the fracture. Some worlds have been unable to maintain them, and so they fall off the grid.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+{
+eventAdvice.text = "We are taking an awful risk by even getting this close to it.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+{
+eventAdvice.text = "There is always quite a lot of tension when encountering worlds without active beacons. It is not unheard of for ships to be seized by places like this.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("psy") >= 4 && getAdvisor(job).getStat("precognition") >= 2 )
+{
+eventAdvice.text = "It's a small world, but they have developed strong affinity with the fracture. I believe they are hiding.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("psy") >= 3 )
+{
+eventAdvice.text = "It's a small world, but they have developed strong affinity with the fracture.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+{
+eventAdvice.text = "So, uh. What we have here is a colony that is not shown on the map.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("psy") >= 1 )
+{
+eventAdvice.text = "It's a small colony.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.priest) {
+{
+eventAdvice.text = "Lost colonies of man. They need to be brought back into the fold. Enlightenment awaits!";
+return eventAdvice;
+}
+}
+return eventAdvice;
+}
+//------------------------------------------------------- TEXT
+public override string getText() {
+if (outcome== 0)
+{
+return "There is a colony here, but there is no active fracture beacon.";
+}
+return "INSERT TEXT HERE";
+}
+//------------------------------------------------------- CHOICES
+public override void initChoices() {
+if (outcome== 0)
+{
+choices.Add("Continue",  919);
+}
+ }
+//------------------------------------------------------- OUTCOMES
+public override void doOutcome() {
+if (choice== 919)
+{
+outcome= 920 ;
+available=false;
+end();
+}
+}
+//------------------------------------------------------- FILTERS
+public override void initFilters() {
+}
+}
+//---------------------------------------------------------------------------------
+//------------------------------------------------------- EVENT 6
+//---------------------------------------------------------------------------------
+public class Event_6 : EventBase {
+public Event_6() : base("contact_noble4") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }
@@ -986,11 +1148,11 @@ return eventAdvice;
 public override string getText() {
 if (outcome== 0)
 {
-return "I am the representative of House Valeria at "+getCurrentLocation().name+".";
+return "Greetings,\n\nI am "+getCurrentLocation().factionHeadTitleAndName(Faction.FactionID.noble4)+" at "+getCurrentLocation().name+".";
 }
-if (outcome== 902)
+if (outcome== 0)
 {
-return "sdhsdh";
+return "";
 }
 return "INSERT TEXT HERE";
 }
@@ -998,37 +1160,24 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Continue",  901
-);
-}
-if (outcome== 902)
-{
-choices.Add("sdhsdgh",  911
-);
+choices.Add("Leave",  908);
 }
 if (outcome== 0)
 {
-choices.Add("Leave",  908
-);
+choices.Add("Continue",  901);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
-if (choice== 901)
-{
-outcome= 902
-;
-}
-if (choice== 911)
-{
-outcome= 915 ;
-end();
-}
 if (choice== 908)
 {
 outcome= 909 ;
 outcome=0;
 end();
+}
+if (choice== 901)
+{
+outcome= 902;
 }
 }
 //------------------------------------------------------- FILTERS
@@ -1037,10 +1186,10 @@ addFilter("contact_factions");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 5
+//------------------------------------------------------- EVENT 7
 //---------------------------------------------------------------------------------
-public class Event_5 : EventBase {
-public Event_5() : base("core singers") {}
+public class Event_7 : EventBase {
+public Event_7() : base("core singers") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }
@@ -1081,8 +1230,7 @@ if (job == Character.Job.navigator) {
 if ( getAdvisor(job).getStat("corruption") >= 50 )
 {
 eventAdvice.text = "As long as the core is in tune.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1096,8 +1244,7 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("corruption") >= 30 )
 {
 eventAdvice.text = "I have things under control. We are actually on to something very interesting.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1105,16 +1252,14 @@ if (job == Character.Job.engineer) {
 if ( getAdvisor(job).getStat("corruption") >= 70 )
 {
 eventAdvice.text = "There must be a misunderstanding here. We do have access! I am a member after all.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
 if (job == Character.Job.engineer) {
 {
 eventAdvice.text = "This is absurd. I'm going to need access to my core.";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1122,8 +1267,7 @@ if (job == Character.Job.security) {
 if ( getAdvisor(job).getStat("corruption") >= 80 )
 {
 eventAdvice.text = "I have infiltrated the group. There is no reason to interfere yet, we can control the situation if need arises.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1131,8 +1275,7 @@ if (job == Character.Job.security) {
 if ( getAdvisor(job).getStat("corruption") >= 50 )
 {
 eventAdvice.text = "I am not convinced this is a threat to the ship security. It's a matter of preference, really.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1140,8 +1283,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") >= 1 && getAdvisor(job).getStat("leadership") >= 4 )
 {
 eventAdvice.text = "I trust my men. You can count on us.";
-eventAdvice.recommend =  840
-;
+eventAdvice.recommend =  840;
 return eventAdvice;
 }
 }
@@ -1149,8 +1291,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") >= 1 )
 {
 eventAdvice.text = "It may be difficult to take the core, if the defenders are determined.";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1158,8 +1299,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") >= 1 && getAdvisor(job).getStat("combat") >= 5 )
 {
 eventAdvice.text = "I can take them.";
-eventAdvice.recommend =  840
-;
+eventAdvice.recommend =  840;
 return eventAdvice;
 }
 }
@@ -1167,8 +1307,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") >= 1 && getAdvisor(job).getStat("security") >= 3 )
 {
 eventAdvice.text = "The core can be easily defended, but our security can handle this.";
-eventAdvice.recommend =  840
-;
+eventAdvice.recommend =  840;
 return eventAdvice;
 }
 }
@@ -1176,8 +1315,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") < 1 && getAdvisor(job).getStat("leadership") >= 4 )
 {
 eventAdvice.text = "If the resistance is determined at the core, our security forces may not be able to handle it. I need more men!";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1185,8 +1323,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") < 1 && getAdvisor(job).getStat("security") >= 3 )
 {
 eventAdvice.text = "The core can be easily defended. Our security forces may have a hard time enforcing this. This is why we need better security on the ship!";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1194,8 +1331,7 @@ if (job == Character.Job.security) {
 if ( getShipStat("Morale") < 1 )
 {
 eventAdvice.text = "It may be difficult to take the core, if the defenders are determined.";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1203,8 +1339,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") >= 1 && getAdvisor(job).getStat("hr") >= 4 )
 {
 eventAdvice.text = "The situation on the ship is well at hand. This is negotiable.";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1212,8 +1347,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") >= 1 && getAdvisor(job).getStat("hr") < 4 && getAdvisor(job).getStat("hr") < 4 )
 {
 eventAdvice.text = "If this doesn't interfere with the ship's procedures, perhaps we should allow this. The crew is handing this well.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1221,8 +1355,7 @@ if (job == Character.Job.quartermaster) {
 if ( getShipStat("Happiness") >= 1 && getAdvisor(job).getStat("hr") < 4 && getAdvisor(job).isIdeology("cult") )
 {
 eventAdvice.text = "Who knows what is going on in there? This isn't right, we have to get in there.";
-eventAdvice.recommend =  840
-;
+eventAdvice.recommend =  840;
 return eventAdvice;
 }
 }
@@ -1230,8 +1363,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("hr") >= 5 )
 {
 eventAdvice.text = "The chain of command is breaking up. These so called 'core singers' are not taking orders from our leadership anymore.";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1239,8 +1371,7 @@ if (job == Character.Job.quartermaster) {
 if ( getAdvisor(job).getStat("corruption") >= 40 )
 {
 eventAdvice.text = "As long as the group keeps operating the core this well, there is no need to interfere.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1269,8 +1400,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("corruption") >= 40 )
 {
 eventAdvice.text = "I have been in contact to these 'core singers' and I am intrigued. They may have something to contribute.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1278,8 +1408,7 @@ if (job == Character.Job.psycher) {
 if ( getAdvisor(job).getStat("corruption") >= 80 )
 {
 eventAdvice.text = "I have met these 'core singers' myself. I believe they have a role to play in the future.";
-eventAdvice.recommend =  838
-;
+eventAdvice.recommend =  838;
 return eventAdvice;
 }
 }
@@ -1307,8 +1436,7 @@ if (job == Character.Job.priest) {
 if ( getAdvisor(job).getStat("security") < -1 )
 {
 eventAdvice.text = "The core contains some of the great secrets of the past. We should not reveal them so easily.";
-eventAdvice.recommend =  839
-;
+eventAdvice.recommend =  839;
 return eventAdvice;
 }
 }
@@ -1316,16 +1444,14 @@ if (job == Character.Job.priest) {
 if ( getShipStat("Holiness") >= 3 )
 {
 eventAdvice.text = "No heretics can take our holy ship! I will lead our people to the path of righteousness.";
-eventAdvice.recommend =  840
-;
+eventAdvice.recommend =  840;
 return eventAdvice;
 }
 }
 if (job == Character.Job.priest) {
 {
 eventAdvice.text = "The core is a sacred place, and must be under our direct control!";
-eventAdvice.recommend =  840
-;
+eventAdvice.recommend =  840;
 return eventAdvice;
 }
 }
@@ -1379,76 +1505,62 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Do not interfere.",  838
-);
+choices.Add("Do not interfere.",  838);
 }
 if (outcome== 843)
 {
-choices.Add("Continue",  857
-);
+choices.Add("Continue",  857);
 }
 if (outcome== 0)
 {
-choices.Add("Demand access to the core for key personnel.",  839
-);
+choices.Add("Demand access to the core for key personnel.",  839);
 }
 if (outcome== 844)
 {
-choices.Add("Send in the security to reclaim the core.",  858
-);
+choices.Add("Send in the security to reclaim the core.",  858);
 }
 if (outcome== 859)
 {
-choices.Add("Continue",  864
-);
+choices.Add("Continue",  864);
 }
 if (outcome== 884)
 {
-choices.Add("Continue",  888
-);
+choices.Add("Continue",  888);
 }
 if (outcome== 844)
 {
-choices.Add("Appoint the 'core singers' an official position on the core.",  851
-);
+choices.Add("Appoint the 'core singers' an official position on the core.",  851);
 }
 if (outcome== 860)
 {
-choices.Add("Continue",  862
-);
+choices.Add("Continue",  862);
 }
 if (outcome== 842)
 {
-choices.Add("Continue",  850
-);
+choices.Add("Continue",  850);
 }
 if (outcome== 0)
 {
-choices.Add("Send in the security to reclaim the core.",  840
-);
+choices.Add("Send in the security to reclaim the core.",  840);
 }
 if (outcome== 841)
 {
-choices.Add("Praise the Church!",  870
-);
+choices.Add("Praise the Church!",  870);
 }
 if (outcome== 867)
 {
-choices.Add("Continue",  880
-);
+choices.Add("Continue",  880);
 }
 if (outcome== 845)
 {
-choices.Add("Continue",  875
-);
+choices.Add("Continue",  875);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
 if (choice== 838)
 {
-outcome= 843
-;
+outcome= 843;
 }
 if (choice== 857)
 {
@@ -1458,13 +1570,11 @@ end();
 }
 if (choice== 839 && getShipStat("Happiness") < 1)
 {
-outcome= 844
-;
+outcome= 844;
 }
 if (choice== 858 && getShipStat("Morale") >= 2)
 {
-outcome= 859
-;
+outcome= 859;
 }
 if (choice== 864)
 {
@@ -1474,8 +1584,7 @@ end();
 }
 if (choice== 858 && getShipStat("Morale") < 2)
 {
-outcome= 884
-;
+outcome= 884;
 }
 if (choice== 888)
 {
@@ -1485,8 +1594,7 @@ end();
 }
 if (choice== 851)
 {
-outcome= 860
-;
+outcome= 860;
 }
 if (choice== 862)
 {
@@ -1496,8 +1604,7 @@ end();
 }
 if (choice== 839 && getShipStat("Happiness") >= 1 || getShipStat("Holiness") >= 3)
 {
-outcome= 842
-;
+outcome= 842;
 }
 if (choice== 850)
 {
@@ -1507,13 +1614,11 @@ end();
 }
 if (choice== 840)
 {
-outcome= 889
-;
+outcome= 889;
 }
 if (choice== 840 && getShipStat("Holiness") >= 3)
 {
-outcome= 841
-;
+outcome= 841;
 }
 if (choice== 870)
 {
@@ -1523,8 +1628,7 @@ end();
 }
 if (choice== 840 && getShipStat("Morale") < 1)
 {
-outcome= 867
-;
+outcome= 867;
 }
 if (choice== 880)
 {
@@ -1534,8 +1638,7 @@ end();
 }
 if (choice== 840 && getShipStat("Morale") >= 1)
 {
-outcome= 845
-;
+outcome= 845;
 }
 if (choice== 875)
 {
@@ -1549,10 +1652,10 @@ public override void initFilters() {
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 6
+//------------------------------------------------------- EVENT 8
 //---------------------------------------------------------------------------------
-public class Event_6 : EventBase {
-public Event_6() : base("default_advice") {}
+public class Event_8 : EventBase {
+public Event_8() : base("default_advice") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }
@@ -1639,14 +1742,351 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 7
+//------------------------------------------------------- EVENT 9
 //---------------------------------------------------------------------------------
-public class Event_7 : EventBase {
-public Event_7() : base("intro Valeria1t") {}
+public class Event_9 : EventBase {
+public Event_9() : base("in 1c08 first enter") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C07"
-;
+location= "1c08";
+triggerEvent=trigger.inLocation;
+locationRequired=true;
+}
+//------------------------------------------------------- FREQUENCY AND AMBIENT
+public override freq getFrequency() {
+return freq.Default;
+}
+public override status getCrewStatus() {
+return status.Default;
+}
+public override noise getAmbientNoise() {
+return noise.DefaultBridge;
+}
+//------------------------------------------------------- PROBABILITY
+public override float calculateProbability() {
+float p = 1.0f;
+if ( getEvent("at 1c08 first found").outcome== 0 )
+{
+p *=  0;
+}
+base.lastProbability = p;
+return base.lastProbability;
+}
+//------------------------------------------------------- ADVICE
+public override EventAdvice getAdvice(Character.Job job) {
+EventAdvice eventAdvice = new EventAdvice();
+if (job == Character.Job.captain) {
+if ( getAdvisor(job).getStat("holiness") >= 2 )
+{
+eventAdvice.text = "It is our duty to find out about this place.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.captain) {
+if ( getAdvisor(job).getStat("diplomat") >= 3 )
+{
+eventAdvice.text = "Let's try to negotiate a safe passage. It would be good to have extra trading partner and a haven out here.";
+eventAdvice.recommend =  925;
+return eventAdvice;
+}
+}
+if (job == Character.Job.captain) {
+if ( getAdvisor(job).getStat("spaceBattle") >= 2 )
+{
+eventAdvice.text = "It's a precarious situation at best. We should play it safe and get out while we can.";
+eventAdvice.recommend =  926;
+return eventAdvice;
+}
+}
+if (job == Character.Job.captain) {
+{
+eventAdvice.text = "Is it an automated message? Maybe we should try to contact them.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.navigator) {
+if ( getAdvisor(job).getStat("navigation") >= 2 )
+{
+eventAdvice.text = "This must be the Gardens of Augustus.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.navigator) {
+{
+eventAdvice.text = "No beacon, but here they are.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).getStat("engineering") >= 1 )
+{
+eventAdvice.text = "If we want to leave, we need to start the prep ASAP.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+{
+eventAdvice.text = "It will take a moment for our sensors to adjust from the shift to normal space. You see, our sensors are shielded against fracture energies and can operate there, but the spike coming from the transition overloads many of our systems and they need to be booted up...";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+if ( getAdvisor(job).getStat("violent") >= 2 )
+{
+eventAdvice.text = "Prep for combat!";
+eventAdvice.recommend =  929;
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+if ( getAdvisor(job).getStat("spaceBattle") >= 3 )
+{
+eventAdvice.text = "Before we know what's in here, it is a very risky situation. Every moment lost in deliberations reduces our chances to get away, if there is more than we can handle.";
+eventAdvice.recommend =  926;
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+if ( getAdvisor(job).getStat("security") >= 2 )
+{
+eventAdvice.text = "If there is a colony down there, it is likely there is a standard space station as well. In that case, we need a big ship to deal with it. And I mean 'big'.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+{
+eventAdvice.text = "Before we know what's in here, it is a very risky situation.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+if ( getAdvisor(job).getStat("violent") < 2 )
+{
+eventAdvice.text = "Okay, they'll want assurances. But we should be able to talk our way in.";
+eventAdvice.recommend =  925;
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+{
+eventAdvice.text = "We're not welcome, time to leave!";
+eventAdvice.recommend =  926;
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("psy") >= 2 )
+{
+eventAdvice.text = "There is a lot of raw potential here. No more than 20 million people.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("psy") >= 2 && getAdvisor(job).isIdeology("brotherhood") )
+{
+eventAdvice.text = "Worlds like there often have no control over their brothers. I sense a lot of untamed minds here. No more than 20 million people.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("precognition") >= 3 )
+{
+eventAdvice.text = "There is danger here, and no half measures. Either convince them, or we leave. Now.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+if ( getAdvisor(job).getStat("psy") >= 1 )
+{
+eventAdvice.text = "It is hard for me to get a sense of how many there are. It feels different here.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+{
+eventAdvice.text = "I should meditate to find answers.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.priest) {
+if ( getAdvisor(job).getStat("holiness") >= 2 )
+{
+eventAdvice.text = "There is only one reason to turn out your fracture beacon, and it's because they are up to no good.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.priest) {
+{
+eventAdvice.text = "To live in isolation is to invite a catastrophe one world can't solve. It would be in their best interests to cooperate with others.";
+return eventAdvice;
+}
+}
+return eventAdvice;
+}
+//------------------------------------------------------- TEXT
+public override string getText() {
+if (outcome== 0)
+{
+return "Immediately after transit, ship comms crackles on by a radio transmission from a nearby source. It will take a moment for the ship sensors to come back online and give more information.\n\n<INCOMING TRANSMISSION>\n\nWARNING TO ENTERING "+getShip().getShipTypeAndName().ToUpper()+"!\nYOU ARE AN UNLICENSED SHIP.\nPREPARE TO BE BOARDED.";
+}
+if (outcome== 954)
+{
+return "With a ship-shuddering groan, the core charge up for an emergency fracture fall.\n\nThe frigate boosts its engines to close in. There is a gleam in its prow as the ship alarm howls, reporting a hit from a laser weapon.\n\nAnd the ship falls back into the fracture.";
+}
+if (outcome== 946)
+{
+return "You receive a message that you have been granted a license for the station, but it is restricted from official Noble House business.\n\nThey also warn against betrayal, as they have intelligence assets outside the station.";
+}
+if (outcome== 927)
+{
+return "It seems there is a small standard space station nearby, orbiting a lush planet below. Not much more is seen, as the powerful station sensors are flooding the ship sensors. A frigate can be seen detaching from the station.\n\nSomeone from the station connects with you, demanding for you to declare your affiliations, as well as your promise never to reveal this location to outsiders.";
+}
+if (outcome== 951)
+{
+return "You receive a message that you have been granted a license for the station, and they welcome your business, as well as your discretion.\n\nThey also warn against betrayal, as they have intelligence assets outside the station.";
+}
+if (outcome== 928)
+{
+return "With a ship-shuddering groan, the core charge up for an emergency fracture fall. The combat screen is lit up as the station's scanners light the ship up. A frigate detaches from the station and starts to swings around. \n\nScanners are mostly blinded by station's active scanners, but a small standard space station is seen orbiting a lush planet. Sensor readings on life forms are inconclusive. \n\nAnd the ship falls back into the fracture.";
+}
+if (outcome== 930)
+{
+return "A frigate detaches from the station and swings around to point at your ship like an accusing finger on the intruder. Combat screen lights up by strong sensors from the station painting the ship white against the empty space.\n\n[TODO]";
+}
+return "INSERT TEXT HERE";
+}
+//------------------------------------------------------- CHOICES
+public override void initChoices() {
+if (outcome== 0)
+{
+choices.Add("Try to establish communications and try to negotiate a passage.",  925);
+}
+if (outcome== 927)
+{
+choices.Add("End the call, and prep the engines for a fall back into the fracture.",  953);
+}
+if (outcome== 954)
+{
+choices.Add("Leave.",  969);
+}
+if (outcome== 927)
+{
+choices.Add("Declare yourself as an envoy from the Noble House Valeria. Promise not to share the location of this colony.",  945);
+}
+if (outcome== 946)
+{
+choices.Add("Dock with the station.",  957);
+}
+if (outcome== 927)
+{
+choices.Add("End the call, and prepare for combat.",  955);
+}
+if (outcome== 927)
+{
+choices.Add("Declare yourself as an independent operator, seeking private contracts. Promise not to share the location of this colony.",  949);
+}
+if (outcome== 951)
+{
+choices.Add("Dock with the station.",  964);
+}
+if (outcome== 0)
+{
+choices.Add("Transmit peaceful message on all frequencies while prepping the engines for a fall back into the fracture.",  926);
+}
+if (outcome== 928)
+{
+choices.Add("Leave.",  935);
+}
+if (outcome== 0)
+{
+choices.Add("Prepare for combat.",  929);
+}
+if (outcome== 930)
+{
+choices.Add("Start combat.",  975);
+}
+ }
+//------------------------------------------------------- OUTCOMES
+public override void doOutcome() {
+if (choice== 925)
+{
+outcome= 927;
+}
+if (choice== 953)
+{
+outcome= 954;
+}
+if (choice== 969)
+{
+outcome= 970 ;
+outcome=0;
+end();
+leaveLocation();
+}
+if (choice== 945)
+{
+outcome= 946;
+}
+if (choice== 957)
+{
+outcome= 960 ;
+available=false;
+end();
+}
+if (choice== 955)
+{
+outcome= 990 ;
+outcome=0;
+end();
+startCombat();
+}
+if (choice== 949)
+{
+outcome= 951;
+}
+if (choice== 964)
+{
+outcome= 965 ;
+available=false;
+end();
+}
+if (choice== 926)
+{
+outcome= 928;
+}
+if (choice== 935)
+{
+outcome= 936 ;
+outcome=0;
+end();
+leaveLocation();
+}
+if (choice== 929)
+{
+outcome= 930;
+}
+if (choice== 975)
+{
+outcome= 976 ;
+outcome=0;
+end();
+startCombat();
+}
+}
+//------------------------------------------------------- FILTERS
+public override void initFilters() {
+}
+}
+//---------------------------------------------------------------------------------
+//------------------------------------------------------- EVENT 10
+//---------------------------------------------------------------------------------
+public class Event_10 : EventBase {
+public Event_10() : base("intro Valeria1t") {}
+//------------------------------------------------------- PREINIT
+public override void initPre() {
+location= "1c07";
+triggerEvent=trigger.inLocation;
+locationRequired=true;
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -1668,26 +2108,119 @@ return base.lastProbability;
 public override EventAdvice getAdvice(Character.Job job) {
 EventAdvice eventAdvice = new EventAdvice();
 if (job == Character.Job.captain) {
-if ( getAdvisor(job).isIdeology("aristocrat") )
+if ( getAdvisor(job).isIdeology("liberal") )
 {
-eventAdvice.text = "This can get us some recognition. And it's a strong statement. Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position.";
-eventAdvice.recommend =  708
-;
+eventAdvice.text = "Consul Regulus has come from the sector Capital to succeed the retiring Lord Calius Valeria. Planetary governor Evander is the other nominee for the position, smart and sensible.";
+eventAdvice.recommend =  709;
 return eventAdvice;
 }
 }
 if (job == Character.Job.captain) {
-if ( getAdvisor(job).isIdeology("liberal") )
+if ( getAdvisor(job).isIdeology("aristocrat") )
 {
-eventAdvice.text = "Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position. If we join this chest-thumping, it will bring attention to us.";
-eventAdvice.recommend =  709
-;
+eventAdvice.text = "This can get us some recognition. And it's a strong statement. Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position.";
+eventAdvice.recommend =  708;
+return eventAdvice;
+}
+}
+if (job == Character.Job.captain) {
+{
+eventAdvice.text = "Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position.";
 return eventAdvice;
 }
 }
 if (job == Character.Job.navigator) {
 {
 eventAdvice.text = "Many eyes are upon us. We should consider this carefully.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).isIdeology("liberal") )
+{
+eventAdvice.text = "&No&, Consuls are high-level politicians and we're about to be used.";
+eventAdvice.recommend =  709;
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).isIdeology("aristocrat") )
+{
+eventAdvice.text = "The Consul is one of the Great Council leaders from New Mercury. He is an insider and has considerable influence across the sector.";
+eventAdvice.recommend =  708;
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+{
+eventAdvice.text = "I'm not very political. Anyone else?";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+if ( getAdvisor(job).isIdeology("liberal") )
+{
+eventAdvice.text = "I'm not sure we'll be better off participating in this sabre rattling. Regulus is doing this to score points against his political opponent.";
+eventAdvice.recommend =  709;
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+if ( getAdvisor(job).isIdeology("aristocrat") )
+{
+eventAdvice.text = "Regulus is our man. Trust me, you won't regret it.";
+eventAdvice.recommend =  708;
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+{
+eventAdvice.text = "Political theater. We can be played, or benefit from it. Regulus is a strong leader, and I am up for giving it a try.";
+eventAdvice.recommend =  708;
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+if ( getAdvisor(job).isIdeology("liberal") )
+{
+eventAdvice.text = "Consul Regulus is not very popular among the locals. We might have harder time recruiting from here, if we support Regulus.";
+eventAdvice.recommend =  709;
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+if ( getAdvisor(job).isIdeology("aristocrat") )
+{
+eventAdvice.text = "We should do the pledge. It's a show of force, and we want to tie those";
+eventAdvice.recommend =  708;
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+if ( getAdvisor(job).isIdeology("transhumanist") )
+{
+eventAdvice.text = "I don't think so, &no&. Consul is one of the top aristocrats. They care for nothing but their own political agendas. I want nothing to do with it.";
+eventAdvice.recommend =  709;
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+{
+eventAdvice.text = "Consul Regulus is not very popular among the locals in "+getLocation().name+", but he has some fleet captains supporting him. We might be able to get some ties to Valerian military.";
+eventAdvice.recommend =  708;
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+{
+eventAdvice.text = "The Consul is a powerful individual, and he carries influence among the imperialists.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.priest) {
+{
+eventAdvice.text = "The Consul is asking us, and it is our duty to answer his call.";
+eventAdvice.recommend =  708;
 return eventAdvice;
 }
 }
@@ -1701,7 +2234,7 @@ return "Consul Regulus Valeria asks Valerian captains in orbit to publicly pledg
 }
 if (outcome== 710)
 {
-return "Consul Regulus and several Valerian captains appear in public with a strong statement. Dacei envoy responds by calling it an aggression. Among the captains, Regulus asks if anyone have the guts to poke around in Dacei shipping lines to see what they are doing. He'd be interested in the content of their transports.";
+return "Consul Regulus and several Valerian captains appear in public with a strong statement. Dacei envoy responds by calling it an aggression. Among the captains, Regulus asks if anyone have the guts to poke around in Dacei shipping lines to see what they are doing. He'd be interested in the contents of their transports.";
 }
 return "INSERT TEXT HERE";
 }
@@ -1709,26 +2242,22 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Join the pledge.",  708
-);
+choices.Add("Join the pledge.",  708);
 }
 if (outcome== 710)
 {
-choices.Add("Continue.",  712
-);
+choices.Add("Continue.",  712);
 }
 if (outcome== 0)
 {
-choices.Add("Stay out of it.",  709
-);
+choices.Add("Stay out of it.",  709);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
 if (choice== 708)
 {
-outcome= 710
-;
+outcome= 710;
 }
 if (choice== 712)
 {
@@ -1750,14 +2279,15 @@ addFilter("intro");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 8
+//------------------------------------------------------- EVENT 11
 //---------------------------------------------------------------------------------
-public class Event_8 : EventBase {
-public Event_8() : base("intro Valeria2t") {}
+public class Event_11 : EventBase {
+public Event_11() : base("intro Valeria2t") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C07"
-;
+location= "1c07";
+triggerEvent=trigger.inLocation;
+locationRequired=true;
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -1785,9 +2315,8 @@ EventAdvice eventAdvice = new EventAdvice();
 if (job == Character.Job.captain) {
 if ( getAdvisor(job).isIdeology("aristocrat") )
 {
-eventAdvice.text = "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political manouvering.";
-eventAdvice.recommend =  722
-;
+eventAdvice.text = "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political maneuvering.";
+eventAdvice.recommend =  722;
 return eventAdvice;
 }
 }
@@ -1795,8 +2324,7 @@ if (job == Character.Job.captain) {
 if ( getAdvisor(job).isIdeology("liberal") )
 {
 eventAdvice.text = "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Exarch Evander is popular, and his attention would reflect well on us.";
-eventAdvice.recommend =  721
-;
+eventAdvice.recommend =  721;
 return eventAdvice;
 }
 }
@@ -1806,17 +2334,72 @@ eventAdvice.text = "The symmetry of politics. We are being weighted.";
 return eventAdvice;
 }
 }
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).isIdeology("liberal") )
+{
+eventAdvice.text = "Of course. We must not refuse this man.";
+eventAdvice.recommend =  721;
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).isIdeology("aristocrat") )
+{
+eventAdvice.text = "No, I don't think so. I mean, there is so much to do and we're on a tight schedule.";
+eventAdvice.recommend =  722;
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+{
+eventAdvice.text = "I'm not very political. But I told you we were being used and I will tell you again.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+if ( getAdvisor(job).isIdeology("aristocrat") )
+{
+eventAdvice.text = "After refusing the pledge, Consul Regulus will not look at us favorably, if we now start supporting his political opponents.";
+eventAdvice.recommend =  722;
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+{
+eventAdvice.text = "The navy is courted by the political rivals. So far it's just political and I hope there won't be an escalation in the internal politics of House Valeria.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+{
+eventAdvice.text = "I wonder what kind of a man Consul Regulus is. If he takes this as a snub from us, it's not good. If we refuse, it's a snub against the Exarch.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+{
+eventAdvice.text = "I am a little bit preoccupied at the moment.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.priest) {
+{
+eventAdvice.text = "I'm not sure we can accept now, when we just turned down a Consul.";
+eventAdvice.recommend =  722;
+return eventAdvice;
+}
+}
 return eventAdvice;
 }
 //------------------------------------------------------- TEXT
 public override string getText() {
 if (outcome== 0)
 {
-return "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites you to an official dinner to discuss local matters.";
+return "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites the top brass to an official dinner to discuss local matters.";
 }
 if (outcome== 726)
 {
-return "Exarch Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planetwide repeatedly over the next few days. In private, Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are well prepared for aggression.";
+return "Exarch Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planet wide repeatedly over the next few days. In private, Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are gearing up for aggression.";
 }
 return "INSERT TEXT HERE";
 }
@@ -1824,26 +2407,22 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Go to the official dinner.",  721
-);
+choices.Add("Attend the official dinner.",  721);
 }
 if (outcome== 726)
 {
-choices.Add("Continue.",  728
-);
+choices.Add("Continue.",  728);
 }
 if (outcome== 0)
 {
-choices.Add("Excuse yourself.",  722
-);
+choices.Add("Excuse yourself.",  722);
 }
  }
 //------------------------------------------------------- OUTCOMES
 public override void doOutcome() {
 if (choice== 721)
 {
-outcome= 726
-;
+outcome= 726;
 }
 if (choice== 728)
 {
@@ -1865,14 +2444,15 @@ addFilter("intro");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 9
+//------------------------------------------------------- EVENT 12
 //---------------------------------------------------------------------------------
-public class Event_9 : EventBase {
-public Event_9() : base("intro Valeria3t") {}
+public class Event_12 : EventBase {
+public Event_12() : base("intro Valeria3t") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C07"
-;
+location= "1c07";
+triggerEvent=trigger.inLocation;
+locationRequired=true;
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -1909,13 +2489,50 @@ eventAdvice.text = "In whispers, Calius is called a powerful fracture bender.";
 return eventAdvice;
 }
 }
+if (job == Character.Job.engineer) {
+if ( getAdvisor(job).getStat("scientist") >= 1 )
+{
+eventAdvice.text = "I have heard of these dig sites that have found some old buried things, but I haven't heard them being found in the Sovereign Void. Nor that top officials are acquiring them. They are considered highly illegal by the Church.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.engineer) {
+{
+eventAdvice.text = "These are highly illegal artifacts. I've heard the Church is hunting them down.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+{
+eventAdvice.text = "I'm not sure that is meant for our eyes. But if we get involved, we have to be very discreet.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.quartermaster) {
+{
+eventAdvice.text = "Lord Calius does not appear in public, and publicly very little is known about him.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.psycher) {
+{
+eventAdvice.text = "Calius Valeria. Most interesting. I will be very curious about what these 'artifacts' are.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.priest) {
+{
+eventAdvice.text = "Church position on any 'artifacts' is absolute. The Inquisition will be after us, if we start doing this.";
+return eventAdvice;
+}
+}
 return eventAdvice;
 }
 //------------------------------------------------------- TEXT
 public override string getText() {
 if (outcome== 0)
 {
-return "Incoming private message:\n\n'Artifacts of the grey past are being transported in the Sovereign Void. You might be the one who brings one for me.'            \n\n-Lord Calius Valeria";
+return "<Incoming private message>\n\nCaptain "+getCharacter(Character.Job.captain).name+",\n\nI have noted your discretion in the recent political ramp up. And I have use for someone with a measure of discression. Artifacts of the grey past are being transported in the Sovereign Void on board Dacei transports. I would be very interested in acquiring one.'            \n\n\n-Lord Calius Valeria";
 }
 return "INSERT TEXT HERE";
 }
@@ -1923,8 +2540,7 @@ return "INSERT TEXT HERE";
 public override void initChoices() {
 if (outcome== 0)
 {
-choices.Add("Continue.",  734
-);
+choices.Add("Continue.",  734);
 }
  }
 //------------------------------------------------------- OUTCOMES
@@ -1943,10 +2559,10 @@ addFilter("intro");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 10
+//------------------------------------------------------- EVENT 13
 //---------------------------------------------------------------------------------
-public class Event_10 : EventBase {
-public Event_10() : base("loc_advice") {}
+public class Event_13 : EventBase {
+public Event_13() : base("loc_advice") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }
@@ -2029,14 +2645,13 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 11
+//------------------------------------------------------- EVENT 14
 //---------------------------------------------------------------------------------
-public class Event_11 : EventBase {
-public Event_11() : base("loc_advice_1C01") {}
+public class Event_14 : EventBase {
+public Event_14() : base("loc_advice_1C01") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C01"
-;
+location= "1c01";
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2125,14 +2740,13 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 12
+//------------------------------------------------------- EVENT 15
 //---------------------------------------------------------------------------------
-public class Event_12 : EventBase {
-public Event_12() : base("loc_advice_1C02") {}
+public class Event_15 : EventBase {
+public Event_15() : base("loc_advice_1C02") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C02"
-;
+location= "1c02";
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2213,14 +2827,13 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 13
+//------------------------------------------------------- EVENT 16
 //---------------------------------------------------------------------------------
-public class Event_13 : EventBase {
-public Event_13() : base("loc_advice_1C03") {}
+public class Event_16 : EventBase {
+public Event_16() : base("loc_advice_1C03") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C03"
-;
+location= "1c03";
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2308,10 +2921,10 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 14
+//------------------------------------------------------- EVENT 17
 //---------------------------------------------------------------------------------
-public class Event_14 : EventBase {
-public Event_14() : base("loc_advice_1C04") {}
+public class Event_17 : EventBase {
+public Event_17() : base("loc_advice_1C04") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }
@@ -2394,14 +3007,13 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 15
+//------------------------------------------------------- EVENT 18
 //---------------------------------------------------------------------------------
-public class Event_15 : EventBase {
-public Event_15() : base("loc_advice_1C05") {}
+public class Event_18 : EventBase {
+public Event_18() : base("loc_advice_1C05") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C05"
-;
+location= "1c05";
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2485,10 +3097,10 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 16
+//------------------------------------------------------- EVENT 19
 //---------------------------------------------------------------------------------
-public class Event_16 : EventBase {
-public Event_16() : base("loc_advice_1C06") {}
+public class Event_19 : EventBase {
+public Event_19() : base("loc_advice_1C06") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
 }
@@ -2571,14 +3183,13 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 17
+//------------------------------------------------------- EVENT 20
 //---------------------------------------------------------------------------------
-public class Event_17 : EventBase {
-public Event_17() : base("loc_advice_1C07") {}
+public class Event_20 : EventBase {
+public Event_20() : base("loc_advice_1C07") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C07"
-;
+location= "1c07";
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2618,8 +3229,15 @@ return eventAdvice;
 }
 }
 if (job == Character.Job.security) {
+if ( getAdvisor(job).getStat("security") < 0 )
 {
-eventAdvice.text = "Not much in the sense of military besides the House Guard. Academics have little use for weapons, it seems. Hope it won't backfire all the way into their ivory towers.";
+eventAdvice.text = "The strength of Valeria is in knowledge, and in their ships.";
+return eventAdvice;
+}
+}
+if (job == Character.Job.security) {
+{
+eventAdvice.text = "Not much in the sense of military on the ground, besides the House Guard. Academics have little use for weapons, it seems. Hope it won't backfire all the way into their ivory towers.";
 return eventAdvice;
 }
 }
@@ -2659,14 +3277,13 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 18
+//------------------------------------------------------- EVENT 21
 //---------------------------------------------------------------------------------
-public class Event_18 : EventBase {
-public Event_18() : base("loc_advice_1C08") {}
+public class Event_21 : EventBase {
+public Event_21() : base("loc_advice_1C08") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C08"
-;
+location= "1c08";
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2761,14 +3378,15 @@ addFilter("LOC_advice");
 }
 }
 //---------------------------------------------------------------------------------
-//------------------------------------------------------- EVENT 19
+//------------------------------------------------------- EVENT 22
 //---------------------------------------------------------------------------------
-public class Event_19 : EventBase {
-public Event_19() : base("loc_advice_1C09") {}
+public class Event_22 : EventBase {
+public Event_22() : base("loc_advice_1C09") {}
 //------------------------------------------------------- PREINIT
 public override void initPre() {
-location= "1C09"
-;
+location= "1c09";
+triggerEvent=trigger.atLocation;
+locationRequired=true;
 }
 //------------------------------------------------------- FREQUENCY AND AMBIENT
 public override freq getFrequency() {
@@ -2825,6 +3443,96 @@ eventAdvice.text = "It is a holy place, secluded and alone. That is why they hav
 return eventAdvice;
 }
 }
+return eventAdvice;
+}
+//------------------------------------------------------- TEXT
+public override string getText() {
+return "INSERT TEXT HERE";
+}
+//------------------------------------------------------- CHOICES
+public override void initChoices() {
+ }
+//------------------------------------------------------- OUTCOMES
+public override void doOutcome() {
+}
+//------------------------------------------------------- FILTERS
+public override void initFilters() {
+addFilter("LOC_advice");
+}
+}
+//---------------------------------------------------------------------------------
+//------------------------------------------------------- EVENT 23
+//---------------------------------------------------------------------------------
+public class Event_23 : EventBase {
+public Event_23() : base("loc_advice_2V01") {}
+//------------------------------------------------------- PREINIT
+public override void initPre() {
+location= "2v01";
+}
+//------------------------------------------------------- FREQUENCY AND AMBIENT
+public override freq getFrequency() {
+return freq.Default;
+}
+public override status getCrewStatus() {
+return status.Default;
+}
+public override noise getAmbientNoise() {
+return noise.DefaultBridge;
+}
+//------------------------------------------------------- PROBABILITY
+public override float calculateProbability() {
+float p = 1.0f;
+base.lastProbability = p;
+return base.lastProbability;
+}
+//------------------------------------------------------- ADVICE
+public override EventAdvice getAdvice(Character.Job job) {
+EventAdvice eventAdvice = new EventAdvice();
+return eventAdvice;
+}
+//------------------------------------------------------- TEXT
+public override string getText() {
+return "INSERT TEXT HERE";
+}
+//------------------------------------------------------- CHOICES
+public override void initChoices() {
+ }
+//------------------------------------------------------- OUTCOMES
+public override void doOutcome() {
+}
+//------------------------------------------------------- FILTERS
+public override void initFilters() {
+addFilter("LOC_advice");
+}
+}
+//---------------------------------------------------------------------------------
+//------------------------------------------------------- EVENT 24
+//---------------------------------------------------------------------------------
+public class Event_24 : EventBase {
+public Event_24() : base("loc_advice_2V02") {}
+//------------------------------------------------------- PREINIT
+public override void initPre() {
+location= "2v01";
+}
+//------------------------------------------------------- FREQUENCY AND AMBIENT
+public override freq getFrequency() {
+return freq.Default;
+}
+public override status getCrewStatus() {
+return status.Default;
+}
+public override noise getAmbientNoise() {
+return noise.DefaultBridge;
+}
+//------------------------------------------------------- PROBABILITY
+public override float calculateProbability() {
+float p = 1.0f;
+base.lastProbability = p;
+return base.lastProbability;
+}
+//------------------------------------------------------- ADVICE
+public override EventAdvice getAdvice(Character.Job job) {
+EventAdvice eventAdvice = new EventAdvice();
 return eventAdvice;
 }
 //------------------------------------------------------- TEXT

@@ -507,11 +507,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edit: 0
-  food: -0.06
-  mineral: -0.17
-  industry: -0.13
-  economy: 0.004
-  innovation: -0.35
-  culture: -0.25
-  military: -0.39
-  blackMarket: 0
+  debugUpdate: 0
+  food: -0.15
+  mineral: -0.14
+  industry: -0.11
+  economy: 0.11
+  innovation: -0.18
+  culture: -0.16
+  military: -0.27
+  blackMarket: 0.05

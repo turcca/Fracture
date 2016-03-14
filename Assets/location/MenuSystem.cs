@@ -15,7 +15,7 @@ public class MenuSystem : MonoBehaviour
     void Start()
     {
         //hideAllPages();
-        GameState.requestState(GameState.State.Location);
+        //GameState.requestState(GameState.State.Location);
         //startLoadingLevel(); //async
     }
 
@@ -59,7 +59,8 @@ public class MenuSystem : MonoBehaviour
     public void exit()
     {
         //Debug.Log("Leaving location");
-        GameState.requestState(GameState.State.Starmap);
+        //DELETE GameState.requestState(GameState.State.Starmap);
+        GameState.returnFromState(GameState.State.Location);
         UnityEngine.SceneManagement.SceneManager.LoadScene("starmapScene"); // switch to async loading! Somehow using this, it doesn't mess up with UI elements and still loads fast.
         //op.allowSceneActivation = true;
     }

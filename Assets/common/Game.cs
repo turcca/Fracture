@@ -9,6 +9,8 @@ public class Game
     public Dictionary<string, Location> locations { get; private set; } 
     public EventManager events {get; private set; } 
     public Player player { get; private set; }
+    public Simulation.Factions factions { get; private set; }
+    public Simulation.GlobalMarket globalMarket { get; private set; }
     public Navigation.NavNetwork navNetwork { get; private set; }
     public List<Simulation.NPCShip> ships { get; private set; }
 
@@ -16,10 +18,17 @@ public class Game
 
 
 
-
     internal void initGameSettings()
     {
         gameSettings = new GameSettings();
+    }
+    internal void initGlobalMarket()
+    {
+        globalMarket = new Simulation.GlobalMarket();
+    }
+    internal void initFactions()
+    {
+        factions = new Simulation.Factions();
     }
 
     internal void initLocations()
@@ -62,6 +71,7 @@ public class Game
         //// all locations
         Location[] arr = new Location[locations.Count];
         locations.Values.CopyTo(arr, 0);
+
         //// all navpoints
         //GameObject navRoot = GameObject.Find("NavpointRoot");
         List<NavpointId> navs = new List<NavpointId>();
@@ -94,11 +104,15 @@ public class Game
 
     internal void initPlayer()
     {
-        player = new Player();
-        //@todo init player position based on faction choice
-        player.position = new Vector3(237, 0, 143); // player starting position
-        //@todo init advisors from starting settings: faction choice & ideology
-        player.init();
+        Debug.Log("gameState: " + GameState.getState());
+        if (GameState.isState(GameState.State.Simulation) == false)
+        {
+            player = new Player();
+            //@todo init player position based on faction choice
+            player.position = new Vector3(237, 0, 143); // player starting position
+                                                        //@todo init advisors from starting settings: faction choice & ideology
+            player.init();
+        }
     }
 
 
@@ -170,29 +184,48 @@ public class Game
     // ------------------------------------------------------------------
     public void tick(float days)
     {
-        if (!GameState.isState(GameState.State.Event))
+        if (GameState.isState(GameState.State.Event) == false)
         {
-            // economy, ideology
+            // [Simulation.]
+            // economy, ideology, 
+            // factions
             foreach (Location location in locations.Values)
             {
                 location.tick(days);
             }
-            player.tick(days);
-            events.tick(days);
+            factions.tick(days);
 
-            EventBase e = events.queryStarmapEvents();
-            if (e != null)
+            // Events
+            if (GameState.isState(GameState.State.Simulation) == false)
             {
-                eventStart(e);
-            }
+                player.tick(days);
+                events.tick(days);
 
+                // atLocation Events
+                if (Root.game.player.isAtLocation())
+                {
+                    EventBase e = events.queryAtLocationEvents();
+                    if (e != null)
+                        eventStart(e);
+                }
+                // inLocation triggered from LocationSceneState.Update()
+
+                // Starmap Events
+                else
+                {
+                    EventBase e = events.queryStarmapEvents();
+                    if (e != null)
+                        eventStart(e);
+                }
+            }
+            
             // ships, trade
             foreach (Simulation.NPCShip ship in ships)
             {
                 ship.sendFreeShip();
                 ship.tick(days);
             }
-            
+            globalMarket.updateGlobalEconomy(days);
         }
     }
     // ------------------------------------------------------------------

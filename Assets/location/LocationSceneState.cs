@@ -43,15 +43,27 @@ public class LocationSceneState : MonoBehaviour
 
 
         menu.hideAll();
-        // check and trigger location events
+        // check and trigger inLocation events --> handled in .game
         //Game.universe.eventManager.queryLocationEvents(new EventManager.AllDoneDelegate(eventQueryDone));
         //@note skip events
         eventQueryDone();
 
         Root.game.events.loadLocationAdvice();
     }
+    void Update()
+    {
+        // tick the inLocationEvent
+        Root.game.events.tick(Time.deltaTime);
+        // inLocation Events
+        if (GameState.isState(GameState.State.Location))
+        {
+            EventBase e = Root.game.events.queryInLocationEvents();
+            if (e != null)
+                Root.game.eventStart(e);
+        }
+    }
 
-    public void eventQueryDone()
+public void eventQueryDone()
     {
         menu.showOrbit();
     }
@@ -66,7 +78,7 @@ public class LocationSceneState : MonoBehaviour
     {
         if (!Root.ui.isEventWindow())
         {
-            Root.game.events.queryDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
+            Root.game.events.loadDiplomacyEvents(faction, new EventManager.AllDoneDelegate(diplomacyQueryDone));
             Root.ui.showEventWindow();
         }
     }

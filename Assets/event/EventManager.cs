@@ -10,14 +10,20 @@ public class EventManager
 
     private AllDoneDelegate allDoneCallback;
 
+    public delegate void ConsequtiveEvent(string loc, AllDoneDelegate callback);
+    private ConsequtiveEvent consequtiveEvent;
+
     private List<EventBase> eventPool = new List<EventBase>();
     private List<EventBase> triggerEventPool = new List<EventBase>();
-    private List<EventBase> eventQueue = new List<EventBase>();
+    //private List<EventBase> eventQueue = new List<EventBase>();
 
     private float daysSinceLastEvent = 0;
     private float eventInterval = 13.0f;
-    private float starmapEventBuffer = 0f;
     private float timePow = 2.0f;
+    private float starmapEventBuffer = 0f;
+    private float starmapAtlocationEventBuffer = 1f;
+    private float starmapInlocationEventBuffer = 1f;
+    
 
     //List<KeyValuePair<int, EventBase>> eventQueue;
 
@@ -28,6 +34,7 @@ public class EventManager
 
     public void createAllEvents()
     {
+        Debug.Log("Create all events");
         for (int i = 1; System.Type.GetType("Event_" + i) != null; ++i)
         {
             System.Activator.CreateInstance(System.Type.GetType("Event_" + i));
@@ -36,22 +43,29 @@ public class EventManager
 
     public void addEventToPool(EventBase e)
     {
-        if (!e.locationEvent)
+        if (e.triggerEvent == EventBase.trigger.None)
         {
             //Debug.Log("Adding event (pool): " + e.name);
             eventPool.Add(e);
         }
         else
         {
-            //Debug.Log("Adding event (trigger pool): " + e.name);
+            if (e.filters.ContainsKey("LOC_advice")) e.outcome = 1; // eventEdit organizes advice-events as root events for location trigger events - set advice outcome to 1 so they are only cosmetically attached (advice event's outcomes are never changed)
+            //Debug.Log("Adding event (trigger pool: "+e.triggerEvent.ToString()+"): " + e.name);
             triggerEventPool.Add(e);
         }
     }
 
     public void tick(float days)
     {
-        daysSinceLastEvent += days;
-        starmapEventBuffer += days;
+        if (GameState.isState(GameState.State.Location))
+            starmapInlocationEventBuffer += days;
+        else
+        {
+            daysSinceLastEvent += days;
+            starmapEventBuffer += days;
+            starmapAtlocationEventBuffer += days;
+        }
     }
 
     public void loadLocationAdvice()
@@ -64,7 +78,6 @@ public class EventManager
         }
 
         string eventName = "loc_advice_"+Root.game.player.getLocationId().ToUpper();
-        //Debug.Log ("eventPool size: "+eventPool.Count+ "    triggerEventPool size: "+triggerEventPool.Count);
 
         foreach (EventBase e in eventPool)
         {
@@ -91,7 +104,7 @@ public class EventManager
     {
         if (starmapEventBuffer >= 0.25f)
         {
-            starmapEventBuffer -= 0.25f;
+            starmapEventBuffer = 0;
 
             if (GameState.isState(GameState.State.Starmap))
             {
@@ -110,16 +123,28 @@ public class EventManager
         return null;
     }
 
-    public void queryLocationEvents(string locationId, AllDoneDelegate callback)
+    public EventBase queryInLocationEvents()
     {
-        //@note test location events
-        Debug.Log ("todo: load location events");
-
-        //Root.ui.showEventWindow();
-        handleEvent(pickEvent(), callback);
+        if (starmapInlocationEventBuffer >= 0.15f)
+        {
+            starmapInlocationEventBuffer = 0;
+            eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
+            return pickTriggerEvent(EventBase.trigger.inLocation);
+        }
+        return null;
+    }
+    public EventBase queryAtLocationEvents()
+    {
+        if (starmapAtlocationEventBuffer >= 0.15f)
+        {
+            starmapAtlocationEventBuffer = 0;
+            return pickTriggerEvent(EventBase.trigger.atLocation);
+        }
+        return null;
     }
 
-    public void queryDiplomacyEvents(string faction, AllDoneDelegate callback)
+
+    public void loadDiplomacyEvents(string faction, AllDoneDelegate callback)
     {
         allDoneCallback = callback;
         bool eventFound = false;
@@ -141,6 +166,40 @@ public class EventManager
             eventDone();
         }
     }
+    public EventBase pickTriggerEvent(EventBase.trigger trigger)
+    {
+        if (trigger != EventBase.trigger.None)
+        {
+            foreach (EventBase e in triggerEventPool)
+            {
+                if (e.available &&
+                    e.triggerEvent == trigger)
+                {
+                    Character character = e.getEventCharacter();
+                    string location = e.getEventLocationID();
+
+                    // at Location necessities - debug
+                    //Debug.Log("event: " + e.name + " ("+e.triggerEvent.ToString()+")");
+                    //if ((!e.locationRequired) || (e.locationRequired && location != null)) Debug.Log("1 - location pre-matching ok!");
+                    //if (trigger == e.triggerEvent && Root.game.player.getLocationId() == location) { Debug.Log("2 - locations match!  e: " + location + "  palyerLoc: " + Root.game.player.getLocationId()); }
+                    //if (character == null || character.isActive) Debug.Log("3 - character ok!");
+                    //if (e.calculateProbability() > 0.0f) Debug.Log("4 - prob ok!");
+
+                    if (((!e.locationRequired) || (e.locationRequired && location != null)) &&                      // no location needed, or it's not null
+                        trigger == e.triggerEvent && Root.game.player.getLocationId() == location &&  // player location same as events
+                        (character == null || character.isActive) &&                                                // if character, needs to be active
+                        (e.calculateProbability() > 0.0f)                                                           // has positive probability
+                        )
+                    {
+                        //Debug.Log("--> YES: " + e.name);
+                        e.initPre();
+                        return e;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     public EventBase pickEvent()
     {
@@ -150,8 +209,8 @@ public class EventManager
         foreach (EventBase e in eventPool)
         {
             if (e.available &&
-                !e.hasFilter("LOC_advice") 
-                && !e.hasFilter("contact_factions") 
+                !e.hasFilter("LOC_advice")
+                && !e.hasFilter("contact_factions")
                 && !e.hasFilter("intro")
                 )
             {
@@ -169,11 +228,12 @@ public class EventManager
                 }
             }
         }
+        
         if (availableEvents.Count == 0)
         {
             Debug.Log("zero events picked!");
+            return null;
         }
-
         else
         {
             // Influence pool weights by event frequencies
@@ -232,12 +292,13 @@ public class EventManager
 
     public void handleEvent(EventBase e, AllDoneDelegate callback)
     {
-        Debug.Log ("handing event: "+ e.name+" (available "+e.available+")");
         allDoneCallback = callback;
         if (e == null)
         {
             eventDone();
+            return;
         }
+        Debug.Log("handing event: " + e.name + " (available " + e.available + ")");
 
         if (eventUI == null) eventUI = GameObject.Find("SideWindow").GetComponent<EventUI>();
         eventUI.setEvent(e, new EventUI.EventDoneDelegate(eventDone));
@@ -256,6 +317,10 @@ public class EventManager
     public EventBase getEventByName (string name)
     {
         foreach (EventBase e in eventPool)
+        {
+            if (e.name == name) return e;
+        }
+        foreach (EventBase e in triggerEventPool)
         {
             if (e.name == name) return e;
         }

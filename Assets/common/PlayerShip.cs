@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-enum Utility
+public enum Utility
 {
     Empty,
     CargoSpace,
@@ -27,6 +27,7 @@ public class PlayerShip
 {
     
     public string shipId { get; private set; }
+    public string shipName { get; private set; }
     public ShipStats shipStats() { return ShipStatsLibrary.getShipStat(shipId); }
 
     List<Utility> utilities = new List<Utility>();
@@ -38,11 +39,38 @@ public class PlayerShip
         this.shipId = (shipId != null) ? shipId : "";
 
         // format utilities
+        /*
         for (int i = 0; i < shipStats().utility; i++)
         {
-            utilities.Add(Utility.Empty);
+            addUtility(Utility.Empty);
         }
-	}
-	
+        */
+        addUtility(Utility.CivilianComms);
+        addUtility(Utility.CrewRecreation);
+        addUtility(Utility.CoreBypass);
+        addUtility(Utility.CargoSpace);
+        Debug.Log("TODO: added manual ship utilities. ("+utilities.Count+" / "+ shipStats().utility + ")");
+    }
+
+    public string getShipTypeAndName()
+    {
+        return "";
+    }
+	public List<Utility> getUtilities()
+    {
+        return utilities;
+    }
+    public void addUtility(Utility utility)
+    {
+        if (!utilities.Contains(utility))
+        {
+            if (utilities.Count < shipStats().utility)
+            {
+                utilities.Add(utility);
+            }
+            else Debug.LogWarning("Adding utility '" + utility.ToString() + "' but already maxed out on utility slots: " + shipStats().utility);
+        }
+        else Debug.LogWarning("Trying to add an utility that already exists: " + utility.ToString());
+    }
 
 }

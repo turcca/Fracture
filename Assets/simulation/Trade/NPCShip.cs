@@ -216,6 +216,7 @@ namespace Simulation
         }
         public bool isInRange()
         {
+            if (GameState.isState(GameState.State.Simulation)) return true;
             return Vector3.Distance(position, Root.game.player.position) < 40f ? true : false; // TODO add radio-silence penalty
         }
 

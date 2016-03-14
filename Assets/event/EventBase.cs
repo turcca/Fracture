@@ -14,6 +14,7 @@ public class EventBase
     public enum freq { Rare, Default, Elevated, Probable }
     public enum status { Quiet, Default, Alert, Panic }
     public enum noise { QuietHum, QuietEerie, DefaultBridge, EchoRoom, EngineRoom, ActionBase, Fracture }
+    public enum trigger { None, inLocation, atLocation, Object }
 
     public string name = "";
     public bool available = false;
@@ -31,16 +32,17 @@ public class EventBase
     public float lastProbability = 0.0f;
     public bool running = false;
 
-    public bool locationEvent = false;
+    public trigger triggerEvent = trigger.None;
 
 
     public EventBase(string _name)
     {
         name = _name;
         available = true;
-        //initPre();
+        initPre();
         initFilters();
         //Debug.Log ("formatting EventBase: "+name+" / "+_name);
+        if (locationRequired && location == null) Debug.LogError("Event Parse ERROR: '" + name + "'\n locationRequired, but no location string assigned");
         Root.game.events.addEventToPool(this);
     }
     public void start()
@@ -146,6 +148,10 @@ public class EventBase
     {
         return Root.game.player.getLocation();
     }
+    protected PlayerShip getShip()
+    {
+        return Root.game.player.playerShip;
+    }
     protected void factionChange(string f, int a)
     {
         //todo
@@ -154,16 +160,23 @@ public class EventBase
     {
         //todo
     }
+    protected void leaveLocation()
+    {
+        Debug.Log("TODO leaveLocation()"); //todo
+    }
+    protected void startCombat()
+    {
+        Debug.Log("TODO startCombat()"); //todo
+    }
 
     protected Character getCharacter()
     {
         return character;
     }
-    /*
     protected Character getCharacter(Character.Job job)
     {
-        return Root.game.player.getAdvisor(job);
-    }*/
+        return (Root.game.player.getAdvisor(job) != null) ? Root.game.player.getAdvisor(job) : (getCharacter() != null) ? getCharacter() : getBestCharacter(Character.Stat.age);
+    }
     protected Character getBestCharacter(Character.Stat s)
     {
         return Character.getBest(Root.game.player.getCharacters(), s);

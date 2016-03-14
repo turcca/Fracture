@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 public static class DataParser
 {
@@ -163,7 +164,7 @@ public static class DataParser
             switch (i)
             {
                 case 1:
-                    stats.name = value;
+                    stats.shipId = value;
                     break;
                 case 2:
                     stats.type = value;
@@ -263,6 +264,53 @@ public static class DataParser
             throw;
         }
         return a;
+    }
+
+    /// <summary>
+    /// Changes all 'he' to 'she' or vice versa
+    /// use with care!
+    /// DOES NOT RECOGNIZE "..is his" -> "..is hers"!
+    /// </summary>
+    /// <param name="parseString"></param>
+    /// <param name="toFemale"></param>
+    /// <returns></returns>
+    public static string changeGenderContent(string parseString, bool isMale, bool makeMale)
+    {
+        if (isMale == makeMale) return parseString;
+
+        //string[] he = { "He", "he", "His", "his", "Him", "him", "Himself", "himself" };
+        //string[] she = { "She", "she", "Hers", "hers", "Her", "her", "Herself", "herself" };
+        string[] he = { "He", "he", "His", "his", "Him", "him", "Himself", "himself" };
+        string[] she = { "She", "she", "Her", "her", "Her", "her", "Herself", "herself" };
+        //string[] he = { "he", "his", "him", "himself" };
+        //string[] she = { "she ", "hers", "her", "herself" };
+
+        if (makeMale == false)
+        {
+            for (int i = 0; i < he.Length; i++)
+            {
+                parseString = ReplaceFullWords(parseString, he[i], she[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < she.Length; i++)
+            {
+                parseString = ReplaceFullWords(parseString, she[i], he[i]);
+            }
+        }
+
+        return parseString;
+    }
+    static string ReplaceFullWords(string input, string from, string to)
+    {
+        if (input == null) { return null; }
+        return Regex.Replace(input, "\\b" + Regex.Escape(from) + "\\b", to);
+    }
+    static string Replace(string input, string from, string to)
+    {
+        if (input == null) { return null; }
+        return Regex.Replace(input, Regex.Escape(from), to);
     }
 }
 

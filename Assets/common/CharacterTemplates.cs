@@ -21,7 +21,7 @@ public static class CharacterTemplates
             return new Character(templateNames[templateName]);
         }
 
-        Debug.LogWarning("WARNING: template not found: '" + templateName + "'");
+        Debug.LogError("WARNING: template not found: '" + templateName + "'");
         return new Character();
     }
 
@@ -36,7 +36,8 @@ public static class CharacterTemplates
         Character character = new Character();
         character.clearStats();
         name = "starting captain";
-        
+        character.isMale = true;
+
         // portrait tag: captain
 
         // assigned stats
@@ -56,6 +57,7 @@ public static class CharacterTemplates
         character = new Character();
         character.clearStats();
         name = "starting navigator";
+        character.isMale = true;
         // portrait tag: navigator
         // character.navigator = true; //? from old system
         // character.psycher = true; //? from old system
@@ -78,10 +80,58 @@ public static class CharacterTemplates
         character = new Character();
         character.clearStats();
         name = "brotherhood";
+        character.isMale = false;
 
         // assigned stats
         character.ideology = Faction.IdeologyID.brotherhood;
         character.setStat(Character.Stat.insanity, Mathf.Pow(Random.Range(0f, 3.16f), 4f));
+
+        if (!templateNames.ContainsKey(name)) templateNames.Add(name, character);
+        else Debug.LogError("Character templateNames already include template named: '" + name + "'");
+        character = null;
+        // <------------------------------------------------ end template
+
+
+
+        // Template ------------------->
+        character = new Character();
+        character.clearStats();
+        name = "demo engineer";
+        character.isMale = true;
+
+        // assigned stats
+
+        if (!templateNames.ContainsKey(name)) templateNames.Add(name, character);
+        else Debug.LogError("Character templateNames already include template named: '" + name + "'");
+        character = null;
+        // <------------------------------------------------ end template
+
+
+
+        // Template ------------------->
+        character = new Character();
+        character.clearStats();
+        name = "demo security";
+        character.isMale = true;
+
+        // assigned stats
+
+
+        if (!templateNames.ContainsKey(name)) templateNames.Add(name, character);
+        else Debug.LogError("Character templateNames already include template named: '" + name + "'");
+        character = null;
+        // <------------------------------------------------ end template
+
+
+
+        // Template ------------------->
+        character = new Character();
+        character.clearStats();
+        name = "demo quartermaster";
+        character.isMale = true;
+
+        // assigned stats
+
 
         if (!templateNames.ContainsKey(name)) templateNames.Add(name, character);
         else Debug.LogError("Character templateNames already include template named: '" + name + "'");
@@ -96,6 +146,7 @@ public static class CharacterTemplates
 
         //// assigned stats
 
+        ////character.characterTrait =
 
         //if (!templateNames.ContainsKey(name)) templateNames.Add(name, character);
         //else Debug.LogError("Character templateNames already include template named: '" + name + "'");

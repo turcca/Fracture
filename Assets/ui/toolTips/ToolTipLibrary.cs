@@ -6,6 +6,9 @@ public static class ToolTipLibrary
 {
     static GameObject toolTipObj;
     static public Text toolTip { get; private set; }
+    static HorizontalLayoutGroup horizontalLayoutGroup;
+
+    
 
 
     static ToolTipLibrary()
@@ -29,11 +32,12 @@ public static class ToolTipLibrary
                 toolTipObj.name = "toolTip";
                 toolTip = toolTipObj.GetComponentInChildren<Text>();
                 if (GameState.isState(GameState.State.Location)) toolTipObj.transform.SetParent(GameObject.Find("LocationCanvas").transform);
-                else if (GameState.isState(GameState.State.Starmap) || GameState.isState(GameState.State.Event)) toolTipObj.transform.SetParent(GameObject.Find("SideWindow").transform);
+                else if (GameState.isState(GameState.State.Starmap) || GameState.isState(GameState.State.Event) || GameState.isState(GameState.State.Pause)) toolTipObj.transform.SetParent(GameObject.Find("ToolTip").transform);
                 if (toolTipObj.transform.parent == null) Debug.LogError("TODO: toolTip not under UI canvas.\n GameState.state = " + GameState.getState().ToString());
             }
         }
         else toolTip = toolTipObj.GetComponentInChildren<Text>();
+        if (horizontalLayoutGroup == null) horizontalLayoutGroup = toolTipObj.GetComponent<HorizontalLayoutGroup>();
         if (toolTip == null) Debug.LogWarning("No UI.Text component found under UI -object 'toolTip'");
         // hide for format
         hide(toolTipObj);
@@ -56,21 +60,42 @@ public static class ToolTipLibrary
     /// Show toolTip
     /// </summary>
     /// <param name="sourceObject"></param>
-    public static void show(GameObject sourceObject)
+    public static void show(ToolTipScript sourceScript)
     {
         if (toolTipObj == null) format();
-        if (toolTip != null)
+        if (toolTip != null && sourceScript != null)
         {
             // relocate toolTip object
-            toolTipObj.transform.position = sourceObject.transform.position;
+            toolTipObj.transform.position = sourceScript.gameObject.transform.position;
+            
             // find components that should evoke tooltips
-            toolTip.text = getToolTip(sourceObject);
+            toolTip.text = sourceScript.toolTip; //getToolTip(sourceScript.gameObject);
+
+            // check screen clipping (default pos is above cursor)
+            RectTransform transform = toolTipObj.GetComponent<RectTransform>();
+            forceRefreshHeight();
+            if (transform.sizeDelta.y + Root.game.gameSettings.toolTipOffset.y + sourceScript.oldMouseScreenPos.y > Screen.height)
+            {
+                transform.pivot = new Vector2 (0.85f, 1f);
+                transform.localPosition -= Root.game.gameSettings.toolTipOffset;
+            }
+            else
+            {
+                transform.pivot = new Vector2(0.85f, 0f);
+                transform.localPosition += Root.game.gameSettings.toolTipOffset;
+            }
 
             // enable toolTip - only if there is one
             if (toolTip.text != "") toolTipObj.gameObject.SetActive(true);
         }
     }
-
+    /// <summary>
+    /// refresh contentSizeFiteter/horizontal layout group
+    /// </summary>
+    static void forceRefreshHeight()
+    {
+        horizontalLayoutGroup.CalculateLayoutInputVertical();
+    }
 
 
     // ----------------------------------------------------------------------------

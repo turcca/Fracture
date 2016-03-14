@@ -39,12 +39,19 @@ namespace Simulation
         public static float[] TierMultipliers = new float[] { 0.25f, 0.5f, 0.75f, 1.0f  };
         public static float tierScaleMultiplier(int tier)
         {
-            if (tier == 0) return 0.0f;
+            //if (tier == 0) return 0.0f;
+            //else if (tier == 1) return 1.0f;
+            //else if (tier == 2) return 2.0f;
+            //else if (tier == 3) return 3.0f;
+            //else if (tier == 4) return 4.0f;
+            //else { Debug.Log("Warning: tier outside 4"); return 1.0f; }
+
+            if (tier == 0) return 1.0f;
             else if (tier == 1) return 1.0f;
-            else if (tier == 2) return 2.0f;
-            else if (tier == 3) return 3.0f;
-            else if (tier == 4) return 4.0f;
-            else { Debug.Log("Warning: tier exceeds 4"); return 0; }
+            else if (tier == 2) return 1.02f;
+            else if (tier == 3) return 1.04f;
+            else if (tier == 4) return 1.05f;
+            else { Debug.Log("Warning: tier outside 4"); return 1.0f; }
         }
         public static float upgradeCostMultiplier(int currentTier)
         {

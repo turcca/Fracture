@@ -35,7 +35,7 @@ public class FactionMeetPanel : MonoBehaviour
         // contact level (admin, contact...)
         txt += getContactTitle() +" ";
         // ruler name
-        txt += Root.game.locations[location].features.ruler[faction] +" </color>\n";
+        txt += Root.game.locations[location].getLocalFactionRulerName(faction) +" </color>\n";
         // % control
         if (ctrl < 10f) txt += "<color=#666666>";
         else if (ctrl < 50f) txt += "<color=888888>";

@@ -56,36 +56,131 @@ public class Character
     }
 
    public enum Stat {
+        /// <summary>
+        /// age in years
+        /// </summary>
         age,
+        /// <summary>
+        /// hp, out of 100?
+        /// </summary>
         health,
+        /// <summary>
+        /// Radioation / toxicity levels: 0: clean, 100: lethal
+        /// </summary>
         polluted,
+        /// <summary>
+        /// Insanity level: 0 = sane, 100 = insane
+        /// </summary>
         insanity,
+        /// <summary>
+        /// Cloned dna: 0-100
+        /// </summary>
         clone,
+        /// <summary>
+        /// "Outside influence"
+        /// 0 = no corruption, 100 = corrupted
+        /// </summary>
         possessed,
+        /// <summary>
+        /// AI influence/brain implant, 0-100
+        /// </summary>
         ai,
+        /// <summary>
+        /// loyalty to the captain, 0-100
+        /// </summary>
         loyalty,
+        /// <summary>
+        /// 100 = euphoric, 0 = rebellious
+        /// </summary>
         happiness,
+        /// <summary>
+        /// 100 = idealistic, naive, 0 = cynic, jaded
+        /// </summary>
         idealist,
+        /// <summary>
+        /// 100 = kind, 0 = mean
+        /// </summary>
         kind,
+        /// <summary>
+        /// Skill
+        /// </summary>
         leadership,
+        /// <summary>
+        /// Skill: human resources
+        /// </summary>
         hr,
+        /// <summary>
+        /// Skill
+        /// </summary>
         engineering,
+        /// <summary>
+        /// Skill, psy warning- seeing into the future
+        /// </summary>
         precognition,
+        /// <summary>
+        /// Skill: fracture strength/skill
+        /// </summary>
         psy,
+        /// <summary>
+        /// Skill
+        /// </summary>
         navigation,
+        /// <summary>
+        /// Skill: directing ship-to-ship combat
+        /// </summary>
         spaceBattle,
+        /// <summary>
+        /// Skill: personal combat, and leading troops
+        /// </summary>
         combat,
+        /// <summary>
+        /// Skill
+        /// </summary>
         trading,
+        /// <summary>
+        /// Skill
+        /// </summary>
         diplomat,
+        /// <summary>
+        /// Skill
+        /// </summary>
         scientist,
+        /// <summary>
+        /// -corruption / +true
+        /// </summary>
         integrity,
+        /// <summary>
+        /// -unholy / +holy
+        /// </summary>
         holiness,
+        /// <summary>
+        /// -mutated / +pure human gene
+        /// </summary>
         purity,
+        /// <summary>
+        /// -anarchist / +police control
+        /// </summary>
         security,
+        /// <summary>
+        /// -pacifist / +violent
+        /// </summary>
         violent,
+        /// <summary>
+        /// How aristocratic? 0 = none
+        /// </summary>
         aristocrat,
+        /// <summary>
+        /// -non-imperialist / +imperialist
+        /// </summary>
         imperialist,
+        /// <summary>
+        /// "Curiosity into the forbidden"
+        /// 0 = innocent/law abiding, 100 = corrupted
+        /// </summary>
         corruption,
+        /// <summary>
+        /// xp
+        /// </summary>
         experience
     }
 
@@ -99,6 +194,7 @@ public class Character
     public  Faction.IdeologyID? ideology       = null;
     public  Faction.Agenda?  agenda         = null;
     public  Job     assignment     = Job.none;
+    public CharacterTrait characterTrait = CharacterTrait.None;
     public  float   dateAssigned   = -1;
     public int id { get; private set; }
 
@@ -237,6 +333,8 @@ public class Character
         if (template != null && template.portrait != null) portrait = template.portrait; portrait = Root.PortraitManager.getPortrait("");
         // get name
         if (template != null && template.name != "") { name = template.name; } else if (ideology != null) name = NameGenerator.getName((Faction.IdeologyID)ideology); else Debug.LogError("Character name error: ideology null");
+        // get trait
+        if (template != null && template.characterTrait != CharacterTrait.None) characterTrait = template.characterTrait;
 
         // setup stats
         foreach (Stat s in (Stat[])Enum.GetValues(typeof(Stat)))
@@ -299,6 +397,45 @@ public class Character
             //Debug.Log("setStat / adding dictionary entry: " + skill.ToString());
             stats.Add(skill, amount);
         }
+    }
+    /// <summary>
+    /// no param: return current assignment (if any) best trait
+    /// job param: return best trait for potential job choice
+    /// </summary>
+    /// <param name="job"></param>
+    /// <returns></returns>
+    public CharacterTrait getBestCharacterTrait(Job job = Job.none)
+    {
+        CharacterTrait oldTrait = characterTrait;
+
+        if (job == Job.none)
+        {
+            job = assignment;
+            if (job == Job.none) return CharacterTrait.None;
+        }
+
+        int bestValue = -99;
+        CharacterTrait bestTrait = CharacterTrait.None;
+
+        foreach (CharacterTrait trait in getJobTraits(job))
+        {
+            characterTrait = trait; // passes trait to character, so evaluator checks that trait for skill values
+            int jobBonuses = 0;
+            foreach (ShipBonus bonus in Enum.GetValues(typeof(ShipBonus)))
+            {
+                jobBonuses += ShipBonusesStats.getCharacterStatBonusAndDescription(this, bonus).Value;
+            }
+            if (jobBonuses > bestValue)
+            {
+                bestTrait = trait;
+                bestValue = jobBonuses;
+            }
+            //Debug.Log("    evaluatorfor " + assignment + ": " + trait + " (" + jobBonuses + ")");
+        }
+        //Debug.Log("best trait for " + assignment + ": " + bestTrait+" ("+bestValue+")");
+        characterTrait = oldTrait;
+        // default is first job trait - actually works like this already since starting comparison for none is -99
+        return bestTrait != CharacterTrait.None ? bestTrait : getJobTraits(job)[0];
     }
 
     /// <summary>
@@ -492,10 +629,16 @@ public class Character
         if (template != null && template.HQclone == null) HQclone = template.HQclone; else HQclone = (UnityEngine.Random.value < 0.05f) ? true : false;
         // possessed
         if (template != null && template.stats.ContainsKey(Stat.possessed)) setStat(Stat.possessed, template.getStat(Stat.possessed)); else { setStat(Stat.possessed, Mathf.Pow(UnityEngine.Random.Range(0f, 2.515f), 5f)); if (getStat(Stat.possessed) < 30f) setStat(Stat.possessed, 0f); }
-
+        // idealist
+        if (template != null && template.stats.ContainsKey(Stat.idealist)) setStat(Stat.idealist, template.getStat(Stat.idealist)); else { setStat(Stat.idealist, UnityEngine.Random.value*100f); }
+        // kind
+        if (template != null && template.stats.ContainsKey(Stat.kind)) setStat(Stat.kind, template.getStat(Stat.kind)); else { setStat(Stat.kind, UnityEngine.Random.value * 100f); }
 
         // IDEOLOGY
-        formatBaseStatsByIdeology((Faction.IdeologyID) ideology);
+        foreach (var pair in getBaseStatsByIdeology((Faction.IdeologyID) ideology))
+        {
+            stats[pair.Key] = pair.Value;
+        }
 
         // add stat rolls
         foreach (Stat stat in getStatNames())
@@ -541,238 +684,396 @@ public class Character
         return roll;
     }
 
-    void formatBaseStatsByIdeology(Faction.IdeologyID ideology)
+    public static Dictionary<Stat, float> getBaseStatsByIdeology(Faction.IdeologyID ideology)
     {
+        Dictionary<Stat, float> stats = new Dictionary<Stat, float>();
+
         if (ideology == Faction.IdeologyID.cult)
         {
-            setStat(Stat.leadership, 100f);
-            setStat(Stat.hr, -15f);
-            setStat(Stat.engineering, -40f);
-            setStat(Stat.precognition, -70f);
-            setStat(Stat.psy, -70f);
-            setStat(Stat.navigation, -40f);
-            setStat(Stat.spaceBattle, 100f);
-            setStat(Stat.combat, 200f);
-            setStat(Stat.trading, -100f);
-            setStat(Stat.diplomat, -100f);
-            setStat(Stat.scientist, -100f);
-            setStat(Stat.integrity, 180f);
-            setStat(Stat.holiness, 100f);
-            setStat(Stat.purity, 100f);
-            setStat(Stat.security, 100f);
-            setStat(Stat.violent, 100f);
-            setStat(Stat.aristocrat, -30f);
-            setStat(Stat.imperialist, 80f);
+            stats.Add(Stat.leadership, 100f);
+            stats.Add(Stat.hr, -15f);
+            stats.Add(Stat.engineering, -40f);
+            stats.Add(Stat.precognition, -70f);
+            stats.Add(Stat.psy, -70f);
+            stats.Add(Stat.navigation, -40f);
+            stats.Add(Stat.spaceBattle, 100f);
+            stats.Add(Stat.combat, 200f);
+            stats.Add(Stat.trading, -100f);
+            stats.Add(Stat.diplomat, -100f);
+            stats.Add(Stat.scientist, -100f);
+            stats.Add(Stat.integrity, 180f);
+            stats.Add(Stat.holiness, 100f);
+            stats.Add(Stat.purity, 100f);
+            stats.Add(Stat.security, 100f);
+            stats.Add(Stat.violent, 100f);
+            stats.Add(Stat.aristocrat, -30f);
+            stats.Add(Stat.imperialist, 80f);
         }
         else if (ideology == Faction.IdeologyID.technocrat)
         {
-            setStat(Stat.leadership, 0f);
-            setStat(Stat.hr, 0f);
-            setStat(Stat.engineering, 130f);
-            setStat(Stat.precognition, -90f);
-            setStat(Stat.psy, -100f);
-            setStat(Stat.navigation, 70f);
-            setStat(Stat.spaceBattle, 90f);
-            setStat(Stat.combat, -20f);
-            setStat(Stat.trading, 15f);
-            setStat(Stat.diplomat, 0f);
-            setStat(Stat.scientist, 70f);
-            setStat(Stat.integrity, 0f);
-            setStat(Stat.holiness, -20f);
-            setStat(Stat.purity, -20f);
-            setStat(Stat.security, -20f);
-            setStat(Stat.violent, -20f);
-            setStat(Stat.aristocrat, 10f);
-            setStat(Stat.imperialist, -10f);
+            stats.Add(Stat.leadership, 0f);
+            stats.Add(Stat.hr, 0f);
+            stats.Add(Stat.engineering, 130f);
+            stats.Add(Stat.precognition, -90f);
+            stats.Add(Stat.psy, -100f);
+            stats.Add(Stat.navigation, 70f);
+            stats.Add(Stat.spaceBattle, 90f);
+            stats.Add(Stat.combat, -20f);
+            stats.Add(Stat.trading, 15f);
+            stats.Add(Stat.diplomat, 0f);
+            stats.Add(Stat.scientist, 70f);
+            stats.Add(Stat.integrity, 0f);
+            stats.Add(Stat.holiness, -20f);
+            stats.Add(Stat.purity, -20f);
+            stats.Add(Stat.security, -20f);
+            stats.Add(Stat.violent, -20f);
+            stats.Add(Stat.aristocrat, 10f);
+            stats.Add(Stat.imperialist, -10f);
         }
         else if (ideology == Faction.IdeologyID.mercantile)
         {
-            setStat(Stat.leadership, 50f);
-            setStat(Stat.hr, -5f);
-            setStat(Stat.engineering, 5f);
-            setStat(Stat.precognition, 90f);
-            setStat(Stat.psy, 20f);
-            setStat(Stat.navigation, 100f);
-            setStat(Stat.spaceBattle, 10f);
-            setStat(Stat.combat, -40f);
-            setStat(Stat.trading, 150f);
-            setStat(Stat.diplomat, 200f);
-            setStat(Stat.scientist, 20f);
-            setStat(Stat.integrity, -140f);
-            setStat(Stat.holiness, -40f);
-            setStat(Stat.purity, -40f);
-            setStat(Stat.security, -60f);
-            setStat(Stat.violent, -70f);
-            setStat(Stat.aristocrat, 100f);
-            setStat(Stat.imperialist, -20f);
+            stats.Add(Stat.leadership, 50f);
+            stats.Add(Stat.hr, -5f);
+            stats.Add(Stat.engineering, 5f);
+            stats.Add(Stat.precognition, 90f);
+            stats.Add(Stat.psy, 20f);
+            stats.Add(Stat.navigation, 100f);
+            stats.Add(Stat.spaceBattle, 10f);
+            stats.Add(Stat.combat, -40f);
+            stats.Add(Stat.trading, 150f);
+            stats.Add(Stat.diplomat, 200f);
+            stats.Add(Stat.scientist, 20f);
+            stats.Add(Stat.integrity, -140f);
+            stats.Add(Stat.holiness, -40f);
+            stats.Add(Stat.purity, -40f);
+            stats.Add(Stat.security, -60f);
+            stats.Add(Stat.violent, -70f);
+            stats.Add(Stat.aristocrat, 100f);
+            stats.Add(Stat.imperialist, -20f);
         }
         else if (ideology == Faction.IdeologyID.bureaucracy)
         {
-            setStat(Stat.leadership, 0f);
-            setStat(Stat.hr, 85f);
-            setStat(Stat.engineering, 35f);
-            setStat(Stat.precognition, -10f);
-            setStat(Stat.psy, -20f);
-            setStat(Stat.navigation, -10f);
-            setStat(Stat.spaceBattle, 0f);
-            setStat(Stat.combat, -20f);
-            setStat(Stat.trading, 35f);
-            setStat(Stat.diplomat, 10f);
-            setStat(Stat.scientist, -10f);
-            setStat(Stat.integrity, -70f);
-            setStat(Stat.holiness, -10f);
-            setStat(Stat.purity, -10f);
-            setStat(Stat.security, 40f);
-            setStat(Stat.violent, 0f);
-            setStat(Stat.aristocrat, 30f);
-            setStat(Stat.imperialist, 5f);
+            stats.Add(Stat.leadership, 0f);
+            stats.Add(Stat.hr, 85f);
+            stats.Add(Stat.engineering, 35f);
+            stats.Add(Stat.precognition, -10f);
+            stats.Add(Stat.psy, -20f);
+            stats.Add(Stat.navigation, -10f);
+            stats.Add(Stat.spaceBattle, 0f);
+            stats.Add(Stat.combat, -20f);
+            stats.Add(Stat.trading, 35f);
+            stats.Add(Stat.diplomat, 10f);
+            stats.Add(Stat.scientist, -10f);
+            stats.Add(Stat.integrity, -70f);
+            stats.Add(Stat.holiness, -10f);
+            stats.Add(Stat.purity, -10f);
+            stats.Add(Stat.security, 40f);
+            stats.Add(Stat.violent, 0f);
+            stats.Add(Stat.aristocrat, 30f);
+            stats.Add(Stat.imperialist, 5f);
         }
         else if (ideology == Faction.IdeologyID.liberal)
         {
-            setStat(Stat.leadership, 0f);
-            setStat(Stat.hr, -15f);
-            setStat(Stat.engineering, 30f);
-            setStat(Stat.precognition, 90f);
-            setStat(Stat.psy, 40f);
-            setStat(Stat.navigation, 20f);
-            setStat(Stat.spaceBattle, 0f);
-            setStat(Stat.combat, -100f);
-            setStat(Stat.trading, 85f);
-            setStat(Stat.diplomat, 200f);
-            setStat(Stat.scientist, 100f);
-            setStat(Stat.integrity, 40f);
-            setStat(Stat.holiness, -60f);
-            setStat(Stat.purity, -60f);
-            setStat(Stat.security, -100f);
-            setStat(Stat.violent, -100f);
-            setStat(Stat.aristocrat, -70f);
-            setStat(Stat.imperialist, -50f);
+            stats.Add(Stat.leadership, 0f);
+            stats.Add(Stat.hr, -15f);
+            stats.Add(Stat.engineering, 30f);
+            stats.Add(Stat.precognition, 90f);
+            stats.Add(Stat.psy, 40f);
+            stats.Add(Stat.navigation, 20f);
+            stats.Add(Stat.spaceBattle, 0f);
+            stats.Add(Stat.combat, -100f);
+            stats.Add(Stat.trading, 85f);
+            stats.Add(Stat.diplomat, 200f);
+            stats.Add(Stat.scientist, 100f);
+            stats.Add(Stat.integrity, 40f);
+            stats.Add(Stat.holiness, -60f);
+            stats.Add(Stat.purity, -60f);
+            stats.Add(Stat.security, -100f);
+            stats.Add(Stat.violent, -100f);
+            stats.Add(Stat.aristocrat, -70f);
+            stats.Add(Stat.imperialist, -50f);
         }
         else if (ideology == Faction.IdeologyID.nationalist)
         {
-            setStat(Stat.leadership, 80f);
-            setStat(Stat.hr, 80f);
-            setStat(Stat.engineering, 70f);
-            setStat(Stat.precognition, -50f);
-            setStat(Stat.psy, -50f);
-            setStat(Stat.navigation, -100f);
-            setStat(Stat.spaceBattle, 160f);
-            setStat(Stat.combat, 160f);
-            setStat(Stat.trading, -55f);
-            setStat(Stat.diplomat, -100f);
-            setStat(Stat.scientist, -20f);
-            setStat(Stat.integrity, 20f);
-            setStat(Stat.holiness, 0f);
-            setStat(Stat.purity, 0f);
-            setStat(Stat.security, 70f);
-            setStat(Stat.violent, 100f);
-            setStat(Stat.aristocrat, -30f);
-            setStat(Stat.imperialist, -100f);
+            stats.Add(Stat.leadership, 80f);
+            stats.Add(Stat.hr, 80f);
+            stats.Add(Stat.engineering, 70f);
+            stats.Add(Stat.precognition, -50f);
+            stats.Add(Stat.psy, -50f);
+            stats.Add(Stat.navigation, -100f);
+            stats.Add(Stat.spaceBattle, 160f);
+            stats.Add(Stat.combat, 160f);
+            stats.Add(Stat.trading, -55f);
+            stats.Add(Stat.diplomat, -100f);
+            stats.Add(Stat.scientist, -20f);
+            stats.Add(Stat.integrity, 20f);
+            stats.Add(Stat.holiness, 0f);
+            stats.Add(Stat.purity, 0f);
+            stats.Add(Stat.security, 70f);
+            stats.Add(Stat.violent, 100f);
+            stats.Add(Stat.aristocrat, -30f);
+            stats.Add(Stat.imperialist, -100f);
         }
         else if (ideology == Faction.IdeologyID.aristocrat)
         {
-            setStat(Stat.leadership, 110f);
-            setStat(Stat.hr, 50f);
-            setStat(Stat.engineering, 20f);
-            setStat(Stat.precognition, 60f);
-            setStat(Stat.psy, 30f);
-            setStat(Stat.navigation, 10f);
-            setStat(Stat.spaceBattle, 160f);
-            setStat(Stat.combat, 160f);
-            setStat(Stat.trading, 10f);
-            setStat(Stat.diplomat, -20f);
-            setStat(Stat.scientist, -30f);
-            setStat(Stat.integrity, -80f);
-            setStat(Stat.holiness, -30f);
-            setStat(Stat.purity, -30f);
-            setStat(Stat.security, 80f);
-            setStat(Stat.violent, 60f);
-            setStat(Stat.aristocrat, 100f);
-            setStat(Stat.imperialist, 50f);
+            stats.Add(Stat.leadership, 110f);
+            stats.Add(Stat.hr, 50f);
+            stats.Add(Stat.engineering, 20f);
+            stats.Add(Stat.precognition, 60f);
+            stats.Add(Stat.psy, 30f);
+            stats.Add(Stat.navigation, 10f);
+            stats.Add(Stat.spaceBattle, 160f);
+            stats.Add(Stat.combat, 160f);
+            stats.Add(Stat.trading, 10f);
+            stats.Add(Stat.diplomat, -20f);
+            stats.Add(Stat.scientist, -30f);
+            stats.Add(Stat.integrity, -80f);
+            stats.Add(Stat.holiness, -30f);
+            stats.Add(Stat.purity, -30f);
+            stats.Add(Stat.security, 80f);
+            stats.Add(Stat.violent, 60f);
+            stats.Add(Stat.aristocrat, 100f);
+            stats.Add(Stat.imperialist, 50f);
         }
         else if (ideology == Faction.IdeologyID.imperialist)
         {
-            setStat(Stat.leadership, 90f);
-            setStat(Stat.hr, -5f);
-            setStat(Stat.engineering, -5f);
-            setStat(Stat.precognition, 50f);
-            setStat(Stat.psy, 20f);
-            setStat(Stat.navigation, 30f);
-            setStat(Stat.spaceBattle, 110f);
-            setStat(Stat.combat, 120f);
-            setStat(Stat.trading, 5f);
-            setStat(Stat.diplomat, 20f);
-            setStat(Stat.scientist, -20f);
-            setStat(Stat.integrity, 40f);
-            setStat(Stat.holiness, 60f);
-            setStat(Stat.purity, 60f);
-            setStat(Stat.security, 30f);
-            setStat(Stat.violent, 30f);
-            setStat(Stat.aristocrat, 50f);
-            setStat(Stat.imperialist, 100f);
+            stats.Add(Stat.leadership, 90f);
+            stats.Add(Stat.hr, -5f);
+            stats.Add(Stat.engineering, -5f);
+            stats.Add(Stat.precognition, 50f);
+            stats.Add(Stat.psy, 20f);
+            stats.Add(Stat.navigation, 30f);
+            stats.Add(Stat.spaceBattle, 110f);
+            stats.Add(Stat.combat, 120f);
+            stats.Add(Stat.trading, 5f);
+            stats.Add(Stat.diplomat, 20f);
+            stats.Add(Stat.scientist, -20f);
+            stats.Add(Stat.integrity, 40f);
+            stats.Add(Stat.holiness, 60f);
+            stats.Add(Stat.purity, 60f);
+            stats.Add(Stat.security, 30f);
+            stats.Add(Stat.violent, 30f);
+            stats.Add(Stat.aristocrat, 50f);
+            stats.Add(Stat.imperialist, 100f);
         }
         else if (ideology == Faction.IdeologyID.navigators)
         {
-            setStat(Stat.leadership, 100f);
-            setStat(Stat.hr, -230f);
-            setStat(Stat.engineering, 55f);
-            setStat(Stat.precognition, 160f);
-            setStat(Stat.psy, 100f);
-            setStat(Stat.navigation, 200f);
-            setStat(Stat.spaceBattle, 190f);
-            setStat(Stat.combat, 80f);
-            setStat(Stat.trading, 75f);
-            setStat(Stat.diplomat, 100f);
-            setStat(Stat.scientist, 70f);
-            setStat(Stat.integrity, -30f);
-            setStat(Stat.holiness, 0f);
-            setStat(Stat.purity, 0f);
-            setStat(Stat.security, -20f);
-            setStat(Stat.violent, -50f);
-            setStat(Stat.aristocrat, 100f);
-            setStat(Stat.imperialist, 10f);
+            stats.Add(Stat.leadership, 100f);
+            stats.Add(Stat.hr, -230f);
+            stats.Add(Stat.engineering, 55f);
+            stats.Add(Stat.precognition, 160f);
+            stats.Add(Stat.psy, 100f);
+            stats.Add(Stat.navigation, 200f);
+            stats.Add(Stat.spaceBattle, 190f);
+            stats.Add(Stat.combat, 80f);
+            stats.Add(Stat.trading, 75f);
+            stats.Add(Stat.diplomat, 100f);
+            stats.Add(Stat.scientist, 70f);
+            stats.Add(Stat.integrity, -30f);
+            stats.Add(Stat.holiness, 0f);
+            stats.Add(Stat.purity, 0f);
+            stats.Add(Stat.security, -20f);
+            stats.Add(Stat.violent, -50f);
+            stats.Add(Stat.aristocrat, 100f);
+            stats.Add(Stat.imperialist, 10f);
         }
         else if (ideology == Faction.IdeologyID.brotherhood)
         {
-            setStat(Stat.leadership, 10f);
-            setStat(Stat.hr, -40f);
-            setStat(Stat.engineering, 0f);
-            setStat(Stat.precognition, 210f);
-            setStat(Stat.psy, 200f);
-            setStat(Stat.navigation, 60f);
-            setStat(Stat.spaceBattle, 60f);
-            setStat(Stat.combat, 0f);
-            setStat(Stat.trading, 10f);
-            setStat(Stat.diplomat, 20f);
-            setStat(Stat.scientist, 50f);
-            setStat(Stat.integrity, 0f);
-            setStat(Stat.holiness, 10f);
-            setStat(Stat.purity, 10f);
-            setStat(Stat.security, -40f);
-            setStat(Stat.violent, -60f);
-            setStat(Stat.aristocrat, 70f);
-            setStat(Stat.imperialist, 5f);
+            stats.Add(Stat.leadership, 10f);
+            stats.Add(Stat.hr, -40f);
+            stats.Add(Stat.engineering, 0f);
+            stats.Add(Stat.precognition, 210f);
+            stats.Add(Stat.psy, 200f);
+            stats.Add(Stat.navigation, 60f);
+            stats.Add(Stat.spaceBattle, 60f);
+            stats.Add(Stat.combat, 0f);
+            stats.Add(Stat.trading, 10f);
+            stats.Add(Stat.diplomat, 20f);
+            stats.Add(Stat.scientist, 50f);
+            stats.Add(Stat.integrity, 0f);
+            stats.Add(Stat.holiness, 10f);
+            stats.Add(Stat.purity, 10f);
+            stats.Add(Stat.security, -40f);
+            stats.Add(Stat.violent, -60f);
+            stats.Add(Stat.aristocrat, 70f);
+            stats.Add(Stat.imperialist, 5f);
         }
         else if (ideology == Faction.IdeologyID.transhumanist)
         {
-            setStat(Stat.leadership, 0f);
-            setStat(Stat.hr, 150f);
-            setStat(Stat.engineering, 75f);
-            setStat(Stat.precognition, 110f);
-            setStat(Stat.psy, 60f);
-            setStat(Stat.navigation, 40f);
-            setStat(Stat.spaceBattle, 50f);
-            setStat(Stat.combat, -100f);
-            setStat(Stat.trading, 65f);
-            setStat(Stat.diplomat, 150f);
-            setStat(Stat.scientist, 100f);
-            setStat(Stat.integrity, -100f);
-            setStat(Stat.holiness, -100f);
-            setStat(Stat.purity, -100f);
-            setStat(Stat.security, -200f);
-            setStat(Stat.violent, 20f);
-            setStat(Stat.aristocrat, -100f);
-            setStat(Stat.imperialist, -100f);
+            stats.Add(Stat.leadership, 0f);
+            stats.Add(Stat.hr, 150f);
+            stats.Add(Stat.engineering, 75f);
+            stats.Add(Stat.precognition, 110f);
+            stats.Add(Stat.psy, 60f);
+            stats.Add(Stat.navigation, 40f);
+            stats.Add(Stat.spaceBattle, 50f);
+            stats.Add(Stat.combat, -100f);
+            stats.Add(Stat.trading, 65f);
+            stats.Add(Stat.diplomat, 150f);
+            stats.Add(Stat.scientist, 100f);
+            stats.Add(Stat.integrity, -100f);
+            stats.Add(Stat.holiness, -100f);
+            stats.Add(Stat.purity, -100f);
+            stats.Add(Stat.security, -200f);
+            stats.Add(Stat.violent, 20f);
+            stats.Add(Stat.aristocrat, -100f);
+            stats.Add(Stat.imperialist, -100f);
+        }
+        return stats;
+    }
+
+
+    public static CharacterTrait[] getJobTraits(Character.Job job)
+    {
+        switch (job)
+        {
+            case Job.none:
+                return null;
+            case Job.captain:
+                return new CharacterTrait[] { CharacterTrait.PersonalLeadership, CharacterTrait.Bureaucrat, CharacterTrait.SpiritualLeader, CharacterTrait.TacticalLeader, CharacterTrait.MerchantPrince };
+            case Job.navigator:
+                return new CharacterTrait[] { CharacterTrait.FractureLink, CharacterTrait.CortexLink };
+            case Job.engineer:
+                return new CharacterTrait[] { CharacterTrait.CivilianEngineer, CharacterTrait.MilitaryEngineer };
+            case Job.security:
+                return new CharacterTrait[] { CharacterTrait.ShipOfficer, CharacterTrait.TroopOfficer, CharacterTrait.SecurityOfficer };
+            case Job.quartermaster:
+                return new CharacterTrait[] { CharacterTrait.CrewLiaison, CharacterTrait.Administrator, CharacterTrait.Councellor };
+            case Job.priest:
+                return new CharacterTrait[] { CharacterTrait.Father, CharacterTrait.Priest };
+            case Job.psycher:
+                return new CharacterTrait[] { CharacterTrait.ShipFracker, CharacterTrait.CrewFracker, CharacterTrait.Negotiator };
+            default:
+                return null;
         }
     }
+}
+
+public enum CharacterTrait
+{
+    None,
+    // captain
+
+    /// <summary>
+    /// [captain trait]
+    /// leadership, diplomacy, combat½, hr½
+    /// </summary>
+    PersonalLeadership,
+    // captain
+    /// <summary>
+    /// [captain trait]
+    /// hr, trade, combat
+    /// </summary>
+    Bureaucrat,
+    // captain
+    /// <summary>
+    /// [captain trait]
+    /// leadership, fracture, holy
+    /// </summary>
+    SpiritualLeader,
+    // captain
+    /// <summary>
+    /// [captain trait]
+    /// space battle, navigation, engineering
+    /// </summary>
+    TacticalLeader,
+    // captain
+    /// <summary>
+    /// [captain trait]
+    /// leadership, diplomacy, trade
+    /// </summary>
+    MerchantPrince,
+
+    // navigator
+
+    /// <summary>
+    /// [navigator trait]
+    /// navigation, fracture½
+    /// </summary>
+    FractureLink,
+    /// <summary>
+    /// [navigator trait]
+    /// navigation, space battle, engineering
+    /// </summary>
+    CortexLink,
+
+    // quartermaster
+
+    /// <summary>
+    /// [quartermaster trait]
+    /// hr, combat*.25, security*.25
+    /// </summary>
+    CrewLiaison,
+    /// <summary>
+    /// [quartermaster trait]
+    /// hr, diplomacy½, trade½
+    /// </summary>
+    Administrator,
+    /// <summary>
+    /// [quartermaster trait]
+    ///  hr, fracture, holy
+    /// </summary>
+    Councellor,
+
+    // security
+
+    /// <summary>
+    /// [security officer trait]
+    /// space battle, engineering
+    /// </summary>
+    ShipOfficer,
+    /// <summary>
+    /// [security officer trait]
+    /// leadership, combat, engineering
+    /// </summary>
+    TroopOfficer,
+    /// <summary>
+    /// [security officer trait]
+    /// security, combat½
+    /// </summary>
+    SecurityOfficer,
+
+    // engineer
+
+    /// <summary>
+    /// [engineer trait]
+    /// (engineering, navigation½) OR science, hr½
+    /// </summary>
+    CivilianEngineer,
+    /// <summary>
+    /// [engineer trait]
+    /// engineering, space battle, navigation½
+    /// </summary>
+    MilitaryEngineer,
+
+    // psycher
+
+    /// <summary>
+    /// [fracker trait]
+    /// fracture
+    /// </summary>
+    ShipFracker,
+    /// <summary>
+    /// [fracker trait]
+    /// fracture, hr.25
+    /// </summary>
+    CrewFracker,
+    /// <summary>
+    /// [fracker trait] (inquisitor?)
+    /// fracture, diplomacy½, trade½
+    /// </summary>
+    Negotiator,
+
+    // priest
+
+    /// <summary>
+    /// [priest trait]
+    /// holy, hr½
+    /// </summary>
+    Father,
+    /// <summary>
+    /// [priest trait]
+    /// holy, combat½
+    /// </summary>
+    Priest
 }

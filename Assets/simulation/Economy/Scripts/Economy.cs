@@ -612,7 +612,7 @@ namespace Simulation
                     if (getEffectiveMul(type) <1.0f) { startingLevel = (location.features.startingTechLevel > 0) ? 1 : 0; } // non-developped industry: resource = 1, except if tech = 0, then 0
                     else { startingLevel = location.features.startingTechLevel; } // resource = tech
                     if (location.features.visibility == Data.Location.Visibility.Hiding) startingLevel += 1; // +1 from hiding
-                    startingLevel += (int)(0.0f - ((location.ideology.effects.police *3.0f)+1.0f));         // -3 to +2 from ideology
+                    startingLevel += (int)(0.0f - ((location.ideology.effects[Effect.police] *3.0f)+1.0f));         // -3 to +2 from ideology
                     startingLevel = Mathf.Min (startingLevel, location.features.startingTechLevel);         // cap to max tech lvl
 
                     // SETTING LEGALITY legality

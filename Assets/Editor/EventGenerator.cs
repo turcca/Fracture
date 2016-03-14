@@ -9,16 +9,25 @@ public class EventGenerator
 {
     private string generatedScript = "";
     private int numEvents = 0;
-    public void generateEvents(string dataFile)
+    public void generateEvents(string[] dataFiles)
     {
         generatedScript = "";
-        StreamReader sr = new StreamReader(dataFile);
-        string data = sr.ReadToEnd();
+        string data = "";
+        StreamReader sr;// = new StreamReader();
+        foreach (string dataFile in dataFiles)
+        {
+            sr = new StreamReader(dataFile);
+            data += sr.ReadToEnd();
+            sr.Close();
+            Debug.Log("   >Event file: '" + dataFile + "'");
+        }
+        //StreamReader sr = new StreamReader(dataFile);
+        //string data = sr.ReadToEnd();
         if (data == null)
         {
-            Debug.Log("could not read data from " + dataFile);
+            Debug.Log("could not read data from " + dataFiles.ToString());
         }
-        sr.Close();
+        //sr.Close();
 
         writeLine ("// Events.cs compiled: "+System.DateTime.Now.ToString("HH:mm:ss")+" "+System.DateTime.Now.ToString("dd/MM/yyyy"));
         writeLine("#pragma warning disable 0162, 1717");
@@ -82,7 +91,17 @@ public class EventGenerator
             {
                 if (Regex.Match(tag.Substring(8), "atLocation").Success)
                 {
-                    writeLine("locationEvent=true;");
+                    writeLine("triggerEvent=trigger.atLocation;");
+                    writeLine("locationRequired=true;");
+                }
+                else if (Regex.Match(tag.Substring(8), "inLocation").Success)
+                {
+                    writeLine("triggerEvent=trigger.inLocation;");
+                    writeLine("locationRequired=true;");
+                }
+                else if (Regex.Match(tag.Substring(8), "Object").Success)
+                {
+                    writeLine("triggerEvent=trigger.Object;");
                 }
             }
             else if (Regex.Match(tag, @"^\@location[\s\{=]").Success)
@@ -90,7 +109,7 @@ public class EventGenerator
                 string id = getNextValue(tag.Substring(10));
                 id = Regex.Replace(id, @"getLocation\((.*)\)", "\"$1\"");
                 id = Regex.Replace(id, "currentLocation", "getPlayerLocationID()");
-                writeLine("location=" + id + ";");
+                writeLine("location=" + id.ToLower() + ";");
             }
             else if (Regex.Match(tag, @"^\@character[\s\{=]").Success)
             {
@@ -178,7 +197,6 @@ public class EventGenerator
         string input = inputStr;
         int n = 0;
         char plus = char.Parse("+");
-        char quote = char.Parse("\"");
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -354,7 +372,7 @@ public class EventGenerator
         int stringStartPos = data.IndexOf("\"");
         if (stringStartPos == -1) throw new System.Exception("Event generator throw (data:"+data+")");
         int length = data.Substring(stringStartPos + 1).IndexOf("\"");
-        if (length == -1) throw new System.Exception("Event generator throw");
+        if (length == -1) throw new System.Exception("Event generator throw (missing end quote?) \n"+data);
         return convertPlusesToParsed(data.Substring(stringStartPos + 1, length));
     }
     string getEventName(string data)
@@ -403,7 +421,9 @@ public class EventGenerator
         cond = Regex.Replace(cond, @"playerLoc\(.inLocation.,.*\)", "(getPlayerLocationID() == location)", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, @"Event\[""(.*?)""\]", "getEvent(\"$1\")", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, @"theCaptain.([a-z]*)", "getCharacterStat(Character.Job.captain, Character.Stat.$1)", RegexOptions.IgnoreCase);
+        //@todo effects changed from struct
         cond = Regex.Replace(cond, @"location\.ideologyStats\[.([a-z]+).\]", "getLocation().ideology.effects.$1", RegexOptions.IgnoreCase);
+        
 
 
         mod = mod.Substring(condEndPos + 1);

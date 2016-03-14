@@ -11003,6 +11003,7 @@ GameObject:
   - 4: {fileID: 861129076}
   - 114: {fileID: 861129075}
   - 114: {fileID: 861129077}
+  - 114: {fileID: 861129078}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -11053,6 +11054,23 @@ MonoBehaviour:
   culture: -0.2
   military: -0.3
   blackMarket: 0
+--- !u!114 &861129078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861129074}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4d3159749f59d408f7037ce158b5a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parse: 1
+  write: 1
+  debugging: 0
+  fileName: /data/EventAdviceTags.txt
+  outputFolder: /event/generated/
+  advicetagLine: []
 --- !u!1001 &866111458
 Prefab:
   m_ObjectHideFlags: 0

@@ -12,12 +12,15 @@ public class ShipyardPage : MonoBehaviour
 
     public GameObject buyShipPrefab;
     public GridLayoutGroup grid;
+    public Button tradeButton;
+    Text tradeButtonLabel;
 
     public List<Text> shipInfos = new List<Text>();
 
     
     void OnEnable () 
     {
+        if (tradeButtonLabel == null) tradeButtonLabel = tradeButton.transform.GetChild(0).GetComponent<Text>();
         compareShipId = "";
         updateShipStats();
         if (compareShipId != "") updateShipStats(ShipStatsLibrary.getShipStat(compareShipId));
@@ -48,10 +51,14 @@ public class ShipyardPage : MonoBehaviour
                 setStatsValue(i);
             }
             // reset compare values
+            resetStatsValue(1); // compare ship name
             for (int i = 6; i < shipInfos.Count; i += 2)
             {
                 resetStatsValue(i);
             }
+            // hide buy-button
+            tradeButton.enabled = false;
+            tradeButtonLabel.text = "Trade";
         }
         else
         {
@@ -62,6 +69,12 @@ public class ShipyardPage : MonoBehaviour
             {
                 setStatsValue(i);
             }
+            // show buy -button
+            // check player local rep & cash
+            tradeButton.enabled = (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) < compareShipStats.reqRelations) ? false : // not enough relation capital    // TODO: link to location relations --> "25f <"
+                (Root.game.player.cargo.credits + playerShipStats.value() - compareShipStats.value() < 0) ? false : true; // enough cash
+            tradeButtonLabel.text = (playerShipStats.value() - compareShipStats.value() > 0f) ? "Trade: +" : "Trade: ";
+            tradeButtonLabel.text += formatNumberToString( playerShipStats.value() - compareShipStats.value() );
         }
     }
     void resetStatsValue(int i)
@@ -93,11 +106,11 @@ public class ShipyardPage : MonoBehaviour
         switch (objName)
         {
             case "CLASS":
-                rs =  playerShipStats.name;
+                rs =  playerShipStats.shipId;
                 rc = new Color32(215, 225, 230, 255);
                 break;
             case "compare class":
-                rs =  "  / "+ compareShipStats.name;
+                rs =  "  / "+ compareShipStats.shipId;
                 rc = grey;
                 break;
 
@@ -260,12 +273,12 @@ public class ShipyardPage : MonoBehaviour
                 && location.economy.technologies[shipKvP.Value.reqTechType].level >= shipKvP.Value.getRequiredTechLevel())
             {
                 GameObject btn = Instantiate<GameObject>(buyShipPrefab);
-                btn.name = "compare " + shipKvP.Value.name;
-                btn.GetComponentInChildren<Text>().text = shipKvP.Value.name;
+                btn.name = "compare " + shipKvP.Value.shipId;
+                btn.GetComponentInChildren<Text>().text = shipKvP.Value.shipId;
 
                 // COLOR
                 // not enough relation capital 
-                if (0f < shipKvP.Value.reqRelations)                   // TODO: link to location relations
+                if (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) < shipKvP.Value.reqRelations) 
                     btn.gameObject.GetComponent<Image>().color = new Color(0.3f, 0.15f, 0.15f);
                 // not enough money
                 /*else */if ((float)playerShipStats.value() + Root.game.player.cargo.credits < (float)shipKvP.Value.value())

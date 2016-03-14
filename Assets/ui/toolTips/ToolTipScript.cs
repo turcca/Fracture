@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -13,12 +14,14 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     //public bool isOnDelay = true;
     //public float toolTipDelay = 0.5f; // todo: universal tooltip timer and on/off
     bool isHovering = false;
-    float toolTipTimer = 0f; 
-    Vector3 oldMouseScreenPos = new Vector3(0,0,0);
+    float toolTipTimer = 0f;
+    public Vector3 oldMouseScreenPos { get; private set; }
 
-    public ToolTipScript(string tip/*, Character.Stat? characterStat = null, Character.Job? characterJob = null*/)
+
+public ToolTipScript(string tip/*, Character.Stat? characterStat = null, Character.Job? characterJob = null*/)
     {
         toolTip = tip;
+        oldMouseScreenPos = new Vector3(0, 0, 0);
         //if (characterJob != null) job = (Character.Job)characterJob;
         //if (characterStat != null) stat = (Character.Stat)characterStat;
     }
@@ -30,7 +33,7 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             {
                 if (toolTipTimer <= 0f)
                 {
-                    ToolTipLibrary.show(this.gameObject);
+                    ToolTipLibrary.show(this);
                 }
                 else toolTipTimer -= Time.deltaTime;
             }
@@ -50,7 +53,7 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             isHovering = true;
             toolTipTimer = Root.game.gameSettings.toolTipDelay;
         }
-        else ToolTipLibrary.show(this.gameObject);
+        else ToolTipLibrary.show(this);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
@@ -60,4 +63,6 @@ public class ToolTipScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         ToolTipLibrary.hide(this.gameObject);
     }
+
+    
 }

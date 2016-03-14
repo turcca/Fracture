@@ -24,6 +24,8 @@ static public class Root
 #if !SIMULATION
         game = new Game();
         game.initGameSettings();
+        game.initGlobalMarket();
+        game.initFactions();
         game.initLocations();
         game.initEvents();
         game.initNPCShips();

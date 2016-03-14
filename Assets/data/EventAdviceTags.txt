@@ -9,20 +9,35 @@
 
 & agree &
 
-if (advisor.ideology == "cult") return "it is so";
+if (advisor.getStat(Character.Stat.holiness) < 0 && advisor.getStat(Character.Stat.kind) < 40) return "damn right";
+if (advisor.getStat(Character.Stat.kind) < 20) return "well of course";
+if (advisor.isIdeology(Faction.IdeologyID.cult)) return "it is so";
 return "I agree";
+
+
+& unsure &
+
+if (advisor.getStat(Character.Stat.kind) < 10) return "don't look at me";
+if (advisor.getStat(Character.Stat.kind) > 90) return "I'm sorry, but I am not sure about this";
+if (advisor.isIdeology(Faction.IdeologyID.cult) && advisor.getStat(Character.Stat.holiness) > 1) return "we must pray for guidance";
+if (advisor.isIdeology(Faction.IdeologyID.cult)) return "there is a quote in scripture I am trying to remember";
+if (advisor.isIdeology(Faction.IdeologyID.navigators)) return "the matter lies outside of the scope of my knowledge";
+return "I am not sure";
 
 
 & yes &
 
-if (advisor.leadership > 3 && advisor.hr > 2) return "for sure";
-if (advisor.idealist < 10)  return "sure";
-if (advisor.ideology == "aristocrat")  return "aye";
+if (advisor.getStat(Character.Stat.kind) < 10) return "it's pretty obvious";
+if (advisor.isIdeology(Faction.IdeologyID.aristocrat))  return "aye";
+if (advisor.getStat(Character.Stat.leadership) > 3 && advisor.getStat(Character.Stat.hr) > 2) return "for sure";
+if (advisor.getStat(Character.Stat.idealist) > 70)  return "sure";
 return "yes";
 
 
 & no &
 
-if (advisor.ideology == "aristocrat")  return "nay";
+if (advisor.getStat(Character.Stat.kind) < 10) return "no way";
+if (advisor.getStat(Character.Stat.kind) > 90) return "sorry but no";
+if (advisor.isIdeology(Faction.IdeologyID.aristocrat))  return "nay";
 return "no";
 

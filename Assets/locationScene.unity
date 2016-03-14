@@ -1546,8 +1546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventText: {fileID: 0}
-  choiceButtonGrid: {fileID: 0}
-  eventPage: {fileID: 0}
+  eventTextField: {fileID: 0}
 --- !u!1 &131034454
 GameObject:
   m_ObjectHideFlags: 0
@@ -3322,7 +3321,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 5
+  m_Text: 7
 --- !u!222 &227131398
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15795,6 +15794,7 @@ MonoBehaviour:
   compareShipId: 
   buyShipPrefab: {fileID: 158918, guid: 909d1a06950b25949930f7e139e11da2, type: 2}
   grid: {fileID: 1147830397}
+  tradeButton: {fileID: 1970398178}
   shipInfos:
   - {fileID: 2033621617}
   - {fileID: 330360845}
@@ -20867,6 +20867,10 @@ Prefab:
     - target: {fileID: 11476802, guid: 909d1a06950b25949930f7e139e11da2, type: 2}
       propertyPath: m_Colors.m_NormalColor.b
       value: 0.49264705
+      objectReference: {fileID: 0}
+    - target: {fileID: 158918, guid: 909d1a06950b25949930f7e139e11da2, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 909d1a06950b25949930f7e139e11da2, type: 2}
@@ -27550,7 +27554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1970398176
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27567,7 +27571,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 104, y: 0}
-  m_SizeDelta: {x: 54, y: 24}
+  m_SizeDelta: {x: 115, y: 24}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1970398177
 CanvasRenderer:
@@ -27596,8 +27600,8 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 0.23064446, g: 0.45044896, b: 0.5808823, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_PressedColor: {r: 0.44227898, g: 0.78431374, b: 0.15570936, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.172}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -29355,11 +29359,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: ac1a81f9cbe96564e87a73c8950ca3d8, type: 3}
-    m_FontSize: 14
+    m_FontSize: 12
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 8
+    m_MaxSize: 12
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

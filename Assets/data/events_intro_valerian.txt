@@ -1,0 +1,64 @@
+
+#intro Valeria1tM
+/* trigger (1C07) INTRO 1 - Regulus and aristocrat's pledge */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+/*@f "intro_Valeria"*/
+/*@f "intro"*/
+@trigger=inLocation
+@location = getLocation(1C07)
+@t {o = 0} "Consul Regulus Valeria asks Valerian captains in orbit to publicly pledge their protection of Valerian colonies, and to keep the Dacei from interloping in Valerian interests."
+@c {o = 0} "Join the pledge." = 708
+@o {c = 708} = 710
+@t {o = 710} "Consul Regulus and several Valerian captains appear in public with a strong statement. Dacei envoy responds by calling it an aggression. Among the captains, Regulus asks if anyone have the guts to poke around in Dacei shipping lines to see what they are doing. He'd be interested in the contents of their transports."
+@c {o = 710} "Continue." = 712
+@o {c = 712} = 713 $=available = false $=end
+@c {o = 0} "Stay out of it." = 709
+@o {c = 709} = 716 $=available = false $=end
+@a captain { TheAdvisor.isIdeology("aristocrat") } "This can get us some recognition. And it's a strong statement. Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position." = 708
+@a captain { TheAdvisor.isIdeology("liberal") } "Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position. If we join this chest-thumping, it will bring attention to us." = 709
+@a navigator "Many eyes are upon us. We should consider this carefully."
+
+#intro Valeria2tM
+/* trigger (1C07) INTRO 2 - Evander's political dinner */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+/*@f "intro_Valeria"*/
+/*@f "intro"*/
+@trigger=inLocation
+@location = getLocation(1C07)
+@p { event["intro Valeria1tM"].outcome = 0 OR event["intro Valeria1tM"].outcome = 713 } = 0
+@t {o = 0} "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites you to an official dinner to discuss local matters."
+@c {o = 0} "Go to the official dinner." = 721
+@o {c = 721} = 726
+@c {o = 726} "Continue." = 728
+@o {c = 728} = 729 $=available = false $=end
+@t {o = 726} "Exarch Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planetwide repeatedly over the next few days. In private, Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are well prepared for aggression."
+@c {o = 0} "Excuse yourself." = 722
+@o {c = 722} = 723 $=available = false $=end
+@a captain { TheAdvisor.isIdeology("aristocrat") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political manouvering." = 722
+@a captain { TheAdvisor.isIdeology("liberal") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Exarch Evander is popular, and his attention would reflect well on us." = 721
+@a navigator "The symmetry of politics. We are being weighted."
+
+#intro Valeria3tM
+/* trigger (1C07) INTRO 3 - Calius' private message on artifacts */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+/*@f "intro_Valeria"*/
+/*@f "intro"*/
+@trigger=inLocation
+@location = getLocation(1C07)
+@p { event["intro Valeria2tM"].outcome = 0 OR event["intro Valeria2tM"].outcome = 729 } = 0
+@t {o = 0} "Incoming private message:
+
+'Artifacts of the grey past are being transported in the Sovereign Void. You might be the one who brings one for me.'            
+
+-Lord Calius Valeria"
+@c {o = 0} "Continue." = 734
+@o {c = 734} = 735 $=available = false $=end
+@a captain "Lord Calius is one of the most powerful persons in the sector, but it may change soon."
+@a navigator "In whispers, Calius is called a powerful fracture bender."
+

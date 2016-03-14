@@ -7,8 +7,8 @@ public class EventUI : MonoBehaviour
 {
     public delegate void EventDoneDelegate();
     public Text eventText;
-    public GameObject choiceButtonGrid;
-    public GameObject eventPage;
+    public GameObject eventTextField;
+    //public GameObject eventPage;
 
     EventBase currentEvent;
     EventBase defaultAdvice;
@@ -52,20 +52,24 @@ public class EventUI : MonoBehaviour
 
     public void eventChoicePicked(int i)
     {
-        Debug.Log("choice: " + i.ToString());
+        if (GameState.isState(GameState.State.Pause) == false)
+        {
+            Debug.Log("choice: " + i.ToString());
 
-        currentEvent.choice = i;
-        currentEvent.doOutcome();
-        if (currentEvent.running)
-        {
-            continueEvent();
+            currentEvent.choice = i;
+            currentEvent.doOutcome();
+            if (currentEvent.running)
+            {
+                continueEvent();
+            }
+            else
+            {
+                endEvent();
+                eventDoneCallback();
+                eventDoneCallback = null;
+            }
         }
-        else
-        {
-            endEvent();
-            eventDoneCallback();
-            eventDoneCallback = null;
-        }
+        else Debug.Log("PAUSED: no event inputs");
     }
 
     public string setAdvisor(Character.Job job)
@@ -92,8 +96,9 @@ public class EventUI : MonoBehaviour
         {
             advice = defaultAdvice.getAdvice(job).text;
         }
-
-        return advice;
+        // resolve advice tags
+        if (Root.game.player.getAdvisor(job) == null) return advice;
+        else return EventAdviceTags.resolveTags(advice, Root.game.player.getAdvisor(job));
     }
 
     private void startEvent()
@@ -118,9 +123,9 @@ public class EventUI : MonoBehaviour
         else eventText.text = currentEvent.getText();
 
         // destroy old entries
-        for (int i = choiceButtonGrid.transform.childCount - 1; i >= 0; --i)
+        foreach (EventChoicesBtn choiseBtn in eventTextField.GetComponentsInChildren<EventChoicesBtn>())
         {
-            GameObject.DestroyImmediate(choiceButtonGrid.transform.GetChild(i).gameObject);
+            GameObject.Destroy(choiseBtn.gameObject);
         }
 
         // set choices
@@ -145,7 +150,7 @@ public class EventUI : MonoBehaviour
         buttonScript.choiceTxt.text = text;
         buttonScript.choiceNumber.text = choiceNum.ToString() +".";
 
-        btn.transform.SetParent(choiceButtonGrid.transform);
+        btn.transform.SetParent(eventTextField.transform);
     }
 
 
@@ -170,7 +175,7 @@ public class EventUI : MonoBehaviour
         else if (currentEvent == null) Debug.LogError("locationAdvice == null");
         else if (GameState.isState(GameState.State.Event) || (currentEvent != null && currentEvent.name.StartsWith("contact_")))
         {
-            Debug.Log("setup AdvisorManager / event");
+            //Debug.Log("setup AdvisorManager / event");
             if (eventSideWindow)
             {
                 am = eventSideWindow.GetComponentInChildren<AdvisorManager>();
@@ -191,7 +196,7 @@ public class EventUI : MonoBehaviour
 
             else
             {
-                Debug.Log("setup AdvisorManager / location");
+                //Debug.Log("setup AdvisorManager / location");
                 am = locationCanvas.GetComponentInChildren<AdvisorManager>();
                 if (am) am.setup();
                 else Debug.LogError("ERROR: location AdvisorManager not found.");
@@ -199,7 +204,7 @@ public class EventUI : MonoBehaviour
         }
         else
         {
-            Debug.LogError("ERROR: no AdvisorManager are active: 'SideWindow/' AND 'LocationCanvas/'");
+            Debug.LogError("ERROR: Event Fallthrough. no AdvisorManager are active: 'SideWindow/' AND 'LocationCanvas/'  [GameState: "+GameState.getState().ToString()+"]");
             return;
         }
     }

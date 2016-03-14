@@ -76,24 +76,13 @@ public class TradeNetVisualisation : MonoBehaviour
                 GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y + 15, 300, 20* trackedShip.tradeList.Count),
                       trackedShip.cargoToDebugString());
         }
-
-        // global resource balance // todo - make this global economy tool
-        System.Collections.Generic.Dictionary<Data.Resource.Type, float> globalResources = new System.Collections.Generic.Dictionary<Data.Resource.Type, float>();
-        System.Collections.Generic.Dictionary<Data.Resource.Type, float> globalResourceGrowth = new System.Collections.Generic.Dictionary<Data.Resource.Type, float>();
-        foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type))) { globalResources.Add(type, 0f); globalResourceGrowth.Add(type, 0f); }
-
-        foreach (Location loc in Root.game.locations.Values)
-        {
-            foreach (var resource in loc.economy.resources)
-            {
-                globalResources[resource.Key] += resource.Value.getResources();
-                globalResourceGrowth[resource.Key] += resource.Value.getNetResourceProduction();
-            }
-        } // draw guis
+        
+        
+        // draw guis
         string rv = "    Global Resource Tracker \n";
         foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
         {
-            rv += type.ToString() + " [rate: " + Mathf.Round(globalResourceGrowth[type] * 100f) / 100f + "] [stock: " + Mathf.Round(globalResources[type]) + "]\n";
+            rv += type.ToString() + " [rate: " + Mathf.Round(Root.game.globalMarket.getGlobalResourceGrowth(type) * 100f) / 100f + "] [stock: " + Mathf.Round(Root.game.globalMarket.getGlobalResources(type)) + "]\n";
         }
         GUI.Label(new Rect(Screen.width / 2.6f, Screen.height - 150, 500, 150), rv);
 

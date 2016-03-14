@@ -1,19 +1,50 @@
-﻿//using System;
-using System.Collections.Generic;
-using UnityEngine;
-//using System.IO;
-//using UnityEngine.UI;
-//using System.Globalization;
+﻿using UnityEngine;
+using System.Collections;
 
+/// <summary>
+/// static Faction -method class for handling names and titles etc.
+/// </summary>
 static public class Faction
 {
-    public enum FactionID { noble1, noble2, noble3, noble4, guild1, guild2, guild3, church, heretic };
+    public enum FactionID
+    {
+        /// <summary>
+        /// Furia
+        /// </summary>
+        noble1,
+        /// <summary>
+        /// Rathmund
+        /// </summary>
+        noble2,
+        /// <summary>
+        /// Tarquinia
+        /// </summary>
+        noble3,
+        /// <summary>
+        /// Valeria
+        /// </summary>
+        noble4,
+        /// <summary>
+        /// Union
+        /// </summary>
+        guild1,
+        /// <summary>
+        /// Dacei
+        /// </summary>
+        guild2,
+        /// <summary>
+        /// Coruna
+        /// </summary>
+        guild3,
+        church,
+        heretic
+    };
     public enum Agenda { loyalist, idealist, faithful, reformist, transhumanist, separatist, nationalist, heretic, individualist } // todo agendas
     public enum IdeologyID { cult, technocrat, mercantile, bureaucracy, liberal, nationalist, aristocrat, imperialist, navigators, brotherhood, transhumanist }
 
     static public string getFactionName(Faction.FactionID id)
     {
-        switch(id)
+        switch (id)
         {
             case FactionID.noble1: return "House Furia";
             case FactionID.noble2: return "House Rathmund";
@@ -76,9 +107,9 @@ static public class Faction
         return "";
     }
 
-    static public string factionToString (FactionID faction)
+    static public string factionToString(FactionID faction)
     {
-        switch(faction)
+        switch (faction)
         {
             case FactionID.noble1: return "noble1";
             case FactionID.noble2: return "noble2";
@@ -92,9 +123,9 @@ static public class Faction
             default: return "";
         }
     }
-    static public FactionID factionToEnum (string faction)
+    static public FactionID factionToEnum(string faction)
     {
-        switch(faction)
+        switch (faction)
         {
             case "noble1": return FactionID.noble1;
             case "noble2": return FactionID.noble2;
@@ -105,7 +136,7 @@ static public class Faction
             case "guild3": return FactionID.guild3;
             case "church": return FactionID.church;
             case "cult": return FactionID.heretic;
-        default: return FactionID.noble1;
+            default: return FactionID.noble1;
         }
     }
     static public string getGovernmentType(FactionID id, bool hasFlipped = false)
@@ -128,18 +159,50 @@ static public class Faction
     {
         switch (id)
         {
-            case Faction.IdeologyID.cult:        return "Imperial"; 
-            case Faction.IdeologyID.technocrat:  return "Civilian";
-            case Faction.IdeologyID.mercantile:  return "Civilian";
+            case Faction.IdeologyID.cult: return "Imperial";
+            case Faction.IdeologyID.technocrat: return "Civilian";
+            case Faction.IdeologyID.mercantile: return "Civilian";
             case Faction.IdeologyID.bureaucracy: return "Imperial";
-            case Faction.IdeologyID.liberal:     return "Civilian";
+            case Faction.IdeologyID.liberal: return "Civilian";
             case Faction.IdeologyID.nationalist: return "Separatist";
-            case Faction.IdeologyID.aristocrat:  return "Imperial";
+            case Faction.IdeologyID.aristocrat: return "Imperial";
             case Faction.IdeologyID.imperialist: return "Imperial";
-            case Faction.IdeologyID.navigators:  return "Order";
+            case Faction.IdeologyID.navigators: return "Order";
             case Faction.IdeologyID.brotherhood: return "Order";
             case Faction.IdeologyID.transhumanist: return "Civilian";
             default: return "";
+        }
+    }
+    /// <summary>
+    /// eg. Calius --> Calius Valeria
+    /// </summary>
+    /// <returns></returns>
+    public static string getTwoPartNameForFactionMember(FactionID faction, string name = null)
+    {
+        if (name == null) name = NameGenerator.getName(faction);
+
+        switch (faction)
+        {
+            case FactionID.noble1:
+                return name + " Furia";
+            case FactionID.noble2:
+                return name + " Rathmund";
+            case FactionID.noble3:
+                return name + " Tatrquinia";
+            case FactionID.noble4:
+                return name + " Valeria";
+            case FactionID.guild1:
+                return name;
+            case FactionID.guild2:
+                return name + " Dacei";
+            case FactionID.guild3:
+                return name;
+            case FactionID.church:
+                return name;
+            case FactionID.heretic:
+                return name;
+            default:
+                return name;
         }
     }
 
@@ -147,113 +210,113 @@ static public class Faction
     {
         // 4th title comes easier for factions!
 
-        if (id == FactionID.noble1)      return getTitle (Faction.IdeologyID.cult, lvl);
-        else if (id == FactionID.noble2) return getTitle (Faction.IdeologyID.cult, lvl);
-        else if (id == FactionID.noble3) return getTitle (Faction.IdeologyID.cult, lvl);
-        else if (id == FactionID.noble4) return getTitle (Faction.IdeologyID.cult, lvl);
+        if (id == FactionID.noble1) return getTitle(Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.noble2) return getTitle(Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.noble3) return getTitle(Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.noble4) return getTitle(Faction.IdeologyID.cult, lvl);
         else if (id == FactionID.guild1)
         {
-            if (lvl <= 2)       return "Councillor";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "President";
-            else                return "Primus Transcended";
+            if (lvl <= 2) return "Councillor";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "President";
+            else return "Primus Transcended";
         }
-        else if (id == FactionID.guild2) return getTitle (Faction.IdeologyID.cult, lvl);
-        else if (id == FactionID.guild3) return getTitle (Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.guild2) return getTitle(Faction.IdeologyID.cult, lvl);
+        else if (id == FactionID.guild3) return getTitle(Faction.IdeologyID.cult, lvl);
         else if (id == FactionID.church)
         {
-            if (lvl <= 2)       return "Bishop";
-            else if (lvl <= 3)  return "Bishop";
-            else if (lvl <= 4)  return "Archbishop";
-            else                return "Apostle";
+            if (lvl <= 2) return "Bishop";
+            else if (lvl <= 3) return "Bishop";
+            else if (lvl <= 4) return "Archbishop";
+            else return "Apostle";
         }
         else if (id == FactionID.heretic)
         {
-            if (lvl <= 2)       return "Councillor";
-            else if (lvl <= 3)  return "Protector";
-            else if (lvl <= 4)  return "Messiah";
-            else                return "Antipope";
+            if (lvl <= 2) return "Councillor";
+            else if (lvl <= 3) return "Protector";
+            else if (lvl <= 4) return "Messiah";
+            else return "Antipope";
         }
         return "Governor";
     }
     static public string getTitle(Faction.IdeologyID id, int lvl)
     {
-        if (id == Faction.IdeologyID.cult) 
+        if (id == Faction.IdeologyID.cult)
         {
-            if (lvl <= 2)       return "Senator";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Senator";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.technocrat)   
+        else if (id == Faction.IdeologyID.technocrat)
         {
-            if (lvl <= 2)       return "Councillor";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Councillor";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.mercantile)   
+        else if (id == Faction.IdeologyID.mercantile)
         {
-            if (lvl <= 2)       return "Councillor";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Councillor";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.bureaucracy)  
+        else if (id == Faction.IdeologyID.bureaucracy)
         {
-            if (lvl <= 2)       return "Senator";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Senator";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.liberal)      
+        else if (id == Faction.IdeologyID.liberal)
         {
-            if (lvl <= 2)       return "Minister";
-            else if (lvl <= 3)  return "Prime Minister";
-            else if (lvl <= 4)  return "President";
-            else                return "Sector President";
+            if (lvl <= 2) return "Minister";
+            else if (lvl <= 3) return "Prime Minister";
+            else if (lvl <= 4) return "President";
+            else return "Sector President";
         }
-        else if (id == Faction.IdeologyID.nationalist)  
+        else if (id == Faction.IdeologyID.nationalist)
         {
-            if (lvl <= 2)       return "Councillor";
-            else if (lvl <= 3)  return "Commissar";
-            else if (lvl <= 4)  return "People's Commissar";
-            else                return "High Commander";
+            if (lvl <= 2) return "Councillor";
+            else if (lvl <= 3) return "Commissar";
+            else if (lvl <= 4) return "People's Commissar";
+            else return "High Commander";
         }
-        else if (id == Faction.IdeologyID.aristocrat)   
+        else if (id == Faction.IdeologyID.aristocrat)
         {
-            if (lvl <= 2)       return "Senator";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Senator";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.imperialist)  
+        else if (id == Faction.IdeologyID.imperialist)
         {
-            if (lvl <= 2)       return "Senator";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Senator";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.navigators)   
+        else if (id == Faction.IdeologyID.navigators)
         {
-            if (lvl <= 2)       return "Senior Advisor";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Senior Advisor";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
-        else if (id == Faction.IdeologyID.brotherhood)  
+        else if (id == Faction.IdeologyID.brotherhood)
         {
-            if (lvl <= 2)       return "Senior Advisor";
-            else if (lvl <= 3)  return "Governor";
-            else if (lvl <= 4)  return "Exarch";
-            else                return "High Exarch";
+            if (lvl <= 2) return "Senior Advisor";
+            else if (lvl <= 3) return "Governor";
+            else if (lvl <= 4) return "Exarch";
+            else return "High Exarch";
         }
         else if (id == Faction.IdeologyID.transhumanist)
         {
-            if (lvl <= 2)       return "Minister";
-            else if (lvl <= 3)  return "Prime Minister";
-            else if (lvl <= 4)  return "Transcended";
-            else                return "Primus Transcended";
+            if (lvl <= 2) return "Minister";
+            else if (lvl <= 3) return "Prime Minister";
+            else if (lvl <= 4) return "Transcended";
+            else return "Primus Transcended";
         }
         return "Governor";
     }
@@ -367,32 +430,13 @@ static public class Faction
         {
             if (ideology.Value > 0.0f)
             {
-                rv += ideology.Key.ToString() +": "+ Mathf.Round(ideology.Value*100f) +"%\n";
+                rv += ideology.Key.ToString() + ": " + Mathf.Round(ideology.Value * 100f) + "%\n";
             }
         }
         return rv;
     }
-}
-
-
-public class FactionData
-{
-    // faction rulers
-    public Dictionary<Faction.FactionID, string> ruler = new Dictionary<Faction.FactionID, string>();
-
-
-    public FactionData(string data)
+    static public bool isNobleHouse(FactionID faction)
     {
-        // randomize rulers -- get the HQ -location ruler?
-        ruler[Faction.FactionID.noble1] = NameGenerator.getName(Faction.FactionID.noble1);
-        ruler[Faction.FactionID.noble2] = NameGenerator.getName(Faction.FactionID.noble2);
-        ruler[Faction.FactionID.noble3] = NameGenerator.getName(Faction.FactionID.noble3);
-        ruler[Faction.FactionID.noble4] = "Calius Valeria"; //NameGenerator.getName(Faction.FactionID.noble4);
-        ruler[Faction.FactionID.guild1] = NameGenerator.getName(Faction.FactionID.guild1);
-        ruler[Faction.FactionID.guild2] = NameGenerator.getName(Faction.FactionID.guild2);
-        ruler[Faction.FactionID.guild3] = NameGenerator.getName(Faction.FactionID.guild3);
-        ruler[Faction.FactionID.church] = NameGenerator.getName(Faction.FactionID.church);
-        ruler[Faction.FactionID.heretic]= NameGenerator.getName(Faction.FactionID.heretic);
+        return (faction == FactionID.noble1 || faction == FactionID.noble2 || faction == FactionID.noble3 || faction == FactionID.noble4);
     }
-
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameSettings : MonoBehaviour
+public class GameSettings
 {
     // TODO: save, serialize
 
@@ -12,7 +12,7 @@ public class GameSettings : MonoBehaviour
         //tooltip
     public bool toolTipsOn = true;
     public float toolTipDelay = 0.5f;
-
+    public Vector3 toolTipOffset = new Vector3(0, 15, 0);
 
 
 

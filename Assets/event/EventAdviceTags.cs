@@ -11,7 +11,7 @@ static public class EventAdviceTags
     {
         if (tagString == null || c == null)
         {
-            Debug.LogError("ERROR: null inputs. tagString: " + tagString + ", Character.name: " + "NOT IMPLEMENTED");
+            Debug.LogError("ERROR: null inputs. tagString: " + tagString + ", Character.name: " + c.name);
             return tagString;
         }
         // key: tagFound - see if more. Value: tagString
@@ -21,8 +21,9 @@ static public class EventAdviceTags
         while (check.Key)
         {
             check = resolveTag(check.Value, c);
+            //if (check.Key) Debug.Log("resolved: " + check.Value);
         }
-
+        //Debug.Log("resolveTags: "+check.Value);
         return check.Value;
     }
 

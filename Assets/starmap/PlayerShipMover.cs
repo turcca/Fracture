@@ -10,7 +10,7 @@ public class PlayerShipMover : MonoBehaviour
 
     public PlayerShipMover()
     {
-        speed = Simulation.Parameters.getPlayerShipSpeed();
+        speed = Simulation.Parameters.getPlayerShipSpeed(); // TODO
         rotationSpeed = speed / 5.0f;
     }
 

@@ -25,7 +25,16 @@ public class MenuExtensions : MonoBehaviour
     {
         Debug.Log("Generating events...");
         EventGenerator eg = new EventGenerator();
-        eg.generateEvents(Application.dataPath + "/data/events.txt");
+        string path = Application.dataPath + "/data/";
+        string[] files = 
+            {
+            // all event .txt files to be read into events
+            path +"events.txt"
+            //path +"events_triggerPatch.txt",
+            //path +"events_intro_valerian.txt"
+        };
+        foreach (string s in files) Debug.Log("Adding file: " + s);
+        eg.generateEvents(files);
         Debug.Log("...done!");
     }
 }

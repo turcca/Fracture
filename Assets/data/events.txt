@@ -136,6 +136,48 @@ It's also the way we open or close the portal we carry in us."
 @a priest { TheAdvisor.getStat("holiness") >= 2 } "We must stop the spread of these deviations from Approved Procedures. At once." = 809
 @a priest "Perhaps a silent meditation will bring clarity to the issue." = 808
 
+#at 1c02 arch beacon
+/* first time coming at arch */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@location = getLocation(1C02)
+@trigger = atLocation
+@p { event["loc_advice_1C02"].outcome = 0 } = 0
+@t {o = 0} "There is an extremely strong beacon here, at the other side of the fracture."
+@c {o = 0} "Continue." = 981
+@o {c = 981} = 982 $=available = false $=end
+@a captain { TheAdvisor.getStat("navigation") >= 1 } "The Arch."
+@a captain "We are by the Arch now, aren't we?"
+@a navigator { TheAdvisor.getStat("navigation") >= 3 } "The Arch beacon, it is our lifeline on this sector. It used to connect this sector to Orion sectors, but no longer."
+@a navigator "The Arch beacon can be located most of the time everywhere in the sector."
+@a engineer { TheAdvisor.getStat("engineering") >= 2 } "It is a wonder, how we used to build these technological marvels that can penetrate even the heart of the fracture."
+@a engineer "I can't imagine what goes into building a fracture beacon like this."
+@a quartermaster "Are we stopping here? I'll have to draw crew recreation rotation."
+
+#at 1c08 first found
+/* First time player comes to the Gardens of Augustus */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@location = getLocation(1C08)
+@trigger = atLocation
+@p { event["loc_advice_1C08"].outcome = 0 } = 0
+@t {o = 0} "There is a colony here, but there is no active fracture beacon."
+@c {o = 0} "Continue" = 919
+@o {c = 919} = 920 $=available = false $=end
+@a captain "If they have turned their beacon off by purpose, they do not want to be found. Will they let us leave, once we have entered?"
+@a navigator { TheAdvisor.getStat("navigation") >= 3 } "This colony is not on any Imperial navigation charts, but I have acquired records of the Old Furia. I believe there are matching references to a small resort called Gardens of Augustus."
+@a navigator "This colony is not on any Imperial navigation charts. I had no idea there was something so far out here."
+@a engineer "Fracture beacons are lighthouses and landmarks for ships in the fracture. Some worlds have been unable to maintain them, and so they fall off the grid."
+@a security "We are taking an awful risk by even getting this close to it."
+@a quartermaster "There is always quite a lot of tension when encountering worlds without active beacons. It is not unheard of for ships to be seized by places like this."
+@a psycher { TheAdvisor.getStat("psy") >= 4 AND TheAdvisor.getStat("precognition") >= 2 } "It's a small world, but they have developed strong affinity with the fracture. I believe they are hiding."
+@a psycher { TheAdvisor.getStat("psy") >= 3 } "It's a small world, but they have developed strong affinity with the fracture."
+@a psycher "So, uh. What we have here is a colony that is not shown on the map."
+@a psycher { TheAdvisor.getStat("psy") >= 1 } "It's a small colony."
+@a priest "Lost colonies of man. They need to be brought back into the fold. Enlightenment awaits!"
+
 #contact_noble4
 /* House Valeria */
 @frequency "Default"
@@ -143,14 +185,14 @@ It's also the way we open or close the portal we carry in us."
 @ambient "DefaultBridge"
 @f "contact_factions"
 @p = 0
-@t {o = 0} "I am the representative of House Valeria at +getCurrentLocation().name+."
-@c {o = 0} "Continue" = 901
-@o {c = 901} = 902
-@t {o = 902} "sdhsdh"
-@c {o = 902} "sdhsdgh" = 911
-@o {c = 911} = 915 $=end
 @c {o = 0} "Leave" = 908
 @o {c = 908} = 909 $=resetOutcome $=end
+@c {o = 0} "Continue" = 901
+@o {c = 901} = 902
+@t {o = 0} "Greetings,
+
+I am +getCurrentLocation().factionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+."
+@t {o = 0} ""
 
 #core singers
 /* If engine room's 'core singers' are allowed to be */
@@ -247,6 +289,89 @@ It's also the way we open or close the portal we carry in us."
 @a psycher "Hmm."
 @a priest "I sahould pray for guidance."
 
+#in 1c08 first enter
+/* The first time the hiding colony of the Gardens of Augustus is entered */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@location = getLocation(1C08)
+@trigger = inLocation
+@p { event["at 1c08 first found"].outcome = 0 } = 0
+@t {o = 0} "Immediately after transit, ship comms crackles on by a radio transmission from a nearby source. It will take a moment for the ship sensors to come back online and give more information.
+
+<INCOMING TRANSMISSION>
+
+WARNING TO ENTERING +getShip().getShipTypeAndName().ToUpper()+!
+YOU ARE AN UNLICENSED SHIP.
+PREPARE TO BE BOARDED."
+@c {o = 0} "Try to establish communications and try to negotiate a passage." = 925
+@o {c = 925} = 927
+@c {o = 927} "End the call, and prep the engines for a fall back into the fracture." = 953
+@o {c = 953} = 954
+@c {o = 954} "Leave." = 969
+@o {c = 969} = 970 $=resetOutcome $=end $=leaveLocation()
+@t {o = 954} "With a ship-shuddering groan, the core charge up for an emergency fracture fall.
+
+The frigate boosts its engines to close in. There is a gleam in its prow as the ship alarm howls, reporting a hit from a laser weapon.
+
+And the ship falls back into the fracture."
+@c {o = 927} "Declare yourself as an envoy from the Noble House Valeria. Promise not to share the location of this colony." = 945
+@o {c = 945} = 946
+@t {o = 946} "You receive a message that you have been granted a license for the station, but it is restricted from official Noble House business.
+
+They also warn against betrayal, as they have intelligence assets outside the station."
+@c {o = 946} "Dock with the station." = 957
+@o {c = 957} = 960 $=available = false $=end
+@c {o = 927} "End the call, and prepare for combat." = 955
+@o {c = 955} = 990 $=resetOutcome $=end $=startCombat()
+@t {o = 927} "It seems there is a small standard space station nearby, orbiting a lush planet below. Not much more is seen, as the powerful station sensors are flooding the ship sensors. A frigate can be seen detaching from the station.
+
+Someone from the station connects with you, demanding for you to declare your affiliations, as well as your promise never to reveal this location to outsiders."
+@c {o = 927} "Declare yourself as an independent operator, seeking private contracts. Promise not to share the location of this colony." = 949
+@o {c = 949} = 951
+@t {o = 951} "You receive a message that you have been granted a license for the station, and they welcome your business, as well as your discretion.
+
+They also warn against betrayal, as they have intelligence assets outside the station."
+@c {o = 951} "Dock with the station." = 964
+@o {c = 964} = 965 $=available = false $=end
+@c {o = 0} "Transmit peaceful message on all frequencies while prepping the engines for a fall back into the fracture." = 926
+@o {c = 926} = 928
+@c {o = 928} "Leave." = 935
+@o {c = 935} = 936 $=resetOutcome $=end $=leaveLocation()
+@t {o = 928} "With a ship-shuddering groan, the core charge up for an emergency fracture fall. The combat screen is lit up as the station's scanners light the ship up. A frigate detaches from the station and starts to swings around. 
+
+Scanners are mostly blinded by station's active scanners, but a small standard space station is seen orbiting a lush planet. Sensor readings on life forms are inconclusive. 
+
+And the ship falls back into the fracture."
+@c {o = 0} "Prepare for combat." = 929
+@o {c = 929} = 930
+@c {o = 930} "Start combat." = 975
+@o {c = 975} = 976 $=resetOutcome $=end $=startCombat()
+@t {o = 930} "A frigate detaches from the station and swings around to point at your ship like an accusing finger on the intruder. Combat screen lights up by strong sensors from the station painting the ship white against the empty space.
+
+[TODO]"
+@a captain { TheAdvisor.getStat("holiness") >= 2 } "It is our duty to find out about this place."
+@a captain { TheAdvisor.getStat("diplomat") >= 3 } "Let's try to negotiate a safe passage. It would be good to have extra trading partner and a haven out here." = 925
+@a captain { TheAdvisor.getStat("spaceBattle") >= 2 } "It's a precarious situation at best. We should play it safe and get out while we can." = 926
+@a captain "Is it an automated message? Maybe we should try to contact them."
+@a navigator { TheAdvisor.getStat("navigation") >= 2 } "This must be the Gardens of Augustus."
+@a navigator "No beacon, but here they are."
+@a engineer { TheAdvisor.getStat("engineering") >= 1 } "If we want to leave, we need to start the prep ASAP."
+@a engineer "It will take a moment for our sensors to adjust from the shift to normal space. You see, our sensors are shielded against fracture energies and can operate there, but the spike coming from the transition overloads many of our systems and they need to be booted up..."
+@a security { TheAdvisor.getStat("violent") >= 2 } "Prep for combat!" = 929
+@a security { TheAdvisor.getStat("spaceBattle") >= 3 } "Before we know what's in here, it is a very risky situation. Every moment lost in deliberations reduces our chances to get away, if there is more than we can handle." = 926
+@a security { TheAdvisor.getStat("security") >= 2 } "If there is a colony down there, it is likely there is a standard space station as well. In that case, we need a big ship to deal with it. And I mean 'big'."
+@a security "Before we know what's in here, it is a very risky situation."
+@a quartermaster { TheAdvisor.getStat("violent") < 2 } "Okay, they'll want assurances. But we should be able to talk our way in." = 925
+@a quartermaster "We're not welcome, time to leave!" = 926
+@a psycher { TheAdvisor.getStat("psy") >= 2 } "There is a lot of raw potential here. No more than 20 million people."
+@a psycher { TheAdvisor.getStat("psy") >= 2 AND TheAdvisor.isIdeology("brotherhood") } "Worlds like there often have no control over their brothers. I sense a lot of untamed minds here. No more than 20 million people."
+@a psycher { TheAdvisor.getStat("precognition") >= 3 } "There is danger here, and no half measures. Either convince them, or we leave. Now."
+@a psycher { TheAdvisor.getStat("psy") >= 1 } "It is hard for me to get a sense of how many there are. It feels different here."
+@a psycher "I should meditate to find answers."
+@a priest { TheAdvisor.getStat("holiness") >= 2 } "There is only one reason to turn out your fracture beacon, and it's because they are up to no good."
+@a priest "To live in isolation is to invite a catastrophe one world can't solve. It would be in their best interests to cooperate with others."
+
 #intro Valeria1t
 /* trigger (1C07) INTRO 1 - Regulus and aristocrat's pledge */
 @frequency "Default"
@@ -255,17 +380,31 @@ It's also the way we open or close the portal we carry in us."
 @f "intro_Valeria"
 @f "intro"
 @location = getLocation(1C07)
+@trigger = inLocation
 @t {o = 0} "Consul Regulus Valeria asks Valerian captains in orbit to publicly pledge their protection of Valerian colonies, and to keep the Dacei from interloping in Valerian interests."
 @c {o = 0} "Join the pledge." = 708
 @o {c = 708} = 710
-@t {o = 710} "Consul Regulus and several Valerian captains appear in public with a strong statement. Dacei envoy responds by calling it an aggression. Among the captains, Regulus asks if anyone have the guts to poke around in Dacei shipping lines to see what they are doing. He'd be interested in the content of their transports."
+@t {o = 710} "Consul Regulus and several Valerian captains appear in public with a strong statement. Dacei envoy responds by calling it an aggression. Among the captains, Regulus asks if anyone have the guts to poke around in Dacei shipping lines to see what they are doing. He'd be interested in the contents of their transports."
 @c {o = 710} "Continue." = 712
 @o {c = 712} = 713 $=available = false $=end
 @c {o = 0} "Stay out of it." = 709
 @o {c = 709} = 716 $=available = false $=end
+@a captain { TheAdvisor.isIdeology("liberal") } "Consul Regulus has come from the sector Capital to succeed the retiring Lord Calius Valeria. Planetary governor Evander is the other nominee for the position, smart and sensible." = 709
 @a captain { TheAdvisor.isIdeology("aristocrat") } "This can get us some recognition. And it's a strong statement. Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position." = 708
-@a captain { TheAdvisor.isIdeology("liberal") } "Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position. If we join this chest-thumping, it will bring attention to us." = 709
+@a captain "Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position."
 @a navigator "Many eyes are upon us. We should consider this carefully."
+@a engineer { TheAdvisor.isIdeology("liberal") } "&No&, Consuls are high-level politicians and we're about to be used." = 709
+@a engineer { TheAdvisor.isIdeology("aristocrat") } "The Consul is one of the Great Council leaders from New Mercury. He is an insider and has considerable influence across the sector." = 708
+@a engineer "I'm not very political. Anyone else?"
+@a security { TheAdvisor.isIdeology("liberal") } "I'm not sure we'll be better off participating in this sabre rattling. Regulus is doing this to score points against his political opponent." = 709
+@a security { TheAdvisor.isIdeology("aristocrat") } "Regulus is our man. Trust me, you won't regret it." = 708
+@a security "Political theater. We can be played, or benefit from it. Regulus is a strong leader, and I am up for giving it a try." = 708
+@a quartermaster { TheAdvisor.isIdeology("liberal") } "Consul Regulus is not very popular among the locals. We might have harder time recruiting from here, if we support Regulus." = 709
+@a quartermaster { TheAdvisor.isIdeology("aristocrat") } "We should do the pledge. It's a show of force, and we want to tie those" = 708
+@a quartermaster { TheAdvisor.isIdeology("transhumanist") } "I don't think so, &no&. Consul is one of the top aristocrats. They care for nothing but their own political agendas. I want nothing to do with it." = 709
+@a quartermaster "Consul Regulus is not very popular among the locals in +getLocation().name+, but he has some fleet captains supporting him. We might be able to get some ties to Valerian military." = 708
+@a psycher "The Consul is a powerful individual, and he carries influence among the imperialists."
+@a priest "The Consul is asking us, and it is our duty to answer his call." = 708
 
 #intro Valeria2t
 /* trigger (1C07) INTRO 2 - Evander's political dinner */
@@ -275,18 +414,27 @@ It's also the way we open or close the portal we carry in us."
 @f "intro_Valeria"
 @f "intro"
 @location = getLocation(1C07)
+@trigger = inLocation
 @p { event["intro Valeria1t"].outcome = 0 OR event["intro Valeria1t"].outcome = 713 } = 0
-@t {o = 0} "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites you to an official dinner to discuss local matters."
-@c {o = 0} "Go to the official dinner." = 721
+@t {o = 0} "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites the top brass to an official dinner to discuss local matters."
+@c {o = 0} "Attend the official dinner." = 721
 @o {c = 721} = 726
 @c {o = 726} "Continue." = 728
 @o {c = 728} = 729 $=available = false $=end
-@t {o = 726} "Exarch Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planetwide repeatedly over the next few days. In private, Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are well prepared for aggression."
+@t {o = 726} "Exarch Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planet wide repeatedly over the next few days. In private, Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are gearing up for aggression."
 @c {o = 0} "Excuse yourself." = 722
 @o {c = 722} = 723 $=available = false $=end
-@a captain { TheAdvisor.isIdeology("aristocrat") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political manouvering." = 722
+@a captain { TheAdvisor.isIdeology("aristocrat") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political maneuvering." = 722
 @a captain { TheAdvisor.isIdeology("liberal") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Exarch Evander is popular, and his attention would reflect well on us." = 721
 @a navigator "The symmetry of politics. We are being weighted."
+@a engineer { TheAdvisor.isIdeology("liberal") } "Of course. We must not refuse this man." = 721
+@a engineer { TheAdvisor.isIdeology("aristocrat") } "No, I don't think so. I mean, there is so much to do and we're on a tight schedule." = 722
+@a engineer "I'm not very political. But I told you we were being used and I will tell you again."
+@a security { TheAdvisor.isIdeology("aristocrat") } "After refusing the pledge, Consul Regulus will not look at us favorably, if we now start supporting his political opponents." = 722
+@a security "The navy is courted by the political rivals. So far it's just political and I hope there won't be an escalation in the internal politics of House Valeria."
+@a quartermaster "I wonder what kind of a man Consul Regulus is. If he takes this as a snub from us, it's not good. If we refuse, it's a snub against the Exarch."
+@a psycher "I am a little bit preoccupied at the moment."
+@a priest "I'm not sure we can accept now, when we just turned down a Consul." = 722
 
 #intro Valeria3t
 /* trigger (1C07) INTRO 3 - Calius' private message on artifacts */
@@ -296,16 +444,26 @@ It's also the way we open or close the portal we carry in us."
 @f "intro_Valeria"
 @f "intro"
 @location = getLocation(1C07)
+@trigger = inLocation
 @p { event["intro Valeria2t"].outcome = 0 OR event["intro Valeria2t"].outcome = 729 } = 0
-@t {o = 0} "Incoming private message:
+@t {o = 0} "<Incoming private message>
 
-'Artifacts of the grey past are being transported in the Sovereign Void. You might be the one who brings one for me.'            
+Captain +getCharacter(Character.Job.captain).name+,
+
+I have noted your discretion in the recent political ramp up. And I have use for someone with a measure of discression. Artifacts of the grey past are being transported in the Sovereign Void on board Dacei transports. I would be very interested in acquiring one.'            
+
 
 -Lord Calius Valeria"
 @c {o = 0} "Continue." = 734
 @o {c = 734} = 735 $=available = false $=end
 @a captain "Lord Calius is one of the most powerful persons in the sector, but it may change soon."
 @a navigator "In whispers, Calius is called a powerful fracture bender."
+@a engineer { TheAdvisor.getStat("scientist") >= 1 } "I have heard of these dig sites that have found some old buried things, but I haven't heard them being found in the Sovereign Void. Nor that top officials are acquiring them. They are considered highly illegal by the Church."
+@a engineer "These are highly illegal artifacts. I've heard the Church is hunting them down."
+@a security "I'm not sure that is meant for our eyes. But if we get involved, we have to be very discreet."
+@a quartermaster "Lord Calius does not appear in public, and publicly very little is known about him."
+@a psycher "Calius Valeria. Most interesting. I will be very curious about what these 'artifacts' are."
+@a priest "Church position on any 'artifacts' is absolute. The Inquisition will be after us, if we start doing this."
 
 #loc_advice
 /* default for location advices */
@@ -422,7 +580,8 @@ It's also the way we open or close the portal we carry in us."
 @a captain "Valerian capital world."
 @a navigator "Valerian Navigators are trained here, at the Academy. They are very good."
 @a engineer "I wouldn't mind getting staffed here."
-@a security "Not much in the sense of military besides the House Guard. Academics have little use for weapons, it seems. Hope it won't backfire all the way into their ivory towers."
+@a security { TheAdvisor.getStat("security") < 0 } "The strength of Valeria is in knowledge, and in their ships."
+@a security "Not much in the sense of military on the ground, besides the House Guard. Academics have little use for weapons, it seems. Hope it won't backfire all the way into their ivory towers."
 @a quartermaster "The Academy supplies skilled specialists sought throughout the sector."
 @a psycher "Beyond the Horizon has many great thinkers. And the smartest of them are thinking quietly."
 @a priest "It shouldn't be said of one of the great Noble Houses of the Imperium, but Valerians have always made me ask how did they pull it off."
@@ -451,11 +610,25 @@ It's also the way we open or close the portal we carry in us."
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C09)
-@trigger = getLocation(1C09)
+@trigger = atLocation
 @a captain "A grim world robbed of function. And yet, old rituals are maintained generations after generations."
 @a navigator "The Mortuary is a lone world at the edge of the sector. The path here is little travelled, a mere thread running in the Fracture. Sicent oblivion, a fitting fate."
 @a security "Grave robbers can be resourceful and in possession of all kinds of old technology. We should keep an eye on who we pick up here."
 @a quartermaster "A solemn place."
 @a psycher "I wonder if the rumours are true. I can't feel anything below, it's all quiet."
 @a priest "It is a holy place, secluded and alone. That is why they have avoided temptation and stayed pure."
+
+#loc_advice_2V01
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V01)
+
+#loc_advice_2V02
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V01)
 

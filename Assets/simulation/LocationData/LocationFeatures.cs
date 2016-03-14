@@ -18,6 +18,7 @@ namespace Data
         public Dictionary<Faction.IdeologyID, float> baseIdeology = new Dictionary<Faction.IdeologyID, float>();
         public Dictionary<Faction.FactionID, string> ruler = new Dictionary<Faction.FactionID, string>();
 
+        // faction headquarters
         public Faction.FactionID? hq = null;
 
         public Dictionary<Resource.Type, float> resourceMultiplier = new Dictionary<Resource.Type, float>(); // location feature multiplier
@@ -39,14 +40,13 @@ namespace Data
             foreach (Faction.FactionID faction in System.Enum.GetValues(typeof(Faction.FactionID)))
             {
                 factionCtrl.Add(faction, 0.0f);
-                ruler.Add (faction, NameGenerator.getName(faction));
+                ruler.Add(faction, NameGenerator.getName(faction));
             }
             foreach (Faction.IdeologyID ideology in System.Enum.GetValues(typeof(Faction.IdeologyID)))
             {
                 baseIdeology.Add(ideology, 0.0f);
             }
         }
-
 
         public string toDebugString()
         {

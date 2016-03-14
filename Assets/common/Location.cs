@@ -16,8 +16,6 @@ public class Location
     public string id { get; private set; }
     public Vector3 position { get; private set; }
 
-    public string ruler { get; private set; }
-
     public Simulation.LocationEconomy economy;
     public Simulation.LocationIdeology ideology;
     public Data.LocationFeatures features
@@ -40,7 +38,8 @@ public class Location
         this.ideology = new Simulation.LocationIdeology(this);
         this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
 
-        this.ruler = getRuler();
+        // if HQ, load name from Factions data
+        if (data.features.hq != null) data.features.ruler[(Faction.FactionID)data.features.hq] = Root.game.factions.getRuler((Faction.FactionID)data.features.hq);
     }
     
     public void tick(float days)
@@ -58,9 +57,31 @@ public class Location
             //"---\n" + "Assets:\n" + .toDebugString();
     }
 
+    /// <summary>
+    /// eg. "House Valeria Governor", "Councillor of the Everlasting Union"
+    /// </summary>
+    /// <returns></returns>
+    public string ruler() { return getRuler(); }
+    /// <summary>
+    /// eg. "Calius Valeria" (Faction.FactionID.noble4)
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public string factionHeadName(Faction.FactionID faction) { return Faction.getTwoPartNameForFactionMember(faction, getLocalFactionRulerName(faction)); }
+    /// <summary>
+    /// eg. "Governor Calius Valeria" (Faction.FactionID.noble4)
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public string factionHeadTitleAndName(Faction.FactionID faction) { return Faction.getTitle(faction, Simulation.Parameters.getGovernmentStr(this)) + " " + factionHeadName(faction); } 
+
     public string getRuler()
     {
         return ideology.getRuler();
+    }
+    public string getLocalFactionRulerName(Faction.FactionID faction)
+    {
+        return features.ruler[faction];
     }
 
 
@@ -93,7 +114,7 @@ public class Location
         return null;
     }
 
-    public List<Data.TradeItem> getLocationTradeList() // CHECK CHECK CHECK CHECK CHECK CHECK 
+    public List<Data.TradeItem> getLocationTradeList()
     {
         List<Data.TradeItem> tradeList = new List<Data.TradeItem>();
         int tier = 1;

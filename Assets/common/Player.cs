@@ -55,7 +55,10 @@ public class Player
 
     private float elapsedDays = 0;  // SAVE
 
-    PlayerShip playerShip = new PlayerShip("cruiser");
+    public PlayerShip playerShip;
+    public PlayerCrew playerCrew;
+    public ShipBonuses shipBonuses;
+    public PlayerReputation playerReputation = new PlayerReputation(Faction.FactionID.noble4); // TODO INTRO setting Valeria as faction for reputations
 
     public Player()
     {
@@ -63,29 +66,27 @@ public class Player
 
     public void init()
     {
-        // starting characters initialized (todo: move to game init with game setup menus)
+        // starting characters initialized (TODO: move to game init with game setup menus)
         createCharacter(Character.Job.captain, "starting captain");
         createCharacter(Character.Job.navigator, "starting navigator");
-        createCharacter(Character.Job.engineer/*, "engineer"*/);
-        createCharacter(Character.Job.security/*, "security"*/);
-        createCharacter(Character.Job.quartermaster/*, "quartermaster"*/);
+        createCharacter(Character.Job.engineer, "demo engineer");
+        createCharacter(Character.Job.security, "demo security");
+        createCharacter(Character.Job.quartermaster, "demo quartermaster");
         createCharacter(Character.Job.psycher, "brotherhood");
+
+        playerShip = new PlayerShip("cruiser");
+        playerCrew = new PlayerCrew(Root.game.player.getClosestHabitat());
+        shipBonuses = new ShipBonuses();
 
     }
     public void createCharacter(Character.Job? assignment = null, string templateName = null) // job parameter will try to assign character to the job
     {
         Character c = CharacterTemplates.getCharacter(templateName);
+        characters.Add(c.id, c);
 
-        if (assignment == null)
+        if (assignment != null)
         {
-            characters.Add(c.id, c);
-        }
-        else
-        {
-            Character.Job job = (Character.Job)assignment;
-            characters.Add(c.id, c);
-            if (!advisors.ContainsKey(job)) advisors.Add(job, c.id);
-            c.assignment = job;
+            setAdvisor((Character.Job)assignment, c.id);
         }
     }
 
@@ -96,7 +97,7 @@ public class Player
 
     public float getWarpMagnitude()
     {
-        return (float)warpMagnitude*6.0f;
+        return (float)warpMagnitude*6.0f; // hard coded fracture multiplier 0-6
     }
     public void setWarpMagnitude(double mag)
     {
@@ -105,6 +106,13 @@ public class Player
     public double getRawWarpMagnitude()
     {
         return warpMagnitude;
+    }
+    public bool isAtLocation()
+    {
+        if (GameState.isState(GameState.State.Starmap) &&
+            locationId != "")
+            return true;
+        return false;
     }
 
     public Character getAdvisor(Character.Job job)
@@ -127,10 +135,21 @@ public class Player
         }
         else
         {
+            Debug.LogWarning("returning empty character by id request: " + id);
             return Character.Empty;
         }
     }
-
+    public Character[] getAdvisors()
+    {
+        Character[] copy = new Character[advisors.Count];
+        int n = 0;
+        foreach (int id in advisors.Values)
+        {
+            copy[n] = getCharacter(id);
+            n++;
+        }
+        return copy;
+    }
     public Character[] getCharacters()
     {
         Character[] copy = new Character[characters.Count];
@@ -172,14 +191,26 @@ public class Player
 
     public void setAdvisor(Character.Job job, int id)
     {
+        Character c = getCharacter(id);
+
+        if (c.assignment == job) return;
+
         foreach (var pair in advisors)
         {
+            // remove character from previous assignment
             if (pair.Value == id)
             {
                 advisors.Remove(pair.Key);
-                break;
+            }
+            // remove previous character from that same assignmnent
+            if (pair.Key == job)
+            {
+                getCharacter(pair.Value).assignment = Character.Job.none;
+                advisors.Remove(pair.Key);
             }
         }
+        c.assignment = job;
+        c.characterTrait = c.getBestCharacterTrait(job);
 
         advisors[job] = getCharacter(id).id;
     }
