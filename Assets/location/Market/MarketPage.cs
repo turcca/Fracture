@@ -107,7 +107,7 @@ public class MarketPage : MonoBehaviour
             playerCargo.text += Root.game.player.cargo.hasFreeCargoSpace() ? "" : "<color=#FF6070>"; // cargo full = red text
             playerCargo.text += Root.game.player.cargo.getUsedCargoSpace();
             playerCargo.text += Root.game.player.cargo.hasFreeCargoSpace() ? "" : "</color>"; // /cargo full
-            playerCargo.text += " / " +Root.game.player.cargo.maxCargoSpace;
+            playerCargo.text += " / " +Root.game.player.cargo.getMaxCargoSpace();
         }
         else Debug.LogError ("ERROR: playerCargo not set in Editor");
     }

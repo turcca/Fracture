@@ -61,6 +61,28 @@ public class ShipBonuses
         foreach (ShipBonus bonus in Enum.GetValues(typeof(ShipBonus))) items.Add(bonus, new List<ShipBonusItem>());
     }
 
+    public int getTotalBonus(string parseEnum)
+    {
+        ShipBonus? bonusType = null;
+        ShipBonusCathegory? bonusCathegory = null;
+
+        // check if ShipBonus
+        try
+        {
+            bonusType = (ShipBonus?)Enum.Parse(typeof(ShipBonus), parseEnum);
+        }
+        catch (Exception)
+        {
+            //throw;
+        }
+        if (bonusType != null) return getTotalBonus((ShipBonus)bonusType);
+        // check if ShipBonusCathegory
+        bonusCathegory = (ShipBonusCathegory?) Enum.Parse(typeof(ShipBonusCathegory), parseEnum);
+        if (bonusCathegory != null) return getTotalBonus((ShipBonusCathegory)bonusCathegory);
+        
+        Debug.LogError("Unable to parse ('" + parseEnum + "') into 'ShipBonus' or 'ShipBonusCathegory'");
+        return 0;
+    }
     /// <summary>
     /// ship (int)value for particular bonus
     /// eg. getTotalBonus(ShipBonus.Happiness) = +2
@@ -318,7 +340,7 @@ public enum ShipBonus
     /// </summary>
     Link,
     /// <summary>
-    /// Fracture tranverse speed
+    /// Fracture traverse speed
     /// </summary>
     Speed,
     /// <summary>

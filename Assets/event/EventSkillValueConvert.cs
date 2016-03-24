@@ -6,35 +6,12 @@ using System.Text.RegularExpressions;
 
 static public class EventSkillValueConvert
 {
-    static public string getSkillValue(string parseString)
-    {
-        string rv = parseString;
-        bool isConverted = false;
-        string[] splitStrings = splitString(parseString);
-        for (int i = 0; i < splitStrings.Length; ++i)
-        {
-            foreach (string skillName in Character.getSkillNames())
-            {
-                if (splitStrings[i].Contains(skillName))
-                {
-                    splitStrings[i] = getIngameSkillValue(splitStrings[i], skillName);
-                    isConverted = true;
-                    break;
-                }
-            }
-        }
-        if (isConverted)
-        {
-            rv = "";
-            foreach (string str in splitStrings)
-            {
-                rv += " " + str;
-            }
-        }
-        return rv;
-    }
 
-    // advisor tag parse
+    /// <summary>
+    /// advisor tag parse (custom, not for general use!)
+    /// </summary>
+    /// <param name="parseString"></param>
+    /// <returns></returns>
     static public string getSkillValueFromEntireLine(string parseString)
     {
         // NOTE: parseString is trimmed
@@ -82,16 +59,51 @@ static public class EventSkillValueConvert
         else return parseString;
     }
 
-    static private int convertValue(string skill, int value)
+    private static string getSkillValue(string parseString)
     {
+        string rv = parseString;
+        bool isConverted = false;
+        string[] splitStrings = splitString(parseString);
+        for (int i = 0; i < splitStrings.Length; ++i)
+        {
+            foreach (string skillName in Character.getSkillNames())
+            {
+                if (splitStrings[i].Contains(skillName))
+                {
+                    splitStrings[i] = getIngameSkillValue(splitStrings[i], skillName);
+                    isConverted = true;
+                    break;
+                }
+            }
+        }
+        if (isConverted)
+        {
+            rv = "";
+            foreach (string str in splitStrings)
+            {
+                rv += " " + str;
+            }
+        }
+        return rv;
+    }
+
+    public static int convertValue(string skill, int value)
+    {
+        if ((Character.Stat?)Enum.Parse(typeof(Character.Stat), skill) == null) Debug.LogError("Invalid skill input: " + skill);
         return convertValue((Character.Stat)Enum.Parse(typeof(Character.Stat), skill), value);
     }
-    static private int convertValue(Character.Stat skill, int value)
+    /// <summary>
+    /// event-based value (-6 - 6) converted to in-game value
+    /// </summary>
+    /// <param name="skill"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private static int convertValue(Character.Stat skill, int value)
     {
         // check bounds, if outside return raw number
-        if (value < -6 || value > 6)
+        if (value < -3 || value > 6)
         {
-            //Debug.LogWarning("WARNING: '"+skill+"' value out of bounds: "+value);
+            Debug.LogWarning("WARNING: '"+skill+"' value out of bounds: "+value);
             return value;
         }
         int newValue = 0;

@@ -57,7 +57,7 @@ public class ShipyardPage : MonoBehaviour
                 resetStatsValue(i);
             }
             // hide buy-button
-            tradeButton.enabled = false;
+            tradeButton.interactable = false;
             tradeButtonLabel.text = "Trade";
         }
         else
@@ -69,12 +69,44 @@ public class ShipyardPage : MonoBehaviour
             {
                 setStatsValue(i);
             }
+
             // show buy -button
+            string toolTipInfo = "";
+            tradeButton.interactable = true;
             // check player local rep & cash
-            tradeButton.enabled = (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) < compareShipStats.reqRelations) ? false : // not enough relation capital    // TODO: link to location relations --> "25f <"
-                (Root.game.player.cargo.credits + playerShipStats.value() - compareShipStats.value() < 0) ? false : true; // enough cash
+            bool enoughRep  = (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) >= compareShipStats.reqRelations);                   // enough relation capital 
+            bool enoughCash = (Root.game.player.cargo.credits + playerShipStats.value() - compareShipStats.value() >= 0);                                           // enough cash
+            bool enoughTech = (Root.game.player.getLocation().economy.technologies[compareShipStats.reqTechType].level >= compareShipStats.getRequiredTechLevel()); // enough tech
+
+            if (enoughTech == false)
+            {
+                toolTipInfo += "Not enough tech. NOTE: How is this button even here?";
+                tradeButton.interactable = false;
+            }
+            if (enoughRep == false)
+            {
+                if (tradeButton.IsInteractable() == false)
+                    toolTipInfo += "\n";
+                else
+                    tradeButton.interactable = false;
+                toolTipInfo += "Not enough reputation ("+ Mathf.Round(Root.game.player.playerReputation.getReputation(Root.game.player.getLocation())*10f)/10f + "/"+ (int)compareShipStats.reqRelations + ")";
+            }
+            if (enoughCash == false)
+            {
+                if (tradeButton.IsInteractable() == false)
+                    toolTipInfo += "\n";
+                else
+                    tradeButton.interactable = false;
+                toolTipInfo += "Not enough cash.";
+            }
+            tradeButton.GetComponent<ToolTipScript>().toolTip = toolTipInfo;
+     
             tradeButtonLabel.text = (playerShipStats.value() - compareShipStats.value() > 0f) ? "Trade: +" : "Trade: ";
             tradeButtonLabel.text += formatNumberToString( playerShipStats.value() - compareShipStats.value() );
+            if (tradeButton.IsInteractable())
+                tradeButtonLabel.color = new Color(1, 1, 1);
+            else
+                tradeButtonLabel.color = new Color(.6f, .6f, .6f);
         }
     }
     void resetStatsValue(int i)
@@ -206,11 +238,11 @@ public class ShipyardPage : MonoBehaviour
                 rc = check == null ? grey : (bool)check ? green : red;
                 break;
             case "S crew":
-                rs =  formatNumberToString(playerShipStats.crew());
+                rs =  formatNumberToString(playerShipStats.crewCapacity());
                 break;
             case "C crew":
-                check = compareStats(playerShipStats.crew(), compareShipStats.crew(), true);
-                rs = check == null ? same : formatNumberToString(compareShipStats.crew());
+                check = compareStats(playerShipStats.crewCapacity(), compareShipStats.crewCapacity(), true);
+                rs = check == null ? same : formatNumberToString(compareShipStats.crewCapacity());
                 rc = check == null ? grey : (bool)check ? green : red;
                 break;
 
@@ -268,31 +300,39 @@ public class ShipyardPage : MonoBehaviour
         foreach (KeyValuePair<string, ShipStats> shipKvP in ShipStatsLibrary.getShipStats())
         {
             //Debug.Log("button "+shipKvP.Key+" \n tech (ship req/location): " + shipKvP.Value.reqTechType.ToString() + " (" + shipKvP.Value.getRequiredTechLevel() + " / " + location.economy.technologies[shipKvP.Value.reqTechType].level + ")");
+            
+            // pre-requisists for ship items to appear: needs to be a ship (not rto), not palyerShip, and available to the location
             if (shipKvP.Value.type == "ship" 
                 && shipKvP.Key != playerShipId 
                 && location.economy.technologies[shipKvP.Value.reqTechType].level >= shipKvP.Value.getRequiredTechLevel())
             {
-                GameObject btn = Instantiate<GameObject>(buyShipPrefab);
-                btn.name = "compare " + shipKvP.Value.shipId;
-                btn.GetComponentInChildren<Text>().text = shipKvP.Value.shipId;
+                GameObject btnObj = Instantiate<GameObject>(buyShipPrefab);
+                btnObj.name = "compare " + shipKvP.Value.shipId;
+                btnObj.GetComponentInChildren<Text>().text = shipKvP.Value.shipId;
+                Button btn = btnObj.GetComponent<Button>();
 
                 // COLOR
                 // not enough relation capital 
-                if (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) < shipKvP.Value.reqRelations) 
-                    btn.gameObject.GetComponent<Image>().color = new Color(0.3f, 0.15f, 0.15f);
+                if (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) < shipKvP.Value.reqRelations)
+                    btn.gameObject.GetComponent<Image>().color = new Color(0.3f, 0.3f, 0.3f);
                 // not enough money
-                /*else */if ((float)playerShipStats.value() + Root.game.player.cargo.credits < (float)shipKvP.Value.value())
-                    btn.gameObject.GetComponent<Image>().color = new Color(0.15f, 0.15f, 0.3f);
+                if ((float)playerShipStats.value() + Root.game.player.cargo.credits < (float)shipKvP.Value.value())
+                    btn.gameObject.GetComponent<Image>().color = new Color(0.3f, 0.3f, 0.3f);
+
+                //btn.interactable =
+                //    (Root.game.player.playerReputation.getReputation(Root.game.player.getLocation()) < shipKvP.Value.reqRelations) ? false :    // not enough relation capital 
+                //    ((float)playerShipStats.value() + Root.game.player.cargo.credits < (float)shipKvP.Value.value()) ? false :                  // not enough money
+                //    true;
 
                 // tooltip
-                btn.GetComponent<ToolTipScript>().toolTip = shipKvP.Value.toolTip;
+                btnObj.GetComponent<ToolTipScript>().toolTip = shipKvP.Value.toolTip;
 
                 // link listener (/w lamda, parameter shipID)
-                btn.GetComponent<Button>().onClick.RemoveAllListeners();
+                btn.onClick.RemoveAllListeners();
                 string key = shipKvP.Key; // need to be converted to string, and not refer to the dictionary entry
-                btn.GetComponent<Button>().onClick.AddListener(() => { this.clickCompareShip(key); } );
+                btn.onClick.AddListener(() => { this.clickCompareShip(key); } );
 
-                btn.gameObject.transform.SetParent(grid.transform);
+                btnObj.gameObject.transform.SetParent(grid.transform);
                 btnCount++;
             }
         }

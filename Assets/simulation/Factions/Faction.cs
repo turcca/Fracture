@@ -119,7 +119,7 @@ static public class Faction
             case FactionID.guild2: return "guild2";
             case FactionID.guild3: return "guild3";
             case FactionID.church: return "church";
-            case FactionID.heretic: return "cult";
+            case FactionID.heretic: return "heretic";
             default: return "";
         }
     }
@@ -135,7 +135,7 @@ static public class Faction
             case "guild2": return FactionID.guild2;
             case "guild3": return FactionID.guild3;
             case "church": return FactionID.church;
-            case "cult": return FactionID.heretic;
+            case "heretic": return FactionID.heretic;
             default: return FactionID.noble1;
         }
     }
@@ -205,8 +205,16 @@ static public class Faction
                 return name;
         }
     }
-
-    static public string getTitle(FactionID id, int lvl)
+    static public string getTitle(FactionID id, int lvl, float control = 0.5f)
+    {
+        if (control < 0.5f) lvl--;
+        return getFactionTitle(id, lvl);
+    }
+    static public string getTitle(Faction.IdeologyID id, int lvl)
+    {
+        return getIdeologyTitle(id, lvl);
+    }
+    static public string getFactionTitle(FactionID id, int lvl)
     {
         // 4th title comes easier for factions!
 
@@ -239,7 +247,7 @@ static public class Faction
         }
         return "Governor";
     }
-    static public string getTitle(Faction.IdeologyID id, int lvl)
+    static public string getIdeologyTitle(Faction.IdeologyID id, int lvl)
     {
         if (id == Faction.IdeologyID.cult)
         {
@@ -327,11 +335,8 @@ static public class Faction
         string rv = "";
         float importance = Simulation.Parameters.getImportance(location);
 
-        // primitive world
-        if (location.economy.technologies[Data.Tech.Type.Technology].level == 0) rv += "Primitive";
-
         // station
-        else if (location.features.isStation())
+        if (location.features.isStation())
         {
             if (importance < 1f) rv += "Border";
             else if (importance < 2f) rv += "Minor";
@@ -341,33 +346,72 @@ static public class Faction
             else rv += "Capital";
             rv += " Station";
         }
-
-        // standard planetary world
-        else if (importance < 1f) rv += "Border";
-        else if (importance < 2f) rv += "Minor";
-        else if (importance < 3f) rv += "Major";
-        else if (importance < 4f) rv += "Central";
-        else if (importance < 5f) rv += "Core";
-        else rv += "Capital";
-
-        if (importance < 5f)
+        else
         {
-            float industry = location.economy.getEffectiveMul(Data.Resource.Type.Industry);
-            float food = location.economy.getEffectiveMul(Data.Resource.Type.Food);
-            if (industry > 1.2f && industry > food) rv += " Industrial";
-            else if (food > 1.2f && food > industry) rv += " Agri";
-            else
-            {
-                if (location.economy.getEffectiveMul(Data.Resource.Type.Innovation) > 1.2f) rv += " Tech";
-                else if (location.economy.getEffectiveMul(Data.Resource.Type.Mineral) > 1.2f) rv += " Mining";
-                else if (location.economy.getEffectiveMul(Data.Resource.Type.Economy) > 1.2f) rv += " Financial";
-                else if (location.economy.getEffectiveMul(Data.Resource.Type.Culture) > 1.2f) rv += " Manufacturing";
-                else if (location.economy.getEffectiveMul(Data.Resource.Type.Military) > 1.2f) rv += " Contractor";
-                else if (location.economy.getEffectiveMul(Data.Resource.Type.BlackMarket) > 1.3f) rv += " Black Market";
-            }
-        }
-        rv += " World";
+            // primitive world
+            if (location.economy.technologies[Data.Tech.Type.Technology].level == 0) rv += "Primitive";
+            
 
+            // standard planetary world
+            else if (importance < 1f) rv += "Border";
+            else if (importance < 2f) rv += "Minor";
+            else if (importance < 3f) rv += "Major";
+            else if (importance < 4f) rv += "Central";
+            else if (importance < 5f) rv += "Core";
+            else rv += "Capital";
+
+            if (importance < 5f)
+            {
+                System.Collections.Generic.KeyValuePair<Data.Resource.Type, float> bestResource = location.economy.getBestResourceEffectiveMultiplier();
+
+                if (bestResource.Value > 1.2f)
+                {
+                    switch (bestResource.Key)
+                    {
+                        case Data.Resource.Type.Food:
+                            rv += " Agri";
+                            break;
+                        case Data.Resource.Type.Mineral:
+                            rv += " Mining";
+                            break;
+                        case Data.Resource.Type.Industry:
+                            rv += " Industrial";
+                            break;
+                        case Data.Resource.Type.Economy:
+                            rv += " Financial";
+                            break;
+                        case Data.Resource.Type.Innovation:
+                            rv += " Tech";
+                            break;
+                        case Data.Resource.Type.Culture:
+                            rv += " Manufacturing";
+                            break;
+                        case Data.Resource.Type.Military:
+                            rv += " Contractor";
+                            break;
+                        case Data.Resource.Type.BlackMarket:
+                            rv += " Black Market";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                //float industry = location.economy.getEffectiveMul(Data.Resource.Type.Industry);
+                //float food = location.economy.getEffectiveMul(Data.Resource.Type.Food);
+                //if (industry > 1.2f && industry > food) rv += " Industrial";
+                //else if (food > 1.2f && food > industry) rv += " Agri";
+                //else
+                //{
+                //    if (location.economy.getEffectiveMul(Data.Resource.Type.Innovation) > 1.2f) rv += " Tech";
+                //    else if (location.economy.getEffectiveMul(Data.Resource.Type.Mineral) > 1.2f) rv += " Mining";
+                //    else if (location.economy.getEffectiveMul(Data.Resource.Type.Economy) > 1.2f) rv += " Financial";
+                //    else if (location.economy.getEffectiveMul(Data.Resource.Type.Culture) > 1.2f) rv += " Manufacturing";
+                //    else if (location.economy.getEffectiveMul(Data.Resource.Type.Military) > 1.2f) rv += " Contractor";
+                //    else if (location.economy.getEffectiveMul(Data.Resource.Type.BlackMarket) > 1.3f) rv += " Black Market";
+                //}
+            }
+            rv += " World";
+        }
         return rv;
     }
     static public string getTechDescription(Location location, Data.Tech.Type techType, bool getOnlyDescription = false)

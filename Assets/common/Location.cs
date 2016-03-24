@@ -38,8 +38,8 @@ public class Location
         this.ideology = new Simulation.LocationIdeology(this);
         this.economy = new Simulation.LocationEconomy(this, new Simulation.LocationEconomyAI());
 
-        // if HQ, load name from Factions data
-        if (data.features.hq != null) data.features.ruler[(Faction.FactionID)data.features.hq] = Root.game.factions.getRuler((Faction.FactionID)data.features.hq);
+        // if HQ, load name from Factions data -- ON second though no, keep faction leader separate from local governors
+        //if (data.features.hq != null) data.features.ruler[(Faction.FactionID)data.features.hq] = Root.game.factions.getLeader((Faction.FactionID)data.features.hq);
     }
     
     public void tick(float days)
@@ -61,29 +61,32 @@ public class Location
     /// eg. "House Valeria Governor", "Councillor of the Everlasting Union"
     /// </summary>
     /// <returns></returns>
-    public string ruler() { return getRuler(); }
+    public string getRuler() { return ideology.getRuler(); }
     /// <summary>
     /// eg. "Calius Valeria" (Faction.FactionID.noble4)
     /// </summary>
     /// <param name="faction"></param>
     /// <returns></returns>
-    public string factionHeadName(Faction.FactionID faction) { return Faction.getTwoPartNameForFactionMember(faction, getLocalFactionRulerName(faction)); }
+    public string getLocalfactionHeadName(Faction.FactionID faction) { return Faction.getTwoPartNameForFactionMember(faction, getLocalFactionLeaderName(faction)); }
     /// <summary>
     /// eg. "Governor Calius Valeria" (Faction.FactionID.noble4)
+    /// if local control is less than 0.5f then title lvl--
     /// </summary>
     /// <param name="faction"></param>
     /// <returns></returns>
-    public string factionHeadTitleAndName(Faction.FactionID faction) { return Faction.getTitle(faction, Simulation.Parameters.getGovernmentStr(this)) + " " + factionHeadName(faction); } 
-
-    public string getRuler()
+    public string getLocalfactionHeadTitleAndName(Faction.FactionID faction)
     {
-        return ideology.getRuler();
-    }
-    public string getLocalFactionRulerName(Faction.FactionID faction)
-    {
-        return features.ruler[faction];
-    }
+        return Faction.getTitle(faction, Simulation.Parameters.getGovernmentStr(this), features.factionCtrl[faction]) + " " + getLocalfactionHeadName(faction);
+    } 
+    /// <summary>
+    /// Location faction leader. If 'null', it's non-faction leader.
+    /// eg. "Calius"
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public string getLocalFactionLeaderName(Faction.FactionID? faction) { return features.getRuler(faction); }
 
+    public void newLocationLeader(Faction.FactionID? faction, string name) { features.addRuler(faction, name); }
 
     public float getImportance()
     {

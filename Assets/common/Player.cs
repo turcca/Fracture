@@ -6,7 +6,6 @@ using System;
 public class CommodityInventory
 {
     internal Dictionary<Data.Resource.SubType, int> commodities = new Dictionary<Data.Resource.SubType, int>(); // SAVE
-    public int maxCargoSpace { get; private set; }
     public float credits = 128.0f;
 
     public CommodityInventory()
@@ -15,13 +14,16 @@ public class CommodityInventory
         {
             commodities.Add(type, 0);
         }
-        maxCargoSpace = 10; // todo: load from ship data
     }
     public void addCargo(Data.Resource.SubType type, int amount = 1)
     {
         commodities[type] += amount;
     }
 
+    public int getMaxCargoSpace()
+    {
+        return Root.game.player.playerShip.getMaxCargoSpace();
+    }
     public int cargoAmount(Data.Resource.SubType type)
     {
         return commodities[type];
@@ -38,7 +40,7 @@ public class CommodityInventory
     }
     public bool hasFreeCargoSpace()
     {
-        return (getUsedCargoSpace() < maxCargoSpace) ? true : false;
+        return (getUsedCargoSpace() < getMaxCargoSpace()) ? true : false;
     }
 }
 

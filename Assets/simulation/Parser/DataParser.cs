@@ -27,7 +27,7 @@ public static class DataParser
                 case 5:
                     data.visibility = (Data.Location.Visibility)System.Enum.Parse(typeof(Data.Location.Visibility), value);
                     break;
-
+                
                 // faction control
                 case 6:
                     data.factionCtrl[Faction.FactionID.noble1] = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);

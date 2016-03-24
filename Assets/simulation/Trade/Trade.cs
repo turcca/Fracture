@@ -364,7 +364,7 @@ namespace Simulation
             }
             else if (type == Data.Resource.Type.Economy)
             {
-                rv += "Foreign ivestments";
+                rv += "Foreign investments";
             }
             else if (type == Data.Resource.Type.Innovation)
             {

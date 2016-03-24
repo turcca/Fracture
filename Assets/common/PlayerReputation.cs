@@ -71,8 +71,13 @@ public class PlayerReputation
             }
         }
     }
-
-    public float getReputation(Faction.FactionID faction)
+    /// <summary>
+    /// player's reputation with a faction. 
+    /// Value range is -100 - +100
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public float getReputationValue(Faction.FactionID faction)
     {
         return (factionReputation.ContainsKey(faction)) ? factionReputation[faction] : 0f;
     }
@@ -87,7 +92,7 @@ public class PlayerReputation
         //factions rep by faction presence
         foreach (var pair in location.features.factionCtrl)
         {
-            rep += getReputation(pair.Key) * pair.Value;
+            rep += getReputationValue(pair.Key) * pair.Value;
         }
         // location's individual reputation
         return (locationReputation.ContainsKey(location.id)) ? locationReputation[location.id] +rep : rep;
@@ -111,11 +116,28 @@ public class PlayerReputation
         if (factionReputation.ContainsKey(faction)) factionReputation[faction] += value;
         else factionReputation.Add(faction, value);
     }
+    /// <summary>
+    /// add reputation to location
+    /// </summary>
+    /// <param name="location"></param>
+    /// <param name="value"></param>
     public void addReputation(Location location, float value) { addReputation(location.id, value); }
     public void addReputation(string locationId, float value)
     {
-        if (locationReputation.ContainsKey(locationId)) locationReputation[locationId] += value;
-        else locationReputation.Add(locationId, value);
+        float factionCtrShare = 0;
+        // distribute reputation to present factions by their share
+        foreach (var pair in Root.game.locations[locationId].features.factionCtrl)
+        {
+            if (pair.Value != 0f)
+            {
+                factionReputation[pair.Key] += value * pair.Value;
+                factionCtrShare += pair.Value;
+            }
+        }
+        // add location reputation
+        // location reputation is independent of faction reputation
+        if (locationReputation.ContainsKey(locationId)) locationReputation[locationId] += value * (1f - factionCtrShare);
+        else locationReputation.Add(locationId, value * (1f - factionCtrShare));
     }
     //public void setReputation(Faction.FactionID faction, float value)
     //{

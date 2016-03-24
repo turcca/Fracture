@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -295,7 +296,6 @@ public class EventGenerator
         effect = Regex.Replace(effect, @"character.([a-z]*).*=([0-9\.]*)", @"setCharacterStat(Character.Stat.$1, $2)");
         effect = Regex.Replace(effect, @"\r", @"");
         effect = Regex.Replace(effect, @"\s", @"");
-
         writeLine(effect + ";");
         return true;
     }
@@ -408,25 +408,39 @@ public class EventGenerator
         cond = Regex.Replace(cond, "NO", "!");
         cond = Regex.Replace(cond, @"^o( |=)", "outcome$1");
         cond = Regex.Replace(cond, @"^c( |=)", "choice$1");
-        cond = Regex.Replace(cond, @"shipStat\(([a-z]*)\)", "getShipStat(\"$1\")", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, @"shipstat\(([a-z]*)\)", "getShipStat(\"$1\")");
         cond = Regex.Replace(cond, "character.([a-z]*)", "getCharacterStat(Character.Stat.$1)", RegexOptions.IgnoreCase);
-        cond = Regex.Replace(cond, "TheAdvisor", "getAdvisor(job)", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, "TheAdvisor", "getCharacter(job)", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, "currentLocation", "getCurrentLocation()", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "locationObject", "locationObject", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "gameTime", "getElapsedDays()", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, "warpmag", "getWarpMagnitude()", RegexOptions.IgnoreCase);
-        cond = Regex.Replace(cond, "finder.magnitude", "getWarpMagnitude()", RegexOptions.IgnoreCase);
+        //cond = Regex.Replace(cond, "finder.magnitude", "getWarpMagnitude()", RegexOptions.IgnoreCase);
         //@todo
         cond = Regex.Replace(cond, @"playerLoc\(.atLocation.,.*\)", "(getPlayerLocationID() == location)", RegexOptions.IgnoreCase);
         //@todo
         cond = Regex.Replace(cond, @"playerLoc\(.inLocation.,.*\)", "(getPlayerLocationID() == location)", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, @"Event\[""(.*?)""\]", "getEvent(\"$1\")", RegexOptions.IgnoreCase);
         cond = Regex.Replace(cond, @"theCaptain.([a-z]*)", "getCharacterStat(Character.Job.captain, Character.Stat.$1)", RegexOptions.IgnoreCase);
-        //@todo effects changed from struct
-        cond = Regex.Replace(cond, @"location\.ideologyStats\[.([a-z]+).\]", "getLocation().ideology.effects.$1", RegexOptions.IgnoreCase);
+        cond = Regex.Replace(cond, @"location\.ideologyStats\[.([a-z]+).\]", "getLocation().ideology.effects[Simulation.Effect.$1]", RegexOptions.IgnoreCase);
+        
+        // need to convert eventEdit skill scale into ingame skill scale
+        if (cond.Contains("getStat("))
+        {
+            //                                  get stat ("    <skill>                ") >=                 -4 / 4   
+            Regex pattern = new Regex(@"(?<getStat>getStat..)(?<skill>[a-zA-Z]+)(?<logic>...[<>=]+.)(?<value>\-\d|\d+)"); //@"getStat=(?<skill>.*?)");
+            Match match = pattern.Match(cond);
+            // only skills need converting (not age etc.)
+            if (Character.skillList.Contains((Character.Stat)Enum.Parse(typeof(Character.Stat), match.Groups["skill"].Value)))
+            {
+                string replaceValue = "${getStat}${skill}${logic} "+ EventSkillValueConvert.convertValue(match.Groups["skill"].Value, int.Parse(match.Groups["value"].Value)).ToString()+" ";
+                //Debug.Log("replaceValue: " + replaceValue);
+                cond = Regex.Replace(cond, pattern.ToString(), replaceValue);
+            }
+        }
         
 
-
-        mod = mod.Substring(condEndPos + 1);
+        mod = mod.Substring(condEndPos + 1); 
         return cond;
     }
 

@@ -217,6 +217,7 @@ namespace Simulation
         }
 
         /// <summary>
+        /// gets the local leader (highest control)
         /// eg. "House Valeria Governor"
         /// </summary>
         /// <returns></returns>

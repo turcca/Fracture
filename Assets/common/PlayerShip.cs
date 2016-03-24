@@ -26,11 +26,11 @@ public enum Utility
 public class PlayerShip
 {
     
-    public string shipId { get; private set; }
-    public string shipName { get; private set; }
-    public ShipStats shipStats() { return ShipStatsLibrary.getShipStat(shipId); }
+    public string shipId { get; private set; } // SAVE
+    public string shipName { get; private set; }// SAVE
+    ShipStats getShipStats() { return ShipStatsLibrary.getShipStat(shipId); }
 
-    List<Utility> utilities = new List<Utility>();
+    List<Utility> utilities = new List<Utility>(); // SAVE
     //Dictionary<hardpoints, mount> hardpoints = new Dictionary<hardpoints, mount>();
     //Dictionary<string, mount> RTO = new Dictionary<string, mount>();
 
@@ -45,32 +45,45 @@ public class PlayerShip
             addUtility(Utility.Empty);
         }
         */
-        addUtility(Utility.CivilianComms);
-        addUtility(Utility.CrewRecreation);
+        addUtility(Utility.FloodGenerators);
         addUtility(Utility.CoreBypass);
+        addUtility(Utility.WeaponsRerouting);
         addUtility(Utility.CargoSpace);
-        Debug.Log("TODO: added manual ship utilities. ("+utilities.Count+" / "+ shipStats().utility + ")");
+        Debug.Log("TODO: added manual ship utilities. ("+utilities.Count+" / "+ getShipStats().utility + ")");
     }
 
     public string getShipTypeAndName()
     {
-        return "";
+        return shipId + " " + shipName;
     }
 	public List<Utility> getUtilities()
     {
         return utilities;
     }
-    public void addUtility(Utility utility)
+    /// <summary>
+    /// returns availability of adding the util, or empty util slots when prompted with Empty parameter
+    /// </summary>
+    /// <param name="utility"></param>
+    /// <returns></returns>
+    public bool addUtility(Utility utility = Utility.Empty)
     {
-        if (!utilities.Contains(utility))
+        if (utility == Utility.Empty || utility == Utility.CargoSpace || utilities.Contains(utility) == false)
         {
-            if (utilities.Count < shipStats().utility)
+            if (utilities.Count < getShipStats().utility)
             {
-                utilities.Add(utility);
+                if (utility != Utility.Empty) utilities.Add(utility);
+                return true;
             }
-            else Debug.LogWarning("Adding utility '" + utility.ToString() + "' but already maxed out on utility slots: " + shipStats().utility);
+            else if (utility != Utility.Empty) Debug.LogWarning("Adding utility '" + utility.ToString() + "' but already maxed out on utility slots: " + getShipStats().utility);
         }
-        else Debug.LogWarning("Trying to add an utility that already exists: " + utility.ToString());
+        else Debug.LogWarning("utility already exists: " + utility.ToString());
+        return false;
     }
-
+    public int getMaxCargoSpace()
+    {
+        int ri = getShipStats().cargo;
+        foreach (var util in utilities)
+            if (util == Utility.CargoSpace) ri++;
+        return ri;
+    }
 }

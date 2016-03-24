@@ -63,7 +63,7 @@ public class LocationSceneState : MonoBehaviour
         }
     }
 
-public void eventQueryDone()
+    public void eventQueryDone()
     {
         menu.showOrbit();
     }

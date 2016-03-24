@@ -11,6 +11,7 @@ public class FactionMeetPanel : MonoBehaviour
     public Image factionImage;
     public Text meetDesc;
     public Image controllerBorders;
+    public Text playerReputation;
 
     private FactionSelectedDelegate callback;
 
@@ -33,9 +34,7 @@ public class FactionMeetPanel : MonoBehaviour
         txt += Faction.getFactionName(faction) +"\n";
         txt += "<color=#aaaaaa>";
         // contact level (admin, contact...)
-        txt += getContactTitle() +" ";
-        // ruler name
-        txt += Root.game.locations[location].getLocalFactionRulerName(faction) +" </color>\n";
+        txt += getContactTitle() + " </color>\n";
         // % control
         if (ctrl < 10f) txt += "<color=#666666>";
         else if (ctrl < 50f) txt += "<color=888888>";
@@ -44,6 +43,10 @@ public class FactionMeetPanel : MonoBehaviour
 
         meetDesc.text = txt;
         controllerBorders.enabled = ctrl > 50f;
+
+        float rep = (Mathf.Round(Root.game.player.playerReputation.getReputationValue(faction) *10f)/10f);
+        playerReputation.text = rep.ToString();
+        playerReputation.color = new Color(Mathf.Min((1f - rep/100f), 1f), Mathf.Min((1f + rep/ 100f), 1f), 1f - Mathf.Abs(rep/100f));
 
         GetComponent<ToolTipScript>().toolTip = Faction.getFactionDescription(faction);
     }
@@ -64,10 +67,10 @@ public class FactionMeetPanel : MonoBehaviour
         // office level from faction control value
         float c = Root.game.locations[location].features.factionCtrl[faction];
 
-        if (c <= 0.12f) return "Contact";
-        else if (c <= 0.3f) return "Representative";
-        else if (c <= 0.5f) return "Office";
-        else if (c <= 0.8f) return "Administrator";
-        else return "Administrator";
+        if (c <= 0.12f) return "Contact "+ Root.game.locations[location].getLocalfactionHeadName(faction);
+        else if (c < 0.2f) return "Representative " + Root.game.locations[location].getLocalfactionHeadName(faction);
+        else return Root.game.locations[location].getLocalfactionHeadTitleAndName(faction);
+        //if (c <= 0.5f) return "Office";
+        //else return Faction.getTitle(faction, Simulation.Parameters.getGovernmentStr(Root.game.locations[location]));
     }
 }

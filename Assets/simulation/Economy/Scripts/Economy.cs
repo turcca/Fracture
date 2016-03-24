@@ -522,7 +522,10 @@ namespace Simulation
         {
             return location.features.resourceMultiplier[type] * location.ideology.resourceMultiplier[type] +Parameters.getGlobatMarketAdjuster(type);
         }
-
+        internal KeyValuePair<Data.Resource.Type, float> getBestResourceEffectiveMultiplier()
+        {
+            return getSortedResourceTypes()[0];
+        }
         internal List<KeyValuePair<Data.Resource.Type, float>> getSortedResourceTypes()
         {
             List<KeyValuePair<Data.Resource.Type, float>> sortedList = new List<KeyValuePair<Data.Resource.Type, float>>();

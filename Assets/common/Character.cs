@@ -241,26 +241,25 @@ public class Character
             "corruption"
         };
     }
-    static public Stat[] getSkills()
+    public static List<Stat> skillList = new List<Stat>
     {
-        return new Stat[]
-        {
-            Stat.leadership,
-            Stat.hr,
-            Stat.engineering,
-            Stat.precognition,
-            Stat.psy,
-            Stat.navigation,
-            Stat.spaceBattle,
-            Stat.combat,
-            Stat.trading,
-            Stat.diplomat,
-            Stat.scientist,
-            Stat.integrity,
-            Stat.holiness,
-            Stat.security
-        };
-    }
+        Stat.leadership,
+        Stat.hr,
+        Stat.engineering,
+        Stat.precognition,
+        Stat.psy,
+        Stat.navigation,
+        Stat.spaceBattle,
+        Stat.combat,
+        Stat.trading,
+        Stat.diplomat,
+        Stat.scientist,
+        Stat.integrity,
+        Stat.holiness,
+        Stat.security,
+        Stat.corruption
+    };
+    
     static public Stat[] getStatNames()
     {
         return new Stat[]
@@ -358,7 +357,7 @@ public class Character
     }
     public float getStat (string statName)
     {
-        return stats[(Stat)Enum.Parse(typeof(Stat), statName)];
+        return getStat((Stat)Enum.Parse(typeof(Stat), statName));
     }
     internal void clearStats()
     {

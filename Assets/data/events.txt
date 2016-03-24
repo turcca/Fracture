@@ -29,17 +29,17 @@
 @a captain "This can't be good. Are the sensors operating? What is our security status? Our Flood Shields are up, right?"
 @a navigator "The Flood Shields are more than energy projectors in the hull. 
 It's also the way we open or close the portal we carry in us."
-@a engineer { TheAdvisor.getStat("security") >= 2 } "When things get confused, it is best to have trusted people by key equipment." = 741
+@a engineer { TheAdvisor.getStat("security") >= 1 } "When things get confused, it is best to have trusted people by key equipment." = 741
 @a engineer { TheAdvisor.getStat("holiness") >= 1 } "I have a bad feeling about this. Better be safe than sorry while in a Fracture Fall."
 @a engineer "If it's a code, we should be able to crack it." = 740
 @a security { TheAdvisor.getStat("security") <= -1 } "Armed security will only escalate things, and there are lots of tension already. Let's find out if this is a threat before jumping the gun."
 @a security "Always secure the Core, bridge, navigation equipment, life support and arsenal." = 741
-@a quartermaster { shipStat(Happiness) < 0 } "The crew is already &shipStatHappiness&, we might be better off giving them something else to chew on." = 742
+@a quartermaster { getShipStat("Happiness") < 0 } "The crew is already &shipStatHappiness&, we might be better off giving them something else to chew on." = 742
 @a quartermaster { TheAdvisor.getStat("security") >= 1 } "Is everyone going to act strange again? Are they going to do something stupid again?" = 741
 @a quartermaster { TheAdvisor.getStat("holiness") >= 1 } "It's the Daemons outside. Testing our resolve, trying to claw in. We should prepare for the worst." = 741
 @a quartermaster "I wonder what this is about." = 740
-@a quartermaster { shipStat(Happiness) <= 3 } "If we don't have a long way to go still, we may want to see what this is about." = 740
-@a quartermaster { TheAdvisor.getStat("psy") >= 1 AND TheAdvisor.getStat("hr") <= 3 } "I can hear the knocking too. I wonder what it means." = 740
+@a quartermaster { getShipStat("Happiness") <= 3 } "If we don't have a long way to go still, we may want to see what this is about." = 740
+@a quartermaster { TheAdvisor.getStat("psy") >= 1 AND TheAdvisor.getStat("hr") <= 2 } "I can hear the knocking too. I wonder what it means." = 740
 @a psycher { TheAdvisor.getStat("psy") >= 2 AND TheAdvisor.getStat("corruption") >= 3 } "Something is out there. We should find more about it, this information can be extremely valuable." = 740
 @a psycher { TheAdvisor.getStat("psy") >= 4 AND TheAdvisor.getStat("corruption") >= 4 } "Let's see who is knocking on our door this time." = 740
 @a psycher { TheAdvisor.getStat("psy") < 2 AND TheAdvisor.getStat("corruption") >= 3 } "We must quickly interrogate people to find everything we can about what they have heard." = 740
@@ -83,9 +83,9 @@ It's also the way we open or close the portal we carry in us."
 @a quartermaster { TheAdvisor.getStat("holiness") >= 1 } "Unholy music. No-one should be listening to this." = 767
 @a quartermaster { TheAdvisor.getStat("psy") >= 1 } "This... music. There is something to it." = 768
 @a quartermaster { TheAdvisor.getStat("corruption") >= 4 } "Let them enjoy themselves. Don't take away the rare piece of happiness they can find." = 766
-@a quartermaster { shipStat(Holiness) <= -1 } "The crew... they are not doing so well. We may want to control this." = 766
-@a quartermaster { shipStat(Happiness) <= 0 } "The crew needs this to take their mind of the Fall." = 766
-@a quartermaster { shipStat(Happiness) <= 3 } "We can carefully monitor the situation." = 768
+@a quartermaster { getShipStat("Holiness") <= -1 } "The crew... they are not doing so well. We may want to control this." = 766
+@a quartermaster { getShipStat("Happiness") <= 0 } "The crew needs this to take their mind of the Fall." = 766
+@a quartermaster { getShipStat("Happiness") <= 3 } "We can carefully monitor the situation." = 768
 @a quartermaster "We can watch how things develop. No need to overreact." = 768
 @a psycher { TheAdvisor.getStat("psy") = 2 AND TheAdvisor.getStat("corruption") >= 2 } "This is... beautiful. We must hear more." = 768
 @a psycher { TheAdvisor.getStat("psy") >= 3 AND TheAdvisor.getStat("corruption") >= 3 } "Beautifully orchestrated. For our benefit. We shouldn't miss it." = 768
@@ -96,11 +96,13 @@ It's also the way we open or close the portal we carry in us."
 @a priest "We must help those who can not help themselves."
 
 #Odd behaviour
+/* Core singers 1 - establishing */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
-@p { warpmag < 1 } = 0
 @p { warpmag >= 2 } = 2
+@p { getShipStat("Fracture") >= 5 } = 0
+@p { getShipStat("Holiness") <= -1 } = 2
 @t {o = 0} "There are increase in reports of odd behaviour among the crew. The crew are holding meetings on their own and changing the practices and procedures."
 @c {o = 0} "Partake in new practices to understand them better." = 807
 @o {c = 807} = 810
@@ -122,21 +124,21 @@ It's also the way we open or close the portal we carry in us."
 @a navigator { TheAdvisor.getStat("corruption") >= 70 } "A good crew is attuned to its function. I encourage this." = 807
 @a navigator "A distraction." = 808
 @a engineer { TheAdvisor.getStat("corruption") >= 20 } "These are my people, and I have full control over the matter. In fact, I have some suggestions." = 807
-@a engineer { TheAdvisor.getStat("holiness") >= 4 } "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact." = 809
+@a engineer { TheAdvisor.getStat("holiness") >= 2 } "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact." = 809
 @a engineer "It's my crew, I know them. I'm not exactly sure what's going on, but the core is running fine and there's no reason to overreact." = 808
 @a security { TheAdvisor.getStat("corruption") >= 80 } "We have established cooperation with the group in question. I believe we can further this understanding." = 807
-@a security { TheAdvisor.getStat("holiness") >= 4 } "Heresy! We must end this now, before it gets out of hand. You can't just go and change the Approved Procedures!" = 809
+@a security { TheAdvisor.getStat("holiness") >= 2 } "Heresy! We must end this now, before it gets out of hand. You can't just go and change the Approved Procedures!" = 809
 @a security "The core is high security area, and there should be very little tolerance towards unregulated activities." = 809
 @a quartermaster { TheAdvisor.getStat("corruption") >= 60 } "Such efficiency and dedication." = 807
-@a quartermaster { TheAdvisor.getStat("hr") >= 6 } "Interfering with this can demoralize the crew. Any radical reaction could unbalance things." = 808
+@a quartermaster { TheAdvisor.getStat("hr") >= 3 } "Interfering with this can demoralize the crew. Any radical reaction could unbalance things." = 808
 @a quartermaster "I'm not entirely sure how we should handle this. Perhaps we need to see how this develops before weigh in." = 808
 @a psycher { TheAdvisor.getStat("corruption") >= 40 } "Interesting. We must participate in this to truly understand it." = 807
-@a psycher { TheAdvisor.getStat("psy") >= 6 } "There is a possibility of exposure here. I feel we're being influenced."
+@a psycher { TheAdvisor.getStat("psy") >= 4 } "There is a possibility of exposure here. I feel we're being influenced."
 @a psycher "I am curious." = 808
 @a priest { TheAdvisor.getStat("holiness") >= 2 } "We must stop the spread of these deviations from Approved Procedures. At once." = 809
 @a priest "Perhaps a silent meditation will bring clarity to the issue." = 808
 
-#at 1c02 arch beacon
+#[at] 1c02 arch beacon
 /* first time coming at arch */
 @frequency "Default"
 @situation "Default"
@@ -155,7 +157,7 @@ It's also the way we open or close the portal we carry in us."
 @a engineer "I can't imagine what goes into building a fracture beacon like this."
 @a quartermaster "Are we stopping here? I'll have to draw crew recreation rotation."
 
-#at 1c08 first found
+#[at] 1c08 first found
 /* First time player comes to the Gardens of Augustus */
 @frequency "Default"
 @situation "Default"
@@ -178,125 +180,14 @@ It's also the way we open or close the portal we carry in us."
 @a psycher { TheAdvisor.getStat("psy") >= 1 } "It's a small colony."
 @a priest "Lost colonies of man. They need to be brought back into the fold. Enlightenment awaits!"
 
-#contact_noble4
-/* House Valeria */
-@frequency "Default"
-@situation "Default"
-@ambient "DefaultBridge"
-@f "contact_factions"
-@p = 0
-@c {o = 0} "Leave" = 908
-@o {c = 908} = 909 $=resetOutcome $=end
-@c {o = 0} "Continue" = 901
-@o {c = 901} = 902
-@t {o = 0} "Greetings,
-
-I am +getCurrentLocation().factionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+."
-@t {o = 0} ""
-
-#core singers
-/* If engine room's 'core singers' are allowed to be */
-@frequency "Elevated"
-@situation "Default"
-@ambient "EngineRoom"
-@p { event["Odd behaviour"].outcome = 0 } = 0
-@p { event["Odd behaviour"].outcome = 828 } = 0
-@c {o = 0} "Do not interfere." = 838
-@o {c = 838} = 843
-@t {o = 843} "The 'core singers' are established as a group with some autonomy in the core. They continue to serve the ship well while having an impact on practices and beliefs of the crew."
-@c {o = 843} "Continue" = 857
-@o {c = 857} = 893 $=available = false $=end
-@t {o = 0} "Newly formed group of engine crew living near the core continue to operate by their own practices. Most recently they have restricted the access to the core from nonmembers."
-@c {o = 0} "Demand access to the core for key personnel." = 839
-@o {c = 839 AND shipStat(Happiness) < 1} = 844
-@t {o = 844} "After quick negations, it became clear that the boundaries set by the group are strict, and their leaders the 'core singers' assume a position of autonomy in the core."
-@c {o = 844} "Send in the security to reclaim the core." = 858
-@o {c = 858 AND shipStat(Morale) >= 2} = 859
-@c {o = 859} "Continue" = 864
-@o {c = 864} = 865 $=available = false $=end
-@t {o = 859} "The security encountered resistance at the core that escalated into a fight in the narrow corridors leading to the core. The defenders were prepared, but the dedicated security forces routed the resistance. In a fierce final stand, the 'core singers' were killed. After that, the involved crew quickly submitted to disciplinary actions and the crew rotated to restore security to the core."
-@o {c = 858 AND shipStat(Morale) < 2} = 884
-@c {o = 884} "Continue" = 888
-@o {c = 888} = 890 $=available = false $=end
-@t {o = 884} "The security encountered resistance at the core that escalated into fighting in the narrow corridors leading to the core. The defenders were prepared, and the ship's security forces were unable to reach the core. As the stalemate and high tensions aboard continued, the group declared themselves the 'core singers' and responsible for the core operations."
-@c {o = 844} "Appoint the 'core singers' an official position on the core." = 851
-@o {c = 851} = 860
-@t {o = 860} "The 'core singers' are established as a group with some autonomy in the core. They continue to serve the ship well while having an impact on practices and beliefs of the crew."
-@c {o = 860} "Continue" = 862
-@o {c = 862} = 866 $=available = false $=end
-@o {c = 839 AND shipStat(Happiness) >= 1 OR shipStat(Holiness) >= 3} = 842
-@c {o = 842} "Continue" = 850
-@o {c = 850} = 852 $=available = false $=end
-@t {o = 842} "After quick negotiations it is agreed that key security and engineering personnel are allowed access to the core. It will otherwise remain under the tutelage of the 'core singers', the leaders of the group."
-@c {o = 0} "Send in the security to reclaim the core." = 840
-@o {c = 840} = 889
-@o {c = 840 AND shipStat(Holiness) >= 3} = 841
-@c {o = 841} "Praise the Church!" = 870
-@o {c = 870} = 871 $=available = false $=end
-@t {o = 841} "The security encountered resistance at the core. But soon after, a devout of the Cult started singing from the Holy Scriptures of the Church and it picked up until the entire engine section was singing it. 'Core singers' disappeared soon after and the core resumed its proper state."
-@o {c = 840 AND shipStat(Morale) < 1} = 867
-@t {o = 867} "The security encountered resistance at the core that escalated into fighting in the narrow corridors leading to the core. The ship's security forces were unable to reach the core. As the stalemate and high tensions aboard continued, the group declared themselves the 'core singers' and responsible for the core operations."
-@c {o = 867} "Continue" = 880
-@o {c = 880} = 881 $=available = false $=end
-@o {c = 840 AND shipStat(Morale) >= 1} = 845
-@c {o = 845} "Continue" = 875
-@o {c = 875} = 876 $=available = false $=end
-@t {o = 845} "The security encountered resistance at the core that escalated into a fight in the narrow corridors leading to the core. The ship's security forces were motivated and routed the resistance. In a fierce final stand, the 'core singers' were killed. After that, the involved crew quickly submitted to disciplinary actions and the crew rotated to restore security to the core."
-@a captain "The core is functioning well it seems. But is it possible to run a ship with independent departments?"
-@a navigator { TheAdvisor.getStat("corruption") >= 50 } "As long as the core is in tune." = 838
-@a navigator "The core is in tune."
-@a engineer { TheAdvisor.getStat("corruption") >= 30 } "I have things under control. We are actually on to something very interesting." = 838
-@a engineer { TheAdvisor.getStat("corruption") >= 70 } "There must be a misunderstanding here. We do have access! I am a member after all." = 838
-@a engineer "This is absurd. I'm going to need access to my core." = 839
-@a security { TheAdvisor.getStat("corruption") >= 80 } "I have infiltrated the group. There is no reason to interfere yet, we can control the situation if need arises." = 838
-@a security { TheAdvisor.getStat("corruption") >= 50 } "I am not convinced this is a threat to the ship security. It's a matter of preference, really." = 838
-@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("leadership") >= 4 } "I trust my men. You can count on us." = 840
-@a security { shipStat(Morale) >= 1 } "It may be difficult to take the core, if the defenders are determined." = 839
-@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("combat") >= 5 } "I can take them." = 840
-@a security { shipStat(Morale) >= 1 AND TheAdvisor.getStat("security") >= 3 } "The core can be easily defended, but our security can handle this." = 840
-@a security { shipStat(Morale) < 1 AND TheAdvisor.getStat("leadership") >= 4 } "If the resistance is determined at the core, our security forces may not be able to handle it. I need more men!" = 839
-@a security { shipStat(Morale) < 1 AND TheAdvisor.getStat("security") >= 3 } "The core can be easily defended. Our security forces may have a hard time enforcing this. This is why we need better security on the ship!" = 839
-@a security { shipStat(Morale) < 1 } "It may be difficult to take the core, if the defenders are determined." = 839
-@a quartermaster { shipStat(Happiness) >= 1 AND TheAdvisor.getStat("hr") >= 4 } "The situation on the ship is well at hand. This is negotiable." = 839
-@a quartermaster { shipStat(Happiness) >= 1 AND TheAdvisor.getStat("hr") < 4 AND TheAdvisor.getStat("hr") < 4 } "If this doesn't interfere with the ship's procedures, perhaps we should allow this. The crew is handing this well." = 838
-@a quartermaster { shipStat(Happiness) >= 1 AND TheAdvisor.getStat("hr") < 4 AND TheAdvisor.isIdeology("cult") } "Who knows what is going on in there? This isn't right, we have to get in there." = 840
-@a quartermaster { TheAdvisor.getStat("hr") >= 5 } "The chain of command is breaking up. These so called 'core singers' are not taking orders from our leadership anymore." = 839
-@a quartermaster { TheAdvisor.getStat("corruption") >= 40 } "As long as the group keeps operating the core this well, there is no need to interfere." = 838
-@a quartermaster { shipStat(Happiness) < 1 AND TheAdvisor.getStat("hr") >= 5 } "Things are tense in the core. We may not have the leverage to make demands, the group has grown in numbers."
-@a quartermaster { shipStat(Happiness) < 1 AND TheAdvisor.getStat("hr") < 5 } "Things are tense in the core, and more people are now joining the group."
-@a psycher { TheAdvisor.getStat("psy") >= 7 } "The core has given birth to these so called 'core singers'. Giving birth to a mind, but not from nothingness. From the other side. Do you understand what I'm saying?"
-@a psycher { TheAdvisor.getStat("corruption") >= 40 } "I have been in contact to these 'core singers' and I am intrigued. They may have something to contribute." = 838
-@a psycher { TheAdvisor.getStat("corruption") >= 80 } "I have met these 'core singers' myself. I believe they have a role to play in the future." = 838
-@a psycher { TheAdvisor.getStat("psy") >= 5 } "These 'core singers' are more than what they appear. We all wear masks, but not like these. Not like these."
-@a psycher { TheAdvisor.getStat("psy") >= 3 } "There is something going on here. At the core. A song."
-@a psycher "Isn't this a matter for the security?"
-@a priest { TheAdvisor.getStat("security") < -1 } "The core contains some of the great secrets of the past. We should not reveal them so easily." = 839
-@a priest { shipStat(Holiness) >= 3 } "No heretics can take our holy ship! I will lead our people to the path of righteousness." = 840
-@a priest "The core is a sacred place, and must be under our direct control!" = 840
-
-#default_advice
-/* default fall-through advice */
-@frequency "Default"
-@situation "Default"
-@ambient "DefaultBridge"
-@f "LOC_advice"
-@p { gameTime >= 0 } = 0
-@a captain "Any suggestions?"
-@a navigator "This doesn't concern me."
-@a engineer "I can't fix this."
-@a security "Nothing to report."
-@a quartermaster "We need to know more."
-@a psycher "Hmm."
-@a priest "I sahould pray for guidance."
-
-#in 1c08 first enter
+#[in] 1c08 first enter
 /* The first time the hiding colony of the Gardens of Augustus is entered */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
 @location = getLocation(1C08)
 @trigger = inLocation
-@p { event["at 1c08 first found"].outcome = 0 } = 0
+@p { event["[at] 1c08 first found"].outcome = 0 } = 0
 @t {o = 0} "Immediately after transit, ship comms crackles on by a radio transmission from a nearby source. It will take a moment for the ship sensors to come back online and give more information.
 
 <INCOMING TRANSMISSION>
@@ -372,6 +263,182 @@ And the ship falls back into the fracture."
 @a priest { TheAdvisor.getStat("holiness") >= 2 } "There is only one reason to turn out your fracture beacon, and it's because they are up to no good."
 @a priest "To live in isolation is to invite a catastrophe one world can't solve. It would be in their best interests to cooperate with others."
 
+#contact_noble4
+/* House Valeria */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "contact_factions"
+@p = 0
+@t {o = 0 AND getFactionReputation("noble4") >= 30} "Salutations!
+
+I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+. How may I be of assistance to you?"
+@c {o = 0 AND getFactionReputation("noble4") > 30} "Ask for a favour." = 901
+@o {c = 901} = 902
+@c {o = 902} "Never mind." = 1072
+@o {c = 1072} = 1073 $=restartEvent()
+@c {o = 902 AND getFactionReputation("noble4") >= 50} "Ask for support [-20 faction reputation, 1000 credits]" = 1044
+@o {c = 1044} = 1083 $=addFactionReputation("noble4", -20) $=addCredits(1000)
+@c {o = 1083} "Continue." = 1085
+@o {c = 1085} = 1086 $=restartEvent()
+@t {o = 1083} "Of course, hope this helps."
+@t {o = 1083 AND getFactionReputation("noble4") <= 70} "You should know we can't offer you more support right now."
+@t {o = 902} "Of course, what did you have in mind?"
+@c {o = 902} "Ask for a reward. [-10 faction reputation, 200 credits]" = 1071
+@o {c = 1071} = 1077 $=addFactionReputation("123", -10) $=addCredits(200)
+@t {o = 1077} "You have certainly earned a reward for all you have done, well done."
+@t {o = 1077 AND getFactionReputation("noble4") <= 40} "But now it is your time to help your house again, yes?"
+@c {o = 1077} "Continue." = 1078
+@o {c = 1078} = 1080 $=restartEvent()
+@c {o = 0 AND getFactionReputation("noble4") <= -70} "Attempt to escape!" = 1056
+@o {c = 1056 AND getAdvisorStat("captain", "combat") >= 3} = 1057
+@t {o = 1057} "The captain and the delegation manage to fight their way out back to the ship."
+@c {o = 1057} "Continue." = 1067
+@o {c = 1067} = 1068 $=resetOutcome $=end
+@o {c = 1056} = 1061 $=resetOutcome $=end
+@c {o = 0 AND getFactionReputation("noble4") > -20} "Ask how you can help." = 908
+@o {c = 908} = 909
+@t {o = 909} "Here is what you can do:
+blah blah blah"
+@c {o = 909} "Continue." = 1147
+@o {c = 1147} = 1148 $=restartEvent()
+@c {o = 0 AND getFactionReputation("noble4") > -70 AND getFactionReputation("noble4") <= -20} "Leave quickly." = 1055
+@o {c = 1055} = 1059 $=resetOutcome $=end
+@t {o = 0 AND getFactionReputation("noble4") > -5 AND getFactionReputation("noble4") <= 30} "Greetings,
+
+I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+. I will always make time to hear you out."
+@c {o = 0 AND getFactionReputation("noble4") > -20} "Leave, begging their pardon." = 1054
+@o {c = 1054} = 1060 $=resetOutcome $=end
+@c {o = 0 AND getFactionReputation("noble4") <= -20} "Ask for a chance to make amends." = 1053
+@o {c = 1053 AND getFactionReputation("noble4") > -70 OR getShipStat("Diplomacy") > 3} = 1058
+@t {o = 1058} "It is possible to talk about reparations, yes."
+@c {o = 1058 AND getCredits() >= 1000 AND getFactionReputation("noble4") > -70} "Offer 1.000 credits in hopes to amend the relations. [10 relations]" = 1110
+@o {c = 1110} = 1111 $=addCredits(-1000) $=addFactionReputation("noble4", 10)
+@t {o = 1111 AND getFactionReputation("noble4") <= -50} "All right. You still have a long way to go, but I am glad you are taking the steps to make amends."
+@c {o = 1111} "Continue." = 1126
+@o {c = 1126} = 1127 $=restartEvent()
+@t {o = 1111 AND getFactionReputation("noble4") > -50 AND getFactionReputation("noble4") <= -30} "This will go a long way to normalize our relations. I hope you keep the course."
+@t {o = 1111 AND getFactionReputation("noble4") > -30} "Thank you. You may consider our grievances settled."
+@c {o = 1058} "Uhh... never mind." = 1121
+@o {c = 1121} = 1122 $=restartEvent()
+@t {o = 1058 AND getCredits() < 1000} "But it would take at least 1000 credits to start the process.
+[Current account balance: +getCredits()+]."
+@c {o = 1058 AND getCredits() >= 3000 AND getFactionReputation("noble4") <= -70} "Offer 3.000 credits in reparations. [20 relations]" = 1107
+@o {c = 1107} = 1108 $=addCredits(-3000) $=addFactionReputation("noble4", 20)
+@t {o = 1108} "I appreciate you taking the steps to right the wrongs you have done. There may be hope for you yet."
+@c {o = 1108} "Continue." = 1141
+@o {c = 1141} = 1142 $=restartEvent()
+@o {c = 1053 AND getFactionReputation("noble4") <= -70} = 1099
+@t {o = 1099} "I do not see a way for you to lift the amount of contempt we have for you. Now, get out!"
+@c {o = 1099} "Leave quickly." = 1102
+@o {c = 1102} = 1103 $=resetOutcome $=end
+@t {o = 0 AND getFactionReputation("noble4") <= -70} "Guards, seize that criminal!"
+@t {o = 0 AND getFactionReputation("noble4") > -70 AND getFactionReputation("noble4") <= -20} "You have a lot of nerve to show up in here. What do you want?"
+@t {o = 0 AND getFactionReputation("noble4") > -20 AND getFactionReputation("noble4") <= -5} "I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+. I am wondering what are you doing here. Perhaps you will offer to make reparations to get in our good graces, no? House Valeria can open many doors."
+@a captain { getFactionReputation("noble4") >= 20 } "trusted" = 1055
+@a captain { getFactionReputation("noble4") <= -70 AND TheAdvisor.getStat("violent") < 0 } "Having a vendetta with one of the great noble houses may not be beneficial. We should give peace talks a chance." = 1053
+@a captain { getFactionReputation("noble4") <= -70 } "We'll burn their house down!" = 1056
+@a captain "House Valeria is one of the great noble houses. They have quite a lot of power across the sector, and their favour can be a great asset." = 908
+@a captain { getFactionReputation("noble2") <= -20 } "These noble houses are thing of the past. Why should we pamper them like they owned the place?" = 1055
+@a captain { getFactionReputation("noble2") <= -20 AND TheAdvisor.getStat("aristocrat") > 0 } "One of the great noble houses are pretty pissed off at us." = 1053
+
+#core singers
+/* Core singers 2 - If engine room's 'core singers' are allowed to be */
+@frequency "Elevated"
+@situation "Default"
+@ambient "EngineRoom"
+@p { event["Odd behaviour"].outcome = 0 } = 0
+@p { event["Odd behaviour"].outcome = 828 } = 0
+@p { getShipStat("Morale") >= 4 } = 0
+@p { getShipStat("Morale") <= -3 } = 2
+@c {o = 0} "Do not interfere." = 838
+@o {c = 838} = 843
+@t {o = 843} "The 'core singers' are established as a group with some autonomy in the core. They continue to serve the ship well while having an impact on practices and beliefs of the crew."
+@c {o = 843} "Continue" = 857
+@o {c = 857} = 893 $=available = false $=end
+@t {o = 0} "Newly formed group of engine crew living near the core continue to operate by their own practices. Most recently they have restricted the access to the core from nonmembers."
+@c {o = 0} "Demand access to the core for key personnel." = 839
+@o {c = 839 AND getShipStat("Happiness") < 1} = 844
+@t {o = 844} "After quick negations, it became clear that the boundaries set by the group are strict, and their leaders the 'core singers' assume a position of autonomy in the core."
+@c {o = 844} "Send in the security to reclaim the core." = 858
+@o {c = 858 AND getShipStat("Morale") >= 2} = 859
+@c {o = 859} "Continue" = 864
+@o {c = 864} = 865 $=available = false $=end
+@t {o = 859} "The security encountered resistance at the core that escalated into a fight in the narrow corridors leading to the core. The defenders were prepared, but the dedicated security forces routed the resistance. In a fierce final stand, the 'core singers' were killed. After that, the involved crew quickly submitted to disciplinary actions and the crew rotated to restore security to the core."
+@o {c = 858 AND getShipStat("Morale") < 2} = 884
+@c {o = 884} "Continue" = 888
+@o {c = 888} = 890 $=available = false $=end
+@t {o = 884} "The security encountered resistance at the core that escalated into fighting in the narrow corridors leading to the core. The defenders were prepared, and the ship's security forces were unable to reach the core. As the stalemate and high tensions aboard continued, the group declared themselves the 'core singers' and responsible for the core operations."
+@c {o = 844} "Appoint the 'core singers' an official position on the core." = 851
+@o {c = 851} = 860
+@t {o = 860} "The 'core singers' are established as a group with some autonomy in the core. They continue to serve the ship well while having an impact on practices and beliefs of the crew."
+@c {o = 860} "Continue" = 862
+@o {c = 862} = 866 $=available = false $=end
+@o {c = 839 AND getShipStat("Happiness") >= 1 OR getShipStat("Holiness") >= 3} = 842
+@c {o = 842} "Continue" = 850
+@o {c = 850} = 852 $=available = false $=end
+@t {o = 842} "After quick negotiations it is agreed that key security and engineering personnel are allowed access to the core. It will otherwise remain under the tutelage of the 'core singers', the leaders of the group."
+@c {o = 0} "Send in the security to reclaim the core." = 840
+@o {c = 840} = 889
+@o {c = 840 AND getShipStat("Holiness") >= 3} = 841
+@c {o = 841} "Praise the Church!" = 870
+@o {c = 870} = 871 $=available = false $=end
+@t {o = 841} "The security encountered resistance at the core. But soon after, a devout of the Cult started singing from the Holy Scriptures of the Church and it picked up until the entire engine section was singing it. 'Core singers' disappeared soon after and the core resumed its proper state."
+@o {c = 840 AND getShipStat("Morale") < 1} = 867
+@t {o = 867} "The security encountered resistance at the core that escalated into fighting in the narrow corridors leading to the core. The ship's security forces were unable to reach the core. As the stalemate and high tensions aboard continued, the group declared themselves the 'core singers' and responsible for the core operations."
+@c {o = 867} "Continue" = 880
+@o {c = 880} = 881 $=available = false $=end
+@o {c = 840 AND getShipStat("Morale") >= 1} = 845
+@c {o = 845} "Continue" = 875
+@o {c = 875} = 876 $=available = false $=end
+@t {o = 845} "The security encountered resistance at the core that escalated into a fight in the narrow corridors leading to the core. The ship's security forces were motivated and routed the resistance. In a fierce final stand, the 'core singers' were killed. After that, the involved crew quickly submitted to disciplinary actions and the crew rotated to restore security to the core."
+@a captain "The core is functioning well it seems. But is it possible to run a ship with independent departments?"
+@a navigator { TheAdvisor.getStat("corruption") >= 50 } "As long as the core is in tune." = 838
+@a navigator "The core is in tune."
+@a engineer { TheAdvisor.getStat("corruption") >= 30 } "I have things under control. We are actually on to something very interesting." = 838
+@a engineer { TheAdvisor.getStat("corruption") >= 70 } "There must be a misunderstanding here. We do have access! I am a member after all." = 838
+@a engineer "This is absurd. I'm going to need access to my core." = 839
+@a security { TheAdvisor.getStat("corruption") >= 80 } "I have infiltrated the group. There is no reason to interfere yet, we can control the situation if need arises." = 838
+@a security { TheAdvisor.getStat("corruption") >= 50 } "I am not convinced this is a threat to the ship security. It's a matter of preference, really." = 838
+@a security { getShipStat("Morale") >= 1 AND TheAdvisor.getStat("leadership") >= 4 } "I trust my men. You can count on us." = 840
+@a security { getShipStat("Morale") >= 1 } "It may be difficult to take the core, if the defenders are determined." = 839
+@a security { getShipStat("Morale") >= 1 AND TheAdvisor.getStat("combat") >= 4 } "I can take them." = 840
+@a security { getShipStat("Morale") >= 1 AND TheAdvisor.getStat("security") >= 1 } "The core can be easily defended, but our security can handle this." = 840
+@a security { getShipStat("Morale") < 1 AND TheAdvisor.getStat("leadership") >= 3 } "If the resistance is determined at the core, our security forces may not be able to handle it. I need more men!" = 839
+@a security { getShipStat("Morale") < 1 AND TheAdvisor.getStat("security") >= 2 } "The core can be easily defended. Our security forces may have a hard time enforcing this. This is why we need better security on the ship!" = 839
+@a security { getShipStat("Morale") < 1 } "It may be difficult to take the core, if the defenders are determined." = 839
+@a quartermaster { getShipStat("Happiness") >= 1 AND TheAdvisor.getStat("hr") >= 3 } "The situation on the ship is well at hand. This is negotiable." = 839
+@a quartermaster { getShipStat("Happiness") >= 1 AND TheAdvisor.getStat("hr") < 3 AND TheAdvisor.getStat("hr") < 4 } "If this doesn't interfere with the ship's procedures, perhaps we should allow this. The crew is handing this well." = 838
+@a quartermaster { getShipStat("Happiness") >= 1 AND TheAdvisor.getStat("hr") < 3 AND TheAdvisor.isIdeology("cult") } "Who knows what is going on in there? This isn't right, we have to get in there." = 840
+@a quartermaster { TheAdvisor.getStat("hr") >= 4 } "The chain of command is breaking up. These so called 'core singers' are not taking orders from our leadership anymore." = 839
+@a quartermaster { TheAdvisor.getStat("corruption") >= 40 } "As long as the group keeps operating the core this well, there is no need to interfere." = 838
+@a quartermaster { getShipStat("Happiness") < 1 AND TheAdvisor.getStat("hr") >= 4 } "Things are tense in the core. We may not have the leverage to make demands, the group has grown in numbers."
+@a quartermaster { getShipStat("Happiness") < 1 AND TheAdvisor.getStat("hr") < 4 } "Things are tense in the core, and more people are now joining the group."
+@a psycher { TheAdvisor.getStat("psy") >= 4 } "The core has given birth to these so called 'core singers'. Giving birth to a mind, but not from nothingness. From the other side. Do you understand what I'm saying?"
+@a psycher { TheAdvisor.getStat("corruption") >= 40 } "I have been in contact to these 'core singers' and I am intrigued. They may have something to contribute." = 838
+@a psycher { TheAdvisor.getStat("corruption") >= 80 } "I have met these 'core singers' myself. I believe they have a role to play in the future." = 838
+@a psycher { TheAdvisor.getStat("psy") >= 3 } "These 'core singers' are more than what they appear. We all wear masks, but not like these. Not like these."
+@a psycher { TheAdvisor.getStat("psy") >= 2 } "There is something going on here. At the core. A song."
+@a psycher "Isn't this a matter for the security?"
+@a priest { TheAdvisor.getStat("security") < -1 } "The core contains some of the great secrets of the past. We should not reveal them so easily." = 839
+@a priest { getShipStat("Holiness") >= 1 } "No heretics can take our holy ship! I will lead our people to the path of righteousness." = 840
+@a priest "The core is a sacred place, and must be under our direct control!" = 840
+
+#default_advice
+/* default fall-through advice */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@p { gameTime >= 0 } = 0
+@a captain "Any suggestions?"
+@a navigator "This doesn't concern me."
+@a engineer "I can't fix this."
+@a security "Nothing to report."
+@a quartermaster "We need to know more."
+@a psycher "Hmm."
+@a priest "I sahould pray for guidance."
+
 #intro Valeria1t
 /* trigger (1C07) INTRO 1 - Regulus and aristocrat's pledge */
 @frequency "Default"
@@ -386,9 +453,9 @@ And the ship falls back into the fracture."
 @o {c = 708} = 710
 @t {o = 710} "Consul Regulus and several Valerian captains appear in public with a strong statement. Dacei envoy responds by calling it an aggression. Among the captains, Regulus asks if anyone have the guts to poke around in Dacei shipping lines to see what they are doing. He'd be interested in the contents of their transports."
 @c {o = 710} "Continue." = 712
-@o {c = 712} = 713 $=available = false $=end
+@o {c = 712} = 713 $=available = false $=end $=newLocFactionLeader("noble4", "Evander")
 @c {o = 0} "Stay out of it." = 709
-@o {c = 709} = 716 $=available = false $=end
+@o {c = 709} = 716 $=available = false $=end $=newLocFactionLeader("noble4", "Evander")
 @a captain { TheAdvisor.isIdeology("liberal") } "Consul Regulus has come from the sector Capital to succeed the retiring Lord Calius Valeria. Planetary governor Evander is the other nominee for the position, smart and sensible." = 709
 @a captain { TheAdvisor.isIdeology("aristocrat") } "This can get us some recognition. And it's a strong statement. Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position." = 708
 @a captain "Consul Regulus has come from the sector Capital to succeed Lord Calius Valeria. Planetary governor Evander is the other nominee for the position."
@@ -407,7 +474,7 @@ And the ship falls back into the fracture."
 @a priest "The Consul is asking us, and it is our duty to answer his call." = 708
 
 #intro Valeria2t
-/* trigger (1C07) INTRO 2 - Evander's political dinner */
+/* [at 1C07] INTRO 2 - Evander's political dinner */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -416,28 +483,28 @@ And the ship falls back into the fracture."
 @location = getLocation(1C07)
 @trigger = inLocation
 @p { event["intro Valeria1t"].outcome = 0 OR event["intro Valeria1t"].outcome = 713 } = 0
-@t {o = 0} "Planetary governor Evander contacts the ship and commends the captain for staying out of internal politics. He invites the top brass to an official dinner to discuss local matters."
+@t {o = 0} "Planetary governor Evander Valeria contacts the ship and commends the captain for staying out of internal politics. He invites the top brass to an official dinner to discuss local matters."
 @c {o = 0} "Attend the official dinner." = 721
 @o {c = 721} = 726
 @c {o = 726} "Continue." = 728
 @o {c = 728} = 729 $=available = false $=end
-@t {o = 726} "Exarch Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planet wide repeatedly over the next few days. In private, Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are gearing up for aggression."
+@t {o = 726} "Governor Evander hosts several Valerian captains and members of the Guiding Council. The event is broadcasted planet wide repeatedly over the next few days. In private, Lord Evander asks you to help the liberal movement here and in the Sovereign Void, to counter Dacei interests from spreading. But he discourages direct confrontation, as Dacei are gearing up for aggression."
 @c {o = 0} "Excuse yourself." = 722
 @o {c = 722} = 723 $=available = false $=end
-@a captain { TheAdvisor.isIdeology("aristocrat") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political maneuvering." = 722
-@a captain { TheAdvisor.isIdeology("liberal") } "Exarch Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Exarch Evander is popular, and his attention would reflect well on us." = 721
+@a captain { TheAdvisor.isIdeology("aristocrat") } "Governor Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. Official dinners are political maneuvering." = 722
+@a captain { TheAdvisor.isIdeology("liberal") } "Governor Evander is the local planetary governor, and a nominee for the position of Lord House Valeria. He is popular, and his attention would reflect well on us." = 721
 @a navigator "The symmetry of politics. We are being weighted."
 @a engineer { TheAdvisor.isIdeology("liberal") } "Of course. We must not refuse this man." = 721
 @a engineer { TheAdvisor.isIdeology("aristocrat") } "No, I don't think so. I mean, there is so much to do and we're on a tight schedule." = 722
 @a engineer "I'm not very political. But I told you we were being used and I will tell you again."
 @a security { TheAdvisor.isIdeology("aristocrat") } "After refusing the pledge, Consul Regulus will not look at us favorably, if we now start supporting his political opponents." = 722
 @a security "The navy is courted by the political rivals. So far it's just political and I hope there won't be an escalation in the internal politics of House Valeria."
-@a quartermaster "I wonder what kind of a man Consul Regulus is. If he takes this as a snub from us, it's not good. If we refuse, it's a snub against the Exarch."
+@a quartermaster "I wonder what kind of a man Consul Regulus is. If he takes this as a snub from us, it's not good. If we refuse, it's a snub against the Governor."
 @a psycher "I am a little bit preoccupied at the moment."
 @a priest "I'm not sure we can accept now, when we just turned down a Consul." = 722
 
 #intro Valeria3t
-/* trigger (1C07) INTRO 3 - Calius' private message on artifacts */
+/* [at 1C07] INTRO 3 - Calius' private message on artifacts */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -450,7 +517,7 @@ And the ship falls back into the fracture."
 
 Captain +getCharacter(Character.Job.captain).name+,
 
-I have noted your discretion in the recent political ramp up. And I have use for someone with a measure of discression. Artifacts of the grey past are being transported in the Sovereign Void on board Dacei transports. I would be very interested in acquiring one.'            
+I have noted your discretion in the recent political ramp up. And I have use for someone with a measure of discretion. Artifacts of the grey past are being transported in the Sovereign Void on board Dacei transports. I would be very interested in acquiring one.'            
 
 
 -Lord Calius Valeria"
@@ -480,7 +547,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "+getLocation().name+ reverts to default comment"
 
 #loc_advice_1C01
-/* New Dirae */
+/* New Dirae, Central World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -496,7 +563,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "Down there is a tomb of old technology. Tombs should not be disturbed."
 
 #loc_advice_1C02
-/* The Arch */
+/* The Arch, Central Station */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -511,7 +578,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "The Blessed Arch. After the Caretakers failed at their task with the Beacon, the Church has been negotiating to share in the responsibility. It feels wrong to have these... these technicians handling this sacred task."
 
 #loc_advice_1C03
-/* Megaera */
+/* Megaera, Major Black Market World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -527,7 +594,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "Corruption. The kind that spoils both body and mind. We should aid the Cult and the Imperialists here."
 
 #loc_advice_1C04
-/* Alecto */
+/* Alecto, Primitive Agri World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -541,7 +608,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "The Church has monasteries in many of these planets, teaching people the right way to live. But it is hard sometimes, these are difficult circumstances. So many of them live in the darkness."
 
 #loc_advice_1C05
-/* Tisiphone */
+/* Tisiphone, Minor Mining World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -557,7 +624,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "A site of great victory, always a place of reflection. This is where the spine of Old Furia was crushed."
 
 #loc_advice_1C06
-/* Creon */
+/* Creon, Primitive Agri World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -571,7 +638,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "Everyone has their place, and this is an important part of the Cradle of the Furies. There is something odd about this place though."
 
 #loc_advice_1C07
-/* Beyond the Horizon */
+/* Beyond the Horizon, Central Manufacturing World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -587,12 +654,13 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "It shouldn't be said of one of the great Noble Houses of the Imperium, but Valerians have always made me ask how did they pull it off."
 
 #loc_advice_1C08
-/* The Garden of Augustus */
+/* The Garden of Augustus, Major World [HIDING] */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(1C08)
+@p = 0
 @a captain { TheAdvisor.isIdeology("transhumanist") } "They are hiding here from the world. And why not? They are doing well."
 @a captain { TheAdvisor.isIdeology("nationalist") } "Tiny population, hiding from the rest. And they seem well off. It feels so right."
 @a captain "Tiny population, hiding from the rest of humanity. It seems so strange."
@@ -604,7 +672,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "Captain, I implore you to reveal this location to the Authority. These people are being kept from the light of truth."
 
 #loc_advice_1C09
-/* The Mortuary */
+/* The Mortuary, Minor Mining World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -619,6 +687,7 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @a priest "It is a holy place, secluded and alone. That is why they have avoided temptation and stayed pure."
 
 #loc_advice_2V01
+/* New Luna, Central Mining World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
@@ -626,9 +695,397 @@ I have noted your discretion in the recent political ramp up. And I have use for
 @location = getLocation(2V01)
 
 #loc_advice_2V02
+/* The Essence of Discovery, Major World */
 @frequency "Default"
 @situation "Default"
 @ambient "DefaultBridge"
 @f "LOC_advice"
 @location = getLocation(2V01)
+
+#loc_advice_2V03
+/* Keziah, Major Manufacturing World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V03)
+@p = 0
+
+#loc_advice_2V04
+/* Concord, Major Station */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V04)
+@p = 0
+
+#loc_advice_2V05
+/* New Carthage, Major Mining World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V05)
+@p = 0
+
+#loc_advice_2V06
+/* The Blessing of Peace, Minor Black Market World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V06)
+@p = 0
+
+#loc_advice_2V07
+/* Ascalon, Major Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V07)
+@p = 0
+
+#loc_advice_2V08
+/* Durendal, Primitive Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V08)
+@p = 0
+
+#loc_advice_2V09
+/* Immanence, Central Tech World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(2V09)
+@p = 0
+
+#loc_advice_3F01
+/* The Fall of the Dacei, Minor Black Market World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(3F01)
+@p = 0
+
+#loc_advice_3F02
+/* Tranquillity, Major Station */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(3F02)
+@p = 0
+
+#loc_advice_3F03
+/* Tyche, Major Tech World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(3F03)
+@p = 0
+
+#loc_advice_4S01
+/* New Mercury, Capital World! */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S01)
+@p = 0
+
+#loc_advice_4S02
+/* Plentiful Harvest, Major Black Market World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S02)
+@p = 0
+
+#loc_advice_4S03
+/* Grievance, Major Black Market World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S03)
+@p = 0
+
+#loc_advice_4S04
+/* Glory of the Unknown, Central Tech World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S04)
+@p = 0
+
+#loc_advice_4S05
+/* Ceres, Primitive Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S05)
+@p = 0
+
+#loc_advice_4S06
+/* The Sword of Mercy, Major Contractor World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S06)
+@p = 0
+
+#loc_advice_4S07
+/* Euphrosyne, Central World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S07)
+@p = 0
+
+#loc_advice_4S08
+/* The Shield of Empire, Central Mining World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S08)
+@p = 0
+
+#loc_advice_4S09
+/* Eschaton, Central Agri World [Church Capital] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S09)
+@p = 0
+
+#loc_advice_4S10
+/* The Beauty of Suffering, Minor Contractor World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S10)
+@p = 0
+
+#loc_advice_4S11
+/* Loyalty Station, Major Station */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(4S11)
+@p = 0
+
+#loc_advice_5E01
+/* Renovatio Dirae, Central Mining World [Furia new home] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E01)
+@p = 0
+
+#loc_advice_5E02
+/* New Alecto, Major Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E02)
+@p = 0
+
+#loc_advice_5E03
+/* Theia, Central Agri World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E03)
+@p = 0
+
+#loc_advice_5E04
+/* New Magaera, Central Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E04)
+@p = 0
+
+#loc_advice_5E05
+/* Chirion, Minor World [Hiding] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E05)
+@p = 0
+
+#loc_advice_5E06
+/* Charis, Major World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E06)
+@p = 0
+
+#loc_advice_5E07
+/* Elysium, Core Tech World [HIDING ANCIENT COLONY] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E07)
+@p = 0
+
+#loc_advice_5E08
+/* Arete, Minor Agri World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E08)
+@p = 0
+
+#loc_advice_5E09
+/* Andromache, Primitive Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(5E09)
+@p = 0
+
+#loc_advice_6T01
+/* Bounty of Peace, Central Black Market World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(6T01)
+@p = 0
+
+#loc_advice_6T02
+/* Eos, Minor Agri World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(6T02)
+@p = 0
+
+#loc_advice_6T03
+/* The Terminus, Major Agri World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(6T03)
+@p = 0
+
+#loc_advice_6T04
+/* Catena, Major Agri World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(6T04)
+@p = 0
+
+#loc_advice_6T05
+/* Antares, Major Mining World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(6T05)
+@p = 0
+
+#loc_advice_7I01
+/* Model Colony No. 2, Central Tech World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I01)
+@p = 0
+
+#loc_advice_7I02
+/* Asterion, Major Tech World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I02)
+@p = 0
+
+#loc_advice_7I03
+/* Far Shore, Minor Agri World [LOST] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I03)
+@p = 0
+
+#loc_advice_7I04
+/* Eternal Victory, Major Contractor World */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I04)
+@p = 0
+
+#loc_advice_7I05
+/* Melancholia, Major Agri World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I05)
+@p = 0
+
+#loc_advice_7I06
+/* Eden, Minor Tech World [LOST church world] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I06)
+@p = 0
+
+#loc_advice_7I07
+/* Model Colony No. 3, Minor Tech World [LOST] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I07)
+@p = 0
+
+#loc_advice_7I08
+/* New Earth, Core Tech World [HIDING] */
+@frequency "Default"
+@situation "Default"
+@ambient "DefaultBridge"
+@f "LOC_advice"
+@location = getLocation(7I08)
+@p = 0
 

@@ -31,8 +31,9 @@ public static class ToolTipLibrary
             {
                 toolTipObj.name = "toolTip";
                 toolTip = toolTipObj.GetComponentInChildren<Text>();
-                if (GameState.isState(GameState.State.Location)) toolTipObj.transform.SetParent(GameObject.Find("LocationCanvas").transform);
-                else if (GameState.isState(GameState.State.Starmap) || GameState.isState(GameState.State.Event) || GameState.isState(GameState.State.Pause)) toolTipObj.transform.SetParent(GameObject.Find("ToolTip").transform);
+                //if (GameState.isState(GameState.State.Location)) toolTipObj.transform.SetParent(GameObject.Find("LocationCanvas").transform);
+                //else if (GameState.isState(GameState.State.Starmap) || GameState.isState(GameState.State.Event) || GameState.isState(GameState.State.Pause)) toolTipObj.transform.SetParent(GameObject.Find("ToolTip").transform);
+                toolTipObj.transform.SetParent(GameObject.Find("ToolTip").transform); // parenting
                 if (toolTipObj.transform.parent == null) Debug.LogError("TODO: toolTip not under UI canvas.\n GameState.state = " + GameState.getState().ToString());
             }
         }

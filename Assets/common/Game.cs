@@ -80,6 +80,12 @@ public class Game
         //    navs.Add(nav);
         //}
         navNetwork = new Navigation.NavNetwork(arr, navs);
+
+        ////debug locations descriptions
+        //if (true){
+        //    foreach (var pair in locations)
+        //        Debug.Log(pair.Key + ":\n" + Faction.getImportanceDescription(pair.Value) + "");
+        //}
     }
 
     internal void initEvents()

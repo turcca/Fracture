@@ -30,7 +30,7 @@ static public class GameState
 
     static public void returnFromState(State state = State.None)
     {
-        if (stateStack.Count == 0) { Debug.LogWarning("returnFromState("+state+")  while stae stack was empty (Starmap)");  return; }
+        if (stateStack.Count == 0) { Debug.LogWarning("returnFromState("+state+")  while state stack was empty (Starmap)");  return; }
 
         State oldState = getState();
         if (state != State.None && state != stateStack.Peek())

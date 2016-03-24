@@ -29,9 +29,9 @@ namespace Simulation
 
 
 
-        public string getRuler(Faction.FactionID faction)
+        public string getLeader(Faction.FactionID faction)
         {
-            return data.getFactionRuler(faction);
+            return data.getFactionLeader(faction);
         }
     }
 }

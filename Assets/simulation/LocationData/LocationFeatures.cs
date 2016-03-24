@@ -6,6 +6,7 @@ using System;
 
 namespace Data
 {
+    // SAVE ALL
     public class LocationFeatures 
     {
         public string name = "NO_NAME";
@@ -16,7 +17,7 @@ namespace Data
 
         public Dictionary<Faction.FactionID, float> factionCtrl = new Dictionary<Faction.FactionID, float>();
         public Dictionary<Faction.IdeologyID, float> baseIdeology = new Dictionary<Faction.IdeologyID, float>();
-        public Dictionary<Faction.FactionID, string> ruler = new Dictionary<Faction.FactionID, string>();
+        List<KeyValuePair<Faction.FactionID?, string>> rulers = new List<KeyValuePair<Faction.FactionID?, string>>();
 
         // faction headquarters
         public Faction.FactionID? hq = null;
@@ -40,12 +41,33 @@ namespace Data
             foreach (Faction.FactionID faction in System.Enum.GetValues(typeof(Faction.FactionID)))
             {
                 factionCtrl.Add(faction, 0.0f);
-                ruler.Add(faction, NameGenerator.getName(faction));
             }
             foreach (Faction.IdeologyID ideology in System.Enum.GetValues(typeof(Faction.IdeologyID)))
             {
                 baseIdeology.Add(ideology, 0.0f);
             }
+        }
+        public string getRuler(Faction.FactionID? faction)
+        {
+            foreach (var ruler in rulers)
+                if (ruler.Key == faction) return ruler.Value;
+            // not found, create it and return
+            rulers.Add(new KeyValuePair<Faction.FactionID?, string>(faction, NameGenerator.getName(faction)));
+            return rulers[rulers.Count -1].Value;
+        }
+        public void addRuler(Faction.FactionID? faction, string name = null)
+        {
+            if (name == null) name = NameGenerator.getName(faction);
+
+            for (int i = 0; i < rulers.Count; i++)
+            {
+                if (rulers[i].Key == faction)
+                {
+                    rulers[i] = new KeyValuePair<Faction.FactionID?, string>(faction, name);
+                    return;
+                }
+            }
+            rulers.Add(new KeyValuePair<Faction.FactionID?, string>(faction, name));
         }
 
         public string toDebugString()

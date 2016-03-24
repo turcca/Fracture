@@ -148,7 +148,7 @@ public class ShipStats
     {
         return hpFront + hpDorsal + hpSideL + hpSideR + hpE1 + hpE2 + hpPd;
     }
-    public int crew()
+    public int crewCapacity()
     {
         return
             command * 50 +
@@ -368,7 +368,7 @@ public static class ShipBonusesStats
                 }
                 break;
             case Utility.CoreBypass:
-                item.source += "Power conduits built to reroute secondary core systems directly to the engines.";
+                item.source += "Main power conduits are rerouted, bypassing secondary core systems to prioritize engine power.";
                 if (bonus == ShipBonus.Speed)
                 {
                     //item.text = "";
@@ -818,7 +818,7 @@ public static class ShipBonusesStats
 
                 if (bonus == ShipBonus.Weapons)
                 {
-                    rs = "When quartermasters are veterans of space battles, they can be great help.";
+                    rs = "When quartermasters are veterans of space battles, they can be a great help.";
                     ri = (character.getStat(Character.Stat.spaceBattle));
                     if (ri >= 300) ri =2;
                     else if (ri >= 200) ri =1;
@@ -1251,7 +1251,7 @@ public static class ShipBonusesStats
             case ShipBonusCathegory.None:
                 return rs;
             case ShipBonusCathegory.Crew:
-                rs = "Overall crew loyalty comes from happiness and morale.\n";
+                rs = "[Crew recruiting modifier]\nOverall crew loyalty comes from happiness and morale.\n\n";
                 if (value > 9) rs += "Onboard this ship, serves the most dedicated crew on the sector! People beg to get a position on your ship.";
                 else if (value > 5) rs += "Right now the crew is very dedicated! Reputation on crew conditions is great which makes recruitment easy.";
                 else if (value > 2) rs += "Right now the crew is focused and dedicated. The ship is considered a good one to sign on, so there should be no problems in recruiting.";
@@ -1262,7 +1262,7 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "There are some complaints. Either people are not performing, or there are some problems in the management. You may lose some crew on the next port of call.";
                 break;
             case ShipBonusCathegory.Ship:
-                rs = "Internal ship stability comes mostly from critical systems like the core stability and weapon status.\n";
+                rs = "[Ship structure modifier]\nInternal ship stability comes mostly from critical systems like the core stability and weapon status.\n\n";
                 if (value > 9) rs += "The engineering team onboard has made wonders to the ship. It is in perfect working order!";
                 else if (value > 5) rs += "When kept well, these ships can handle quite a lot. And clearly, there are very qualified people running the ship.";
                 else if (value > 2) rs += "The ship is well maintained. Sometimes you can hear these things from ship vibrations when you come aboard.";
@@ -1273,7 +1273,7 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "These ships are old, and it is hard to keep taps with its many arcane systems and components.";
                 break;
             case ShipBonusCathegory.Fracture:
-                rs = "Fracture is no place for human beings. No place. However, there are ways to make the fracture fall manageable, so a thread of sanity is left when the ship comes out.\n";
+                rs = "[Fracture safety modifier]\nFracture is no place for human beings. No place. However, there are ways to make the fracture fall manageable, so a thread of sanity is left when the ship comes out.\n\n";
                 if (value > 9) rs += "But oboard this ship, it is like it was not inside the fracture at all!";
                 else if (value > 5) rs += "On this ship, it seems to be working well.";
                 else if (value > 2) rs += "This ship is a typical example. There are some unexplained headaches and insomnia.";
@@ -1284,7 +1284,7 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "This ship is a typical example. People are jumpy and distrusting. Someone loses his mind or yells for no apparent reason. And at night you can hear the crew cry in their sleep.";
                 break;
             case ShipBonusCathegory.Relations:
-                rs = "Relations, reputation and recognition onboard a starship resonates from the political- and business networks it extends.\n";
+                rs = "[Fame modifier]\nRelations, reputation and recognition onboard a starship resonates from the political- and business networks it extends.\n\n";
                 if (value > 9) rs += "This ship is reknown, and its actions are an interest on many worlds.";
                 else if (value > 5) rs += "The actions of this ship are followed with great interest, and are well remembered.";
                 else if (value > 2) rs += "The actions of this ship are always local news.";
@@ -1308,7 +1308,7 @@ public static class ShipBonusesStats
             case ShipBonus.None:
                 return rs;
             case ShipBonus.Happiness:
-                rs = "The crew is ";
+                rs = "[Ship structure modifier]\nThe crew is ";
                 if (value > 9) rs += "enthusiastic!";
                 else if (value > 5) rs += "happy.";
                 else if (value > 2) rs += "comfortable.";
@@ -1319,7 +1319,7 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "reserved. There are some complaints, but they are mostly minor issues.";
                 break;
             case ShipBonus.Morale:
-                rs = "Morale is crew's conviction, the will to fight as well as representative of the internal security.\n";
+                rs = "[Security and combat modifier]\nMorale is crew's conviction, the will to fight as well as representative of the internal security.\n\n";
                 if (value > 9) rs += "Reported morale is 'Excellent': The crew's faith in the ship is unwavering.";
                 else if (value > 5) rs += "Reported morale is 'Good': Crew is dedicated and eager to serve.";
                 else if (value > 2) rs += "Reported morale is 'Solid': No security threats, the crew is ready and willing.";
@@ -1330,9 +1330,9 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "Reported morale is 'Substandard': Working morale is not good. Critical operations are not compromized, but there are reports of mismanagement from most departments.";
                 break;
             case ShipBonus.Weapons:
-                rs = "Weapon systems, sensors and remote tactical objects are key to efficient space combat operations.\n";
-                if (value >= 0) rs += "Weapon and sensor range bonus:  +" + Mathf.Round((1f- Mathf.Sqrt(1f - value /15f))*100f ) + "%"; // multiplier: 1 - Sqrt(1-weapons/15)
-                else rs += "Weapon and sensor range bonus:  " + Mathf.Round((1f - Mathf.Sqrt(1f - value / 15f)) * 100f) + "%";
+                rs = "[Weapon range modifier]\nWeapon systems and remote tactical objects are key to efficient space combat operations.";
+                if (value >= 0) rs += "\n\nWeapon range bonus:  +" + Mathf.Round((1f- Mathf.Sqrt(1f - value /15f))*100f ) + "%"; // multiplier: 1 - Sqrt(1-weapons/15)
+                else rs += "\n\nWeapon range bonus:  " + Mathf.Round((1f - Mathf.Sqrt(1f - value / 15f)) * 100f) + "%";
                 //else if (value > 5) rs += "";
                 //else if (value > 2) rs += "";
                 //else if (value >= 0) rs += "";
@@ -1342,7 +1342,7 @@ public static class ShipBonusesStats
                 //else if (value < 0) rs += "";
                 break;
             case ShipBonus.Core:
-                rs = "The core is a sealed fracture power source in a round compartment.\n"; // TODO: core mechanics
+                rs = "[Energy stability modifier]\nThe core is a sealed fracture power source in a round compartment.\n\n"; // TODO: core mechanics
                 if (value > 9) rs += "Even the most delicate systems on the ship are operating without a hiccup!";
                 else if (value > 5) rs += "The whole ship is more reliable for its steady power source.";
                 else if (value > 2) rs += "It is stable.";
@@ -1353,7 +1353,7 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "Sometimes there are brownouts as the current fluxes. Primary systems are secured.";
                 break;
             case ShipBonus.Link:
-                rs = "Fracture link represents control over the fracture vortex that forms around everything in fracture.\n";
+                rs = "[Fracker power]\nFracture link represents control over the fracture vortex that forms around everything in fracture.\n\n";
                 if (value > 9) rs += "The ship is like a perfect storm: calm in the centre, and a great whirlwind of power crackling around it!";
                 else if (value > 5) rs += "The energies around the ship are powerful, yet projected outwards exatly like they should be.";
                 else if (value > 2) rs += "There is a measurable barrier of fracture circling the ship, deflecting fracture surges.";
@@ -1364,9 +1364,9 @@ public static class ShipBonusesStats
                 else if (value < 0) rs += "There are volatile surges of fracture around the ship, beating against the flood shields.";
                 break;
             case ShipBonus.Speed:
-                rs = "Speed comes from the core churning power to the engines, and from navigating through the currents of fracture.\n";
-                if (value >= 0) rs += "Speed bonus:  +" + Mathf.Round((1f - Mathf.Sqrt(1f - value / 15f)) * 100f) + "%"; // multiplier: 1 - Sqrt(1-weapons/15)
-                else rs += "Speed bonus:  " + Mathf.Round((1f - Mathf.Sqrt(1f - value / 15f)) * 100f) + "%";
+                rs = "[Ship speed modifier]\nSpeed comes from the core churning power to the engines, and from navigating through the currents of fracture.";
+                if (value >= 0) rs += "\n\nSpeed bonus:  +" + Mathf.Round((1f - Mathf.Sqrt(1f - value / 15f)) * 100f) + "%"; // multiplier: 1 - Sqrt(1-weapons/15)
+                else rs += "\n\nSpeed bonus:  " + Mathf.Round((1f - Mathf.Sqrt(1f - value / 15f)) * 100f) + "%";
                 //if (value > 9) rs += "";
                 //else if (value > 5) rs += "";
                 //else if (value > 2) rs += "";
@@ -1377,37 +1377,37 @@ public static class ShipBonusesStats
                 //else if (value < 0) rs += "";
                 break;
             case ShipBonus.Holiness:
-                rs = "";
-                if (value > 9) rs += "";
-                else if (value > 5) rs += "";
-                else if (value > 2) rs += "";
-                else if (value >= 0) rs += "";
-                else if (value < -9) rs += "";
-                else if (value < -5) rs += "";
-                else if (value < -2) rs += "";
-                else if (value < 0) rs += "";
+                rs = "[Fracture resistance]\nWith purity of mind, it is possible to resist the corrupting powers constantly attacking the human mind.\n\n";
+                if (value > 9) rs += "The ship is a sanctuary, and will suffer no harm from wicked forces!";
+                else if (value > 5) rs += "The ship is obviously blessed. The communion is strong and united.";
+                else if (value > 2) rs += "There is something blessed about this ship. A peace of mind that can be felt.";
+                else if (value >= 0) rs += "The proper protocol is observed, and practises on the ship are mostly sound.";
+                else if (value < -9) rs += "It is quite possible the ship and its crew is possessed. But how is it necessarily a bad thing?";
+                else if (value < -5) rs += "Someone could find many cases of malpractises from core dabbling to outright daemon summonings among the crew.";
+                else if (value < -2) rs += "To an outsider, crew's widespread and unsanctified beliefs and practises can seem a bit disturbing.";
+                else if (value < 0) rs += "Each ship has their unique ways of handling the daily routines.";
                 break;
             case ShipBonus.Diplomacy:
-                rs = "";
-                if (value > 9) rs += "";
-                else if (value > 5) rs += "";
-                else if (value > 2) rs += "";
-                else if (value >= 0) rs += "";
-                else if (value < -9) rs += "";
-                else if (value < -5) rs += "";
-                else if (value < -2) rs += "";
-                else if (value < 0) rs += "";
+                rs = "[Relations modifier]\nEach transaction, exchange of ideas or negotiations changes the relationship.\n\n";
+                if (value > 9) rs += "To walk through life without enemies is a great achievement!";
+                else if (value > 5) rs += "Master diplomats can win friends easily and dodge complications with alarming grace.";
+                else if (value > 2) rs += "Sometimes a bad thing can be fixed, and good things can have great power to connect people.";
+                else if (value >= 0) rs += "It is good to have many friends and few enemies.";
+                else if (value < -9) rs += "But something is seriously wrong, when no opportunity can make friends, and even the smallest of slight turns into a catastrophe.";
+                else if (value < -5) rs += "But these dealings rarely offer little beyond their current value of transaction. At least there won't be shortage of enemies.";
+                else if (value < -2) rs += "But it is hard to form relations and trust that grow beyond the moment. Unless it is something bad. People remember the bad.";
+                else if (value < 0) rs += "It would be helpful if more came out of it. Can't have too many friends.";
                 break;
             case ShipBonus.Trade:
-                rs = "";
-                if (value > 9) rs += "";
-                else if (value > 5) rs += "";
-                else if (value > 2) rs += "";
-                else if (value >= 0) rs += "";
-                else if (value < -9) rs += "";
-                else if (value < -5) rs += "";
-                else if (value < -2) rs += "";
-                else if (value < 0) rs += "";
+                rs = "[Trade modifier]\nWhere others buy at list prices, master traders can find extra profit.\n\n";
+                if (value > 9) rs += "And this ship is famous for it!";
+                else if (value > 5) rs += "Most of the time the right buyer or a great opportunity can be found.";
+                else if (value > 2) rs += "This ship usually trades above list prices.";
+                else if (value >= 0) rs += "This ship trades at list prices.";
+                else if (value < -9) rs += "Ships like this are their favourite marks.";
+                else if (value < -5) rs += "But why is no-one showing those lists? Runnign a ship is very expensive.";
+                else if (value < -2) rs += "But there are so many extra expenses and fees it is hard to keep track.";
+                else if (value < 0) rs += "This ship trades at list prices.";
                 break;
             default:
                 return rs;

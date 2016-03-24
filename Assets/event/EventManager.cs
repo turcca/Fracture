@@ -46,11 +46,11 @@ public class EventManager
         if (e.triggerEvent == EventBase.trigger.None)
         {
             //Debug.Log("Adding event (pool): " + e.name);
+            if (e.filters.ContainsKey("LOC_advice")) { e.outcome = 1; e.available = false; } // eventEdit organizes advice-events as root events for location trigger events - set advice outcome to 1 so they are only cosmetically attached (advice event's outcomes are never changed)
             eventPool.Add(e);
         }
         else
         {
-            if (e.filters.ContainsKey("LOC_advice")) e.outcome = 1; // eventEdit organizes advice-events as root events for location trigger events - set advice outcome to 1 so they are only cosmetically attached (advice event's outcomes are never changed)
             //Debug.Log("Adding event (trigger pool: "+e.triggerEvent.ToString()+"): " + e.name);
             triggerEventPool.Add(e);
         }

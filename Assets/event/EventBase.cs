@@ -118,6 +118,9 @@ public class EventBase
         }
         return false;
     }
+
+    // -------------------------------------------------------------------
+
     protected int getElapsedDays()
     {
         return Root.game.player.getElapsedDays();
@@ -148,17 +151,21 @@ public class EventBase
     {
         return Root.game.player.getLocation();
     }
+    protected void newLocFactionLeader(string faction, string name)
+    {
+        Root.game.player.getLocation().newLocationLeader((Faction.FactionID?) Enum.Parse(typeof(Faction.FactionID), faction), name);
+    }
     protected PlayerShip getShip()
     {
         return Root.game.player.playerShip;
     }
     protected void factionChange(string f, int a)
     {
-        //todo
+        Debug.Log("TODO factionChange()"); //todo
     }
     protected void filterWeight(string w, int a)
     {
-        //todo
+        Debug.Log("TODO filterWeight()"); //todo
     }
     protected void leaveLocation()
     {
@@ -185,31 +192,57 @@ public class EventBase
     {
         return character.getStat(s);
     }
+    protected double getAdvisorStat(string job, string s)
+    {
+        return getCharacterStat((Character.Job) Enum.Parse(typeof(Character.Job), job), (Character.Stat)Enum.Parse(typeof(Character.Stat), s));
+    }
     protected double getCharacterStat(Character.Job job, Character.Stat s)
     {
         return Root.game.player.getAdvisor(job).getStat(s);
     }
-    protected double getShipStat(string s)
+    protected int getShipStat(string s)
     {
-        //todo
-        return 0.0;
+        return Root.game.player.shipBonuses.getTotalBonus(s);
     }
-    protected Character getAdvisor(Character.Job job)
+    protected float getCredits()
     {
-        return Root.game.player.getAdvisor(job);
+        return Root.game.player.cargo.credits;
+    }
+    protected void addCredits(float amount)
+    {
+        Root.game.player.cargo.credits += amount;
+        if (Root.game.player.cargo.credits < 0) Debug.LogWarning("events/addCredits: reduced credits below 0 : ("+ Root.game.player.cargo.credits + ")");
+    }
+    protected int getFactionReputation(string faction)
+    {
+        return (int)Root.game.player.playerReputation.getReputationValue(Faction.factionToEnum(faction));
+    }
+    protected string getFactionAlliancesList(string faction)
+    {
+
+    }
+    protected void addFactionReputation(string faction, float amount)
+    {
+        Root.game.player.playerReputation.addReputation(Faction.factionToEnum(faction), amount);
     }
     protected void addCharacterStat(Character.Stat stat, double amount)
     {
-        //todo
+        Debug.Log("TODO addCharacterStat()"); //todo
     }
     protected void setCharacterStat(Character.Stat stat, double amount)
     {
-        //todo
+        Debug.Log("TODO setCharacterStat()"); //todo
     }
 
     protected int statRoll(string s)
     {
+        Debug.Log("TODO setCharacterStat()"); //todo
         return 0;
+    }
+    protected void restartEvent()
+    {
+        outcome = 0;
+        choice = 0;
     }
     protected void end()
     {
