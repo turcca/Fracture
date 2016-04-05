@@ -123,7 +123,7 @@ public class EventBase
 
     protected int getElapsedDays()
     {
-        return Root.game.player.getElapsedDays();
+        return Root.game.getElapsedDays();
     }
     protected double getWarpMagnitude()
     {
@@ -217,9 +217,13 @@ public class EventBase
     {
         return (int)Root.game.player.playerReputation.getReputationValue(Faction.factionToEnum(faction));
     }
-    protected string getFactionAlliancesList(string faction)
+    protected string explainRelations(Faction.FactionID faction)
     {
-
+        return Root.game.factions.getFactionRelationsDescription(faction);
+    }
+    protected string explainRelations(string faction)
+    {
+        return explainRelations((Faction.FactionID)Enum.Parse(typeof(Faction.FactionID), faction));
     }
     protected void addFactionReputation(string faction, float amount)
     {

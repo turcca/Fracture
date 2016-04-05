@@ -264,7 +264,7 @@ namespace Simulation
                 updateFeatures();
                 handlePolicyChanges();
                 setState();
-                if (GameState.isState(GameState.State.Simulation) == false) Debug.Log ("["+Root.game.player.getElapsedDays ()+ "]"+location.id + " UPgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + level);
+                if (GameState.isState(GameState.State.Simulation) == false) Debug.Log ("["+Root.game.getElapsedDays ()+ "]"+location.id + " UPgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + level);
             }
             else Debug.LogWarning ("Attempting to upgrade level 4 resource");
         }
@@ -278,7 +278,7 @@ namespace Simulation
                 updateFeatures();
                 handlePolicyChanges();
                 setState();
-                if (GameState.isState(GameState.State.Simulation) == false) Debug.Log ("[" + Root.game.player.getElapsedDays() + "]" + location.id+ " DOWNgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + level);
+                if (GameState.isState(GameState.State.Simulation) == false) Debug.Log ("[" + Root.game.getElapsedDays() + "]" + location.id+ " DOWNgaded " + Enum.GetName(typeof(Data.Resource.Type), data.type) + " to level " + level);
             }
             else Debug.LogWarning ("Attempting to downgrade level 0 resource");
         }

@@ -11,18 +11,24 @@ public static class CharacterTemplates
         compileTemplates();
     }
 
-    public static Character getCharacter(string templateName = null)
+    public static Character createNewCharacter(string templateName = null)
     {
-        if (templateName == null) return new Character();
-
         // find template
-        if (templateNames.ContainsKey(templateName))
+        if (templateName != null)
         {
-            return new Character(templateNames[templateName]);
+            if (templateNames.ContainsKey(templateName))
+            {
+                Character newCharacter = new Character();
+                newCharacter.format(templateNames[templateName]);
+                return newCharacter;
+                //return new Character(templateNames[templateName]);
+            }
+            Debug.LogError("WARNING: template not found: '" + templateName + "'");
         }
 
-        Debug.LogError("WARNING: template not found: '" + templateName + "'");
-        return new Character();
+        Character newChar = new Character();
+        newChar.format();
+        return newChar;
     }
 
 
@@ -36,6 +42,7 @@ public static class CharacterTemplates
         Character character = new Character();
         character.clearStats();
         name = "starting captain";
+
         character.isMale = true;
 
         // portrait tag: captain

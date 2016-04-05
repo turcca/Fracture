@@ -30,6 +30,7 @@ static public class Root
         game.initEvents();
         game.initNPCShips();
         game.initPlayer();
+        
 #else
         game = new Game();
         game.initLocations();

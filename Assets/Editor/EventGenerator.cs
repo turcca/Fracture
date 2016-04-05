@@ -439,7 +439,6 @@ public class EventGenerator
             }
         }
         
-
         mod = mod.Substring(condEndPos + 1); 
         return cond;
     }

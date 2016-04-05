@@ -1,4 +1,4 @@
-// Events.cs compiled: 15:08:25 23/03/2016
+// Events.cs compiled: 17:10:14 29/03/2016
 #pragma warning disable 0162, 1717
 using System;
 //---------------------------------------------------------------------------------
@@ -1665,13 +1665,13 @@ if (outcome== 902)
 {
 return "Of course, what did you have in mind?";
 }
-if (outcome== 1077)
-{
-return "You have certainly earned a reward for all you have done, well done.";
-}
 if (outcome== 1077 && getFactionReputation("noble4") <= 40)
 {
 return "But now it is your time to help your house again, yes?";
+}
+if (outcome== 1077)
+{
+return "You have certainly earned a reward for all you have done, well done.";
 }
 if (outcome== 1057)
 {
@@ -1679,7 +1679,7 @@ return "The captain and the delegation manage to fight their way out back to the
 }
 if (outcome== 909)
 {
-return "Here is what you can do:\nblah blah blah";
+return "You can further our goals and expand our influence throughout the sector. You should also be aware of our relations to other factions.\n\n"+explainRelations(Faction.FactionID.noble4)+"";
 }
 if (outcome== 0 && getFactionReputation("noble4") > -5 && getFactionReputation("noble4") <= 30)
 {
@@ -1734,11 +1734,6 @@ if (outcome== 0 && getFactionReputation("noble4") > 30)
 choices.Add("Ask for a favour.",  901
 );
 }
-if (outcome== 902)
-{
-choices.Add("Never mind.",  1072
-);
-}
 if (outcome== 902 && getFactionReputation("noble4") >= 50)
 {
 choices.Add("Ask for support [-20 faction reputation, 1000 credits]",  1044
@@ -1759,6 +1754,11 @@ if (outcome== 1077)
 choices.Add("Continue.",  1078
 );
 }
+if (outcome== 902)
+{
+choices.Add("Never mind.",  1072
+);
+}
 if (outcome== 0 && getFactionReputation("noble4") <= -70)
 {
 choices.Add("Attempt to escape!",  1056
@@ -1777,6 +1777,11 @@ choices.Add("Ask how you can help.",  908
 if (outcome== 909)
 {
 choices.Add("Continue.",  1147
+);
+}
+if (outcome== 909)
+{
+choices.Add("Leave.",  1151
 );
 }
 if (outcome== 0 && getFactionReputation("noble4") > -70 && getFactionReputation("noble4") <= -20)
@@ -1832,11 +1837,6 @@ if (choice== 901)
 outcome= 902
 ;
 }
-if (choice== 1072)
-{
-outcome= 1073 ;
-restartEvent();
-}
 if (choice== 1044)
 {
 outcome= 1083 ;
@@ -1857,6 +1857,11 @@ addCredits(200);
 if (choice== 1078)
 {
 outcome= 1080 ;
+restartEvent();
+}
+if (choice== 1072)
+{
+outcome= 1073 ;
 restartEvent();
 }
 if (choice== 1056 && getAdvisorStat("captain", "combat") >= 3)
@@ -1885,6 +1890,12 @@ if (choice== 1147)
 {
 outcome= 1148 ;
 restartEvent();
+}
+if (choice== 1151)
+{
+outcome= 1152 ;
+outcome=0;
+end();
 }
 if (choice== 1055)
 {

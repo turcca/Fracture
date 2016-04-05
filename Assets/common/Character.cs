@@ -311,7 +311,11 @@ public class Character
 
     static private int ids = 0;
 
-    public Character(Character template = null)
+    public Character()
+    {
+        
+    }
+    public void format(Character template = null)
     {
         id = ids;
         ++ids;
@@ -330,8 +334,10 @@ public class Character
 
         // get appropriate portrait
         if (template != null && template.portrait != null) portrait = template.portrait; portrait = Root.PortraitManager.getPortrait("");
+        // gender
+        if (template != null && template.isMale != null) { isMale = template.isMale; } //else { isMale = UnityEngine.Random.value < 0.5f ? true : false; Debug.Log("character not gendered from template"); }
         // get name
-        if (template != null && template.name != "") { name = template.name; } else if (ideology != null) name = NameGenerator.getName((Faction.IdeologyID)ideology); else Debug.LogError("Character name error: ideology null");
+        if (template != null && template.name != "") { name = template.name; } else if (ideology != null) name = NameGenerator.getName((Faction.IdeologyID)ideology, isMale); else Debug.LogError("Character name error: ideology null");
         // get trait
         if (template != null && template.characterTrait != CharacterTrait.None) characterTrait = template.characterTrait;
 

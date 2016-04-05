@@ -34,11 +34,12 @@ static public class GameState
 
         State oldState = getState();
         if (state != State.None && state != stateStack.Peek())
+            Debug.LogWarning("Tried to return from state: '" + state + "', but stateStack was\n" + ToDebugString());
+        else
         {
-            Debug.LogWarning("OBSERVE: returning from state: '" + state + "', but stateStack was\n" + ToDebugString());
+            stateStack.Pop();
+            Debug.Log("[GameState <-- " + ToDebugString() + "  (out: " + oldState + ") ]");
         }
-        stateStack.Pop();
-        Debug.Log("[GameState <-- " + ToDebugString() + "  (out: "+oldState+") ]");
     }
 
     static public State getState()

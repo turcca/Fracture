@@ -16,6 +16,7 @@ public class Game
 
     public GameSettings gameSettings { get; private set; }
 
+    private float elapsedDays = 0;  // SAVE
 
 
     internal void initGameSettings()
@@ -187,9 +188,16 @@ public class Game
         return closestPlanet;
     }
 
+    public int getElapsedDays()
+    {
+        return (int)elapsedDays;
+    }
+
     // ------------------------------------------------------------------
     public void tick(float days)
     {
+        elapsedDays += days;
+
         if (GameState.isState(GameState.State.Event) == false)
         {
             // [Simulation.]

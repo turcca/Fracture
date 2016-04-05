@@ -275,8 +275,6 @@ And the ship falls back into the fracture."
 I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+. How may I be of assistance to you?"
 @c {o = 0 AND getFactionReputation("noble4") > 30} "Ask for a favour." = 901
 @o {c = 901} = 902
-@c {o = 902} "Never mind." = 1072
-@o {c = 1072} = 1073 $=restartEvent()
 @c {o = 902 AND getFactionReputation("noble4") >= 50} "Ask for support [-20 faction reputation, 1000 credits]" = 1044
 @o {c = 1044} = 1083 $=addFactionReputation("noble4", -20) $=addCredits(1000)
 @c {o = 1083} "Continue." = 1085
@@ -286,10 +284,12 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @t {o = 902} "Of course, what did you have in mind?"
 @c {o = 902} "Ask for a reward. [-10 faction reputation, 200 credits]" = 1071
 @o {c = 1071} = 1077 $=addFactionReputation("123", -10) $=addCredits(200)
-@t {o = 1077} "You have certainly earned a reward for all you have done, well done."
 @t {o = 1077 AND getFactionReputation("noble4") <= 40} "But now it is your time to help your house again, yes?"
+@t {o = 1077} "You have certainly earned a reward for all you have done, well done."
 @c {o = 1077} "Continue." = 1078
 @o {c = 1078} = 1080 $=restartEvent()
+@c {o = 902} "Never mind." = 1072
+@o {c = 1072} = 1073 $=restartEvent()
 @c {o = 0 AND getFactionReputation("noble4") <= -70} "Attempt to escape!" = 1056
 @o {c = 1056 AND getAdvisorStat("captain", "combat") >= 3} = 1057
 @t {o = 1057} "The captain and the delegation manage to fight their way out back to the ship."
@@ -298,10 +298,13 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @o {c = 1056} = 1061 $=resetOutcome $=end
 @c {o = 0 AND getFactionReputation("noble4") > -20} "Ask how you can help." = 908
 @o {c = 908} = 909
-@t {o = 909} "Here is what you can do:
-blah blah blah"
 @c {o = 909} "Continue." = 1147
 @o {c = 1147} = 1148 $=restartEvent()
+@t {o = 909} "You can further our goals and expand our influence throughout the sector. You should also be aware of our relations to other factions.
+
++explainRelations(Faction.FactionID.noble4)+"
+@c {o = 909} "Leave." = 1151
+@o {c = 1151} = 1152 $=resetOutcome $=end
 @c {o = 0 AND getFactionReputation("noble4") > -70 AND getFactionReputation("noble4") <= -20} "Leave quickly." = 1055
 @o {c = 1055} = 1059 $=resetOutcome $=end
 @t {o = 0 AND getFactionReputation("noble4") > -5 AND getFactionReputation("noble4") <= 30} "Greetings,
@@ -310,7 +313,7 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @c {o = 0 AND getFactionReputation("noble4") > -20} "Leave, begging their pardon." = 1054
 @o {c = 1054} = 1060 $=resetOutcome $=end
 @c {o = 0 AND getFactionReputation("noble4") <= -20} "Ask for a chance to make amends." = 1053
-@o {c = 1053 AND getFactionReputation("noble4") > -70 OR getShipStat("Diplomacy") > 3} = 1058
+@o {c = 1053 AND getFactionReputation("noble4") > -70 OR getFactionReputation("noble4") > 3} = 1058
 @t {o = 1058} "It is possible to talk about reparations, yes."
 @c {o = 1058 AND getCredits() >= 1000 AND getFactionReputation("noble4") > -70} "Offer 1.000 credits in hopes to amend the relations. [10 relations]" = 1110
 @o {c = 1110} = 1111 $=addCredits(-1000) $=addFactionReputation("noble4", 10)
@@ -325,9 +328,9 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 [Current account balance: +getCredits()+]."
 @c {o = 1058 AND getCredits() >= 3000 AND getFactionReputation("noble4") <= -70} "Offer 3.000 credits in reparations. [20 relations]" = 1107
 @o {c = 1107} = 1108 $=addCredits(-3000) $=addFactionReputation("noble4", 20)
-@t {o = 1108} "I appreciate you taking the steps to right the wrongs you have done. There may be hope for you yet."
 @c {o = 1108} "Continue." = 1141
 @o {c = 1141} = 1142 $=restartEvent()
+@t {o = 1108} "I appreciate you taking the steps to right the wrongs you have done. There may be hope for you yet."
 @o {c = 1053 AND getFactionReputation("noble4") <= -70} = 1099
 @t {o = 1099} "I do not see a way for you to lift the amount of contempt we have for you. Now, get out!"
 @c {o = 1099} "Leave quickly." = 1102
@@ -335,12 +338,26 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @t {o = 0 AND getFactionReputation("noble4") <= -70} "Guards, seize that criminal!"
 @t {o = 0 AND getFactionReputation("noble4") > -70 AND getFactionReputation("noble4") <= -20} "You have a lot of nerve to show up in here. What do you want?"
 @t {o = 0 AND getFactionReputation("noble4") > -20 AND getFactionReputation("noble4") <= -5} "I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+. I am wondering what are you doing here. Perhaps you will offer to make reparations to get in our good graces, no? House Valeria can open many doors."
-@a captain { getFactionReputation("noble4") >= 20 } "trusted" = 1055
-@a captain { getFactionReputation("noble4") <= -70 AND TheAdvisor.getStat("violent") < 0 } "Having a vendetta with one of the great noble houses may not be beneficial. We should give peace talks a chance." = 1053
-@a captain { getFactionReputation("noble4") <= -70 } "We'll burn their house down!" = 1056
+@a captain { getFactionReputation("noble4") >= 20 } "House Valeria is a great faction that exerts its influence throughout the sector. It has been" = 1055
+@a captain { getFactionReputation("noble4") <= -50 AND TheAdvisor.getStat("violent") < 0 } "Having a vendetta with one of the great noble houses may not be beneficial. We should give peace talks a chance." = 1053
+@a captain { getFactionReputation("noble4") <= -50 } "We'll burn their house down!" = 1056
 @a captain "House Valeria is one of the great noble houses. They have quite a lot of power across the sector, and their favour can be a great asset." = 908
 @a captain { getFactionReputation("noble2") <= -20 } "These noble houses are thing of the past. Why should we pamper them like they owned the place?" = 1055
 @a captain { getFactionReputation("noble2") <= -20 AND TheAdvisor.getStat("aristocrat") > 0 } "One of the great noble houses are pretty pissed off at us." = 1053
+@a navigator { TheAdvisor.isIdeology("liberal") } "It is said that before the Imperium, this noble house existed as the Valeria Network and was exploring the stars. Their experience in the Fracture is considerable."
+@a navigator { TheAdvisor.isIdeology("aristocrat") } "It is said that before the Imperium and before House Valeria became nobility, it existed as a corporate network that was exploring the stars. Their experience in the Fracture is considerable."
+@a navigator { TheAdvisor.isIdeology("navigators") } "It is said that before the Imperium, they existed as the Valeria Network that was exploring the stars. Their experience in the Fracture is considerable, and they train some of the best navigators on the sector."
+@a navigator "It is said that even before the Imperium, House Valeria explored the stars. Their experience in the Fracture is considerable"
+@a engineer { TheAdvisor.getStat("scientist") >= 2 } "House Valeria has some of the best research facilities on the sector, but they are guarding their secrets jealously."
+@a engineer { TheAdvisor.getStat("engineering") >= 2 } "House Valeria has some of the oldest and best civilian tech around. Their ships are well prepared for high fracture."
+@a engineer "House Valeria is known for their keen tech."
+@a security { TheAdvisor.getStat("security") >= 1 } "House Valeria is divided mostly in two branches, and it is hard for them to muster a lot of resources for military projects."
+@a security "House Valeria tends to invest mostly in civilian projects."
+@a quartermaster "House Valeria has great specialists to work on navigation and research."
+@a psycher { TheAdvisor.getStat("psy") >= 2 } "The guiding council of House Valeria always has a few renown ingenium among them."
+@a psycher "It is said that House Valeria has a few strong frackers with them. I wonder if that is what makes them so successful in diplomatic affairs."
+@a priest { TheAdvisor.getStat("holiness") >= 1 } "There lies a danger in unbridled curiosity, and House Valeria has forgotten the lesson. Or else they never truly learned it."
+@a priest "House Valeria is behind some of the initiatives that has reduced the power of the Church on the sector."
 
 #core singers
 /* Core singers 2 - If engine room's 'core singers' are allowed to be */

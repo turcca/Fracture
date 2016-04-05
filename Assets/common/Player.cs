@@ -55,7 +55,6 @@ public class Player
     private double warpMagnitude = 0.0d;
     private string locationId = "";     // SAVE (if "", in space)
 
-    private float elapsedDays = 0;  // SAVE
 
     public PlayerShip playerShip;
     public PlayerCrew playerCrew;
@@ -83,7 +82,7 @@ public class Player
     }
     public void createCharacter(Character.Job? assignment = null, string templateName = null) // job parameter will try to assign character to the job
     {
-        Character c = CharacterTemplates.getCharacter(templateName);
+        Character c = CharacterTemplates.createNewCharacter(templateName);
         characters.Add(c.id, c);
 
         if (assignment != null)
@@ -92,10 +91,7 @@ public class Player
         }
     }
 
-    public int getElapsedDays()
-    {
-        return (int)elapsedDays;
-    }
+    
 
     public float getWarpMagnitude()
     {
@@ -187,7 +183,7 @@ public class Player
 
     public void tick(float days)
     {
-        elapsedDays += days;
+        //elapsedDays += days; moved
         //advisor exp - character tick?
     }
 

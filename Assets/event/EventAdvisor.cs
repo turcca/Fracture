@@ -9,7 +9,8 @@ public class EventAdvisor : MonoBehaviour
     public Character.Job advisorJob;
     public Text adviceText;
     public GridLayoutGroup skills;
-    public Text idPanel;
+    public Text title;
+    public Text characterName;
 
     private Character character;
     AdvisorSelectedDelegate callback;
@@ -21,15 +22,16 @@ public class EventAdvisor : MonoBehaviour
     {
         if (this.gameObject.activeSelf != true) Debug.LogWarning("advisor "+advisorJob.ToString()+" is still inactive");
         // set idPanel/info (namePlate, job)
-        if (idPanel != null)
+        if (title != null && characterName != null)
         {
             if (character != null)
             {
-                idPanel.text = Character.getJobName(advisorJob) + "\n" + character.name;
+                title.text = Character.getJobName(advisorJob);
+                characterName.text = character.name;
             }
             else Debug.LogError("character not set");
         }
-        else Debug.LogError("idPanel/info.text not assigned");
+        else Debug.LogError("title/characterName.text not assigned");
 
         // auto-select captain
         if (advisorJob == Character.Job.captain)
@@ -41,6 +43,13 @@ public class EventAdvisor : MonoBehaviour
         {
             advicePanel.SetActive(false);
         }
+    }
+    public void renameAdvisor(string newName)
+    {
+        character.name = newName;
+        clearStats();
+        showStats();
+        // BUG: if you rename a character in 'inLocation' -event, the location advisors are loaded underneath, and the advisor's characterName is not changed while in the location
     }
 
     public void showAdvice(string advice)
