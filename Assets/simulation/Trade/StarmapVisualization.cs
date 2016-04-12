@@ -9,10 +9,18 @@ namespace Simulation
         static GameObject NPCShips;
         static GameObject tradeShipPrefab;
 
-        public static GameMenuSystem ui;
+        private static GameMenuSystem ui;
+        public static GameMenuSystem Ui
+        {
+            get
+            {
+                infoReady();
+                return ui;
+            }
+            set { ui = value; }
+        }
 
         public static LaserScope lineUI; // line renderer effect for NPC ship info ui
-
 
         // Use this for initialization
         public static void initNPCShipVisuals()
@@ -53,14 +61,14 @@ namespace Simulation
         {
             if (infoReady())
             {
-                ui.showNPCshipInfo(ship, isOver);
+                Ui.showNPCshipInfo(ship, isOver);
             }
         }
         public static void mouseOverLocationForInfo(LocationStarmapVisibility location, bool isOver)
         {
             if (infoReady())
             {
-                ui.showLocationInfo(location, isOver);
+                Ui.showLocationInfo(location, isOver);
             }
         }
 
@@ -71,7 +79,7 @@ namespace Simulation
             {
                 try
                 {
-                    ui = GameObject.Find("GameCanvas").GetComponent<GameMenuSystem>();
+                    Ui = GameObject.Find("GameCanvas").GetComponent<GameMenuSystem>();
                 }
                 catch (NullReferenceException)
                 {

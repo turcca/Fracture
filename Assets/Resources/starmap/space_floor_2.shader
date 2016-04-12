@@ -15,7 +15,7 @@
  
         CGPROGRAM
         #pragma surface surf Lambert vertex:disp nolightmap
-        //#pragma target 3.0
+        #pragma target 3.0
         #pragma glsl
  
         sampler2D _BaseTex;

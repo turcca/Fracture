@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 
 public static class ShipStatsLibrary
@@ -14,7 +15,7 @@ public static class ShipStatsLibrary
     // constructor
     static ShipStatsLibrary()
     {
-        Debug.Log("reading ships.csv");
+        Debug.Log("reading ships data");
         shipStats = parseShipStats();
     }
         
@@ -36,43 +37,23 @@ public static class ShipStatsLibrary
 
     private static Dictionary<string, ShipStats> parseShipStats()
     {
+        string src = ExternalFiles.IniReadFile(ExternalFiles.file.Ships);
+
         Dictionary<string, ShipStats> rv = new Dictionary<string, ShipStats>();
-        FileInfo src = null;
-        StreamReader reader = null;
 
-        src = new FileInfo(Application.dataPath + "/data/ships.tsv");
-        if (src != null && src.Exists)
-        {
-            reader = src.OpenText();
-        }
+        if (src == null)
+            Debug.LogError("'locations' data not found or not readable.");
 
-        if (reader == null)
-        {
-            Debug.Log("ships.tsv data not found or not readable.");
-        }
         else
         {
             // Each line starting from DATASTART to DATAEND contains one location 
             // split lines to strings and construct features from each line between markers
-            List<string> lines = new List<string>();
-            while (!reader.EndOfStream)
-            {
-                lines.Add(reader.ReadLine());
-            }
-
-            bool dataBlock = false;
+            Regex regex = new Regex("DATASTART(.*)DATAEND", RegexOptions.Singleline);
+            Match match = regex.Match (src);
+            string[] lines = match.Groups[1].ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
-                if (line.StartsWith("DATASTART"))
-                {
-                    dataBlock = true;
-                }
-                else if (line.StartsWith("DATAEND"))
-                {
-                    dataBlock = false;
-                    break;
-                }
-                else if (dataBlock)
+                if (line != null && line != String.Empty && line.Trim() != "")
                 {
                     // first block contains id, rest is data [TSV tab separated values]
                     rv.Add(line.Split('\t')[0], DataParser.parseShipStats(line));

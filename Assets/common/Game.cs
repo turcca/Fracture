@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Text.RegularExpressions;
+using System;
 
 public class Game
 {
@@ -125,49 +126,30 @@ public class Game
 
     private Dictionary<string, Data.LocationFeatures> parseLocationFeatures()
     {
+        Debug.Log("reading locations data");
+        string src = ExternalFiles.IniReadFile(ExternalFiles.file.Locations);
+        //Debug.Log("src: " + src);
         Dictionary<string, Data.LocationFeatures> rv = new Dictionary<string, Data.LocationFeatures>();
-        FileInfo src = null;
-        StreamReader reader = null;
- 
-        src = new FileInfo (Application.dataPath + "/data/locations.tsv");
-        if (src != null && src.Exists)
-        {
-            reader = src.OpenText();
-        }
- 
-        if (reader == null)
-        {
-            Debug.Log("Location data not found or not readable.");
-        }
+
+        if (string.IsNullOrEmpty(src))
+            Debug.LogError("'locations' data not found or not readable.");
+
         else
         {
             // Each line starting from DATASTART to DATAEND contains one location 
             // split lines to strings and construct features from each line between markers
-            List<string> lines = new List<string>();
-            while (!reader.EndOfStream)
-            {
-                lines.Add(reader.ReadLine());
-            }
-
-            bool dataBlock = false;
+            Regex regex = new Regex("DATASTART(.*)DATAEND", RegexOptions.Singleline);
+            Match match = regex.Match (src);
+            string[] lines = match.Groups[1].ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
-                if (line.StartsWith("DATASTART"))
+                if (string.IsNullOrEmpty(line) == false && line.Trim() != "")
                 {
-                    dataBlock = true;
-                }
-                else if (line.StartsWith("DATAEND"))
-                {
-                    dataBlock = false;
-                    break;
-                }
-                else if (dataBlock)
-                {
+                    //Debug.Log("line: " + line);
                     // first block contains id, rest is data [TSV tab separated values]
                     rv.Add(line.Split('\t')[0], DataParser.parseLocationFeatures(line));
                 }
             }
-
             //Debug.Log("2v08: " + rv["2v08"].description2 + " --- " + "populiation: " + rv["2v08"].population);
         }
         return rv;

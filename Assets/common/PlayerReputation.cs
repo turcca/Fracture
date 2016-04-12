@@ -22,59 +22,8 @@ public class PlayerReputation
 
             // starting reputation inside your own faction
             addReputation((Faction.FactionID)startingFaction, 20f);
-
-            //// allies and enemies (how others consider you)
-            //switch (startingFaction)
-            //{
-            //    case Faction.FactionID.noble1:
-            //        // Furia
-            //        addReputation(Faction.FactionID.noble3, -15f);
-            //        addReputation(Faction.FactionID.church, -15f);
-            //        break;
-            //    case Faction.FactionID.noble2:
-            //        // Rathmund - in ok terms with all?
-            //        //addReputation(Faction.FactionID.noble3, -10f);
-            //        break;
-            //    case Faction.FactionID.noble3:
-            //        // Tarquinia
-            //        addReputation(Faction.FactionID.church, 10f);
-            //        addReputation(Faction.FactionID.noble1, -10f);
-            //        addReputation(Faction.FactionID.noble4, -5f);
-            //        break;
-            //    case Faction.FactionID.noble4:
-            //        // Valeria
-            //        addReputation(Faction.FactionID.guild2, -15f);
-            //        break;
-            //    case Faction.FactionID.guild1:
-            //        addReputation(Faction.FactionID.church, -10f);
-            //        break;
-            //    case Faction.FactionID.guild2:
-            //        addReputation(Faction.FactionID.noble4, -10f);
-            //        break;
-            //    case Faction.FactionID.guild3:
-            //        addReputation(Faction.FactionID.church, -5f);
-            //        break;
-            //    case Faction.FactionID.church:
-            //        addReputation(Faction.FactionID.noble3, 15f);
-            //        addReputation(Faction.FactionID.heretic, -50f);
-            //        addReputation(Faction.FactionID.noble2, 5f);
-            //        addReputation(Faction.FactionID.noble4, -5f);
-            //        addReputation(Faction.FactionID.guild1, -5f);
-            //        break;
-            //    case Faction.FactionID.heretic:
-            //        addReputation(Faction.FactionID.church, -50f);
-            //        addReputation(Faction.FactionID.noble1, -25f);
-            //        addReputation(Faction.FactionID.noble2, -20f);
-            //        addReputation(Faction.FactionID.noble3, -40f);
-            //        addReputation(Faction.FactionID.noble4, -20f);
-            //        addReputation(Faction.FactionID.guild1, -5f);
-            //        addReputation(Faction.FactionID.guild2, -25f);
-            //        addReputation(Faction.FactionID.guild3, -20f);
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
+        //Debug.Log(ToDebugString());
     }
     /// <summary>
     /// player's reputation with a faction. 
@@ -149,4 +98,11 @@ public class PlayerReputation
     //    if (reputation.ContainsKey(faction)) reputation[faction] = value;
     //    else reputation.Add(faction, value);
     //}
+    public string ToDebugString()
+    {
+        string rs = "Player Reputation:\n";
+        foreach (Faction.FactionID faction in Enum.GetValues(typeof(Faction.FactionID)))
+            rs += Faction.getFactionName(faction)+": "+ getReputationValue (faction)+ "\n";
+        return rs;
+    }
 }

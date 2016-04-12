@@ -269,7 +269,7 @@ public static class DataParser
     /// <summary>
     /// Changes all 'he' to 'she' or vice versa
     /// use with care!
-    /// DOES NOT RECOGNIZE "..is his" -> "..is hers"!
+    /// DOES NOT RECOGNIZE "..is his" -> "..is hers"! (should write original pronouns for she)
     /// </summary>
     /// <param name="parseString"></param>
     /// <param name="toFemale"></param>

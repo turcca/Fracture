@@ -6,30 +6,38 @@ using System.Linq;
 
 public class CharacterPortraitManager
 {
-    public class PortraitEntry
+    public class PortraitItem
     {
         public string file = "";
         public string tag = "";     // specially tagged portraits, such as "navigator", can be reserved for those characters
         public int id = -1;
 
-        public PortraitEntry(string _file, string _tag, int _id)
+        public PortraitItem(Sprite sprite, int id)//string _file, string _tag, int _id)
         {
-            file = _file;
-            tag = _tag;
-            id = _id;
+            file = sprite.name;
+            //@todo parse tags from file name
+            Debug.Log("todo: parse tags from " + file);
+            //tag = _tag;
+            this.id = id;
         }
     }
 
-    private Dictionary<int, PortraitEntry> portraits = new Dictionary<int, PortraitEntry>();
+    private Dictionary<int, PortraitItem> portraits = new Dictionary<int, PortraitItem>();
 
     public CharacterPortraitManager()
     {
-        string[] portraitFiles = Directory.GetFiles("Assets/Resources/ui/portraits", "portrait*.png");
+        Sprite[] sprites = Resources.LoadAll<Sprite>("/ui/portraits");
+        //string[] portraitFiles = Directory.GetFiles("Assets/Resources/ui/portraits", "portrait*.png");
         int id = 0;
-        foreach (string file in portraitFiles)
+        //foreach (string file in portraitFiles)
+        //{
+        //    ++id;
+        //    portraits.Add(id, new PortraitItem(Path.GetFileNameWithoutExtension(file), "", id));
+        //}
+        foreach (Sprite sprite in sprites)
         {
             ++id;
-            portraits.Add(id, new PortraitEntry(Path.GetFileNameWithoutExtension(file), "", id));
+            portraits.Add(id, new PortraitItem(sprite, id));
         }
     }
 
@@ -50,7 +58,7 @@ public class CharacterPortraitManager
         }
 
         Dictionary<int, int> allIds = new Dictionary<int, int>();
-        foreach (PortraitEntry entry in portraits.Values)
+        foreach (PortraitItem entry in portraits.Values)
         {
             allIds.Add(entry.id, 0);
             if (takenIds.ContainsKey(entry.id))
@@ -76,20 +84,36 @@ public class CharacterPortraitManager
         return new Character.Portrait(id, 0);
     }
 
-    public string getPortraitImage(int id)
-    {
-        ///@todo check range
-        return portraits[id].file;
-    }
+    //public string getPortraitImage(int id)
+    //{
+    //    if (portraits.ContainsKey(id))
+    //        return portraits[id].file;
+    //    else
+    //    {
+    //        Debug.LogError("invalid portrait id requested: " + id);
+    //        return portraits.First().Value.file;
+    //    }
+    //}
 
-    public Texture getPortraitTexture(int id)
-    {
-        ///@todo check range
-        return Resources.Load<Texture2D>("ui/portraits/" + portraits[id].file);
-    }
+    //public Texture getPortraitTexture(int id)
+    //{
+    //    if (portraits.ContainsKey(id))
+    //        return Resources.Load<Texture2D>("ui/portraits/" + portraits[id].file);
+    //    else
+    //    {
+    //        Debug.LogError("invalid portrait id requested: " + id);
+    //        return Resources.Load<Texture2D>("ui/portraits/" + portraits.First().Value.file);
+    //    }
+    //}
 
     public Sprite getPortraitSprite(int id)
     {
-        return Resources.Load<Sprite>("ui/portraits/" + portraits[id].file);
+        if (portraits.ContainsKey(id))
+            return Resources.Load<Sprite>("ui/portraits/" + portraits[id].file);
+        else
+        {
+            Debug.LogError("invalid portrait id requested: " + id);
+            return Resources.Load<Sprite>("ui/portraits/" + portraits.First().Value.file);
+        }
     }
 }

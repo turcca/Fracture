@@ -7,6 +7,7 @@ public class GameMenuSystem : MonoBehaviour
     public List<GameObject> pages;
     public GameObject characterSelectDialog;
     public GameObject locationEntryDialog;
+    public GameObject pause;
 
     // floating panel
     public StarmapInfo shipInfo;
@@ -57,6 +58,10 @@ public class GameMenuSystem : MonoBehaviour
         locationEntryDialog.SetActive(false);
     }
 
+    public void setPauseText(bool isOn)
+    {
+        pause.SetActive(isOn);
+    }
 
     // toolTip -style starmap popups
     // NPC ships, locations

@@ -12,7 +12,7 @@ static public class GameState
 
     static private Stack<State> stateStack = new Stack<State>();
 
-    //static private State currentState = State.Starmap;
+    static private bool playerPaused = false;
 
 
     static GameState()
@@ -22,6 +22,7 @@ static public class GameState
 
     static public bool requestState(State s)
     {
+        if (playerPaused) return false; // freeze state if playerPaused
         //currentState = s;
         stateStack.Push(s);
         Debug.Log("[GameState --> " + ToDebugString() + "]");
@@ -41,10 +42,21 @@ static public class GameState
             Debug.Log("[GameState <-- " + ToDebugString() + "  (out: " + oldState + ") ]");
         }
     }
+    /// <summary>
+    /// Toggles manual pause/unpauses by the player and returns new playerPaused -value
+    /// </summary>
+    /// <returns></returns>
+    static public bool playerPause()
+    {
+        playerPaused = !playerPaused;
+        // mute/unmute master volume
+        Mixer.Instance.pauseMaster(playerPaused);
+        return playerPaused;
+    }
 
     static public State getState()
     {
-        return (stateStack.Count > 0) ? stateStack.Peek() : State.Starmap;
+        return (playerPaused) ? State.Pause : (stateStack.Count > 0) ? stateStack.Peek() : State.Starmap;
     }
     static public bool isState(State queryState)
     {
@@ -55,12 +67,14 @@ static public class GameState
     }
     static public bool hasState(State queryState)
     {
+        if (playerPaused && queryState == State.Pause) return true;
         return stateStack.Contains(queryState);
     }
 
     public static string ToDebugString()
     {
         string rv = "{ ";
+        if (playerPaused) rv += " (Player Paused) / ";
         foreach (State state in stateStack)
         {
             rv += state.ToString() + " / ";

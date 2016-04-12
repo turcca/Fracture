@@ -23,7 +23,7 @@ namespace Simulation
         public Factions()
         {
             data = new FactionData();
-            Debug.Log(ToDebugString());
+            //Debug.Log(ToDebugString());
         }
 
 

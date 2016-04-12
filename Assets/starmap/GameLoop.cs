@@ -29,9 +29,17 @@ public class GameLoop : MonoBehaviour
     void Update()
     {
         // drive game ticks
-        if (GameState.isState(GameState.State.Starmap) || GameState.isState(GameState.State.Simulation))
+        if ((GameState.hasState(GameState.State.Pause) == false) && 
+            (GameState.isState(GameState.State.Starmap) || GameState.isState(GameState.State.Simulation)))
         {
             Root.game.tick(Time.deltaTime * Simulation.Parameters.gameSpeed);
+        }
+        if (Input.GetButtonDown("Pause") || Input.GetKeyDown("pause"))
+        {
+            if (GameState.hasState(GameState.State.Location) == false && GameState.hasState(GameState.State.MainMenu) == false && GameState.hasState(GameState.State.Event) == false)
+            {
+                Simulation.StarmapVisualization.Ui.setPauseText(GameState.playerPause());
+            }
         }
     }
 
