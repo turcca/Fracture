@@ -86,7 +86,7 @@ public class EventAdvisor : MonoBehaviour
                     txt.text = skill.Key;
                     txt.font = adviceText.font;
                     // colours
-                    if (skill.Key.StartsWith("Name") || skill.Key.StartsWith("Affiliation") || skill.Key.StartsWith("Age")) txt.color = new Color32(110, 80, 20, 255);
+                    if (skill.Key.StartsWith("Trait") || skill.Key.StartsWith("Name") || skill.Key.StartsWith("Affiliation") || skill.Key.StartsWith("Age")) txt.color = new Color32(110, 80, 20, 255);
                     else txt.color = new Color32(40, 40, 40, 255);
                     txt.resizeTextForBestFit = true;
                     txt.resizeTextMaxSize = 14;

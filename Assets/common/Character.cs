@@ -468,14 +468,14 @@ public class Character
         else if (getStat(Stat.hr) >= 150.0f) { skillLevels.Add("Human Resources: Good",         "Managing a departments on a ship is a full-time job."); }
         else if (getStat(Stat.hr) >= 100.0f) { skillLevels.Add("Human Resources: Trained",      "Managing a department on a ship is a full-time job, even when things are running smoothly."); }
 
-        if (getStat(Stat.engineering) >= 500.0f) { skillLevels.Add("Engineering: Epic",             ""); }
-        else if (getStat(Stat.engineering) >= 400.0f) { skillLevels.Add("Engineering: Legendary",   ""); }
-        else if (getStat(Stat.engineering) >= 350.0f) { skillLevels.Add("Engineering: Exceptional", ""); }
-        else if (getStat(Stat.engineering) >= 300.0f) { skillLevels.Add("Engineering: Remarcable",  ""); }
-        else if (getStat(Stat.engineering) >= 250.0f) { skillLevels.Add("Engineering: Excellent",   ""); }
-        else if (getStat(Stat.engineering) >= 200.0f) { skillLevels.Add("Engineering: Very Good",   ""); }
-        else if (getStat(Stat.engineering) >= 150.0f) { skillLevels.Add("Engineering: Good",        ""); }
-        else if (getStat(Stat.engineering) >= 100.0f) { skillLevels.Add("Engineering: Trained",     "Rudimentary knowledge of the basic ship systems."); }
+        if (getStat(Stat.engineering) >= 500.0f) { skillLevels.Add("Engineering: Epic",             "Wielding knowledge of the ancient men, no system is too complex or no crisis out of control."); }
+        else if (getStat(Stat.engineering) >= 400.0f) { skillLevels.Add("Engineering: Legendary",   "Extremely capable with ship systems. No systems failure seems too difficult."); }
+        else if (getStat(Stat.engineering) >= 350.0f) { skillLevels.Add("Engineering: Exceptional", "Rare talent with ship systems and exceptional damage control."); }
+        else if (getStat(Stat.engineering) >= 300.0f) { skillLevels.Add("Engineering: Remarcable",  "Deep understanding with ship systems and the capacity to handle most crisis."); }
+        else if (getStat(Stat.engineering) >= 250.0f) { skillLevels.Add("Engineering: Excellent",   "Experienced with ship systems and the ability to handle small crisis."); }
+        else if (getStat(Stat.engineering) >= 200.0f) { skillLevels.Add("Engineering: Very Good",   "Understanding of the ship systems and the ability to maintain them."); }
+        else if (getStat(Stat.engineering) >= 150.0f) { skillLevels.Add("Engineering: Good",        "Basic understanding of the ship systems and the ability to do routine maintainance."); }
+        else if (getStat(Stat.engineering) >= 100.0f) { skillLevels.Add("Engineering: Trained",     "Rudimentary understanding of the most basic ship systems."); }
 
         if (getStat(Stat.precognition) >= 500.0f) { skillLevels.Add("Precognition: Epic",           ""); }
         else if (getStat(Stat.precognition) >= 400.0f) { skillLevels.Add("Precognition: Legendary", ""); }
@@ -501,23 +501,23 @@ public class Character
         else if (getStat(Stat.navigation) >= 200.0f) { skillLevels.Add("Navigation: Trained",       "To be a true navigator, more than training is required. But it is possible for a trained pilot to navigate low fracture without navigator implants."); }
         else if (getStat(Stat.navigation) >= 150.0f) { skillLevels.Add("Navigation: Basic",         "Navigating the fracture is a complicated skill. It takes a real effort to learn even the basics."); }
 
-        if (getStat(Stat.spaceBattle) >= 500.0f) { skillLevels.Add("Space Battle: Epic",            ""); }
-        else if (getStat(Stat.spaceBattle) >= 400.0f) { skillLevels.Add("Space Battle: Legendary",  ""); }
-        else if (getStat(Stat.spaceBattle) >= 350.0f) { skillLevels.Add("Space Battle: Inspirational",""); }
-        else if (getStat(Stat.spaceBattle) >= 300.0f) { skillLevels.Add("Space Battle: Outstanding",""); }
-        else if (getStat(Stat.spaceBattle) >= 250.0f) { skillLevels.Add("Space Battle: Excellent",  ""); }
-        else if (getStat(Stat.spaceBattle) >= 200.0f) { skillLevels.Add("Space Battle: Very Good",  ""); }
-        else if (getStat(Stat.spaceBattle) >= 150.0f) { skillLevels.Add("Space Battle: Good",       ""); }
+        if (getStat(Stat.spaceBattle) >= 500.0f) { skillLevels.Add("Space Battle: Epic",            "Mastermind for ship battle tactics. A pseudo-spatial savant whose combat maneuvers defy all logic."); }
+        else if (getStat(Stat.spaceBattle) >= 400.0f) { skillLevels.Add("Space Battle: Legendary",  "Master of space battles and an amazing mind challenging the conventional understanding of pseudo-spatial maneuvers."); }
+        else if (getStat(Stat.spaceBattle) >= 350.0f) { skillLevels.Add("Space Battle: Inspirational", "Inspired ship battle tactician. Few people show this much potential for pseudo-spatial capacity."); }
+        else if (getStat(Stat.spaceBattle) >= 300.0f) { skillLevels.Add("Space Battle: Outstanding", "Solid ship battle tactics veteran and notable talent for pseudo-spatial maneuvering."); }
+        else if (getStat(Stat.spaceBattle) >= 250.0f) { skillLevels.Add("Space Battle: Excellent",  "Experienced in ship battle tactics and decent pseudo-spatial talent."); }
+        else if (getStat(Stat.spaceBattle) >= 200.0f) { skillLevels.Add("Space Battle: Very Good",  "Understanding in ship battle tactics and some pseudo-spatial talent."); }
+        else if (getStat(Stat.spaceBattle) >= 150.0f) { skillLevels.Add("Space Battle: Good",       "Understanding in basic ship battle maneuvers, but little pseudo-spatial talent."); }
 
-        if (getStat(Stat.combat) >= 500.0f) { skillLevels.Add("Combat: Epic",               ""); }
-        else if (getStat(Stat.combat) >= 400.0f) { skillLevels.Add("Combat: Legendary",     ""); }
-        else if (getStat(Stat.combat) >= 350.0f) { skillLevels.Add("Combat: Inspirational", ""); }
-        else if (getStat(Stat.combat) >= 300.0f) { skillLevels.Add("Combat: Outstanding",   ""); }
-        else if (getStat(Stat.combat) >= 250.0f) { skillLevels.Add("Combat: Excellent",     ""); }
-        else if (getStat(Stat.combat) >= 200.0f) { skillLevels.Add("Combat: Very Good",     ""); }
-        else if (getStat(Stat.combat) >= 150.0f) { skillLevels.Add("Combat: Good",          "Prowess in personal combat and the ability to lead men in battle."); }
+        if (getStat(Stat.combat) >= 500.0f) { skillLevels.Add("Combat: Epic",               "Epic prowess in personal combat and awesome at leading the troops in battle."); }
+        else if (getStat(Stat.combat) >= 400.0f) { skillLevels.Add("Combat: Legendary",     "Legendary prowess in personal combat and amazing at leading troops in battle."); }
+        else if (getStat(Stat.combat) >= 350.0f) { skillLevels.Add("Combat: Inspirational", "Outstanding prowess in personal combat and truly inspiring when leading troops in battle."); }
+        else if (getStat(Stat.combat) >= 300.0f) { skillLevels.Add("Combat: Outstanding",   "Great prowess in personal combat and an outstanding ability to lead troops in battle."); }
+        else if (getStat(Stat.combat) >= 250.0f) { skillLevels.Add("Combat: Excellent",     "Notable prowess in personal combat and excellent at leading troops in battle."); }
+        else if (getStat(Stat.combat) >= 200.0f) { skillLevels.Add("Combat: Very Good",     "Prowess in personal combat and solid leader of the troops in battle."); }
+        else if (getStat(Stat.combat) >= 150.0f) { skillLevels.Add("Combat: Good",          "Some prowess in personal combat and the ability to lead the troops in battle."); }
 
-        if (getStat(Stat.trading) >= 500.0f) { skillLevels.Add("Trading: Epic",             ""); }
+        if (getStat(Stat.trading) >= 500.0f) { skillLevels.Add("Trading: Epic",             ""); } ä
         else if (getStat(Stat.trading) >= 400.0f) { skillLevels.Add("Trading: Legendary",   ""); }
         else if (getStat(Stat.trading) >= 350.0f) { skillLevels.Add("Trading: Exceptional", ""); }
         else if (getStat(Stat.trading) >= 300.0f) { skillLevels.Add("Trading: Remarcable",  ""); }
@@ -587,8 +587,25 @@ public class Character
         foreach (KeyValuePair<string, string> item in getSkillLevelsList()) lines.Add(item);
         lines.Insert(0, new KeyValuePair < string, string >("Age: " + Mathf.Floor(getStat(Stat.age)).ToString(), "")); //The age of "+name+" in Solar Years.
         lines.Insert(0, new KeyValuePair<string, string>("Affiliation: " + Faction.getPartyName((Faction.IdeologyID)ideology) + " ", Faction.getPartyDescription((Faction.IdeologyID)ideology)));
+        lines.Insert(0, new KeyValuePair<string, string>("Trait: " + ShipBonusesStats.formatEnumString(characterTrait.ToString()), getJobName(assignment) + " trait\n" + listOfTraitBonuses() ));
         lines.Insert(0, new KeyValuePair<string, string>("Name: " + name, ""));
         return lines;
+    }
+    private string listOfTraitBonuses()
+    {
+        Dictionary<string, int> bonuses = new Dictionary<string, int>();
+        KeyValuePair<string, int> pair;
+        foreach (ShipBonus bonus in Enum.GetValues(typeof(ShipBonus)))
+        {
+            pair = ShipBonusesStats.getCharacterStatBonusAndDescription(this, bonus);
+            if (pair.Key != "" && pair.Value != 0) bonuses.Add(ShipBonusesStats.formatEnumString(bonus.ToString()), pair.Value);
+        }
+        string rs = "";
+        foreach (var kvp in bonuses)
+        {
+            rs += "\n" + kvp.Key + ": " + ShipStatBonusUI.valueToString(kvp.Value);
+        }
+        return rs;
     }
 
     public string toDebugString()

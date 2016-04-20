@@ -1289,7 +1289,7 @@ public static class ShipBonusesStats
             case ShipBonus.None:
                 return rs;
             case ShipBonus.Happiness:
-                rs = "[Ship structure modifier]\nThe crew is ";
+                rs = "[General crew happiness]\nThe crew is ";
                 if (value > 9) rs += "enthusiastic!";
                 else if (value > 5) rs += "happy.";
                 else if (value > 2) rs += "comfortable.";
@@ -1400,7 +1400,7 @@ public static class ShipBonusesStats
     {
         if(string.IsNullOrEmpty(enumString))
            return string.Empty;
-        // välilyönti isojen kirjainten eteen (camelCase -> camel Case)
+        // De-camelCase: välilyönti isojen kirjainten eteen (camelCase -> camel Case)
         StringBuilder newText = new StringBuilder(enumString.Length * 2);
         newText.Append(enumString[0]);
         for (int i = 1; i < enumString.Length; i++)

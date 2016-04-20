@@ -33,7 +33,6 @@ public class Mixer : MonoBehaviour {
         masterMixer.SetFloat("masterVolume", Mathf.Clamp(db, -80f, 0f));
     }
 
-
     public void pauseMaster(bool setPaused)
     {
         if (setPaused)

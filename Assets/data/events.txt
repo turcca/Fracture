@@ -313,7 +313,7 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @c {o = 0 AND getFactionReputation("noble4") > -20} "Leave, begging their pardon." = 1054
 @o {c = 1054} = 1060 $=resetOutcome $=end
 @c {o = 0 AND getFactionReputation("noble4") <= -20} "Ask for a chance to make amends." = 1053
-@o {c = 1053 AND getFactionReputation("noble4") > -70 OR getFactionReputation("noble4") > 3} = 1058
+@o {c = 1053 AND getFactionReputation("noble4") > -70} = 1058
 @t {o = 1058} "It is possible to talk about reparations, yes."
 @c {o = 1058 AND getCredits() >= 1000 AND getFactionReputation("noble4") > -70} "Offer 1.000 credits in hopes to amend the relations. [10 relations]" = 1110
 @o {c = 1110} = 1111 $=addCredits(-1000) $=addFactionReputation("noble4", 10)
@@ -326,7 +326,7 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @o {c = 1121} = 1122 $=restartEvent()
 @t {o = 1058 AND getCredits() < 1000} "But it would take at least 1000 credits to start the process.
 [Current account balance: +getCredits()+]."
-@c {o = 1058 AND getCredits() >= 3000 AND getFactionReputation("noble4") <= -70} "Offer 3.000 credits in reparations. [20 relations]" = 1107
+@c {o = 1058 AND getCredits() >= 3000 AND getFactionReputation("noble4") > -70} "Offer 3.000 credits in reparations. [20 relations]" = 1107
 @o {c = 1107} = 1108 $=addCredits(-3000) $=addFactionReputation("noble4", 20)
 @c {o = 1108} "Continue." = 1141
 @o {c = 1141} = 1142 $=restartEvent()
@@ -338,7 +338,7 @@ I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.nob
 @t {o = 0 AND getFactionReputation("noble4") <= -70} "Guards, seize that criminal!"
 @t {o = 0 AND getFactionReputation("noble4") > -70 AND getFactionReputation("noble4") <= -20} "You have a lot of nerve to show up in here. What do you want?"
 @t {o = 0 AND getFactionReputation("noble4") > -20 AND getFactionReputation("noble4") <= -5} "I am +getCurrentLocation().getLocalfactionHeadTitleAndName(Faction.FactionID.noble4)+ at +getCurrentLocation().name+. I am wondering what are you doing here. Perhaps you will offer to make reparations to get in our good graces, no? House Valeria can open many doors."
-@a captain { getFactionReputation("noble4") >= 20 } "House Valeria is a great faction that exerts its influence throughout the sector. It has been" = 1055
+@a captain { getFactionReputation("noble4") >= 20 } "House Valeria is a great faction that exerts its influence throughout the sector. We share good relations and trust." = 908
 @a captain { getFactionReputation("noble4") <= -50 AND TheAdvisor.getStat("violent") < 0 } "Having a vendetta with one of the great noble houses may not be beneficial. We should give peace talks a chance." = 1053
 @a captain { getFactionReputation("noble4") <= -50 } "We'll burn their house down!" = 1056
 @a captain "House Valeria is one of the great noble houses. They have quite a lot of power across the sector, and their favour can be a great asset." = 908

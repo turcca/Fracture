@@ -51,6 +51,11 @@ public class ShipStatBonusUI : MonoBehaviour
         else { Debug.LogError("No RectTransform component on gameObject: "+this.gameObject.name); return null; }
     }
 
+    /// <summary>
+    /// format an in to a string, where you have a "+" in front of a positive number
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
     public static string valueToString(int i)
     {
         // 3 --> "+3"
