@@ -39,7 +39,7 @@ public static class EventAdviceTagsParsed
 			if (advisor.getStat(Character.Stat.kind) > 90) return "I'm sorry, but I am not sure about this";
 			if (advisor.isIdeology(Faction.IdeologyID.cult) && advisor.getStat(Character.Stat.holiness) > 1) return "we must pray for guidance";
 			if (advisor.isIdeology(Faction.IdeologyID.cult)) return "there is a quote in scripture I am trying to remember";
-			if (advisor.isIdeology(Faction.IdeologyID.navigators)) return "the matter lies outside of the scope of my knowledge";
+			if (advisor.isIdeology(Faction.IdeologyID.navigators)) return "the matter lies outside of my scope";
 			return "I am not sure";
 		}
 		if (tagRecord == "yes")

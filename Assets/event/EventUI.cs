@@ -17,6 +17,19 @@ public class EventUI : MonoBehaviour
     GameObject choiceButtonPrefab;
     GameObject advisorNode;
 
+    public EventBase DefaultAdvice
+    {
+        get
+        {
+            if (defaultAdvice == null)
+            {
+                defaultAdvice = Root.game.events.getEventByName("default_advice");
+                if (defaultAdvice == null) Debug.LogWarning("default_advice -event not found!");
+            }
+            return defaultAdvice;
+        }
+    }
+
     public EventUI()
     {
     }
@@ -26,10 +39,7 @@ public class EventUI : MonoBehaviour
         choiceButtonPrefab = Resources.Load<GameObject>("event/ui/EventChoice");
     }
 
-    void Start()
-    {
-        defaultAdvice = Root.game.events.getEventByName("default_advice");
-    }
+
 
     public void setEvent(EventBase e, EventDoneDelegate callback)
     {
@@ -94,7 +104,8 @@ public class EventUI : MonoBehaviour
 
         if (advice == "NO ADVICE") 
         {
-            advice = defaultAdvice.getAdvice(job).text;
+            if (DefaultAdvice == null) Debug.LogError("defaultAdvice is null");
+            advice = DefaultAdvice.getAdvice(job).text;
         }
         // resolve advice tags
         if (Root.game.player.getAdvisor(job) == null) return advice;

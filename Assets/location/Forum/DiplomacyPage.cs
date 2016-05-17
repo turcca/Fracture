@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class DiplomacyPage : MonoBehaviour
 {
     public LocationSceneState scene;
-    public GameObject grid;
+    public GridLayoutGroup grid;
     public GameObject factionListItem;
 
     private Location location;
@@ -44,6 +44,8 @@ public class DiplomacyPage : MonoBehaviour
             {
                 addMenuItem(item.Key, item.Value);
             }
+            // align one-colum grid vs two-column grid when 6+ factionListItems
+            grid.childAlignment = (sortedControl.Count <= 5) ? TextAnchor.UpperCenter : TextAnchor.UpperLeft;
         }
     }
 
@@ -52,7 +54,7 @@ public class DiplomacyPage : MonoBehaviour
         GameObject factionPanel = (GameObject)GameObject.Instantiate(factionListItem);
         factionPanel.GetComponent<FactionMeetPanel>().setup(scene.trackedLocation, faction,
             new FactionMeetPanel.FactionSelectedDelegate(eventFactionPicked));
-        factionPanel.transform.SetParent(grid.transform);
+        factionPanel.transform.SetParent(grid.gameObject.transform);
     }
 
     public void eventFactionPicked(string faction)

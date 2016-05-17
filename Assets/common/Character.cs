@@ -517,40 +517,40 @@ public class Character
         else if (getStat(Stat.combat) >= 200.0f) { skillLevels.Add("Combat: Very Good",     "Prowess in personal combat and solid leader of the troops in battle."); }
         else if (getStat(Stat.combat) >= 150.0f) { skillLevels.Add("Combat: Good",          "Some prowess in personal combat and the ability to lead the troops in battle."); }
 
-        if (getStat(Stat.trading) >= 500.0f) { skillLevels.Add("Trading: Epic",             ""); } ä
-        else if (getStat(Stat.trading) >= 400.0f) { skillLevels.Add("Trading: Legendary",   ""); }
-        else if (getStat(Stat.trading) >= 350.0f) { skillLevels.Add("Trading: Exceptional", ""); }
-        else if (getStat(Stat.trading) >= 300.0f) { skillLevels.Add("Trading: Remarcable",  ""); }
-        else if (getStat(Stat.trading) >= 250.0f) { skillLevels.Add("Trading: Excellent",   ""); }
-        else if (getStat(Stat.trading) >= 200.0f) { skillLevels.Add("Trading: Very Good",   ""); }
-        else if (getStat(Stat.trading) >= 150.0f) { skillLevels.Add("Trading: Good",        ""); }
+        if (getStat(Stat.trading) >= 500.0f) { skillLevels.Add("Trading: Epic",             "Greatest merchants on the sector are well known and connected. Most of the time they can surprise with truly amazing trades."); }
+        else if (getStat(Stat.trading) >= 400.0f) { skillLevels.Add("Trading: Legendary",   "A few merchants are well known throughout the sector. They can have extensive contacts on most worlds or else pull out amazing trades."); }
+        else if (getStat(Stat.trading) >= 350.0f) { skillLevels.Add("Trading: Exceptional", "There’s a lot of interstellar trading going on and some merchants are well connected on local markets to find exceptional trades."); }
+        else if (getStat(Stat.trading) >= 300.0f) { skillLevels.Add("Trading: Remarcable",  "There’s a lot of interstellar trading going on and some merchants are well connected on local markets to find great trades."); }
+        else if (getStat(Stat.trading) >= 250.0f) { skillLevels.Add("Trading: Excellent",   "There’s a lot of interstellar trading going on and an excellent trader can often pull on their contacts on local markets to find the right trade."); }
+        else if (getStat(Stat.trading) >= 200.0f) { skillLevels.Add("Trading: Very Good",   "There’s a lot of interstellar trading going on and a good trader can often pull on their contacts on local markets to find the right trade."); }
+        else if (getStat(Stat.trading) >= 150.0f) { skillLevels.Add("Trading: Good",        "There’s a lot of interstellar trading going on and a good trader can sometimes pull on their contacts on local markets to find the right trade."); }
 
-        if (getStat(Stat.diplomat) >= 400.0f) { skillLevels.Add("Diplomat",                 ""); }
-        else if (getStat(Stat.diplomat) >= 250.0f) { skillLevels.Add("Negotiator",          ""); }
+        if (getStat(Stat.diplomat) >= 400.0f) { skillLevels.Add("Diplomat",                 "A diplomat is an expert on relations as well as well recognized negotiator in ship's internal matters."); }
+        else if (getStat(Stat.diplomat) >= 250.0f) { skillLevels.Add("Negotiator",          "Negotiators are very useful in resolving both internal and external diplomatic relations."); }
 
-        if (getStat(Stat.scientist) >= 500.0f) { skillLevels.Add("Scientist: Epic",             ""); }
-        else if (getStat(Stat.scientist) >= 400.0f) { skillLevels.Add("Scientist: Legendary",   ""); }
-        else if (getStat(Stat.scientist) >= 350.0f) { skillLevels.Add("Scientist: Renown",      ""); }
-        else if (getStat(Stat.scientist) >= 300.0f) { skillLevels.Add("Scientist: Remarcable",  ""); }
-        else if (getStat(Stat.scientist) >= 250.0f) { skillLevels.Add("Scientist: Recognized",  ""); }
-        else if (getStat(Stat.scientist) >= 200.0f) { skillLevels.Add("Scientist",              ""); }
+        if (getStat(Stat.scientist) >= 500.0f) { skillLevels.Add("Scientist: Epic",             "Epic scientists are unique expert advisors on ships. They can contribute to some of the ship's most complex systems."); }
+        else if (getStat(Stat.scientist) >= 400.0f) { skillLevels.Add("Scientist: Legendary",   "Legendary scientists are rare expert advisors on ships. They can contribute to some of the ship's most complex systems."); }
+        else if (getStat(Stat.scientist) >= 350.0f) { skillLevels.Add("Scientist: Renown",      "Renown scientists are valued expert advisors on ships. They can contribute to some of the ship's most complex systems."); }
+        else if (getStat(Stat.scientist) >= 300.0f) { skillLevels.Add("Scientist: Remarcable",  "Remarcable scientists can advice as experts on technical issues, as well as work to improve some of the ship's systems."); }
+        else if (getStat(Stat.scientist) >= 250.0f) { skillLevels.Add("Scientist: Recognized",  "Recognized scientists can advice as experts on technical issues, as well as work to improve some of the ship's systems."); }
+        else if (getStat(Stat.scientist) >= 200.0f) { skillLevels.Add("Scientist",              "Scientists can sometimes advice as experts on technical matters."); }
 
-        if (getStat(Stat.integrity) >= 300.0f) { skillLevels.Add("Benefactor",          ""); }
-        else if (getStat(Stat.integrity) >= 175) { skillLevels.Add("Honest",            ""); }
-        else if (getStat(Stat.integrity) < -200.0f) { skillLevels.Add("Unscrupulous",   ""); }
-        else if (getStat(Stat.integrity) < -100.0f) { skillLevels.Add("Opportunist",    ""); }
+        if (getStat(Stat.integrity) >= 300.0f) { skillLevels.Add("Benefactor",          "Serving others and serving the truth is a sign of a true, virtuous benefactor."); }
+        else if (getStat(Stat.integrity) >= 175) { skillLevels.Add("Honest",            "Honesty is a reputation earned in service to the truth and to others. It is a valued virtue."); }
+        else if (getStat(Stat.integrity) < -200.0f) { skillLevels.Add("Unscrupulous",   "Some opportunists are well known for their preference in enlightened self-interests. It may be difficult for others to trust such an individual."); }
+        else if (getStat(Stat.integrity) < -100.0f) { skillLevels.Add("Opportunist",    "Opportunists care little for the rules and instead let their instincts guide them."); }
 
-        if (getStat(Stat.holiness) >= 500.0f) { skillLevels.Add("Saint",            ""); }
-        else if (getStat(Stat.holiness) >= 400.0f) { skillLevels.Add("Holy",        ""); }
-        else if (getStat(Stat.holiness) >= 300.0f) { skillLevels.Add("Revered",     ""); }
-        else if (getStat(Stat.holiness) >= 200.0f) { skillLevels.Add("Blessed",     ""); }
-        else if (getStat(Stat.holiness) >= 150.0f) { skillLevels.Add("Faithful",    ""); }
-        else if (getStat(Stat.holiness) < -200.0f) { skillLevels.Add("Heretic",     ""); }
-        else if (getStat(Stat.holiness) < -100.0f) { skillLevels.Add("Debauched",   ""); }
+        if (getStat(Stat.holiness) >= 500.0f) { skillLevels.Add("Saint",            "Saints are unwavering in their faith and recognized by the Church and the congregation."); }
+        else if (getStat(Stat.holiness) >= 400.0f) { skillLevels.Add("Holy",        "The Holy are recognized leaders of their congregation and known for their great spiritual strength"); }
+        else if (getStat(Stat.holiness) >= 300.0f) { skillLevels.Add("Revered",     "The revered are often leaders of their congregation and known for their spiritual strength."); }
+        else if (getStat(Stat.holiness) >= 200.0f) { skillLevels.Add("Blessed",     "The blessed are often recognized in their congregation and can draw upon inner strength when facing spiritual crisis."); }
+        else if (getStat(Stat.holiness) >= 150.0f) { skillLevels.Add("Faithful",    "The faithful are living virtuous lives and can draw upon their faith when facing spiritual crisis."); }
+        else if (getStat(Stat.holiness) < -200.0f) { skillLevels.Add("Heretic",     "Heretics are declared lost or even enemies of the Church. They often have to conceal their beliefs to avoid church inquiry."); }
+        else if (getStat(Stat.holiness) < -100.0f) { skillLevels.Add("Debauched",   "There are people who not only care little about the teachings of the Church, but actively ignore them in their lives."); }
 
-        if (getStat(Stat.purity) >= 500.0f) { skillLevels.Add("Pure",           ""); }
-        else if (getStat(Stat.purity) < -100.0f) { skillLevels.Add("Mutant",    ""); }
-        else if (getStat(Stat.purity) < -50.0f) { skillLevels.Add("Tainted",    ""); }
+        if (getStat(Stat.purity) >= 500.0f) { skillLevels.Add("Pure",           "Human genome has been polluted through centuries by the exposure to cosmic radiation, alien environments and the forces of the Fracture. It is rare to find pure human DNA intact."); }
+        else if (getStat(Stat.purity) < -100.0f) { skillLevels.Add("Mutant",    "Human genome has been polluted through centuries by the exposure to cosmic radiation, alien environments and the forces of the Fracture. Some individuals are riding the borders of human parameters."); }
+        else if (getStat(Stat.purity) < -50.0f) { skillLevels.Add("Tainted",    "Human genome has been polluted through centuries by the exposure to cosmic radiation, alien environments and the forces of the Fracture."); }
 
         if (getStat(Stat.security) >= 500.0f) { skillLevels.Add("Agent",                ""); }
         else if (getStat(Stat.security) >= 300.0f) { skillLevels.Add("Secret Police",   ""); }
@@ -564,15 +564,15 @@ public class Character
         else if (getStat(Stat.violent) < -300.0f) { skillLevels.Add("Pasifist",     ""); }
         else if (getStat(Stat.violent) < -100.0f) { skillLevels.Add("Peaceful",     ""); }
 
-        if (getStat(Stat.aristocrat) >= 200.0f) { skillLevels.Add("Aristocrat",     ""); }
+        if (getStat(Stat.aristocrat) >= 200.0f) { skillLevels.Add("Aristocrat",     "Members of aristocracy often consider themselves wardens of the people. With greater power comes greater responsibility."); }
 
-        if (getStat(Stat.imperialist) >= 500.0f) { skillLevels.Add("Agent of the Empire",""); }
-        else if (getStat(Stat.imperialist) >= 200.0f) { skillLevels.Add("Imperialist",  ""); }
-        else if (getStat(Stat.imperialist) >= 100.0f) { skillLevels.Add("Imperialist",  ""); }
-        else if (getStat(Stat.imperialist) < -200.0f) { skillLevels.Add("Rebel",        ""); }
-        else if (getStat(Stat.imperialist) < -100.0f) { skillLevels.Add("Separatist",   ""); }
+        if (getStat(Stat.imperialist) >= 500.0f) { skillLevels.Add("Agent of the Empire","Absolutely loyal to the Imperial Order, agents sometimes hold positions within the various imperial organizations."); }
+        else if (getStat(Stat.imperialist) >= 200.0f) { skillLevels.Add("Imperialist",  "Imperialists are loyal citizens of the Imperium."); }
+        else if (getStat(Stat.imperialist) >= 100.0f) { skillLevels.Add("Imperialist",  "Imperialists are citizens of the Imperium."); }
+        else if (getStat(Stat.imperialist) < -200.0f) { skillLevels.Add("Rebel",        "Known for their anti-imperial ethos, rebels are considered dangerous political dissidents in the Imperium and often need to hide their true political motives."); }
+        else if (getStat(Stat.imperialist) < -100.0f) { skillLevels.Add("Separatist",   "Separatists are in favour of seceding from the Imperium. They are considered with prejudice in the Imperium, but can be parts of popular movements in the frontiers."); }
 
-        if (getStat(Stat.corruption) >= 100.0f) { skillLevels.Add("Corrupted",          ""); }
+        if (getStat(Stat.corruption) >= 100.0f) { skillLevels.Add("Corrupted",  "Exposure to the forces of the Fracture raise concerns. It is believed to change people."); }
 
         return skillLevels;
     }

@@ -19,6 +19,9 @@ public class GameSettings
     // constructor
     public GameSettings()
     {
+        // OVERRIDE todo remove
+        Screen.SetResolution(1920, 1080, false);
+
         // config.ini
 #if UNITY_EDITOR
         if (ExternalFiles.fileExists(ExternalFiles.file.Config) == false)
@@ -26,11 +29,13 @@ public class GameSettings
             // create default config.ini -file
             ExternalFiles.IniWriteValue(ExternalFiles.Sections.Graphics, ExternalFiles.Keys.DisplayResolutionDialog, "false");
             ExternalFiles.IniWriteValue(ExternalFiles.Sections.Graphics, ExternalFiles.Keys.Fullscreen, "true");
-            ExternalFiles.IniWriteValue(ExternalFiles.Sections.Graphics, ExternalFiles.Keys.Windowed_Mode_x, "1900");
-            ExternalFiles.IniWriteValue(ExternalFiles.Sections.Graphics, ExternalFiles.Keys.Windowed_Mode_y, "1000");
+            ExternalFiles.IniWriteValue(ExternalFiles.Sections.Graphics, ExternalFiles.Keys.Windowed_Mode_x, "1920");
+            ExternalFiles.IniWriteValue(ExternalFiles.Sections.Graphics, ExternalFiles.Keys.Windowed_Mode_y, "1080");
         }
 #endif
+//#if !UNITY_EDITOR
         //PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+//#endif
     }
 
 

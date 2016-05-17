@@ -8787,7 +8787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scene: {fileID: 396576024}
-  grid: {fileID: 1926574432}
+  grid: {fileID: 1926574434}
   factionListItem: {fileID: 100004, guid: 6ee0201249252484ca955d2d56ed0cf3, type: 2}
 --- !u!222 &579813999
 CanvasRenderer:
@@ -13160,7 +13160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scene: {fileID: 396576024}
-  grid: {fileID: 822638803}
+  grid: {fileID: 0}
   factionListItem: {fileID: 100004, guid: 6ee0201249252484ca955d2d56ed0cf3, type: 2}
 --- !u!114 &862846793
 MonoBehaviour:
