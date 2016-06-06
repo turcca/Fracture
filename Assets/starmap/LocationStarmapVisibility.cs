@@ -26,37 +26,50 @@ public class LocationStarmapVisibility : MonoBehaviour//, IPointerEnterHandler, 
         if (ps != null)
         {
             initLocation();
-            calculateSize();
-            setupNameTag();
+            
         }
 	}
     // -----------------------
 	void Update () 
     {
-	    if (ps != null)
+        updateDistanceToPlayer();
+        
+        // fade nameTag alpha in/out
+        fadeNameTagHandler();
+
+        // fade particles
+        if (inPlayerRange)
+            setParticleOpacity(opacity);
+        else
+            setParticleOpacity(0.0f);
+    }
+
+    private void updateDistanceToPlayer()
+    {
+        if (ps != null)
         {
-            // distance dimming
+            // particle distance dimming
             float distance = Vector3.Distance(this.gameObject.transform.position, Root.game.player.position);
 
-            if (distance > 50.0f * getConnectedPenaltyMul() + opacity*200f -15f ) // modifiers: psy str, disconnected // TODO sensors str/navigation
+            if (distance > 50.0f * getConnectedPenaltyMul() + opacity * 200f - 15f) // modifiers: psy str, disconnected // TODO sensors str/navigation
             {
-                setParticleOpacity(0.0f);
                 inPlayerRange = false;
                 collider_.enabled = false;
             }
             else
             {
-                setParticleOpacity (opacity);
                 inPlayerRange = true;
                 collider_.enabled = true;
             }
         }
-        // fade nameTag alpha in/out
+    }
+    private void fadeNameTagHandler()
+    {
         if (fadeNameTag)
         {
             float rateOfChange = 0.15f; // adjusted in conjuction with particlesystem life (turning on/off delay)
 
-            if (inPlayerRange && 
+            if (inPlayerRange &&
                 location.features.visibility == Data.Location.Visibility.Connected)
             {
                 // fade in
@@ -105,9 +118,19 @@ public class LocationStarmapVisibility : MonoBehaviour//, IPointerEnterHandler, 
     void initLocation()
     {
         location = Root.game.locations[this.gameObject.name];
+
+        calculateSize();
+        setupNameTag();
+
+        if (inPlayerRange == false) // hard set opacity to 0
+        {
+            getTextOutline().outlineColor = new Color(outlineColorTarget.r, outlineColorTarget.g, outlineColorTarget.b, 0f); 
+            nameTag.color = new Color(nameTagColorTarget.r, nameTagColorTarget.g, nameTagColorTarget.b, 0f);
+        }
+        Debug.Log(location.name + " inPlayerRange: " + inPlayerRange);
     }
 
-    public void setupNameTag(/*bool visibility = false*/)
+    void setupNameTag(/*bool visibility = false*/)
     {
         if (outline == null)
         {
@@ -116,7 +139,7 @@ public class LocationStarmapVisibility : MonoBehaviour//, IPointerEnterHandler, 
             getTextOutline().setup();
         }
         //nameTag.gameObject.SetActive(visibility);
-        //this.visibility = visibility;
+        //this.visibility 
     }
 
     public TextOutline getTextOutline()
