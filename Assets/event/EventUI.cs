@@ -70,7 +70,7 @@ public class EventUI : MonoBehaviour
             currentEvent.doOutcome();
             if (currentEvent.running)
             {
-                continueEvent();
+                drawChoices();
             }
             else
             {
@@ -116,8 +116,8 @@ public class EventUI : MonoBehaviour
     {
         currentEvent.initPre();
         currentEvent.start();
+        drawChoices();
         setupAdvisorManager();
-        continueEvent();
     }
 
     private void endEvent()
@@ -127,7 +127,7 @@ public class EventUI : MonoBehaviour
     }
 
 
-    private void continueEvent()
+    private void drawChoices()
     {
         // set description
         if (eventText == null) { Debug.LogError("eventText == null"); /*eventText = GameObject.Find("EventText").GetComponentInChildren<Text>();*/ }
@@ -151,6 +151,7 @@ public class EventUI : MonoBehaviour
 
     private void drawChoice(int choiceInternal, int choiceNum, string text)
     {
+        Debug.Log("drawChoice: " + choiceNum + " \n" + text);
         GameObject btn = (GameObject)GameObject.Instantiate(choiceButtonPrefab);
 
         // set relevant choice
