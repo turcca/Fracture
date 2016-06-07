@@ -151,7 +151,6 @@ public class EventUI : MonoBehaviour
 
     private void drawChoice(int choiceInternal, int choiceNum, string text)
     {
-        Debug.Log("drawChoice: " + choiceNum + " \n" + text);
         GameObject btn = (GameObject)GameObject.Instantiate(choiceButtonPrefab);
 
         // set relevant choice
