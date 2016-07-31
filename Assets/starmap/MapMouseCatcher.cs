@@ -9,18 +9,6 @@ public class MapMouseCatcher : MonoBehaviour
 
     void Update()
     {
-        /*
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() )
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10000.0f, LayerMask.GetMask("MouseCatcher")))
-            {
-                setTarget(hit.point);
-                chaseTarget = null;
-            }
-        }
-        */
         if (chaseTarget != null)
         {
             setTarget(chaseTarget.position);
@@ -32,6 +20,7 @@ public class MapMouseCatcher : MonoBehaviour
     /// </summary>
     public void eventPointerDown()
     {
+        // handle hit point and handle targeting
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("UI")))

@@ -9,6 +9,14 @@ public class TradeNetVisualisation : MonoBehaviour
 
     Simulation.NPCShip trackedShip;
 
+    public bool showGlobalEconomyStats = false;
+    public bool showGlobalShipStats = true;
+    public bool showShips = true;
+    public bool showLocations = true;
+    public bool showShortages = true;
+    public bool showRoutes = true;
+
+
     // Use this for initialization
     void Start()
     {
@@ -27,31 +35,46 @@ public class TradeNetVisualisation : MonoBehaviour
         //shipObj.GetComponent<MeshFilter>().mesh = MeshFilter.
         ship.tradeShip.setVisibilityToStarmap(ship.isVisible);
 
-        GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        box.GetComponent<Renderer>().material.shader = Shader.Find ("Custom/brdf");
-        box.transform.parent = shipObj.transform;
-        box.transform.localPosition = new Vector3(0,-1,0);
-        box.transform.localScale = new Vector3(1,1,1);
+        // assign box to ship
+        //GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //box.GetComponent<Renderer>().material.shader = Shader.Find ("Custom/brdf");
+        //box.transform.parent = shipObj.transform;
+        //box.transform.localPosition = new Vector3(0,-1,0); // ship box location
+        //box.transform.localScale = new Vector3(.5f,.5f,.5f);
+        //box.GetComponent<BoxCollider>().isTrigger = true;
     }
 
 
     void OnDrawGizmos()
     {
-        //foreach (Location loc in Game.universe.locations.Values)
-        //{
-        //    foreach(Location toLoc in Game.universe.tradeNetwork.getNeighbours(loc))
-        //    {
-        //        Gizmos.color = new Color(1.0f, 1.0f, 1.0f);
-        //        Gizmos.DrawLine(loc.position, toLoc.position);
-        //    }
-        //}
-
-        foreach (Navigation.NavNode node in Root.game.navNetwork.navNodes)
+        if (showRoutes)
         {
-            foreach (Navigation.NavNode neighbour in node.links)
+            Gizmos.color = new Color(0.05f, .2f, .0f, 0.1f);
+            foreach (Navigation.NavNode node in Root.game.navNetwork.navNodes)
             {
-                Gizmos.color = new Color(1.0f, 1.0f, 1.0f);
-                Gizmos.DrawLine(node.position, neighbour.position);
+                foreach (Navigation.NavNode neighbour in node.links)
+                    Gizmos.DrawLine(node.position, neighbour.position);
+            }
+        }
+        if (showShips)
+        {
+            foreach (Simulation.NPCShip ship in Root.game.ships)
+            {
+                Gizmos.color = new Color(0.1f, .4f, .2f, 0.3f);
+                if (ship.isTradeShip && ship.free == false)
+                    Gizmos.DrawWireSphere(ship.position, 2f);
+            }
+        }
+        if (showLocations)
+        {
+            foreach (Location location in Root.game.locations.Values)
+            {
+                if (location.features.visibility == Data.Location.Visibility.Connected) Gizmos.color = new Color(0.95f, .95f, .95f, 0.2f);
+                else /*(location.features.visibility == Data.Location.Visibility.Hiding)*/ Gizmos.color = new Color(0.5f, .5f, .5f, 0.1f);
+                float importance = Mathf.Max(location.getImportance(), 1f);
+                if (location.features.isStation())
+                    Gizmos.DrawWireCube(location.position, new Vector3(importance, 0, importance));
+                else Gizmos.DrawWireSphere(location.position, importance);
             }
         }
 
@@ -76,15 +99,18 @@ public class TradeNetVisualisation : MonoBehaviour
                 GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y + 15, 300, 20* trackedShip.tradeList.Count),
                       trackedShip.cargoToDebugString());
         }
-        
-        
+
+
         // draw guis
-        string rv = "    Global Resource Tracker \n";
-        foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
+        if (showGlobalEconomyStats)
         {
-            rv += type.ToString() + " [rate: " + Mathf.Round(Root.game.globalMarket.getGlobalResourceGrowth(type) * 100f) / 100f + "] [stock: " + Mathf.Round(Root.game.globalMarket.getGlobalResources(type)) + "]\n";
+            string rv = "    Global Resource Tracker \n";
+            foreach (Data.Resource.Type type in Enum.GetValues(typeof(Data.Resource.Type)))
+            {
+                rv += type.ToString() + " [rate: " + Mathf.Round(Root.game.globalMarket.getGlobalResourceGrowth(type) * 100f) / 100f + "] [stock: " + Mathf.Round(Root.game.globalMarket.getGlobalResources(type)) + "]\n";
+            }
+            GUI.Label(new Rect(Screen.width / 2.6f, Screen.height - 150, 500, 150), rv);
         }
-        GUI.Label(new Rect(Screen.width / 2.6f, Screen.height - 150, 500, 150), rv);
 
         // location tags and shortages
         foreach (Location location in Root.game.locations.Values)
@@ -101,7 +127,7 @@ public class TradeNetVisualisation : MonoBehaviour
                 GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y, 300, 16),
                           location.id + " (net: " + netMul + ")", style);
                 // shortages
-                if (location.economy.hasShortage())
+                if (showShortages && location.economy.hasShortage())
                 {
                     GUI.Label(new Rect(pos.x + 20, Screen.height - pos.y +16, 300, 80), location.economy.shortagesToDebugStringFloating());
                 }

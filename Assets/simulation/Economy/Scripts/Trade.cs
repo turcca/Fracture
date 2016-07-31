@@ -13,16 +13,25 @@ namespace Simulation
             List<Data.TradeItem> bestPartnerTradeList = new List<Data.TradeItem>();
             Location bestPartner = ship.home;
             float bestScore = 0.0f;
+            // go through other locations
             foreach(Location partner in Root.game.locations.Values)
             {
                 if (partner != ship.home)
                 {
-                    candidate = scoreTradeListPair(ship.home, partner, ship.cargoSpace);
-                    if (candidate.Key > bestScore)
+                    // visibility
+                    //if (partner.)
                     {
-                        bestScore = candidate.Key;
-                        bestPartner = partner;
-                        bestPartnerTradeList = candidate.Value;
+                        // relations
+                        //if ()
+                        {
+                            candidate = scoreTradeListPair(ship.home, partner, ship.cargoSpace);
+                            if (candidate.Key > bestScore)
+                            {
+                                bestScore = candidate.Key;
+                                bestPartner = partner;
+                                bestPartnerTradeList = candidate.Value;
+                            }
+                        }
                     }
                 }
             }

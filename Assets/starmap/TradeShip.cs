@@ -42,15 +42,18 @@ public class TradeShip : MonoBehaviour//, IPointerEnterHandler, IPointerExitHand
     {
         trackedShip = ship;
     }
-    /*
+    
+    // SimulationScene hookup
     public void OnMouseDown()
     {
-        if (visualisation)
+        if (GameState.isState(GameState.State.Simulation))
         {
-            visualisation.trackShip(trackedShip);
+            TradeNetVisualisation visualisation = GameObject.Find("Debug").GetComponent<TradeNetVisualisation>();
+            if (visualisation != null)
+                visualisation.trackShip(trackedShip);
         }
     }
-    */
+    // ----------------------
 
     public void eventPointerOver(bool entering) // false = exiting
     {

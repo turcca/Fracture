@@ -127,7 +127,6 @@ public class LocationStarmapVisibility : MonoBehaviour//, IPointerEnterHandler, 
             getTextOutline().outlineColor = new Color(outlineColorTarget.r, outlineColorTarget.g, outlineColorTarget.b, 0f); 
             nameTag.color = new Color(nameTagColorTarget.r, nameTagColorTarget.g, nameTagColorTarget.b, 0f);
         }
-        Debug.Log(location.name + " inPlayerRange: " + inPlayerRange);
     }
 
     void setupNameTag(/*bool visibility = false*/)
